@@ -36,6 +36,8 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private UserEnum role; // ADMIN, CUSTOMER
 
+    private String email;
+
     @Builder
     public User(Long id, String username, String password, String fullname, String nickname, String profileImage, UserEnum role) {
         this.id = id;
