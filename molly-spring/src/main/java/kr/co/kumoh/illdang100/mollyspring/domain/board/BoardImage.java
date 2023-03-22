@@ -1,5 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.board;
 
+import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardImage {
+public class BoardImage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +19,11 @@ public class BoardImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
-    private Board board;;
+    private Board board;
 
-    @Column(nullable = false, length = 1000)
-    private String content;
+    @Column(nullable = false)
+    private String uploadFileName;
+
+    @Column(nullable = false)
+    private String storeFileName;
 }
