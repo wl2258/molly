@@ -3,6 +3,7 @@ package kr.co.kumoh.illdang100.mollyspring.domain.medication;
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.Pet;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +24,17 @@ public class MedicationHistory extends BaseTimeEntity {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
+    @Column(nullable = false)
     private LocalDate medicationDate;
 
+    @Column(nullable = false, length = 30)
     private String medicationName;
+
+    @Builder
+    public MedicationHistory(Long id, Pet pet, LocalDate medicationDate, String medicationName) {
+        this.id = id;
+        this.pet = pet;
+        this.medicationDate = medicationDate;
+        this.medicationName = medicationName;
+    }
 }
