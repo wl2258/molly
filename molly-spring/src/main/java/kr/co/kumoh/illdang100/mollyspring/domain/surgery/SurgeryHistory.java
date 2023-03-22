@@ -1,7 +1,9 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.surgery;
 
+import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.Pet;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +13,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SurgeryHistory {
+public class SurgeryHistory extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +24,17 @@ public class SurgeryHistory {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
+    @Column(nullable = false)
+    private LocalDate surgeryDate;
+
+    @Column(nullable = false, length = 30)
     private String surgeryName;
 
-    private LocalDate surgeryDate;
+    @Builder
+    public SurgeryHistory(Long id, Pet pet, LocalDate surgeryDate, String surgeryName) {
+        this.id = id;
+        this.pet = pet;
+        this.surgeryDate = surgeryDate;
+        this.surgeryName = surgeryName;
+    }
 }
