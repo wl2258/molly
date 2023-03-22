@@ -1,7 +1,8 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.pet;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
-import kr.co.kumoh.illdang100.mollyspring.domain.user.User;
+import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "PET_TYPE")
+@DiscriminatorColumn
 public abstract class Pet extends BaseTimeEntity {
 
     @Id
@@ -22,19 +23,17 @@ public abstract class Pet extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @Column(nullable = false, length = 30)
     private String petName;
-
-    private String profileImage;
 
     @Column(nullable = false)
     private LocalDate birthdate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private PetGenderEnum gender;
 
     @Column(nullable = false)
@@ -43,6 +42,22 @@ public abstract class Pet extends BaseTimeEntity {
     @Column(nullable = false)
     private double weight;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
     private PetTypeEnum petType;
+
+    @Embedded
+    private ImageFile petProfile;
+
+    public Pet(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfile) {
+        this.id = id;
+        this.account = account;
+        this.petName = petName;
+        this.birthdate = birthdate;
+        this.gender = gender;
+        this.neuteredStatus = neuteredStatus;
+        this.weight = weight;
+        this.petType = petType;
+        this.petProfile = petProfile;
+    }
 }
