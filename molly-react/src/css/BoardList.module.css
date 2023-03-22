@@ -1,0 +1,96 @@
+.header {
+  background-color: #F9F9F9;
+  margin-top: 200px;
+  position: relative;
+}
+
+.header > ul {
+  padding: 25px;
+}
+
+.board {
+  margin-top: -16px;
+  background-color: #F9F9F9;
+}
+
+.list {
+  z-index: 1;
+  padding: 8px 0 20px;
+  padding-left: 55px;
+  border-bottom: 1px solid #B2ACA7;
+  color: #645C56;
+  font-size: small;
+  position: relative;
+}
+
+.list > p, .list > span {
+  color: #A19C97;
+}
+
+.list > span:nth-child(3) {
+  padding-right: 15px;
+}
+
+.list > span:nth-child(5) {
+  color: #B27910;
+  position: absolute;
+  right: 80px;
+}
+
+.list > span:nth-child(6) {
+  color: #B27910;
+  position: absolute;
+  right: 70px;
+  bottom: 19px;
+}
+
+.list > span:nth-child(7) {
+  color: #B27910;
+  position: absolute;
+  right: 45px;
+  bottom: 18px;
+}
+
+.list > span:nth-child(8) {
+  color: #B27910;
+  position: absolute;
+  right: 33px;
+  bottom: 19px;
+}
+
+.footer {
+  height: 80px;
+  background-color: #F9F9F9;
+  margin: auto;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+}
+
+.sort {
+  z-index: 2;
+  color: #A19C97;
+  background-color: #EEECEC;
+  width: 108px;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
+
+.default {
+  position: relative;
+  left: 10px;
+  bottom: 6px;
+  padding-right: 10px;
+  font-size: small;
+}
+
+.dropdown > li {
+  font-size: 13.5px;
+  list-style: none;
+  padding: 5px 10px;
+  border-top: 1px solid #CFCFCF ;
+}
+
+.dropdown > li:hover {
+  background-color: #e3dede;
+}
