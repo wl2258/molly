@@ -2,7 +2,9 @@ package kr.co.kumoh.illdang100.mollyspring.domain.comment;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +25,20 @@ public class Comment extends BaseTimeEntity {
     private Board board;
 
     @Column(nullable = false)
-    private int userId;
+    private Long accountId;
 
-    private String profileImage;
+    @Column(nullable = false, length = 20)
+    private String writerNickname;
+
+    @Embedded
+    private ImageFile writerProfile;
+
+    @Builder
+    public Comment(Long id, Board board, Long accountId, String writerNickname, ImageFile writerProfile) {
+        this.id = id;
+        this.board = board;
+        this.accountId = accountId;
+        this.writerNickname = writerNickname;
+        this.writerProfile = writerProfile;
+    }
 }
