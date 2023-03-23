@@ -2,6 +2,7 @@ package kr.co.kumoh.illdang100.mollyspring.domain.board;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,12 @@ public class BoardImage extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String storeFileName;
+
+    @Builder
+    public BoardImage(Long id, Board board, String uploadFileName, String storeFileName) {
+        this.id = id;
+        this.board = board;
+        this.uploadFileName = uploadFileName;
+        this.storeFileName = storeFileName;
+    }
 }
