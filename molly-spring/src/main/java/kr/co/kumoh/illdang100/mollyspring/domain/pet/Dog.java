@@ -10,17 +10,16 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@DiscriminatorValue("Dog")
+@DiscriminatorValue("D")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dog extends Pet{
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private DogEnum dogSpecies;
 
     @Builder
-    public Dog(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfile, DogEnum species) {
-        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfile);
-        this.dogSpecies = species;
+    public Dog(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, DogEnum dogSpecies) {
+        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage);
+        this.dogSpecies = dogSpecies;
     }
 }
