@@ -39,10 +39,10 @@ public class Account extends BaseTimeEntity {
     private String email;
 
     @Embedded
-    private ImageFile accountFile;
+    private ImageFile accountProfileImage;
 
     @Builder
-    public Account(Long id, String username, String password, String fullName, String nickname, AccountEnum role, String email) {
+    public Account(Long id, String username, String password, String fullName, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -50,5 +50,6 @@ public class Account extends BaseTimeEntity {
         this.nickname = nickname;
         this.role = role;
         this.email = email;
+        this.accountProfileImage = accountProfileImage;
     }
 }
