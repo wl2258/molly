@@ -28,14 +28,14 @@ public class Account extends BaseTimeEntity {
     @Column(unique = false, length = 20)
     private String fullName;
 
-    @Column(unique = false, length = 20)
+    @Column(unique = true, length = 20)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AccountEnum role; // ADMIN, CUSTOMER
 
-    @Column(length = 25)
+    @Column(unique = true, length = 25)
     private String email;
 
     @Embedded
