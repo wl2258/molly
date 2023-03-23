@@ -1,12 +1,17 @@
 import React from 'react';
-import { REST_API_KEY, REDIRECT_URI } from './KakaoLoginData';
 import styles from '../css/LoginTest.module.css';
 
 const LoginTest = () => {
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const KAKAO_AUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
+  const GOOGLE_AUTH_URL = `http://localhost:8080/oauth2/authorization/google`;
   
-  const handleLogin = () => {
+  
+  const kakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
+  }
+
+  const googleLogin = () => {
+    window.location.href = GOOGLE_AUTH_URL;
   }
 
   return (
@@ -17,8 +22,11 @@ const LoginTest = () => {
         </div>
         <p>반려동물 예방접종 일정관리 사이트</p>
         <p>회원가입 👋</p>
-        <div className={styles.kakao} onClick={handleLogin}>
+        <div onClick={kakaoLogin}>
           <img src='img/kakao_login_medium_wide.png' alt="kakao"/>
+        </div>
+        <div style={{marginTop: "10px"}} onClick={googleLogin}>
+          <img src='img/google_login.png' alt="kakao" width="81%"/>
         </div>
       </div>
     </div>

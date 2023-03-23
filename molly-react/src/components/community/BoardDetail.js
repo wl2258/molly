@@ -62,7 +62,7 @@ const BoardDetail = (props) => {
         <span>{post[0].writer}</span>
         <span>{post[0].time}</span>
         <p>{post[0].detail}</p>
-        {post[0].id === 1 ? <img src={process.env.PUBLIC_URL + '/puppy.jpg'} alt="puppy"/> : null}
+        {post[0].id === 1 ? <img src={process.env.PUBLIC_URL + '/img/puppy.jpg'} alt="puppy"/> : null}
         <div className={styles.count}>
           <span><IoMdThumbsUp color="#B27910" size="18px"/></span>
           <span>{post[0].good}</span>
