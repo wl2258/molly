@@ -4,6 +4,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn
+@AllArgsConstructor
 public abstract class Pet extends BaseTimeEntity {
 
     @Id
@@ -51,17 +53,4 @@ public abstract class Pet extends BaseTimeEntity {
 
     @Column(length = 100)
     private String caution;
-
-    public Pet(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, String caution) {
-        this.id = id;
-        this.account = account;
-        this.petName = petName;
-        this.birthdate = birthdate;
-        this.gender = gender;
-        this.neuteredStatus = neuteredStatus;
-        this.weight = weight;
-        this.petType = petType;
-        this.petProfileImage = petProfileImage;
-        this.caution = caution;
-    }
 }
