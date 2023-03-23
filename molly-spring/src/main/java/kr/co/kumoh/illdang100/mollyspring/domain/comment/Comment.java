@@ -31,14 +31,14 @@ public class Comment extends BaseTimeEntity {
     private String writerNickname;
 
     @Embedded
-    private ImageFile writerProfile;
+    private ImageFile writerProfileImage;
 
     @Builder
-    public Comment(Long id, Board board, Long accountId, String writerNickname, ImageFile writerProfile) {
+    public Comment(Long id, Board board, Long accountId, String writerNickname, ImageFile writerProfileImage) {
         this.id = id;
         this.board = board;
         this.accountId = accountId;
         this.writerNickname = writerNickname;
-        this.writerProfile = writerProfile;
+        this.writerProfileImage = writerProfileImage;
     }
 }
