@@ -49,7 +49,10 @@ public abstract class Pet extends BaseTimeEntity {
     @Embedded
     private ImageFile petProfileImage;
 
-    public Pet(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage) {
+    @Column(length = 100)
+    private String caution;
+
+    public Pet(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, String caution) {
         this.id = id;
         this.account = account;
         this.petName = petName;
@@ -59,5 +62,6 @@ public abstract class Pet extends BaseTimeEntity {
         this.weight = weight;
         this.petType = petType;
         this.petProfileImage = petProfileImage;
+        this.caution = caution;
     }
 }
