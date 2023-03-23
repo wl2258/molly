@@ -47,9 +47,9 @@ public abstract class Pet extends BaseTimeEntity {
     private PetTypeEnum petType;
 
     @Embedded
-    private ImageFile petProfile;
+    private ImageFile petProfileImage;
 
-    public Pet(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfile) {
+    public Pet(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage) {
         this.id = id;
         this.account = account;
         this.petName = petName;
@@ -58,6 +58,6 @@ public abstract class Pet extends BaseTimeEntity {
         this.neuteredStatus = neuteredStatus;
         this.weight = weight;
         this.petType = petType;
-        this.petProfile = petProfile;
+        this.petProfileImage = petProfileImage;
     }
 }
