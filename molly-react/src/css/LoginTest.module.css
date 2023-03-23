@@ -20,7 +20,7 @@
   font-size: 13px;
   color: #AFA79F;
   position: absolute;
-  left: 45px;
+  left: 83px;
 }
 
 .login > p:nth-child(3) {
@@ -28,5 +28,5 @@
   font-size: 15px;
   color: #645C56;
   font-weight: 600;
-  padding-left: 10px;
+  padding-left: 50px;
 }
