@@ -1,11 +1,11 @@
-package kr.co.kumoh.illdang100.mollyspring.domain.user;
+package kr.co.kumoh.illdang100.mollyspring.domain.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum UserEnum {
+public enum AccountEnum {
 
     ADMIN("관리자"), CUSTOMER("고객");
     private String value;
