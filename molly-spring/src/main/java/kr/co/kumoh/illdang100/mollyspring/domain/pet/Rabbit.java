@@ -18,8 +18,8 @@ public class Rabbit extends Pet{
     private RabbitEnum rabbitSpecies;
 
     @Builder
-    public Rabbit(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, RabbitEnum rabbitSpecies) {
-        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage);
+    public Rabbit(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, String caution, RabbitEnum rabbitSpecies) {
+        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage, caution);
         this.rabbitSpecies = rabbitSpecies;
     }
 }
