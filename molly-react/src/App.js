@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
 import Calendar from './pages/Calendar';
 import List from './pages/community/List';
 import Hospital from './pages/Hospital';
@@ -10,16 +8,15 @@ import About from './pages/About';
 import Detail from './pages/community/Detail';
 import Write from './pages/community/Write';
 import RegisterPet from './pages/pet/RegisterPet';
-import LoginTest from './pages/LoginTest';
+import LogIn from './pages/LogIn';
 
 function App() {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<LoginTest />}/>
+        <Route path="/" element={<LogIn />}/>
         <Route path="/home" element={<Home />}/>
-        <Route path="/join" element={<SignUp />}/>
-        <Route path="/login" element={<SignIn />}/>
+        <Route path="/login" element={<LogIn />}/>
         <Route path="/calendar" element={<Calendar />}/>
         <Route path="/list" element={<List />}/>
         <Route path="/hospital" element={<Hospital />}/>
