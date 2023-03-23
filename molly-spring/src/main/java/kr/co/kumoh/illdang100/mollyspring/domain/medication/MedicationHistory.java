@@ -17,7 +17,7 @@ public class MedicationHistory extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "medical_history_id")
+    @Column(name = "medication_history_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,16 +25,20 @@ public class MedicationHistory extends BaseTimeEntity {
     private Pet pet;
 
     @Column(nullable = false)
-    private LocalDate medicationDate;
+    private LocalDate medicationStartDate;
+
+    @Column(nullable = false)
+    private LocalDate medicationEndDate;
 
     @Column(nullable = false, length = 30)
     private String medicationName;
 
     @Builder
-    public MedicationHistory(Long id, Pet pet, LocalDate medicationDate, String medicationName) {
+    public MedicationHistory(Long id, Pet pet, LocalDate medicationStartDate, LocalDate medicationEndDate, String medicationName) {
         this.id = id;
         this.pet = pet;
-        this.medicationDate = medicationDate;
+        this.medicationStartDate = medicationStartDate;
+        this.medicationEndDate = medicationEndDate;
         this.medicationName = medicationName;
     }
 }
