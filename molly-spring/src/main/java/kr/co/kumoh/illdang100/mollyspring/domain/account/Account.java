@@ -1,6 +1,7 @@
-package kr.co.kumoh.illdang100.mollyspring.domain.user;
+package kr.co.kumoh.illdang100.mollyspring.domain.account;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +12,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseTimeEntity {
+public class Account extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "account_id")
     private Long id;
 
     @Column(unique = true, nullable = false, length = 25)
@@ -25,25 +26,30 @@ public class User extends BaseTimeEntity {
     private String password;
 
     @Column(unique = false, length = 20)
-    private String fullname;
+    private String fullName;
 
     @Column(unique = false, length = 20)
     private String nickname;
 
-    private String profileImage;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserEnum role; // ADMIN, CUSTOMER
+    private AccountEnum role; // ADMIN, CUSTOMER
+
+    @Column(length = 25)
+    private String email;
+
+    @Embedded
+    private ImageFile accountProfileImage;
 
     @Builder
-    public User(Long id, String username, String password, String fullname, String nickname, String profileImage, UserEnum role) {
+    public Account(Long id, String username, String password, String fullName, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.fullname = fullname;
+        this.fullName = fullName;
         this.nickname = nickname;
-        this.profileImage = profileImage;
         this.role = role;
+        this.email = email;
+        this.accountProfileImage = accountProfileImage;
     }
 }
