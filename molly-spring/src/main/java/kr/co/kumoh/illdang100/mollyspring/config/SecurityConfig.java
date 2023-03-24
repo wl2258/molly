@@ -3,7 +3,7 @@ package kr.co.kumoh.illdang100.mollyspring.config;
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthorizationFilter;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.CustomOAuth2UserService;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2SuccessHandler;
-import kr.co.kumoh.illdang100.mollyspring.domain.user.UserEnum;
+import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
 import kr.co.kumoh.illdang100.mollyspring.util.CustomResponseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +73,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests()
                 .antMatchers("/api/auth/**").authenticated()
-                .antMatchers("/api/admin/**").hasRole("" + UserEnum.ADMIN)
+                .antMatchers("/api/admin/**").hasRole("" + AccountEnum.ADMIN)
                 .anyRequest().permitAll();
 
         http
