@@ -23,7 +23,6 @@
             client-name: Kakao
             scope:
               - profile_nickname
-              - profile_image
               - account_email
 
         provider:
