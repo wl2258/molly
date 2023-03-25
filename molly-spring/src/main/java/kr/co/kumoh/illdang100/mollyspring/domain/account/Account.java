@@ -19,7 +19,7 @@ public class Account extends BaseTimeEntity {
     @Column(name = "account_id")
     private Long id;
 
-    @Column(unique = true, length = 25)
+    @Column(unique = true, length = 30)
     private String username;
 
     @Column(length = 20)
@@ -47,5 +47,9 @@ public class Account extends BaseTimeEntity {
         this.role = role;
         this.email = email;
         this.accountProfileImage = accountProfileImage;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
     }
 }
