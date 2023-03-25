@@ -19,13 +19,10 @@ public class Account extends BaseTimeEntity {
     @Column(name = "account_id")
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 25)
+    @Column(unique = true, length = 25)
     private String username;
 
-    @Column(unique = false, length = 60) // 패스워드 인코딩(BCrypt)
-    private String password;
-
-    @Column(unique = false, length = 20)
+    @Column(length = 20)
     private String fullName;
 
     @Column(unique = true, length = 20)
@@ -42,10 +39,9 @@ public class Account extends BaseTimeEntity {
     private ImageFile accountProfileImage;
 
     @Builder
-    public Account(Long id, String username, String password, String fullName, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
+    public Account(Long id, String username, String fullName, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.fullName = fullName;
         this.nickname = nickname;
         this.role = role;
