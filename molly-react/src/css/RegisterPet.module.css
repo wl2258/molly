@@ -1,0 +1,189 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.board {
+  margin-top: 120px;
+  position: relative;
+}
+
+.board > h1 {
+  color: #656565;
+  font-size: 28px;
+}
+
+.board > input, .surgeryname, .weight, .drug > input, .caution > input {
+  width: 120px;
+  border-radius: 10px;
+  color: #656565;
+  background-color: #EBE7E3;
+  border: none;
+  text-align: center;
+  caret-color: #C7C3BF;
+}
+
+.board > input:focus, 
+.surgeryname:focus, 
+.weight:focus, 
+.drug > input:focus,
+.caution > input:focus {
+  outline: none;
+}
+
+.board > input::placeholder, 
+.surgeryname::placeholder,
+.weight::placeholder,
+.drug > input::placeholder,
+.caution > input::placeholder {
+  color: #b4b1ad;
+}
+
+.name {
+  height: 30px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.board > h4, .info > h4 {
+  display: inline-block;
+  color: #827870;
+  font-weight: bold;
+  margin-right: 40px;
+  margin-top: 5px;
+}
+
+.sort {
+  position: absolute;
+  top: -47px;
+  left: 72px;
+  color: #827870;
+  background-color: #EBE7E3;
+  width: 110px;
+  position: relative;
+  box-sizing: border-box;
+  padding-top: 7px;
+  border-radius: 10px;
+}
+
+.default {
+  position: relative;
+  left: 13px;
+  bottom: 6px;
+  font-size: small;
+}
+
+.dropdown > li {
+  position: relative;
+  font-size: small;
+  list-style: none;
+  padding: 7px 13px;
+  background-color: #EBE7E3;
+}
+
+.dropdown > li:last-child {
+  border-radius: 0 0 10px 10px;
+}
+
+.dropdown > li:hover {
+  background-color: #DFDAD4;
+}
+
+.info {
+  margin-top: -30px;
+}
+
+.radio {
+  margin-left: -3px;
+}
+
+.radio > span {
+  color: #827870;
+  font-size: 15px;
+  margin-right: 20px;
+}
+
+.radio > input {
+  margin-right: 10px;
+  accent-color: #827870;
+  border: none !important
+}
+
+.surgery {
+  margin-left: 100px;
+  position: relative;
+}
+
+.surgery > span {
+  position: absolute;
+  top: 5px;
+  right: 160px;
+}
+
+.surgeryname {
+  margin-left: 20px;
+  width: 130px;
+  height: 29px;
+  font-size: 13px;
+}
+
+.weight {
+  box-sizing: border-box;
+  width: 110px;
+  height: 28px;
+  font-size: 13px;
+  padding: 0 30px;
+}
+
+.drug, .caution {
+  display: inline-block;
+  position: relative;
+}
+
+.drug > input {
+  width: 100px;
+  height: 27px;
+  font-size: 13px;
+  margin-left: 10px;
+}
+
+.drug > p {
+  display: inline-block;
+  margin: 0 10px 0 20px;
+  color: #827870;
+}
+
+.drug > p:nth-child(2) {
+  margin-left: 30px;
+}
+
+.drug > span {
+  position: absolute;
+  top: 5px;
+  right: -30px;
+}
+
+.caution > input {
+  width: 350px;
+  height: 27px;
+  font-size: 13px;
+  margin-left: -11px;
+}
+
+.caution > span {
+  position: absolute;
+  top: 5px;
+  right: -30px;
+}
+
+.info > button {
+  margin-left: -16px;
+  margin-bottom: 20px;
+  background-color: #AFA79F;
+  color: white;
+  font-size: 14px;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 8px;
+}

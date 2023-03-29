@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../css/LoginTest.module.css';
+import styles from '../css/Login.module.css';
 
 const LoginTest = () => {
   const KAKAO_AUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
