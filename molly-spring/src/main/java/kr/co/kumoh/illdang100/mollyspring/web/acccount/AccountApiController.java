@@ -26,7 +26,7 @@ public class AccountApiController {
     private final AccountRepository accountRepository;
 
     @PostMapping("/account/duplicate")
-    public ResponseEntity<?> duplicateNickname(@RequestBody @Valid InputNicknameReqDto inputNicknameReqDto, BindingResult bindingResult) {
+    public ResponseEntity<?> checkDuplicateNickname(@RequestBody @Valid InputNicknameReqDto inputNicknameReqDto, BindingResult bindingResult) {
 
         String nickname = inputNicknameReqDto.getNickname();
         Optional<Account> accountOptional = accountRepository.findByNickname(nickname);
