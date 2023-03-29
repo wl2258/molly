@@ -22,7 +22,7 @@ public class Account extends BaseTimeEntity {
     @Column(unique = true, nullable = false, length = 30)
     private String username;
 
-    @Column(unique = true, length = 20)
+    @Column(unique = true, length = 10)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
