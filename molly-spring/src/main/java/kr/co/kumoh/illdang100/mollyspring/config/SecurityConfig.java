@@ -48,7 +48,7 @@ public class SecurityConfig {
 
         // 인증 실패 처리
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-            CustomResponseUtil.fail(response, "로그인을 진행해 주세요", HttpStatus.UNAUTHORIZED);
+            CustomResponseUtil.redirect(response, "http://localhost:3000/login");
         });
 
         // 권한 실패
@@ -78,9 +78,8 @@ public class SecurityConfig {
 
         http
                 .oauth2Login().loginPage("/token/expired")
-                .defaultSuccessUrl("/login-success")    // oauth2 인증이 성공했을 때, 이동되는 url 설정
                 .successHandler(oAuth2SuccessHandler)
-                .userInfoEndpoint().userService(oAuth2UserService); // 로그인이 성공하면 해당 유저의  정보를 들고 customOAuth2UserService에서 후처리 해주겠다는 의미
+                .userInfoEndpoint().userService(oAuth2UserService);
 
         return http.build();
     }
