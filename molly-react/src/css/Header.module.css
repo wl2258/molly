@@ -86,6 +86,8 @@
 }
 
 .petinfo {
+  position: fixed;
+  right: 115px;
   width: 90px;
   background-color: #E1D8D0;
   border-radius: 10px;

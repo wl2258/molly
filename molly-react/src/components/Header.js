@@ -20,7 +20,7 @@ const Header = () => {
   const [alarmView, setAalarmView] = useState(false);
 
   return (
-    <div>
+    <div style={{zIndex:"3"}}>
       <header className={styles.header}>
         <div className={styles.empty}/>
         <div className={styles.logo}>
@@ -31,7 +31,7 @@ const Header = () => {
             <div>
               <CustomNavLink 
                 style={({ isActive }) => (isActive ? "active" : "")}
-                to="/">
+                to="/home">
                   Home
               </CustomNavLink>
             </div>
@@ -102,12 +102,15 @@ const UserDropdown = () => {
 
 const PetDropdown = () => {
   let navigate = useNavigate();
+  const [pet] = useState(['까까', '보리', '마루']);
 
   return (
     <div className={styles.petdropdown}>
-      <li onClick={() => {}}>까까</li>
-      <li onClick={() => {}}>마루</li>
-      <li onClick={() => {}}>보리</li>
+      {pet.map((item, index) => {
+        return (
+          item !== '' && <li onClick={() => {navigate(`/detailpet/${index+1}`)}}>{item}</li>
+        )
+      })}
       <li onClick={() => {navigate('/registerpet')}}>추가하기</li>
     </div>
   )

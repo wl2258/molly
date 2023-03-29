@@ -9,7 +9,7 @@ let CustomButton = styled.button`
   border: none;
   border-radius: 10px;
   font-weight: 800;
-  padding: 8px 10px 5px 10px;
+  padding: 9px 10px 6px 10px;
   margin: 10px;
 `;
 

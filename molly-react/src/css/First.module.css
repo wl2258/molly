@@ -1,0 +1,52 @@
+.header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #FAF5F1;
+  display: flex;
+}
+
+.logo {
+  flex-grow: 0.5;
+}
+
+.logo > img {
+  padding-top: 15px;
+  padding-left: 30px;
+}
+
+.navcontainer {
+  flex-grow: 3;
+}
+
+.navcontainer > nav {
+  padding-top: 30px;
+}
+
+.user > h4 {
+  display: inline-block;
+  padding-top: 15px;
+  padding-right: 30px;
+  font-size: 13px;
+  color: #827870;
+}
+
+.banner {
+  height: 480px;
+  background-color: #FAF5F1;
+  position: relative;
+  margin-top: 80px;
+}
+
+.banner > h1 {
+  text-align: center;
+  line-height: 490px;
+}
+
+.banner > span {
+  position: absolute;
+  right: 30px;
+  bottom: 250px;
+}
