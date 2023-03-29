@@ -19,13 +19,10 @@ public class Account extends BaseTimeEntity {
     @Column(name = "account_id")
     private Long id;
 
-    @Column(unique = true, length = 30)
+    @Column(unique = true, nullable = false, length = 30)
     private String username;
 
-    @Column(length = 20)
-    private String fullName;
-
-    @Column(unique = true, length = 20)
+    @Column(unique = true, length = 10)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -39,10 +36,9 @@ public class Account extends BaseTimeEntity {
     private ImageFile accountProfileImage;
 
     @Builder
-    public Account(Long id, String username, String fullName, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
+    public Account(Long id, String username, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
         this.id = id;
         this.username = username;
-        this.fullName = fullName;
         this.nickname = nickname;
         this.role = role;
         this.email = email;
