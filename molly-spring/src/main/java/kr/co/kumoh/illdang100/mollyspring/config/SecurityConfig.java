@@ -1,6 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.config;
 
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthorizationFilter;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtProcess;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.CustomOAuth2UserService;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2FailureHandler;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2SuccessHandler;
@@ -27,6 +28,8 @@ public class SecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2FailureHandler oAuth2FailureHandler;
 
+    private final JwtProcess jwtProcess;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -36,7 +39,7 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-            http.addFilter(new JwtAuthorizationFilter(authenticationManager));
+            http.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProcess));
         }
     }
 
