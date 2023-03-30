@@ -34,7 +34,6 @@ const First = () => {
           </nav>
         </div>
         <div className={styles.user}>
-          <h4 onClick={() => navigate('/login')}>회원가입</h4>
           <h4 onClick={() => navigate('/login')}>로그인</h4>
         </div>
         <div style={{flexGrow: "0.2"}}/>
