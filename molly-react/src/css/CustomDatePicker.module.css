@@ -1,0 +1,13 @@
+.datepicker {
+  display: inline-block;
+}
+
+.custominput {
+  color: #827870;
+  background-color: #EBE7E3;
+  border-style: none;
+  border-radius: 10px;
+  padding: 7px;
+  box-sizing: border-box;
+  width: 110px;
+}

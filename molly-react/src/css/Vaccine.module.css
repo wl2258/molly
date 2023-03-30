@@ -1,0 +1,70 @@
+.vaccine {
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #adaaa790;
+}
+
+.modalContainer {
+  width: 400px;
+  height: 500px;
+  border-radius: 20px;
+  background-color: #FDFDFD;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -250px;
+}
+
+.modalContainer > h1 {
+  font-size: 20px;
+  margin: 30px 40px;
+  color: #656565;
+}
+
+.modalContainer > div {
+  position: absolute;
+  bottom: 25px;
+  left: 120px;
+}
+
+.sort {
+  z-index: 2;
+  color: #827870;
+  background-color: #EBE7E3;
+  width: 130px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.default {
+  position: relative;
+  left: 13px;
+  bottom: 1px;
+  line-height: 30px;
+  font-size: small;
+}
+
+.dropdown > li {
+  font-size: small;
+  list-style: none;
+  padding: 7px 13px;
+}
+
+.dropdown > li:last-child {
+  border-radius: 0 0 10px 10px;
+}
+
+.dropdown > li:hover {
+  background-color: #DFDAD4;
+}
+
+.modalContainer > span {
+  position: absolute;
+  right: 60px;
+  top: 87px;
+}
