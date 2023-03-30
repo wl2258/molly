@@ -11,6 +11,7 @@ import RegisterPet from './pages/pet/RegisterPet';
 import LogIn from './pages/LogIn';
 import First from './pages/First';
 import DetailPet from './pages/pet/DetailPet';
+import LoginRedirect from './pages/LoginRedirect';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<First />}/>
         <Route path="/login" element={<LogIn />}/>
+        <Route path="/login/oauth2/code/kakao" element={<LoginRedirect />}/>
         <Route path="/home" element={<Home />}/>
         <Route path="/home/:id" element={<Home />}/>
         <Route path="/login" element={<LogIn />}/>
