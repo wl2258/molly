@@ -48,4 +48,12 @@ public class Account extends BaseTimeEntity {
     public void changeEmail(String email) {
         this.email = email;
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeProfileImage(ImageFile imageFile) {
+            this.accountProfileImage = imageFile;
+    }
 }
