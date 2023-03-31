@@ -27,15 +27,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtProcess jwtProcess;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
 
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
 
         Account account = principal.getAccount();
-        String jwtToken = jwtProcess.create(principal);
-        response.addHeader(JwtVO.HEADER, jwtToken);
 
         // TODO: 인증에 성공하면 접근 실패한 uri를 http://localhost:3000/ 뒤에 추가해서 리다이렉트 시키기!!
         String additionalInputUri = "";
@@ -44,13 +41,21 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             additionalInputUri = "home/signup";
         }
 
-        String redirectUrl = makeRedirectUrl(additionalInputUri);
+        String redirectUrl = makeRedirectUrl(additionalInputUri, principal);
         log.info("redirectUrl={}", redirectUrl);
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 
-    private String makeRedirectUrl(String uri) {
-        return UriComponentsBuilder.fromUriString("http://localhost:3000/" + uri).build().toUriString();
+    private String makeRedirectUrl(String uri, PrincipalDetails principal) {
+
+        String jwtToken = jwtProcess.create(principal);
+
+        Account account = principal.getAccount();
+
+        return UriComponentsBuilder.fromUriString("http://localhost:3000/" + uri)
+                .queryParam("accountId", account.getId())
+                .queryParam("accessToken", jwtToken)
+                .build().toUriString();
     }
 }
