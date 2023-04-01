@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import styles from '../css/First.module.css'
 import styled from 'styled-components';
 import { MdArrowForwardIos } from 'react-icons/md';
@@ -17,6 +17,11 @@ let CustomNavLink = styled(NavLink)`
 
 const First = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const accountId = params.get('accountId');
+  const accessToken = params.get('accessToken');
 
   return (
     <div style={{zIndex:"3"}}>
@@ -75,6 +80,7 @@ const First = () => {
         <h1>molly</h1>
         <span><MdArrowForwardIos size="50px" color="rgba(235, 231, 227, 40)"/></span>
       </div>
+      {console.log(accountId, accessToken)}
     </div>
   );
 };

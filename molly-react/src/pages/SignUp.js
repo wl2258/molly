@@ -23,9 +23,7 @@ const SignUp = () => {
   const params = new URLSearchParams(location.search);
 
   const accountId = params.get('accountId');
-  const accessToken = params.get('accessToken')
-
-  localStorage.setItem('token', accessToken);
+  const accessToken = params.get('accessToken');
 
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
@@ -64,7 +62,7 @@ const SignUp = () => {
           </div>
           <span><Button name="저장"/></span>
         </form>
-        {console.log(accountId)}
+        {console.log(accountId, accessToken)}
       </div>
     </div>
   );
