@@ -1,0 +1,154 @@
+.header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #FAF5F1;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.navcontainer {
+  flex-grow: 8;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-around;
+}
+
+.logo {
+  flex-grow: 0.5;
+}
+
+.logo > img {
+  margin-top: 15px;
+}
+
+.icon {
+  display: flex;
+  flex-grow: 1.5;
+  position: relative;
+}
+
+.icon > div {
+  display: flex;
+  flex-grow: 1;
+}
+
+.empty {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.iconempty {
+  flex-grow: 0.5;
+}
+
+.navuser > ul:first-child {
+  position: absolute;
+  top: 50px;
+  right: 11.5%;
+}
+
+.userinfo {
+  width: 100px;
+  background-color: #E1D8D0;
+  border-radius: 10px;
+}
+
+.userdropdown > li {
+  font-weight: bold;
+  font-size: 13px;
+  list-style: none;
+  padding: 5px 10px;
+  border-top: 1px solid #F5F5F5;
+  text-align: center;
+}
+
+.userdropdown > li:first-child {
+  border-radius: 10px 10px 0 0;
+}
+
+.userdropdown > li:nth-child(2) {
+  border-radius: 0 0 10px 10px;
+}
+
+.userdropdown > li:hover {
+  background-color: #d7cdc4;
+}
+
+.navuser > ul:nth-child(2) {
+  position: absolute;
+  top: 50px;
+  right: 7%;
+}
+
+.petinfo {
+  position: fixed;
+  right: 115px;
+  width: 90px;
+  background-color: #E1D8D0;
+  border-radius: 10px;
+}
+
+.petdropdown > li {
+  font-weight: bold;
+  font-size: 14px;
+  list-style: none;
+  padding: 10px 10px;
+  text-align: center;
+}
+
+.petdropdown > li:first-child {
+  border-radius: 10px 10px 0 0;
+}
+
+.petdropdown > li:last-child {
+  color: #646464;
+  font-size: 10px;
+  border-radius: 0 0 10px 10px ;
+}
+
+.petdropdown > li:hover {
+  background-color: #D6CABF;
+}
+
+.navuser > ul:nth-child(3){
+  position: absolute;
+  top: 50px;
+  right: 3%;
+}
+
+.alarm {
+  width: 200px;
+  background-color: #FCFCFC;
+  border-radius: 10px;
+  box-shadow: 2px 4px 2px lightgray;
+  padding: 5px 7px 3px 10px;
+}
+
+.alarmdropdown > li {
+  list-style: none;
+}
+
+.alarmdropdown > li:first-child {
+  border-radius: 10px 10px 0 0;
+}
+
+.alarmdropdown > li:last-child {
+  border-radius: 0 0 10px 10px ;
+}
+
+.alarmdropdown > li > p:first-child {
+  font-size: 10px;
+  color: #AFAFAF;
+  padding: 0 5px;
+}
+
+.alarmdropdown > li > p:nth-child(2) {
+  font-size: 12px;
+  padding: 0 10px;
+}

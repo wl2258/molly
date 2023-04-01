@@ -1,0 +1,32 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F9F9F9;
+  display: flex;
+  justify-content: center;
+}
+
+.login {
+  margin-top: 130px;
+  position: relative;
+}
+
+.login > div {
+  display: flex;
+  justify-content: center;
+}
+
+.login > p:nth-child(2){
+  font-size: 13px;
+  color: #AFA79F;
+  position: absolute;
+  left: 83px;
+}
+
+.login > p:nth-child(3) {
+  padding-top: 80px;
+  font-size: 15px;
+  color: #645C56;
+  font-weight: 600;
+  padding-left: 50px;
+}

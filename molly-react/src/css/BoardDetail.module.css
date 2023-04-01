@@ -1,0 +1,136 @@
+.board {
+  background-color: #F9F9F9;
+  margin-top: 200px;
+  position: relative;
+}
+
+.board > h2 {
+  color: #645C56;
+  padding: 35px 60px 0;
+}
+
+.board > span:nth-child(2) {
+  position: absolute;
+  left: 63px;
+  top: 85px;
+  color: #A19C97;
+}
+
+.board > span:nth-child(3){
+  position: absolute;
+  left: 85px;
+  top: 82px;
+  color: #A19C97;
+}
+
+.board > span:nth-child(4){
+  position: absolute;
+  left: 176px;
+  top: 83px;
+  color: #A19C97;
+}
+
+.board > p {
+  padding-left: 63px;
+  padding-top: 50px;
+  color: #787471;
+}
+
+.board > img {
+  padding-left: 63px;
+}
+
+.count {
+  padding-left: 62px;
+  padding-top: 70px;
+}
+
+.count > span:nth-child(1) {
+  color: #B27910;
+  position: absolute;
+  left: 60px;
+  bottom: 16px;
+}
+
+.count > span:nth-child(2) {
+  color: #B27910;
+  position: absolute;
+  left: 80px;
+  bottom: 19px;
+}
+
+.count > span:nth-child(3) {
+  color: #B27910;
+  position: absolute;
+  left: 100px;
+  bottom: 18px;
+}
+
+.count > span:nth-child(4) {
+  color: #B27910;
+  position: absolute;
+  left: 117px;
+  bottom: 19px;
+}
+
+.comment {
+  background-color: #F9F9F9;
+  padding: 30px 20px;
+  border-top: 1px solid #B2ACA7;
+  position: relative;
+  min-height: 50px;
+}
+
+.comment > span:nth-child(1) {
+  color: #87827F;
+  position: absolute;
+  left: 60px;
+}
+
+.comment > span:nth-child(2) {
+  color: #87827F;
+  font-weight: 700;
+  position: absolute;
+  left: 80px;
+  top: 27px;
+}
+
+.comment > span:nth-child(3) {
+  color: #87827F;
+  font-size: small;
+  position: absolute;
+  left: 175px;
+  top: 30px;
+}
+
+.comment > span:nth-child(4) {
+  color: #87827F;
+  position: absolute;
+  left: 70px;
+  top: 60px;
+}
+
+.footer {
+  background-color: #F9F9F9;
+  padding: 20px 60px;
+  border-top: 1px solid #B2ACA7;
+}
+
+.footer > input {
+  width: 70%;
+  height: 34px;
+  border-radius: 10px;
+  background-color: #E9E5E3;
+  border: none;
+  margin-right: 10px;
+  padding-left: 15px;
+  caret-color: #C7C3BF;
+}
+
+.footer > input:focus {
+  outline: none;
+}
+
+.footer > input::placeholder {
+  color: #b4b1ad;
+}
