@@ -18,6 +18,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Slf4j
 @Configuration
@@ -49,6 +52,8 @@ public class SecurityConfig {
         http.headers().frameOptions().disable(); // iframe 허용안함
         http.csrf().disable(); // csrf 허용안함
 
+        http.cors().configurationSource(configurationSource());
+
         // 인증 실패 처리
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
             CustomResponseUtil.redirect(response, "http://localhost:3000/login");
@@ -79,5 +84,21 @@ public class SecurityConfig {
                 .userInfoEndpoint().userService(oAuth2UserService);
 
         return http.build();
+    }
+
+    public CorsConfigurationSource configurationSource() {
+
+        log.debug("디버그: configurationSource cors 설정이 SecurityFilterChain에 등록된다.");
+
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (Javascript 요청 허용)
+        configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용 (프론트 엔드 ip만 허용하도록 할 수도 있다.)
+        configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 주소요청에 위 설정을 적용
+
+        return source;
     }
 }
