@@ -4,12 +4,14 @@ import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Getter
 @DiscriminatorValue("C")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cat extends Pet{
