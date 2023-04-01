@@ -18,12 +18,18 @@ const SignUp = () => {
   }, []);
 
   const [imgFile, setImgFile] = useState("");
+  const [nickname, setNickName] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const imgRef = useRef();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
   const accountId = params.get('accountId');
   const accessToken = params.get('accessToken');
+
+  const handleChange = (e) => {
+    setNickName(e.target.value);
+  }
 
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
@@ -33,11 +39,58 @@ const SignUp = () => {
         setImgFile(reader.result);
     };
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    formData.append("accountProfileImage", imgRef.current.files[0]);
+
+    fetch(`http://localhost:8080/api/account/${accountId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type" : "multipart/form-data",
+        Authorization: accessToken
+      },
+      body: formData,
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(res.code === -1 && res.data !== null) {
+        alert(res.data.nickname);
+      } else {
+        alert(res.msg);
+      }
+    })  
+  }
+
+  const checkDuplicate = (e) => {
+    fetch(`http://localhost:8080/api/account/duplicate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken
+      },
+      body: JSON.stringify({
+        nickname : nickname
+      })
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(res.code === 1) {
+        alert(res.msg);
+        setDisabled(true);
+      } else {
+        alert(res.msg);
+        setDisabled(false);
+      }
+    })  
+  }
   
   return (
     <div className={styles.container}>
       <div className={styles.modalContainer}>
-        <form encType="multipart/form-data">
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <label htmlFor="profileImg">
             <div className={styles.profileuser}>
               <img
@@ -49,6 +102,7 @@ const SignUp = () => {
           </label>
           <label className={styles.profilelabel} htmlFor="profileImg">프로필 이미지 추가</label>
           <input
+            name="accountProfileImage"
             className={styles.profileinput}
             type="file"
             accept="image/*"
@@ -57,12 +111,20 @@ const SignUp = () => {
             ref={imgRef}
           />
           <div className={styles.modal}>
-            <input placeholder="닉네임"></input>
-            <span>중복확인</span>
+            <input 
+              name="nickname"
+              type="text" 
+              value={nickname} 
+              onChange={handleChange} 
+              placeholder="닉네임"
+              required
+            />
+            <span onClick={checkDuplicate}>중복확인</span>
           </div>
-          <span><Button name="저장"/></span>
+          {disabled ? 
+            <span><Button disabled={disabled} name="저장"/></span> 
+            : <span><Button disabled={disabled} name="저장" bgcolor="#D6CCC3"/></span>}
         </form>
-        {console.log(accountId, accessToken)}
       </div>
     </div>
   );

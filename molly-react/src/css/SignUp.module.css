@@ -66,6 +66,7 @@
   position: absolute;
   right: -60px;
   bottom: 28px;
+  cursor: pointer;
 }
 
 .profilelabel {
