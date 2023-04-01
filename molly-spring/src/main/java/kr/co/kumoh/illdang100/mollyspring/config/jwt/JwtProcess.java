@@ -48,8 +48,7 @@ public class JwtProcess {
         String role = decodedJWT.getClaim("role").asString();
 
         Account account = Account.builder().id(id).role(AccountEnum.valueOf(role)).build();
-        PrincipalDetails principalDetails = new PrincipalDetails(account);
 
-        return principalDetails;
+        return new PrincipalDetails(account);
     }
 }

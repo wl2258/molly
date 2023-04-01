@@ -1,7 +1,9 @@
 package kr.co.kumoh.illdang100.mollyspring.config;
 
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthorizationFilter;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtProcess;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.CustomOAuth2UserService;
+import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2FailureHandler;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2SuccessHandler;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
 import kr.co.kumoh.illdang100.mollyspring.util.CustomResponseUtil;
@@ -24,19 +26,20 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
+
+    private final JwtProcess jwtProcess;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 모든 필터 등록은 여기서!!
     public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity> {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-//            http.addFilter(new JwtAuthenticationFilter(authenticationManager));
-            http.addFilter(new JwtAuthorizationFilter(authenticationManager));
+            http.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProcess));
         }
     }
 
@@ -48,7 +51,7 @@ public class SecurityConfig {
 
         // 인증 실패 처리
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-            CustomResponseUtil.fail(response, "로그인을 진행해 주세요", HttpStatus.UNAUTHORIZED);
+            CustomResponseUtil.redirect(response, "http://localhost:3000/login");
         });
 
         // 권한 실패
@@ -56,16 +59,9 @@ public class SecurityConfig {
             CustomResponseUtil.fail(response, "권한이 없습니다", HttpStatus.FORBIDDEN);
         });
 
-        /*
-         * SessionCreationPolicy.STATELESS
-         * 클라이언트가 로그인 request
-         * 서버는 User 세션 저장
-         * 서버가 response
-         * 세션값 사라짐. (즉 유지하지 않음)
-         */
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.formLogin().disable();
-        // httpBasic()은 브라우저가 팝업창을 이용해서 사용자 인증을 진행한다.
         http.httpBasic().disable();
 
         // 필터 적용
@@ -78,9 +74,9 @@ public class SecurityConfig {
 
         http
                 .oauth2Login().loginPage("/token/expired")
-                .defaultSuccessUrl("/login-success")    // oauth2 인증이 성공했을 때, 이동되는 url 설정
                 .successHandler(oAuth2SuccessHandler)
-                .userInfoEndpoint().userService(oAuth2UserService); // 로그인이 성공하면 해당 유저의  정보를 들고 customOAuth2UserService에서 후처리 해주겠다는 의미
+                .failureHandler(oAuth2FailureHandler)
+                .userInfoEndpoint().userService(oAuth2UserService);
 
         return http.build();
     }

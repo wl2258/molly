@@ -61,20 +61,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         } else {
             log.error("지원하지 않는 소셜 로그인");
-            // TODO: 예외 발생시키고 FailureHandler 처리하기!!
-            throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인");
-//            throw new OAuth2AuthenticationException(new OAuth2Error("invalid_request", "The requested provider is not supported", null), "The requested provider is not supported");
+            throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다.");
         }
 
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
 
-        // TODO: 소셜 로그인 후 입력 못받은 정보 따로 입력받기
-        // 입력 못받은 정보 있으면 추가 정보 입력 받는 페이지로 리다이렉트??
         Account account;
         String oauthEmail = oAuth2UserInfo.getEmail();
         if (accountOptional.isEmpty()) {
 
-            // user의 패스워드가 null이기 때문에 OAuth 유저는 일반적인 로그인을 할 수 없음.
             account = Account.builder()
                     .username(username)
                     .email(oauthEmail)
@@ -83,13 +78,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             accountRepository.save(account);
         } else {
             account = accountOptional.get();
-
-            String email = account.getEmail();
-            if (!oauthEmail.equals(email)) {
-                account.changeEmail(oauthEmail);
-
-                accountRepository.save(account);
-            }
         }
 
         return new PrincipalDetails(account, oAuth2User.getAttributes());

@@ -1,7 +1,5 @@
 package kr.co.kumoh.illdang100.mollyspring.config.jwt;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /*
     SECRET은 노출되면 안된다. (클라우드AWS - 환경변수, 파일에 있는 것을 읽을 수 있다.)
     리프래시 토큰 (X)
