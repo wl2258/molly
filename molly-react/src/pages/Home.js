@@ -20,7 +20,7 @@ let Schedule = styled.div`
 `
 
 const Home = () => {
-  let {id} = useParams();
+  let {id} = useParams(); 
 
   return (
     <div>

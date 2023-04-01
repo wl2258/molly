@@ -21,22 +21,55 @@ const First = () => {
   return (
     <div style={{zIndex:"3"}}>
       <header className={styles.header}>
-        <div className={styles.logo}>
-          <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="120px"/>
-        </div>
-        <div className={styles.navcontainer}>
-          <nav>
-            <CustomNavLink 
-              style={({ isActive }) => (isActive ? "active" : "")}
-              to="/list">
-                Community
-            </CustomNavLink>
-          </nav>
-        </div>
         <div className={styles.user}>
           <h4 onClick={() => navigate('/login')}>로그인</h4>
         </div>
-        <div style={{flexGrow: "0.2"}}/>
+        <div className={styles.container}>
+          <div style={{flexGrow: "1"}} />
+          <div className={styles.logo}>
+            <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="120px"/>
+          </div>
+          <div className={styles.navcontainer}>
+            <nav className={styles.navigation}>
+              <div>
+                <CustomNavLink 
+                  style={({ isActive }) => (isActive ? "active" : "")}
+                  to="/home">
+                    Home
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink 
+                  style={({ isActive }) => (isActive ? "active" : "")}
+                  to="/calendar">
+                    Calendar
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink
+                  style={({ isActive }) => (isActive ? "active" : "")} 
+                  to="/list">
+                    Community
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink 
+                  style={({ isActive }) => (isActive ? "active" : "")}
+                  to="/hospital">
+                    Hospital
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink
+                  style={({ isActive }) => (isActive ? "active" : "")} 
+                  to="/about">
+                    About
+                </CustomNavLink>
+              </div>
+            </nav>
+          </div>
+          <div style={{flexGrow: "1"}} />
+        </div>
       </header>
       <div className={styles.banner}>
         <h1>molly</h1>

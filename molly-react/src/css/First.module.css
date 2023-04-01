@@ -3,9 +3,39 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: 80px;
+  height: 120px;
   background-color: #FAF5F1;
+}
+
+.user {
   display: flex;
+  justify-content: end;
+  padding-right: 5%;
+  padding-top: 10px;
+}
+
+.user > h4 {
+  font-size: 13px;
+  color: #827870;
+}
+
+.container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-top: 35px;
+}
+
+.navcontainer {
+  flex-grow: 8;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-around;
 }
 
 .logo {
@@ -14,30 +44,13 @@
 
 .logo > img {
   padding-top: 15px;
-  padding-left: 30px;
-}
-
-.navcontainer {
-  flex-grow: 3;
-}
-
-.navcontainer > nav {
-  padding-top: 30px;
-}
-
-.user > h4 {
-  display: inline-block;
-  padding-top: 15px;
-  padding-right: 30px;
-  font-size: 13px;
-  color: #827870;
 }
 
 .banner {
   height: 480px;
   background-color: #FAF5F1;
   position: relative;
-  margin-top: 80px;
+  margin-top: 120px;
 }
 
 .banner > h1 {
