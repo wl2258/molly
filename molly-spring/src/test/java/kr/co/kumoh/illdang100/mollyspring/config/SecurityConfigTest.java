@@ -26,14 +26,14 @@ public class SecurityConfigTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/s/hello"));
+        ResultActions resultActions = mvc.perform(get("/api/auth/hello"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         int httpStatusCode = resultActions.andReturn().getResponse().getStatus();
         System.out.println("테스트 : " + responseBody);
         System.out.println("테스트 : " + httpStatusCode);
 
         // then
-        assertThat(httpStatusCode).isEqualTo(401);
+        assertThat(httpStatusCode).isEqualTo(302);
     }
 
     @Test
@@ -49,8 +49,8 @@ public class SecurityConfigTest {
         System.out.println("테스트 : " + httpStatusCode);
 
         // then
-        // 로그인이 되어 있지 않은 상태이므로 403이 아닌 401 에러가 발생하는 것이 맞다.
-        assertThat(httpStatusCode).isEqualTo(401);
+        // 인증 예외 발생: 로그인 페이지로 리다이렉트
+        assertThat(httpStatusCode).isEqualTo(302);
 
     }
 }
