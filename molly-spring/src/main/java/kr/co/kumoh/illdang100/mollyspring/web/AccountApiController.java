@@ -2,7 +2,6 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.service.AccountService;
-import kr.co.kumoh.illdang100.mollyspring.util.CustomResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +33,12 @@ public class AccountApiController {
     }
 
     @PostMapping("/account/{accountId}")
+    @ResponseStatus(HttpStatus.OK)
     public void completeRegistration(@PathVariable Long accountId,
-                                                  @RequestBody @Valid SaveAccountRequest saveAccountRequest,
+                                     @Valid SaveAccountRequest saveAccountRequest,
                                                   BindingResult bindingResult,
                                                   HttpServletResponse response) throws IOException {
 
         accountService.saveAdditionalAccountInfo(accountId, saveAccountRequest);
-
-        CustomResponseUtil.redirect(response, "http://localhost:3000/");
     }
 }
