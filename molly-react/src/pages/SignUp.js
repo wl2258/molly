@@ -23,9 +23,9 @@ const SignUp = () => {
   const imgRef = useRef();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
+  let color = disabled ? "#B27910" : "#D6CCC3";
 
   const accountId = params.get('accountId');
-  const accessToken = params.get('accessToken');
 
   const handleChange = (e) => {
     setNickName(e.target.value);
@@ -50,7 +50,6 @@ const SignUp = () => {
       method: "POST",
       headers: {
         "Content-Type" : "multipart/form-data",
-        Authorization: accessToken
       },
       body: formData,
     })
@@ -58,7 +57,7 @@ const SignUp = () => {
     .then(res => {
       if(res.code === -1 && res.data !== null) {
         alert(res.data.nickname);
-      } else {
+      } else if(res.code === -1 && res.data === null) {
         alert(res.msg);
       }
     })  
@@ -69,7 +68,6 @@ const SignUp = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: accessToken
       },
       body: JSON.stringify({
         nickname : nickname
@@ -121,9 +119,7 @@ const SignUp = () => {
             />
             <span onClick={checkDuplicate}>중복확인</span>
           </div>
-          {disabled ? 
-            <span><Button disabled={disabled} name="저장"/></span> 
-            : <span><Button disabled={disabled} name="저장" bgcolor="#D6CCC3"/></span>}
+          <span><Button disabled={disabled} name="저장" bgcolor={color}/></span>
         </form>
       </div>
     </div>
