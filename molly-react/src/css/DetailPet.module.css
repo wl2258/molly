@@ -1,0 +1,10 @@
+.container > h1 {
+  display: inline-block;
+  margin-left: 30px;
+  font-size: 30px;
+}
+
+.container > h4 {
+  color: #827870;
+  display: inline-block;
+}
