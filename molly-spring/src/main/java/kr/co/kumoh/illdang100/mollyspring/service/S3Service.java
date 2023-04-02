@@ -69,6 +69,15 @@ public class S3Service {
 
         String imageUrl = amazonS3Client.getUrl(bucket, storeFileName).toString();
 
-        return new ImageFile(originalFilename, imageUrl);
+        return new ImageFile(originalFilename, storeFileName, imageUrl);
+    }
+
+    /**
+     * 파일 삭제
+     */
+    public void delete(String storeFileName) {
+        boolean isExistObject = amazonS3Client.doesObjectExist(bucket, storeFileName);
+        if (isExistObject)
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, storeFileName));
     }
 }
