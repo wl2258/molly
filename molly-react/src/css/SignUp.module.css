@@ -9,7 +9,7 @@
 }
 
 .modalContainer {
-  width: 520px;
+  width: 480px;
   height: 200px;
   border-radius: 30px;
   background-color: #FDFDFD;
@@ -26,10 +26,16 @@
   top: 35px;
 }
 
+.modalContainer > form > span {
+  position: absolute;
+  bottom: -10px;
+  right: -240px;
+}
+
 .modal {
   position: absolute;
-  right: 35px;
-  top: 70px;
+  left: 130px;
+  top: 35px;
 }
 
 .modal > input {
@@ -55,7 +61,12 @@
 }
 
 .modal > span {
-  margin-left: 10px;
+  font-size: 13px;
+  color: #827870;
+  position: absolute;
+  right: -60px;
+  bottom: 28px;
+  cursor: pointer;
 }
 
 .profilelabel {
@@ -73,6 +84,7 @@
   border-radius: 70%;
   overflow: hidden;
   margin-right: 60px;
+  cursor: pointer;
 }
 
 .profileinput[type="file"] {

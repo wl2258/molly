@@ -18,12 +18,13 @@ const Header = () => {
   const [userView, setUserView] = useState(false);
   const [petView, setPetView] = useState(false);
   const [alarmView, setAalarmView] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div style={{zIndex:"3"}}>
       <header className={styles.header}>
         <div className={styles.empty}/>
-        <div className={styles.logo}>
+        <div className={styles.logo} onClick={() => navigate('/')}>
           <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="120px"/>
         </div>
         <div className={styles.navcontainer}>

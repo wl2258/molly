@@ -22,12 +22,12 @@ const DetailPet = () => {
       neutered: false,
       surgery: [
         {
-          surgeryname: '수직이도성형술',
-          surgerydate: '2023/02/18'
+          "surgeryName": "수직이도성형술",
+					"surgeryDate": "2023-01-01"
         },
         {
-          surgeryname: '유선종양제거',
-          surgerydate: '2023/03/05'
+          "surgeryName": "수술",
+					"surgeryDate": "2023-03-06"
         }
       ],
       medication: [
@@ -57,18 +57,81 @@ const DetailPet = () => {
   ])
 
   let detail = text.filter((item) => item.id === parseInt(id));
+  let gender = detail[0].gender === 'female' ? true : false;
+  let neutered = detail[0].neutered === true ? true : false;
+  let surgery = detail[0].surgery[0] === undefined ? false : true;
 
   return (
     <div>
       <Header />
       <CustomBody>
-        <img
-          className={styles.profileimg}
-          src={process.env.PUBLIC_URL + '/img/profile.png'}
-          alt="프로필 이미지"
-          width="70px"
-        />
-        <h1>{detail[0].name}</h1>
+        <div className={styles.container}>
+          <img
+            className={styles.profileimg}
+            src={process.env.PUBLIC_URL + '/img/profile.png'}
+            alt="프로필 이미지"
+            width="70px"
+          />
+          <h1>{detail[0].name}</h1>
+          <br/>
+          <h4>품종</h4>
+          <span>{detail[0].species}</span>
+          <br/>
+          <h4>생일</h4>
+          <span>{detail[0].birthday}</span>
+          <h4>몸무게</h4>
+          <span>{detail[0].weight}kg</span>
+          <br/>
+          <h4>성별</h4>
+          <label className={styles.radio}>
+            <input type="radio" readOnly={true} value="암컷" checked={gender}/>
+            <span>암컷</span>
+            <input type="radio" readOnly={true} value="수컷" checked={!gender}/>
+            <span>수컷</span>
+          </label>
+          <br/>
+          <h4>중성화</h4>
+          <label className={styles.radio}>
+            <input type="radio" readOnly={true} value="함" checked={neutered}/>
+            <span>함</span>
+            <input type="radio" readOnly={true} value="안 함" checked={!neutered}/>
+            <span>안 함</span>
+          </label>
+          <br/>
+          <h4>수술이력</h4>
+          <label className={styles.radio}>
+            <input type="radio" readOnly={true} value="있음" checked={surgery}/>
+            <span>있음</span>
+            <input type="radio" readOnly={true} value="없음" checked={!surgery}/>
+            <span>없음</span>
+          </label>
+          <br/>
+          {surgery ? 
+            detail[0].surgery.map((item) => {
+              return (
+                <div>
+                  <span>{item.surgeryDate}</span>
+                  <span>{item.surgeryName}</span>
+                  <br/>
+                </div>
+              )
+            })
+            : null}
+          <h4>복용약</h4>
+          {
+            detail[0].medication.map((item) => {
+              return (
+                <div>
+                  <p>{item.medicationName}</p>
+                  <span>{item.medicationStart}</span>
+                  <span>{item.medicationEnd}</span>
+                </div>
+              )
+            })
+          }
+          <br/>
+          <h4>주의할 점</h4>
+        </div>
       </CustomBody>
     </div>
   );
