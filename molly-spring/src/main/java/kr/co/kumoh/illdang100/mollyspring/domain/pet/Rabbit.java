@@ -24,4 +24,13 @@ public class Rabbit extends Pet{
         super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage, caution);
         this.rabbitSpecies = rabbitSpecies;
     }
+
+    public boolean compareRabbitSpecies(RabbitEnum rabbitSpecies) {
+        if (this.rabbitSpecies != rabbitSpecies) return false;
+        return true;
+    }
+
+    public void updateRabbitSpecies(RabbitEnum rabbitSpecies) {
+        this.rabbitSpecies = rabbitSpecies;
+    }
 }
