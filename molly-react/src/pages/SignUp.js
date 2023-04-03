@@ -19,11 +19,15 @@ const SignUp = () => {
 
   const [imgFile, setImgFile] = useState("");
   const [nickname, setNickName] = useState("");
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [duplicate, setDuplicate] = useState(0);
+  const [effective, setEffective] = useState(false);
+  const [warning, setWarning] = useState(false);
+
   const imgRef = useRef();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  let color = disabled ? "#B27910" : "#D6CCC3";
+  let color = disabled ? "#D6CCC3" : "#B27910";
 
   const accountId = params.get('accountId');
 
@@ -44,23 +48,39 @@ const SignUp = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("nickname", nickname);
-    formData.append("accountProfileImage", imgRef.current.files[0]);
+    if(imgRef.current.files[0] !== undefined) {
+      formData.append("accountProfileImage", imgRef.current.files[0]);
+    }
 
     fetch(`http://localhost:8080/api/account/${accountId}`, {
       method: "POST",
-      headers: {
-        "Content-Type" : "multipart/form-data",
-      },
       body: formData,
     })
-    .then(res => res.json())
+    .then(res => {
+      if(res.status === 200) {
+        window.location.replace("/");
+      }
+      else res.json()
+    })
     .then(res => {
       if(res.code === -1 && res.data !== null) {
-        alert(res.data.nickname);
+        console.log(res.data.nickname);
       } else if(res.code === -1 && res.data === null) {
-        alert(res.msg);
+        console.log(res.msg);
       }
     })  
+  }
+
+  const checkNickname = (e) => {
+    const regExp = /^[가-힣a-zA-Z]{1,10}$/;
+    if(regExp.test(e.target.value) === true) {
+      setEffective(true);
+      setWarning(false);
+    }
+    else { 
+      setEffective(false);
+      setWarning(true);
+    }
   }
 
   const checkDuplicate = (e) => {
@@ -76,11 +96,13 @@ const SignUp = () => {
     .then(res => res.json())
     .then(res => {
       if(res.code === 1) {
-        alert(res.msg);
-        setDisabled(true);
+        effective === true ? setDisabled(false) : setDisabled(true);
+        setWarning(false);
+        setDuplicate(2);
       } else {
-        alert(res.msg);
-        setDisabled(false);
+        setDisabled(true);
+        setWarning(false);
+        setDuplicate(1);
       }
     })  
   }
@@ -116,9 +138,16 @@ const SignUp = () => {
               onChange={handleChange} 
               placeholder="닉네임"
               required
+              onBlur={checkNickname}
             />
             <span onClick={checkDuplicate}>중복확인</span>
           </div>
+          {
+            warning === false ? null :
+            <span style={{left: "173px"}} className={styles.duplicatepass}>한글 또는 영어를 사용하여<br/>10자 이내로 작성해주세요.</span>}
+          {duplicate === 0 ? null : 
+            duplicate === 1 ? <span style={{color:"red"}} className={styles.duplicatepass}>사용 불가능한 닉네임입니다.</span> 
+              : <span className={styles.duplicatepass}>사용 가능한 닉네임입니다.</span>}
           <span><Button disabled={disabled} name="저장" bgcolor={color}/></span>
         </form>
       </div>
