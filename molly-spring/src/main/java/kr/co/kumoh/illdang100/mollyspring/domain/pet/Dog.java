@@ -24,4 +24,13 @@ public class Dog extends Pet{
         super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage, caution);
         this.dogSpecies = dogSpecies;
     }
+
+    public boolean compareDogSpecies(DogEnum dogSpecies) {
+        if (this.dogSpecies != dogSpecies) return false;
+        return true;
+    }
+
+    public void updateDogSpecies(DogEnum dogSpecies) {
+        this.dogSpecies = dogSpecies;
+    }
 }
