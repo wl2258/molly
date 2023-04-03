@@ -24,4 +24,13 @@ public class Cat extends Pet{
         super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage, caution);
         this.catSpecies = catSpecies;
     }
+
+    public boolean compareCatSpecies(CatEnum catSpecies) {
+        if (this.catSpecies != catSpecies) return false;
+        return true;
+    }
+
+    public void updateCatSpecies(CatEnum catSpecies) {
+        this.catSpecies = catSpecies;
+    }
 }
