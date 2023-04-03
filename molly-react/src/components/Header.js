@@ -18,12 +18,13 @@ const Header = () => {
   const [userView, setUserView] = useState(false);
   const [petView, setPetView] = useState(false);
   const [alarmView, setAalarmView] = useState(false);
+  const navigate = useNavigate();
 
   return (
-    <div>
+    <div style={{zIndex:"3"}}>
       <header className={styles.header}>
         <div className={styles.empty}/>
-        <div className={styles.logo}>
+        <div className={styles.logo} onClick={() => navigate('/')}>
           <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="120px"/>
         </div>
         <div className={styles.navcontainer}>
@@ -31,7 +32,7 @@ const Header = () => {
             <div>
               <CustomNavLink 
                 style={({ isActive }) => (isActive ? "active" : "")}
-                to="/">
+                to="/home">
                   Home
               </CustomNavLink>
             </div>
@@ -102,12 +103,15 @@ const UserDropdown = () => {
 
 const PetDropdown = () => {
   let navigate = useNavigate();
+  const [pet] = useState(['까까', '보리', '마루']);
 
   return (
     <div className={styles.petdropdown}>
-      <li onClick={() => {}}>까까</li>
-      <li onClick={() => {}}>마루</li>
-      <li onClick={() => {}}>보리</li>
+      {pet.map((item, index) => {
+        return (
+          item !== '' && <li onClick={() => {navigate(`/detailpet/${index+1}`)}}>{item}</li>
+        )
+      })}
       <li onClick={() => {navigate('/registerpet')}}>추가하기</li>
     </div>
   )

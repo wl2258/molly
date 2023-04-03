@@ -5,6 +5,8 @@ import Description from '../components/home/Description';
 import Graph from '../components/home/Graph';
 import Month from '../components/home/Month';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import SignUp from './SignUp';
 
 let CustomBody = styled.body`
   margin-top: 140px;
@@ -18,6 +20,8 @@ let Schedule = styled.div`
 `
 
 const Home = () => {
+  let {id} = useParams(); 
+
   return (
     <div>
       <Header />
@@ -34,6 +38,7 @@ const Home = () => {
           <Description />
         </div>
       </CustomBody>
+      {id === 'signup' && <SignUp />}
     </div>
   );
 };

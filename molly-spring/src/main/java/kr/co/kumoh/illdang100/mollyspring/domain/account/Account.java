@@ -19,16 +19,10 @@ public class Account extends BaseTimeEntity {
     @Column(name = "account_id")
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 25)
+    @Column(unique = true, nullable = false, length = 30)
     private String username;
 
-    @Column(unique = false, length = 60) // 패스워드 인코딩(BCrypt)
-    private String password;
-
-    @Column(unique = false, length = 20)
-    private String fullName;
-
-    @Column(unique = true, length = 20)
+    @Column(unique = true, length = 10)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -42,14 +36,24 @@ public class Account extends BaseTimeEntity {
     private ImageFile accountProfileImage;
 
     @Builder
-    public Account(Long id, String username, String password, String fullName, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
+    public Account(Long id, String username, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
         this.id = id;
         this.username = username;
-        this.password = password;
-        this.fullName = fullName;
         this.nickname = nickname;
         this.role = role;
         this.email = email;
         this.accountProfileImage = accountProfileImage;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeProfileImage(ImageFile imageFile) {
+            this.accountProfileImage = imageFile;
     }
 }

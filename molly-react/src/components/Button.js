@@ -4,13 +4,14 @@ import { MdNavigateNext } from 'react-icons/md';
 
 
 let CustomButton = styled.button`
-  background-color: #B27910;
+  background-color: ${(props) => props.bgColor || "#B27910"};
   color: white;
   border: none;
   border-radius: 10px;
   font-weight: 800;
-  padding: 8px 10px 5px 10px;
+  padding: 9px 10px 6px 10px;
   margin: 10px;
+  cursor: pointer;
 `;
 
 const NextButton = (props) => {
@@ -29,7 +30,7 @@ const NextButton = (props) => {
 
 const Button = (props) => {
   return (
-    <CustomButton onClick={props.onClick}>
+    <CustomButton bgColor={props.bgcolor} type={props.type} disabled={props.disabled} onClick={props.onClick}>
       <h4 style={{ fontSize: "14px", margin:"0.5px 4px 4px" }}>{props.name}</h4>
     </CustomButton>
   );

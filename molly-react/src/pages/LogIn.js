@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from '../css/LoginTest.module.css';
+import styles from '../css/Login.module.css';
 
-const LoginTest = () => {
+const Login = () => {
   const KAKAO_AUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
   const GOOGLE_AUTH_URL = `http://localhost:8080/oauth2/authorization/google`;
   
@@ -33,4 +33,4 @@ const LoginTest = () => {
   );
 };
 
-export default LoginTest;
+export default Login;
