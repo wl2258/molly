@@ -12,11 +12,11 @@ import javax.persistence.Embeddable;
 public class ImageFile  {
     private String uploadFileName;
     private String storeFileName;
-    private String storeFileURL;
+    private String storeFileUrl;
 
-    public ImageFile(String uploadFileName, String storeFileName, String storeFileURL) {
+    public ImageFile(String uploadFileName, String storeFileName, String storeFileUrl) {
         this.uploadFileName = uploadFileName;
         this.storeFileName = storeFileName;
-        this.storeFileURL = storeFileURL;
+        this.storeFileUrl = storeFileUrl;
     }
 }
