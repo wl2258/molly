@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 
+import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/auth/pet")
@@ -26,7 +28,7 @@ public class PetApiController {
     private final PetService petService;
     private final ImageFileService imageFileService;
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetReqDto.PetAddRequest request, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetAddRequest request, BindingResult bindingResult) throws IOException {
 
         Long petId = petService.registerPet(request);
 
@@ -40,7 +42,7 @@ public class PetApiController {
         return new ResponseEntity<>(new ResponseDto(1, "", response), HttpStatus.OK);
     }
     @PutMapping
-    public ResponseEntity<?> updatePet(@ModelAttribute @Valid PetReqDto.PetUpdateRequest request, BindingResult bindingResult) {
+    public ResponseEntity<?> updatePet(@ModelAttribute @Valid PetUpdateRequest request, BindingResult bindingResult) {
 
         petService.updatePet(request);
 
