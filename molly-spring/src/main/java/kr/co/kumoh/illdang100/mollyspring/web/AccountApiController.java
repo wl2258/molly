@@ -44,10 +44,11 @@ public class AccountApiController {
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<?> reIssueAccessToken(@RequestHeader(JwtVO.REFRESH_TOKEN_HEADER) String refreshToken) {
+    public ResponseEntity<?> reIssueAccessToken(@RequestHeader(JwtVO.REFRESH_TOKEN_HEADER) String refreshToken,
+                                   HttpServletResponse response) {
 
-        accountService.reIssueToken(refreshToken);
+        accountService.reIssueToken(response, refreshToken);
 
-        return null;
+        return new ResponseEntity<>(new ResponseDto<>(1, "토큰 재발급에 성공하였습니다.", null), HttpStatus.OK);
     }
 }
