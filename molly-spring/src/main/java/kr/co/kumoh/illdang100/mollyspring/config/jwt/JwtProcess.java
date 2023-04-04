@@ -20,7 +20,7 @@ public class JwtProcess {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String createNewAccessToken(PrincipalDetails principalDetails) {
+    public String createAccessToken(PrincipalDetails principalDetails) {
 
         Account account = principalDetails.getAccount();
 
