@@ -37,7 +37,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String additionalInputUri = "";
 
         // JwtToken(AccessToken) 생성
-        String jwtToken = jwtProcess.createAccessToken(principal);
+        String accessToken = jwtProcess.createAccessToken(principal);
 
         // Redis에 RefreshToken 저장
         String refreshToken = saveRefreshToken(account);
@@ -49,8 +49,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             additionalInputUri = "home/signup";
         }
 
-        String redirectUrl = makeRedirectUrl(additionalInputUri, principal, jwtToken, refreshToken);
-        log.info("jwtToken={}", jwtToken);
+        String redirectUrl = makeRedirectUrl(additionalInputUri, principal, accessToken, refreshToken);
+        log.info("accessToken={}", accessToken);
         log.info("redirectUrl={}", redirectUrl);
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
