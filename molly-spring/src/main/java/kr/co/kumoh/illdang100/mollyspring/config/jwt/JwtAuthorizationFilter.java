@@ -1,6 +1,9 @@
 package kr.co.kumoh.illdang100.mollyspring.config.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.kumoh.illdang100.mollyspring.config.auth.PrincipalDetails;
+import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,27 +33,43 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         // 토큰이 존재하는지 검사한다.
-        if (isHeaderVerify(request, response)) {
+        if (isHeaderVerify(request)) {
 
-            String token = request.getHeader(JwtVO.HEADER).replace(JwtVO.TOKEN_PREFIX, "");
-            PrincipalDetails loginUser = jwtProcess.verify(token);
+            String token = request.getHeader(JwtVO.ACCESS_TOKEN_HEADER).replace(JwtVO.TOKEN_PREFIX, "");
 
-            // 임시 세션
-            Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            loginUser,
-                            null,
-                            loginUser.getAuthorities());
+            try {
+                PrincipalDetails loginAccount = jwtProcess.verify(token);
 
-            // 강제 로그인이 진행된다.
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 임시 세션
+                Authentication authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                loginAccount,
+                                null,
+                                loginAccount.getAuthorities());
+
+                // 강제 로그인이 진행된다.
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
+                fail(response);
+            }
         }
 
         chain.doFilter(request, response);
     }
 
-    private boolean isHeaderVerify(HttpServletRequest request, HttpServletResponse response) {
-        String header = request.getHeader(JwtVO.HEADER);
+    private static void fail(HttpServletResponse response) throws IOException {
+        ObjectMapper om = new ObjectMapper();
+        ResponseDto<String> responseDto = new ResponseDto<>(-1, "만료된 토큰입니다.", null);
+        String responseBody = om.writeValueAsString(responseDto);
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.getWriter().write(responseBody);
+        response.getWriter().flush();
+        response.getWriter().close();
+    }
+
+    private boolean isHeaderVerify(HttpServletRequest request) {
+        String header = request.getHeader(JwtVO.ACCESS_TOKEN_HEADER);
         if (header == null || !header.startsWith(JwtVO.TOKEN_PREFIX)) {
             return false;
         } else {
