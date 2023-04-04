@@ -50,7 +50,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             String providerId = oAuth2User.getAttribute("sub");
             username = registrationId + "_" + providerId;
 
-            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+            oAuth2UserInfo = new GoogleUserInfo(attributes);
         } else if (registrationId.equals("kakao")) {
 
             log.info("카카오 로그인 요청!");
@@ -58,7 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             long providerId = (long) attributes.get("id");
             username = registrationId + "_" + providerId;
 
-            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+            oAuth2UserInfo = new KakaoUserInfo(attributes);
         } else {
             log.error("지원하지 않는 소셜 로그인");
             throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다.");
@@ -80,6 +80,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             account = accountOptional.get();
         }
 
-        return new PrincipalDetails(account, oAuth2User.getAttributes());
+        return new PrincipalDetails(account, attributes);
     }
 }
