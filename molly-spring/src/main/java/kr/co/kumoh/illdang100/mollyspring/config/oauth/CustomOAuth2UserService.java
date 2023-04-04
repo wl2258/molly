@@ -61,7 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new KakaoUserInfo(attributes);
         } else {
             log.error("지원하지 않는 소셜 로그인");
-            throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다.");
+            throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다");
         }
 
         Optional<Account> accountOptional = accountRepository.findByUsername(username);

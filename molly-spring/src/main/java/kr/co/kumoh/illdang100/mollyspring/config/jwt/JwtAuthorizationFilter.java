@@ -59,7 +59,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static void fail(HttpServletResponse response) throws IOException {
         ObjectMapper om = new ObjectMapper();
-        ResponseDto<String> responseDto = new ResponseDto<>(-1, "만료된 토큰입니다.", null);
+        ResponseDto<String> responseDto = new ResponseDto<>(-1, "만료된 토큰입니다", null);
         String responseBody = om.writeValueAsString(responseDto);
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.BAD_REQUEST.value());

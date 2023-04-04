@@ -56,14 +56,14 @@ public class SecurityConfig {
 
         // 인증 실패 처리
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-            CustomResponseUtil.redirect(response, "http://localhost:3000/login");
+            // CustomResponseUtil.fail() 메서드 호출하기 -> 리액트에서 자동 로그인 페이지로 이동
+            CustomResponseUtil.fail(response, "로그인이 필요합니다", HttpStatus.UNAUTHORIZED);
         });
 
         // 권한 실패
         http.exceptionHandling().accessDeniedHandler((request, response, e) -> {
             CustomResponseUtil.fail(response, "권한이 없습니다", HttpStatus.FORBIDDEN);
         });
-
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.formLogin().disable();

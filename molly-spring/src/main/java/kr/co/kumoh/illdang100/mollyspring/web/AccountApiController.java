@@ -30,7 +30,7 @@ public class AccountApiController {
         String nickname = inputNicknameRequest.getNickname();
         accountService.checkNicknameDuplicate(nickname);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 닉네임입니다.", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 닉네임입니다", null), HttpStatus.OK);
     }
 
     @PostMapping("/account/{accountId}")
@@ -49,6 +49,6 @@ public class AccountApiController {
 
         accountService.reIssueToken(response, refreshToken);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "토큰 재발급에 성공하였습니다.", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "토큰 재발급에 성공하였습니다", null), HttpStatus.OK);
     }
 }
