@@ -22,7 +22,7 @@ const SignUp = () => {
   const [disabled, setDisabled] = useState(true);
   const [duplicate, setDuplicate] = useState(0);
   const [effective, setEffective] = useState(false);
-  const [warning, setWarning] = useState(false);
+  const [effectiveColor, setEffectiveColor] = useState("");
 
   const imgRef = useRef();
   const location = useLocation();
@@ -30,6 +30,11 @@ const SignUp = () => {
   let color = disabled ? "#D6CCC3" : "#B27910";
 
   const accountId = params.get('accountId');
+  const accessToken = params.get('accessToken');
+  const refreshToken = params.get('refreshToken');
+
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
 
   const handleChange = (e) => {
     setNickName(e.target.value);
@@ -75,16 +80,18 @@ const SignUp = () => {
     const regExp = /^[가-힣a-zA-Z]{1,10}$/;
     if(regExp.test(e.target.value) === true) {
       setEffective(true);
-      setWarning(false);
     }
     else { 
       setEffective(false);
-      setWarning(true);
     }
   }
 
   const checkDuplicate = (e) => {
-    fetch(`http://localhost:8080/api/account/duplicate`, {
+    if(effective === false) {
+      setEffectiveColor("red");
+    } else {
+      setEffectiveColor("#827870");
+      fetch(`http://localhost:8080/api/account/duplicate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,19 +99,17 @@ const SignUp = () => {
       body: JSON.stringify({
         nickname : nickname
       })
-    })
-    .then(res => res.json())
-    .then(res => {
-      if(res.code === 1) {
-        effective === true ? setDisabled(false) : setDisabled(true);
-        setWarning(false);
-        setDuplicate(2);
-      } else {
-        setDisabled(true);
-        setWarning(false);
-        setDuplicate(1);
-      }
-    })  
+    }).then(res => res.json())
+      .then(res => {
+        if(res.code === 1) {
+          setDisabled(false);
+          setDuplicate(2);
+        } else {
+          setDisabled(true);
+          setDuplicate(1);
+        }
+      }) 
+    }
   }
   
   return (
@@ -131,6 +136,9 @@ const SignUp = () => {
             ref={imgRef}
           />
           <div className={styles.modal}>
+            <span style={{color: `${effectiveColor}`}} className={styles.duplicatepass}>
+              한글/영어를 사용하여 10자 이내로 작성
+            </span>
             <input 
               name="nickname"
               type="text" 
@@ -139,12 +147,10 @@ const SignUp = () => {
               placeholder="닉네임"
               required
               onBlur={checkNickname}
+              maxLength="10"
             />
             <span onClick={checkDuplicate}>중복확인</span>
           </div>
-          {
-            warning === false ? null :
-            <span style={{left: "173px"}} className={styles.duplicatepass}>한글 또는 영어를 사용하여<br/>10자 이내로 작성해주세요.</span>}
           {duplicate === 0 ? null : 
             duplicate === 1 ? <span style={{color:"red"}} className={styles.duplicatepass}>사용 불가능한 닉네임입니다.</span> 
               : <span className={styles.duplicatepass}>사용 가능한 닉네임입니다.</span>}

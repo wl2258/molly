@@ -20,14 +20,26 @@ const First = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
-  const accountId = params.get('accountId');
   const accessToken = params.get('accessToken');
+  const refreshToken = params.get('refreshToken');
+
+  if(accessToken !== null && refreshToken !== null) {
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  }
 
   return (
     <div style={{zIndex:"3"}}>
       <header className={styles.header}>
         <div className={styles.user}>
-          <h4 onClick={() => navigate('/login')}>로그인</h4>
+          {localStorage.getItem("accessToken") === null ? 
+            <h4 onClick={() => navigate('/login')}>로그인</h4> :
+            <h4 onClick={handleLogout}>로그아웃</h4>}
         </div>
         <div className={styles.container}>
           <div style={{flexGrow: "1"}} />
@@ -80,7 +92,6 @@ const First = () => {
         <h1>molly</h1>
         <span><MdArrowForwardIos size="50px" color="rgba(235, 231, 227, 40)"/></span>
       </div>
-      {console.log(accountId, accessToken)}
     </div>
   );
 };

@@ -1,0 +1,80 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F9F9F9;
+}
+
+.login {
+  position: relative;
+}
+
+.login > div {
+  display: flex;
+  justify-content: center;
+}
+
+.login > div > img {
+  margin-top: 130px;
+}
+
+.login > p:nth-child(2){
+  font-size: 13px;
+  color: #AFA79F;
+  text-align: center;
+}
+
+.login > div:nth-child(3) > p {
+  padding-top: 40px;
+  font-size: 15px;
+  color: #645C56;
+  font-weight: 600;
+  margin-left: -160px;
+}
+
+.input {
+  display: flex;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.input > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.input > div:nth-child(2) {
+  margin-top: 32px;
+}
+
+.input > div > input {
+  width: 260px;
+  height: 37px;
+  border-radius: 10px;
+  background-color: #EEECEC;
+  border: none;
+  margin-right: 10px;
+  padding-left: 15px;
+  caret-color: #C7C3BF;
+  margin-bottom: 10px;
+}
+
+.input > div > input:focus {
+  outline: none;
+}
+
+.input > div > input::placeholder {
+  color: #b4b1ad;
+}
+
+.input > div > button {
+  width: 277px;
+  height: 38px;
+  background-color: #BF7A09;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 9px 10px 7px 10px;
+  cursor: pointer;
+}
