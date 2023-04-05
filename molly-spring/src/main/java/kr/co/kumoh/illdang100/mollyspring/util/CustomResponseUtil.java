@@ -37,17 +37,5 @@ public class CustomResponseUtil {
             log.error("서버 파싱 에러");
         }
     }
-
-    public static void redirect(HttpServletResponse response, String uri) {
-        try {
-
-            ObjectMapper om = new ObjectMapper();
-
-            response.setStatus(HttpServletResponse.SC_FOUND);
-            response.sendRedirect(uri);
-        } catch (Exception e) {
-            log.error("서버 파싱 에러");
-        }
-    }
 }
 
