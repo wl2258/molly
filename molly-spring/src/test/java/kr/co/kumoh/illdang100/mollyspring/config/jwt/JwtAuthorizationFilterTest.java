@@ -37,11 +37,11 @@ class JwtAuthorizationFilterTest {
                 .build();
 
         PrincipalDetails loginUser = new PrincipalDetails(account);
-        String jwtToken = jwtProcess.create(loginUser);
+        String jwtToken = jwtProcess.createAccessToken(loginUser);
         System.out.println("jwtToken = " + jwtToken);
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/auth/hello/test").header(JwtVO.HEADER, jwtToken));
+        ResultActions resultActions = mvc.perform(get("/api/auth/hello/test").header(JwtVO.ACCESS_TOKEN_HEADER, jwtToken));
 
         // then
         resultActions.andExpect(status().isNotFound());
@@ -56,7 +56,7 @@ class JwtAuthorizationFilterTest {
         ResultActions resultActions = mvc.perform(get("/api/auth/hello/test"));
 
         // then
-        resultActions.andExpect(status().isFound());
+        resultActions.andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -71,11 +71,11 @@ class JwtAuthorizationFilterTest {
                 .build();
 
         PrincipalDetails loginUser = new PrincipalDetails(account);
-        String jwtToken = jwtProcess.create(loginUser);
+        String jwtToken = jwtProcess.createAccessToken(loginUser);
         System.out.println("jwtToken = " + jwtToken);
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/admin/hello/test").header(JwtVO.HEADER, jwtToken));
+        ResultActions resultActions = mvc.perform(get("/api/admin/hello/test").header(JwtVO.ACCESS_TOKEN_HEADER, jwtToken));
 
         // then
         resultActions.andExpect(status().isForbidden());
