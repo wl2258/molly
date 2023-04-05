@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class Account extends BaseTimeEntity {
 
     @Id
@@ -21,6 +22,9 @@ public class Account extends BaseTimeEntity {
 
     @Column(unique = true, nullable = false, length = 30)
     private String username;
+
+    @Column(unique = false, length = 60) // 패스워드 인코딩(BCrypt)
+    private String password;
 
     @Column(unique = true, length = 10)
     private String nickname;
@@ -36,17 +40,14 @@ public class Account extends BaseTimeEntity {
     private ImageFile accountProfileImage;
 
     @Builder
-    public Account(Long id, String username, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
+    public Account(Long id, String username, String password, String nickname, AccountEnum role, String email, ImageFile accountProfileImage) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.nickname = nickname;
         this.role = role;
         this.email = email;
         this.accountProfileImage = accountProfileImage;
-    }
-
-    public void changeEmail(String email) {
-        this.email = email;
     }
 
     public void changeNickname(String nickname) {

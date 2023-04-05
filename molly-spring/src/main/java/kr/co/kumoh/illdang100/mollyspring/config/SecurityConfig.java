@@ -1,7 +1,9 @@
 package kr.co.kumoh.illdang100.mollyspring.config;
 
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthenticationFilter;
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthorizationFilter;
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtProcess;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.RefreshTokenRedisRepository;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.CustomOAuth2UserService;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2FailureHandler;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2SuccessHandler;
@@ -30,8 +32,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2FailureHandler oAuth2FailureHandler;
-
     private final JwtProcess jwtProcess;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -42,6 +44,7 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            http.addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProcess, refreshTokenRedisRepository));
             http.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProcess));
         }
     }
