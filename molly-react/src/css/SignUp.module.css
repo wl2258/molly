@@ -60,7 +60,7 @@
   color: #b4b1ad;
 }
 
-.modal > span {
+.modal > span:nth-child(3) {
   font-size: 13px;
   color: #827870;
   position: absolute;
@@ -99,8 +99,8 @@
 
 .duplicatepass {
   font-size: 10px;
-  color: blue;
+  color: #827870;
   position: absolute;
-  top: 88px;
-  left: 173px;
+  top: -23px;
+  left: 10px;
 }
