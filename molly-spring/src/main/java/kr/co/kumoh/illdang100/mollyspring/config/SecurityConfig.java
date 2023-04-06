@@ -1,9 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.config;
 
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthenticationFilter;
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthorizationFilter;
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtProcess;
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.RefreshTokenRedisRepository;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.*;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.CustomOAuth2UserService;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2FailureHandler;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2SuccessHandler;
@@ -98,6 +95,9 @@ public class SecurityConfig {
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (Javascript 요청 허용)
         configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용 (프론트 엔드 ip만 허용하도록 할 수도 있다.)
         configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청 허용
+
+        configuration.addExposedHeader(JwtVO.ACCESS_TOKEN_HEADER);
+        configuration.addExposedHeader(JwtVO.REFRESH_TOKEN_HEADER);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // 모든 주소요청에 위 설정을 적용
