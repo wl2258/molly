@@ -2,6 +2,8 @@ package kr.co.kumoh.illdang100.mollyspring.domain.vaccinations;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.Pet;
+import kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationReqDto;
+import kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationReqDto.VaccinationUpdateRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,5 +38,10 @@ public class VaccinationHistory extends BaseTimeEntity {
         this.pet = pet;
         this.vaccinationDate = vaccinationDate;
         this.vaccinationName = vaccinationName;
+    }
+
+    public void updateVaccination(VaccinationUpdateRequest request) {
+        this.vaccinationName = request.getVaccinationName();
+        this.vaccinationDate = request.getVaccinationDate();
     }
 }
