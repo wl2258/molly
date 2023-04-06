@@ -10,7 +10,7 @@ import SignUp from './SignUp';
 
 let CustomBody = styled.body`
   margin-top: 140px;
-  padding: 0 5%;
+  padding: 0 10%;
 `;
 
 let Schedule = styled.div`

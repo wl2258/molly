@@ -1,10 +1,126 @@
-.container > h1 {
-  display: inline-block;
-  margin-left: 30px;
-  font-size: 30px;
+.container {
+  display: flex;
+  justify-content: space-between;
 }
 
-.container > h4 {
+.info {
+  position: relative;
+}
+
+.info > h1 {
+  display: inline-block;
+  position: absolute;
+  margin-left: 30px;
+  font-size: 28px;
+  color: #656565;
+  top: 10px;
+}
+
+.info > div {
+  margin-top: 20px;
+}
+
+.info > div > h4, .weight > h4, .medicine > h4 {
   color: #827870;
   display: inline-block;
+  margin-right: 43px;
+  margin-left: 18px;
+  margin-bottom: 10px;
+}
+
+.info > div > span, .weight > span {
+  color: #827870;
+  font-size: 15px;
+}
+
+.surgery {
+  margin-top: 15px;
+  margin-left: 100px;
+}
+
+.surgery > span {
+  color: #827870;
+  font-size: 15px;
+}
+
+.surgery > span:first-child {
+  margin-right: 15px;
+}
+
+.care, .weight {
+  margin-top: 144px;
+}
+
+.care > h4 {
+  color: #827870;
+}
+
+.care > h4:nth-child(9) {
+  margin-top: 50px;
+}
+
+.care > span {
+  color: #827870;
+  font-size: 14px;
+}
+
+.care > span:nth-child(2), 
+.care > span:nth-child(5), 
+.care > span:nth-child(8) {
+  margin-right: 20px;
+}
+
+.radio {
+  margin-left: -3px;
+}
+
+.radio > span {
+  color: #827870;
+  font-size: 15px;
+  margin-right: 20px;
+}
+
+.radio > input {
+  margin-right: 10px;
+  accent-color: #827870;
+  border: none !important
+}
+
+.medicine {
+  display: flex;
+  margin-top: 20px;
+}
+
+.medicine > div {
+  margin-top: 10px;
+  margin-left: -10px;
+}
+
+.medicineinfo > p {
+  display: inline-block;
+  background-color: #EBE7E3;
+  padding: 6px 22px;
+  border-radius: 9px;
+  font-size: 13px;
+  color: #827870;
+  margin-right: 20px;
+}
+
+.medicineinfo > span, .vaccine > span {
+  color: #827870;
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+.info > div > p {
+  display: inline-block;
+  color: #827870;
+  font-size: 15px;
+  background-color: #EBE7E3;
+  padding: 6px 22px;
+  border-radius: 9px;
+}
+
+.vaccine {
+  margin-top: 15px;
 }

@@ -1,7 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.config;
 
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtAuthorizationFilter;
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtProcess;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.*;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.CustomOAuth2UserService;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2FailureHandler;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2SuccessHandler;
@@ -30,8 +29,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2FailureHandler oAuth2FailureHandler;
-
     private final JwtProcess jwtProcess;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -42,6 +41,7 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            http.addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProcess, refreshTokenRedisRepository));
             http.addFilter(new JwtAuthorizationFilter(authenticationManager, jwtProcess));
         }
     }
@@ -56,14 +56,14 @@ public class SecurityConfig {
 
         // 인증 실패 처리
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-            CustomResponseUtil.redirect(response, "http://localhost:3000/login");
+            // CustomResponseUtil.fail() 메서드 호출하기 -> 리액트에서 자동 로그인 페이지로 이동
+            CustomResponseUtil.fail(response, "로그인이 필요합니다", HttpStatus.UNAUTHORIZED);
         });
 
         // 권한 실패
         http.exceptionHandling().accessDeniedHandler((request, response, e) -> {
             CustomResponseUtil.fail(response, "권한이 없습니다", HttpStatus.FORBIDDEN);
         });
-
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.formLogin().disable();
@@ -95,6 +95,9 @@ public class SecurityConfig {
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (Javascript 요청 허용)
         configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용 (프론트 엔드 ip만 허용하도록 할 수도 있다.)
         configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청 허용
+
+        configuration.addExposedHeader(JwtVO.ACCESS_TOKEN_HEADER);
+        configuration.addExposedHeader(JwtVO.REFRESH_TOKEN_HEADER);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // 모든 주소요청에 위 설정을 적용

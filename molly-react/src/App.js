@@ -11,6 +11,7 @@ import RegisterPet from './pages/pet/RegisterPet';
 import LogIn from './pages/LogIn';
 import First from './pages/First';
 import DetailPet from './pages/pet/DetailPet';
+import ManagerLogin from './pages/ManagerLogin';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/list/write" element={<Write />}/>
         <Route path="/registerpet" element={<RegisterPet />}/>
         <Route path="/detailpet/:id" element={<DetailPet />}/>
+        <Route path="/manager/login" element={<ManagerLogin />} />
       </Routes>
     </div>
   );
