@@ -3,7 +3,6 @@ package kr.co.kumoh.illdang100.mollyspring.domain.pet;
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
-import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.PetUpdateRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn
+@DiscriminatorColumn(length = 1)
 @AllArgsConstructor
 public abstract class Pet extends BaseTimeEntity {
 
