@@ -33,7 +33,7 @@ public class SecurityConfigTest {
         System.out.println("테스트 : " + httpStatusCode);
 
         // then
-        assertThat(httpStatusCode).isEqualTo(302);
+        assertThat(httpStatusCode).isEqualTo(401);
     }
 
     @Test
@@ -49,8 +49,7 @@ public class SecurityConfigTest {
         System.out.println("테스트 : " + httpStatusCode);
 
         // then
-        // 인증 예외 발생: 로그인 페이지로 리다이렉트
-        assertThat(httpStatusCode).isEqualTo(302);
+        assertThat(httpStatusCode).isEqualTo(401);
 
     }
 }
