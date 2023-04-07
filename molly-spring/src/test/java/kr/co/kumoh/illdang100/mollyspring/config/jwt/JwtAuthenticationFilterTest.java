@@ -66,7 +66,7 @@ class JwtAuthenticationFilterTest extends DummyObject {
     }
 
     @Test
-    public void failAuthentication_test() throws Exception {
+    public void unSuccessfulAuthentication_test() throws Exception {
 
         // given
         AccountReqDto.LoginReqDto loginReqDto = new AccountReqDto.LoginReqDto();
