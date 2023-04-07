@@ -11,7 +11,7 @@ public class SurgeryRespDto {
     @Data
     @AllArgsConstructor
     public static class SurgerySaveResponse {
-        private Long SurgeryId;
+        private Long surgeryId;
     }
 
     @Data
