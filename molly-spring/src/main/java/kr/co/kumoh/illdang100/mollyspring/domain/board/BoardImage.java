@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardImage extends BaseTimeEntity {
+public class BoardImage{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
