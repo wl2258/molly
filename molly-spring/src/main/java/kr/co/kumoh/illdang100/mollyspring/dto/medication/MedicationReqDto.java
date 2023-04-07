@@ -59,19 +59,4 @@ public class MedicationReqDto {
         @NotNull
         private Long medicationId;
     }
-
-    @Data
-    @AllArgsConstructor
-    public static class MedicationRequest {
-        @NotBlank(message = "복용약 이름은 빈 문자열이면 안됩니다.")
-        private String medicationName;
-
-        @NotNull
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "복용약 시작 날짜는 yyyy-MM-dd 형식이어야 합니다.")
-        private LocalDate medicationStartDate;
-
-        @NotNull
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "복용약 종료 날짜는 yyyy-MM-dd 형식이어야 합니다.")
-        private LocalDate medicationEndDate;
-    }
 }
