@@ -46,7 +46,7 @@ public abstract class Pet extends BaseTimeEntity {
     private double weight;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 15)
     private PetTypeEnum petType;
 
     @Embedded
