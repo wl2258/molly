@@ -30,7 +30,7 @@ public class Account extends BaseTimeEntity {
     private String nickname;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private AccountEnum role; // ADMIN, CUSTOMER
 
     @Column(unique = true, length = 25)
