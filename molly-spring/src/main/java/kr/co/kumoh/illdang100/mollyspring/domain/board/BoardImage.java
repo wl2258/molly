@@ -1,6 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.board;
 
-import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,17 +22,14 @@ public class BoardImage{
     @JoinColumn(name = "board_id")
     private Board board;
 
+    @Embedded
     @Column(nullable = false)
-    private String uploadFileName;
-
-    @Column(nullable = false)
-    private String storeFileName;
+    private ImageFile accountProfileImage;
 
     @Builder
-    public BoardImage(Long id, Board board, String uploadFileName, String storeFileName) {
+    public BoardImage(Long id, Board board, ImageFile accountProfileImage) {
         this.id = id;
         this.board = board;
-        this.uploadFileName = uploadFileName;
-        this.storeFileName = storeFileName;
+        this.accountProfileImage = accountProfileImage;
     }
 }
