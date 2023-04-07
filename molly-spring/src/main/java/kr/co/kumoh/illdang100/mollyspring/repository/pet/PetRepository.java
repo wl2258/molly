@@ -8,5 +8,5 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
-    Optional<Pet> findByAccountIdAndPetTypeAndPetNameAndBirthDate(Long accountId, PetTypeEnum petType, String petName, LocalDate birthdate);
+    Optional<Pet> findByAccountIdAndPetTypeAndPetNameAndBirthdate(Long accountId, PetTypeEnum petType, String petName, LocalDate birthdate);
 }
