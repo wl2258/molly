@@ -33,7 +33,7 @@ public abstract class Pet extends BaseTimeEntity {
     private String petName;
 
     @Column(nullable = false)
-    private LocalDate birthDate;
+    private LocalDate birthdate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
@@ -60,8 +60,8 @@ public abstract class Pet extends BaseTimeEntity {
         return true;
     }
 
-    public boolean compareBirthDate(LocalDate birthDate) {
-        if (this.birthDate != birthDate) return false;
+    public boolean comparebirthdate(LocalDate birthdate) {
+        if (this.birthdate != birthdate) return false;
         return true;
     }
 
@@ -91,7 +91,7 @@ public abstract class Pet extends BaseTimeEntity {
 
     public void updatePet(PetUpdateRequest petInfo) {
         if (!comparePetName(petInfo.getPetName())) this.petName = petInfo.getPetName();
-        if (!compareBirthDate(petInfo.getBirthDate())) this.birthDate = petInfo.getBirthDate();
+        if (!comparebirthdate(petInfo.getBirthdate())) this.birthdate = petInfo.getBirthdate();
         if (!compareNeuteredStatus(petInfo.isNeuteredStatus())) this.neuteredStatus = petInfo.isNeuteredStatus();
         if (!compareGender(petInfo.getGender())) this.gender = petInfo.getGender();
         if (!compareWeight(petInfo.getWeight())) this.weight = petInfo.getWeight();
