@@ -31,15 +31,18 @@ public class Board extends BaseTimeEntity {
     private String content;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private BoardEnum category;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     private PetTypeEnum petType;
 
     @Column(nullable = false)
-    private int views;
+    private long views;
+
+    @Column(nullable = false)
+    private boolean isNotice;
 
     @Builder
     public Board(Long id, Account account, String title, String content, BoardEnum category, PetTypeEnum petType, int views) {
