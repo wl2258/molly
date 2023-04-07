@@ -23,6 +23,7 @@ public class SurgeryRespDto {
     @Data
     @AllArgsConstructor
     public static class SurgeryResponse {
+        private Long surgeryId;
         private String surgeryName;
         @JsonFormat(pattern="yyyy-MM-dd")
         private LocalDate surgeryDate;
