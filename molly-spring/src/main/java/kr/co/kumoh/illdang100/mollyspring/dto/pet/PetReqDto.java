@@ -32,7 +32,7 @@ public class PetReqDto {
 
         @NotNull
         @DateTimeFormat(pattern="yyyy-MM-dd")
-        private LocalDate birthDate;
+        private LocalDate birthdate;
 
         @NotNull
         private PetGenderEnum gender;
@@ -40,7 +40,6 @@ public class PetReqDto {
         private boolean neuteredStatus;
 
         @DecimalMin(value = "0.0")
-        @DecimalMax(value = "50.0")
         private double weight;
 
         private MultipartFile imageFile;
@@ -70,7 +69,7 @@ public class PetReqDto {
 
         @NotNull
         @DateTimeFormat(pattern="yyyy-MM-dd")
-        private LocalDate birthDate;
+        private LocalDate birthdate;
 
         @NotNull
         private PetGenderEnum gender;
@@ -78,7 +77,6 @@ public class PetReqDto {
         private boolean neuteredStatus;
 
         @DecimalMin(value = "0.0")
-        @DecimalMax(value = "50.0")
         private double weight;
 
         @Size(min = 1, max = 100)
