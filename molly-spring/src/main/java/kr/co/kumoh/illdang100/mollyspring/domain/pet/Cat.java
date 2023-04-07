@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class Cat extends Pet{
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 25)
+    @Column(length = 25)
     private CatEnum catSpecies;
 
     @Builder

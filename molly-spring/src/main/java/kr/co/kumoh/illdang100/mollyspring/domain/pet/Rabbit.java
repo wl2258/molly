@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class Rabbit extends Pet{
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 25)
+    @Column(length = 25)
     private RabbitEnum rabbitSpecies;
 
     @Builder
