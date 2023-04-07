@@ -24,6 +24,7 @@ public class MedicationRespDto {
     @Data
     @AllArgsConstructor
     public static class MedicationResponse {
+        private Long medicationId;
         private String medicationName;
         @JsonFormat(pattern="yyyy-MM-dd")
         private LocalDate medicationStartDate;
