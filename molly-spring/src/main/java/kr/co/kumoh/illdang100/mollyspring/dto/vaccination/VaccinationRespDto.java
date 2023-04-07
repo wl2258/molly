@@ -25,6 +25,7 @@ public class VaccinationRespDto {
     @Data
     @AllArgsConstructor
     public static class VaccinationResponse {
+        private Long vaccinationId;
         private String vaccinationName;
         @JsonFormat(pattern="yyyy-MM-dd")
         private LocalDate vaccinationDate;
