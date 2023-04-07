@@ -1,8 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
-import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto;
-import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto;
+import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.PetDetailResponse;
 import kr.co.kumoh.illdang100.mollyspring.service.ImageFileService;
 import kr.co.kumoh.illdang100.mollyspring.service.PetService;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +27,16 @@ public class PetApiController {
     private final PetService petService;
     private final ImageFileService imageFileService;
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetAddRequest request, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetSaveRequest request, BindingResult bindingResult) throws IOException {
 
-        Long petId = petService.registerPet(request);
+        PetDetailResponse response = petService.registerPet(request);
 
-        return new ResponseEntity<>(new ResponseDto(1, "", new PetRespDto.PetAddResponse(petId)), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto(1, "", response), HttpStatus.CREATED);
     }
     @GetMapping("{petId}")
     public ResponseEntity<?> viewDetails(@PathVariable Long petId) {
 
-        PetRespDto.PetDetailResponse response = petService.viewDetails(petId);
+        PetDetailResponse response = petService.viewDetails(petId);
 
         return new ResponseEntity<>(new ResponseDto(1, "", response), HttpStatus.OK);
     }
@@ -51,8 +50,6 @@ public class PetApiController {
 
     @DeleteMapping("{petId}")
     public ResponseEntity<?> deletePet(@PathVariable Long petId) {
-
-        petService.deletePet(petId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
