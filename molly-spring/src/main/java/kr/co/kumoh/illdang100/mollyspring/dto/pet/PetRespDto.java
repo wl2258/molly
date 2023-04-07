@@ -29,7 +29,7 @@ public class PetRespDto {
         private PetTypeEnum petType;
         private String petName;
         @JsonFormat(pattern="yyyy-MM-dd")
-        private LocalDate birthDate;
+        private LocalDate birthdate;
         private List<SurgeryResponse> surgery;
         private List<MedicationResponse> medication;
         private List<VaccinationResponse> vaccination;
@@ -46,7 +46,7 @@ public class PetRespDto {
         private String petName;
         private String species;
         @JsonFormat(pattern="yyyy-MM-dd")
-        private LocalDate birthDate;
+        private LocalDate birthdate;
         private PetGenderEnum gender;
         private boolean neuteredStatus;
         private double weight;
