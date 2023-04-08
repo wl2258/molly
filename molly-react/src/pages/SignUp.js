@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from '../css/SignUp.module.css';
 import {Button} from '../components/Button';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const SignUp = () => {
   useEffect(() => {
@@ -35,6 +36,122 @@ const SignUp = () => {
   localStorage.setItem("accessToken", accessToken);
   localStorage.setItem("refreshToken", refreshToken);
 
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8080",
+  });
+
+  axiosInstance.interceptors.response.use(
+    (res) => {
+      return res;
+    },
+    async (error) => {
+      try {
+        const errResponseStatus = error.response.status;
+        const prevRequest = error.config;
+
+        if(errResponseStatus === 400) {
+          const preRefreshToken = localStorage.getItem("refreshToken");
+          if(preRefreshToken) {
+            async function issuedToken() {
+              return await axios
+                .post(`http://localhost:8080/api/token/refresh`, {
+                  "Refresh-Token": preRefreshToken,
+                })
+                .then(async (res) => {
+                  localStorage.removeItem('accessToken');
+                  localStorage.removeItem('refreshToken');
+                  const reAccessToken = res.headers.get("Authorization");
+                  const reRefreshToken = res.headers.get("Refresh-token");
+                  localStorage.setItem("accessToken", reAccessToken);
+                  localStorage.setItem("refreshToken", reRefreshToken);
+                  
+                  prevRequest.headers.Authorization = reAccessToken;
+                  
+                  return await axios(prevRequest);
+                })
+                .catch((e) => {
+                  localStorage.removeItem('accessToken');
+                  localStorage.removeItem('refreshToken');
+                  console.log("토큰 재발급 실패");
+                  window.location.replace("/login");
+
+                  return new Error(e);
+                });
+            }
+            return await issuedToken();
+          } else {
+            throw new Error("There is no refresh token");
+          }
+        }
+        else if(errResponseStatus === 401) {
+          console.log("인증 실패");
+          window.location.replace("/login");
+        }
+        else if(errResponseStatus === 403) {
+          alert("권한이 없습니다.");
+        }
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    if(imgRef.current.files[0] !== undefined) {
+      formData.append("accountProfileImage", imgRef.current.files[0]);
+    }
+
+    const fetchData = async function fetch() {
+      const response = await axiosInstance.post(`/api/auth/account/save`, {
+        headers: {
+          Authorization : localStorage.getItem("accessToken"),
+        },
+        data: formData
+      })
+      console.log(response); 
+      if(response.code === 1) {
+        window.location.replace("/");
+      }
+    }
+
+    fetchData();
+  }
+
+  const checkDuplicate = (e) => {
+    setDisabled(true);
+    setDuplicate(0);
+    if(effective === false) {
+      setEffectiveColor("red");
+    } else if(effective === true) {
+      setEffectiveColor("#827870");
+      const fetchData = async function fetch() {
+        const response = await axiosInstance.post(`/api/auth/account/duplicate`, {
+          headers: {
+            Authorization : localStorage.getItem("accessToken"),
+            "Content-Type": "application/json"
+          },
+          data: {
+            nickname : nickname
+          }
+        })
+        console.log(response); 
+        if(response.code === 1) {
+          setDisabled(false);
+          setDuplicate(2);
+        } 
+        else if(response.code === -1) {
+          setDisabled(true);
+          setDuplicate(1);
+        }
+      }
+  
+      fetchData();
+    }
+  }
+
   const handleChange = (e) => {
     setNickName(e.target.value);
   }
@@ -48,71 +165,6 @@ const SignUp = () => {
     };
   };
 
-  const issuedToken = () => {
-    fetch(`http://localhost:8080/api/token/refresh`, {
-      method: "POST",
-      headers: {
-        "Refresh-Token" : refreshToken
-      }
-    })
-    .then(res => {
-      if(res.status === 200) {
-        console.log("토큰 재발급 성공");
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        let accessToken = res.headers.get("Authorization");
-        let refreshToken = res.headers.get("Refresh-token");
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-      }
-      else if(res.status === 401) {
-        console.log("토큰 재발급 실패");
-        window.location.replace("/login");
-      }
-    })
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("nickname", nickname);
-    if(imgRef.current.files[0] !== undefined) {
-      formData.append("accountProfileImage", imgRef.current.files[0]);
-    }
-
-    fetch(`http://localhost:8080/api/auth/account/save`, {
-      method: "POST",
-      headers: {
-        Authorization : accessToken
-      },
-      body: formData,
-    })
-    .then(res => {
-      if(res.status === 200) {
-        window.location.replace("/");
-      }
-      else if(res.status === 400) {
-        issuedToken();
-        handleSubmit();
-      }
-      else if(res.status === 401) {
-        console.log("인증 실패");
-        window.location.replace("/login");
-      }
-      else if(res.status === 403) {
-        alert("권한이 없습니다.");
-      }
-      else res.json()
-    })
-    .then(res => {
-      if(res.code === -1 && res.data !== null) {
-        console.log(res.data.nickname);
-      } else if(res.code === -1 && res.data === null) {
-        console.log(res.msg);
-      }
-    })  
-  }
-
   const checkNickname = (e) => {
     const regExp = /^[가-힣a-zA-Z]{1,10}$/;
     if(regExp.test(e.target.value) === true) {
@@ -120,49 +172,6 @@ const SignUp = () => {
     }
     else { 
       setEffective(false);
-    }
-  }
-
-  const checkDuplicate = (e) => {
-    if(effective === false) {
-      setEffectiveColor("red");
-    } else {
-      setEffectiveColor("#827870");
-      fetch(`http://localhost:8080/api/auth/account/duplicate`, {
-        method: "POST",
-        headers: {
-          Authorization : accessToken,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          nickname : nickname
-        })
-      })
-      .then(res => {
-        if(res.status === 200) {
-          return res.json()
-        }
-        else if(res.status === 400) {
-          issuedToken();
-          checkDuplicate();
-        }
-        else if(res.status === 401) {
-          console.log("인증 실패");
-          window.location.replace("/login");
-        }
-        else if(res.status === 403) {
-          alert("권한이 없습니다.");
-        }
-      })
-      .then(res => {
-        if(res.code === 1) {
-          setDisabled(false);
-          setDuplicate(2);
-        } else {
-          setDisabled(true);
-          setDuplicate(1);
-        }
-      }) 
     }
   }
   
