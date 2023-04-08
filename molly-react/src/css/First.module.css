@@ -12,11 +12,14 @@
   justify-content: flex-end;
   padding-right: 5%;
   padding-top: 10px;
+  position: relative;
+  z-index: 5;
 }
 
 .user > h4 {
   font-size: 13px;
   color: #827870;
+  cursor: pointer;
 }
 
 .container {
