@@ -28,9 +28,9 @@ public class AccountApiController {
                                            BindingResult bindingResult) {
 
         String nickname = inputNicknameRequest.getNickname();
-        accountService.checkNicknameDuplicate(nickname);
+        ResponseDto responseDto = accountService.checkNicknameDuplicate(nickname);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 닉네임입니다", null), HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping("/save")
@@ -38,8 +38,8 @@ public class AccountApiController {
                                                   BindingResult bindingResult,
                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
 
-        accountService.saveAdditionalAccountInfo(principalDetails.getAccount().getId(), saveAccountRequest);
+        ResponseDto responseDto = accountService.saveAdditionalAccountInfo(principalDetails.getAccount().getId(), saveAccountRequest);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "추가정보 기입 완료", null), HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

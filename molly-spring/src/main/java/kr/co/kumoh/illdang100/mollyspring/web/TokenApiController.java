@@ -4,6 +4,7 @@ import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtVO;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/token")
@@ -23,6 +25,8 @@ public class TokenApiController {
     @PostMapping("/refresh")
     public ResponseEntity<?> reIssueAccessToken(@RequestHeader(JwtVO.REFRESH_TOKEN_HEADER) String refreshToken,
                                                 HttpServletResponse response) {
+
+        log.debug("토큰 재발급 수행");
 
         accountService.reIssueToken(response, refreshToken);
 

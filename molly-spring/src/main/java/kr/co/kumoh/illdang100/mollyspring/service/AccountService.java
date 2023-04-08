@@ -6,6 +6,7 @@ import kr.co.kumoh.illdang100.mollyspring.config.jwt.RefreshToken;
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.RefreshTokenRedisRepository;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,17 +32,19 @@ public class AccountService {
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
     @Transactional(readOnly = true)
-    public void checkNicknameDuplicate(String nickname) {
+    public ResponseDto checkNicknameDuplicate(String nickname) {
 
         Optional<Account> accountOptional = accountRepository.findByNickname(nickname);
 
         if (accountOptional.isPresent()) {
             throw new CustomApiException("사용 불가능한 닉네임입니다");
         }
+
+        return new ResponseDto<>(1, "사용 가능한 닉네임입니다", null);
     }
 
     @Transactional
-    public void saveAdditionalAccountInfo(Long accountId, SaveAccountRequest saveAccountRequest) throws IOException {
+    public ResponseDto saveAdditionalAccountInfo(Long accountId, SaveAccountRequest saveAccountRequest) throws IOException {
 
         Account account = accountRepository
                 .findById(accountId)
@@ -58,6 +61,8 @@ public class AccountService {
                     s3Service.upload(saveAccountRequest.getAccountProfileImage(), FileRootPathVO.ACCOUNT_PATH);
             account.changeProfileImage(accountImageFile);
         }
+
+        return new ResponseDto<>(1, "추가정보 기입 완료", null);
     }
 
     @Transactional
