@@ -40,8 +40,8 @@ public class VaccinationHistory extends BaseTimeEntity {
         this.vaccinationName = vaccinationName;
     }
 
-    public void updateVaccination(VaccinationUpdateRequest request) {
-        this.vaccinationName = request.getVaccinationName();
-        this.vaccinationDate = request.getVaccinationDate();
+    public void updateVaccination(VaccinationUpdateRequest vaccinationUpdateRequest) {
+        this.vaccinationName = vaccinationUpdateRequest.getVaccinationName();
+        this.vaccinationDate = vaccinationUpdateRequest.getVaccinationDate();
     }
 }
