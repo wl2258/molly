@@ -20,7 +20,7 @@ public class DummyObject {
                 .build();
     }
 
-    protected Account newMockUser(Long id, String username, String nickname) {
+    protected Account newMockUser(Long id, String username, String nickname, AccountEnum accountEnum) {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encPassword = passwordEncoder.encode("1234");
@@ -31,7 +31,7 @@ public class DummyObject {
                 .password(encPassword)
                 .email(username + "@naver.com")
                 .nickname(nickname)
-                .role(AccountEnum.CUSTOMER)
+                .role(accountEnum)
                 .build();
     }
 }
