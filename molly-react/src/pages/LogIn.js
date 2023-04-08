@@ -24,7 +24,7 @@ const Login = () => {
           <img src={process.env.PUBLIC_URL + '/molly-logo-title.png'} alt="molly-logo" width="120px"/>
         </div>
         <p>반려동물 예방접종 일정관리 사이트</p>
-        <p>회원가입 👋</p>
+        <p>간편 로그인 👋</p>
         <div onClick={kakaoLogin}>
           <img src='img/kakao_login_medium_wide.png' alt="kakao"/>
         </div>

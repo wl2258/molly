@@ -97,10 +97,18 @@
   object-fit: cover;
 }
 
-.duplicatepass {
+.nicknameguide {
   font-size: 10px;
   color: #827870;
   position: absolute;
   top: -23px;
   left: 10px;
+}
+
+.duplicatepass {
+  font-size: 10px;
+  color: #827870;
+  position: absolute;
+  top: 85px;
+  left: 170px;
 }
