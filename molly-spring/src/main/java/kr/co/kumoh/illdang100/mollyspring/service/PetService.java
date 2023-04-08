@@ -52,7 +52,7 @@ public class PetService {
         Optional<Pet> findPetOpt = petRepository.findByAccountIdAndPetTypeAndPetNameAndBirthdate(findUser.getId(), petType, petSaveRequest.getPetName(), petSaveRequest.getBirthdate());
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
-        MultipartFile imageFile = petSaveRequest.getImageFile();
+        MultipartFile imageFile = petSaveRequest.getPetProfileImage();
         if (petType.equals(CAT)) {
             Pet savedCat = saveCat(petSaveRequest, petType, findUser, imageFile);
             return viewDetails(savedCat.getId());
