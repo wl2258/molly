@@ -3,6 +3,7 @@ package kr.co.kumoh.illdang100.mollyspring.domain.pet;
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.PetUpdateRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn
+@DiscriminatorColumn(length = 1)
 @AllArgsConstructor
 public abstract class Pet extends BaseTimeEntity {
 
@@ -45,7 +46,7 @@ public abstract class Pet extends BaseTimeEntity {
     private double weight;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 15)
     private PetTypeEnum petType;
 
     @Embedded
@@ -53,4 +54,47 @@ public abstract class Pet extends BaseTimeEntity {
 
     @Column(length = 100)
     private String caution;
+
+    public boolean comparePetName(String petName) {
+        if (this.petName != petName) return false;
+        return true;
+    }
+
+    public boolean comparebirthdate(LocalDate birthdate) {
+        if (this.birthdate != birthdate) return false;
+        return true;
+    }
+
+    public boolean compareGender(PetGenderEnum gender) {
+        if (this.gender != gender) return false;
+        return true;
+    }
+
+    public boolean compareNeuteredStatus(boolean neuteredStatus) {
+        if (this.neuteredStatus != neuteredStatus) return false;
+        return true;
+    }
+
+    public boolean compareWeight(Double weight) {
+        if (this.weight != weight) return false;
+        return true;
+    }
+
+    public boolean compareCaution(String caution) {
+        if (this.caution != caution) return false;
+        return true;
+    }
+
+    public void updatePetProfileImage(ImageFile petProfileImage){
+        this.petProfileImage = petProfileImage;
+    }
+
+    public void updatePet(PetUpdateRequest petUpdateRequest) {
+        if (!comparePetName(petUpdateRequest.getPetName())) this.petName = petUpdateRequest.getPetName();
+        if (!comparebirthdate(petUpdateRequest.getBirthdate())) this.birthdate = petUpdateRequest.getBirthdate();
+        if (!compareNeuteredStatus(petUpdateRequest.isNeuteredStatus())) this.neuteredStatus = petUpdateRequest.isNeuteredStatus();
+        if (!compareGender(petUpdateRequest.getGender())) this.gender = petUpdateRequest.getGender();
+        if (!compareWeight(petUpdateRequest.getWeight())) this.weight = petUpdateRequest.getWeight();
+        if (!compareCaution(petUpdateRequest.getCaution())) this.caution = petUpdateRequest.getCaution();
+    }
 }

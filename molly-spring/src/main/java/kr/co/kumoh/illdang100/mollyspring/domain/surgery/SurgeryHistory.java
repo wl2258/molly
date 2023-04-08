@@ -2,6 +2,7 @@ package kr.co.kumoh.illdang100.mollyspring.domain.surgery;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.Pet;
+import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+
+import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto.*;
 
 @Entity
 @Getter
@@ -36,5 +39,10 @@ public class SurgeryHistory extends BaseTimeEntity {
         this.pet = pet;
         this.surgeryDate = surgeryDate;
         this.surgeryName = surgeryName;
+    }
+
+    public void updateSurgery(SurgeryUpdateRequest surgeryUpdateRequest) {
+        this.surgeryName = surgeryUpdateRequest.getSurgeryName();
+        this.surgeryDate = surgeryUpdateRequest.getSurgeryDate();
     }
 }
