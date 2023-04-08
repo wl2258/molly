@@ -41,8 +41,8 @@ public class SurgeryHistory extends BaseTimeEntity {
         this.surgeryName = surgeryName;
     }
 
-    public void updateSurgery(SurgeryUpdateRequest request) {
-        this.surgeryName = request.getSurgeryName();
-        this.surgeryDate = request.getSurgeryDate();
+    public void updateSurgery(SurgeryUpdateRequest surgeryUpdateRequest) {
+        this.surgeryName = surgeryUpdateRequest.getSurgeryName();
+        this.surgeryDate = surgeryUpdateRequest.getSurgeryDate();
     }
 }
