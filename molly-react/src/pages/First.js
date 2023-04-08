@@ -16,7 +16,7 @@ let CustomNavLink = styled(NavLink)`
 `;
 
 const First = () => {
-  const [login, setLogin] = useState("로그인");
+  const [login, setLogin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -27,7 +27,7 @@ const First = () => {
   if(accessToken !== null && refreshToken !== null) {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
-    setLogin("로그아웃");
+    setLogin(true);
   }
 
   
@@ -42,9 +42,8 @@ const First = () => {
     <div style={{zIndex:"3"}}>
       <header className={styles.header}>
         <div className={styles.user}>
-          {localStorage.getItem("accessToken") === null ? 
-            <h4 onClick={() => navigate('/login')}>{login}</h4> :
-            <h4 onClick={handleLogout}>{login}</h4>}
+          {!login ? <h4 onClick={() => navigate('/login')}>로그인</h4> :
+            <h4 onClick={handleLogout}>로그아웃</h4>}
         </div>
         <div className={styles.container}>
           <div style={{flexGrow: "1"}} />
