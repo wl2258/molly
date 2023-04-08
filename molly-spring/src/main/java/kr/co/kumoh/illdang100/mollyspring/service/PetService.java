@@ -142,15 +142,16 @@ public class PetService {
 
     /**
      * 반려동물 프로필 이미지 변경
-     * @param petId
-     * @param multipartFile
+     * @param petProfileUpdateRequest
      * @throws IOException
      */
     @Transactional
-    public void updatePetProfile(Long petId, MultipartFile multipartFile) throws IOException {
+    public void updatePetProfile(PetProfileUpdateRequest petProfileUpdateRequest) throws IOException {
 
+        Long petId = petProfileUpdateRequest.getPetId();
+        MultipartFile petProfileImage = petProfileUpdateRequest.getPetProfileImage();
         Pet findPet = deletePetProfile(petId);
-        ImageFile updatedImageFile = s3Service.upload(multipartFile, FileRootPathVO.PET_PATH);
+        ImageFile updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
         findPet.updatePetProfileImage(updatedImageFile);
     }
 
