@@ -28,5 +28,5 @@ spring:
 
 logging:
   level:
-    '[shop.mtcoding.bank]': DEBUG
+    '[kr.co.kumoh.illdang100.mollyspring]': DEBUG
     '[org.hibernate.type]': TRACE
