@@ -147,9 +147,9 @@ public class PetService {
      * @throws IOException
      */
     @Transactional
-    public void updatePetProfileFile(Long petId, MultipartFile multipartFile) throws IOException {
+    public void updatePetProfile(Long petId, MultipartFile multipartFile) throws IOException {
 
-        Pet findPet = deletePetProfileFile(petId);
+        Pet findPet = deletePetProfile(petId);
         ImageFile updatedImageFile = s3Service.upload(multipartFile, FileRootPathVO.PET_PATH);
         findPet.updatePetProfileImage(updatedImageFile);
     }
@@ -160,7 +160,7 @@ public class PetService {
      * @return
      */
     @Transactional
-    public Pet deletePetProfileFile(Long petId) {
+    public Pet deletePetProfile(Long petId) {
 
         Pet findPet = findPetOrElseThrow(petId);
 
