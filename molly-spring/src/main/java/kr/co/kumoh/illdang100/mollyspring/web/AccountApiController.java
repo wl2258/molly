@@ -23,7 +23,7 @@ public class AccountApiController {
 
     private final AccountService accountService;
 
-    @PostMapping("/account/duplicate")
+    @PostMapping("/auth/account/duplicate")
     public ResponseEntity<?> checkNickname(@RequestBody @Valid InputNicknameRequest inputNicknameRequest,
                                            BindingResult bindingResult) {
 
@@ -33,14 +33,16 @@ public class AccountApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 닉네임입니다", null), HttpStatus.OK);
     }
 
-    @PostMapping("/account/{accountId}")
+    @PostMapping("/auth/account/{accountId}")
     @ResponseStatus(HttpStatus.OK)
-    public void completeRegistration(@PathVariable Long accountId,
+    public ResponseEntity<?> completeRegistration(@PathVariable Long accountId,
                                      @Valid SaveAccountRequest saveAccountRequest,
                                      BindingResult bindingResult,
                                      HttpServletResponse response) throws IOException {
 
         accountService.saveAdditionalAccountInfo(accountId, saveAccountRequest);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "추가정보 기입 완료", null), HttpStatus.OK);
     }
 
     @PostMapping("/token/refresh")
