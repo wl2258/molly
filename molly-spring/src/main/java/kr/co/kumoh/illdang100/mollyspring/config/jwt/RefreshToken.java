@@ -23,11 +23,6 @@ public class RefreshToken {
     @Indexed
     private String refreshToken;
 
-    public RefreshToken(String id, String refreshToken) {
-        this.id = id;
-        this.refreshToken = refreshToken;
-    }
-
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }

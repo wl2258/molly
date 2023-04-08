@@ -1,5 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.config.jwt;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,12 +24,12 @@ class RefreshTokenRedisRepositoryTest {
 
         refreshTokenRedisRepository.save(refreshToken);
 
-        Optional<RefreshToken> testToken = refreshTokenRedisRepository.findByRefreshToken("testToken");
+        Optional<RefreshToken> findTokenOpt = refreshTokenRedisRepository.findByRefreshToken("testToken");
 
-        RefreshToken refreshToken1 = testToken.get();
+        RefreshToken findToken = findTokenOpt.get();
 
-        System.out.println("refreshToken1.getId() = " + refreshToken1.getId());
-        System.out.println("refreshToken1.getRole() = " + refreshToken1.getRole());
-        System.out.println("refreshToken1.getRefreshToken() = " + refreshToken1.getRefreshToken());
+        Assertions.assertThat(findToken.getId()).isEqualTo("testId");
+        Assertions.assertThat(findToken.getRole()).isEqualTo("CUSTOMER");
+        Assertions.assertThat(findToken.getRefreshToken()).isEqualTo("testToken");
     }
 }

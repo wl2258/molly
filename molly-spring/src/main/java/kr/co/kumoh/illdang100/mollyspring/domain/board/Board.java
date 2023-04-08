@@ -25,10 +25,10 @@ public class Board extends BaseTimeEntity {
     private Account account;
 
     @Column(nullable = false, length = 60)
-    private String title;
+    private String boardTitle;
 
     @Column(nullable = false, length = 1000)
-    private String content;
+    private String boardContent;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
@@ -48,8 +48,8 @@ public class Board extends BaseTimeEntity {
     public Board(Long id, Account account, String title, String content, BoardEnum category, PetTypeEnum petType, int views) {
         this.id = id;
         this.account = account;
-        this.title = title;
-        this.content = content;
+        this.boardTitle = title;
+        this.boardContent = content;
         this.category = category;
         this.petType = petType;
         this.views = views;

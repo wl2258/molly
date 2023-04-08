@@ -20,8 +20,8 @@ class JwtProcessTest extends DummyObject {
     public void createAccessToken_test() throws Exception {
 
         // given
-        Account account1 = newMockUser(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
-        Account account2 = newMockUser(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
+        Account account1 = newMockAccount(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
+        Account account2 = newMockAccount(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
         PrincipalDetails principalDetails1 = new PrincipalDetails(account1);
         PrincipalDetails principalDetails2 = new PrincipalDetails(account2);
 
