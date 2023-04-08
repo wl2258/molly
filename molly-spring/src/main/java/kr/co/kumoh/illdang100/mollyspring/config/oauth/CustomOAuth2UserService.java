@@ -22,7 +22,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-    // TODO: 테스트 진행하기!!
 
     private final AccountRepository accountRepository;
 
@@ -45,7 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String username = "";
         if (registrationId.equals("google")) {
 
-            log.info("구글 로그인 요청!");
+            log.debug("구글 로그인 요청!");
 
             String providerId = oAuth2User.getAttribute("sub");
             username = registrationId + "_" + providerId;
@@ -53,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new GoogleUserInfo(attributes);
         } else if (registrationId.equals("kakao")) {
 
-            log.info("카카오 로그인 요청!");
+            log.debug("카카오 로그인 요청!");
 
             long providerId = (long) attributes.get("id");
             username = registrationId + "_" + providerId;
