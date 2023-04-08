@@ -20,7 +20,7 @@ public class DummyObject {
                 .build();
     }
 
-    protected Account newMockUser(Long id, String username, String nickname, AccountEnum accountEnum) {
+    protected Account newMockAccount(Long id, String username, String nickname, AccountEnum accountEnum) {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encPassword = passwordEncoder.encode("1234");
