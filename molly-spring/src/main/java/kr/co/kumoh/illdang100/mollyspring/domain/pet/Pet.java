@@ -89,12 +89,12 @@ public abstract class Pet extends BaseTimeEntity {
         this.petProfileImage = petProfileImage;
     }
 
-    public void updatePet(PetUpdateRequest petInfo) {
-        if (!comparePetName(petInfo.getPetName())) this.petName = petInfo.getPetName();
-        if (!comparebirthdate(petInfo.getBirthdate())) this.birthdate = petInfo.getBirthdate();
-        if (!compareNeuteredStatus(petInfo.isNeuteredStatus())) this.neuteredStatus = petInfo.isNeuteredStatus();
-        if (!compareGender(petInfo.getGender())) this.gender = petInfo.getGender();
-        if (!compareWeight(petInfo.getWeight())) this.weight = petInfo.getWeight();
-        if (!compareCaution(petInfo.getCaution())) this.caution = petInfo.getCaution();
+    public void updatePet(PetUpdateRequest petUpdateRequest) {
+        if (!comparePetName(petUpdateRequest.getPetName())) this.petName = petUpdateRequest.getPetName();
+        if (!comparebirthdate(petUpdateRequest.getBirthdate())) this.birthdate = petUpdateRequest.getBirthdate();
+        if (!compareNeuteredStatus(petUpdateRequest.isNeuteredStatus())) this.neuteredStatus = petUpdateRequest.isNeuteredStatus();
+        if (!compareGender(petUpdateRequest.getGender())) this.gender = petUpdateRequest.getGender();
+        if (!compareWeight(petUpdateRequest.getWeight())) this.weight = petUpdateRequest.getWeight();
+        if (!compareCaution(petUpdateRequest.getCaution())) this.caution = petUpdateRequest.getCaution();
     }
 }
