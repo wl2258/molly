@@ -44,9 +44,9 @@ public class MedicationHistory extends BaseTimeEntity {
         this.medicationName = medicationName;
     }
 
-    public void updateMedication(MedicationUpdateRequest medication) {
-        this.medicationName = medication.getMedicationName();
-        this.medicationStartDate = medication.getMedicationStartDate();
-        this.medicationEndDate = medication.getMedicationEndDate();
+    public void updateMedication(MedicationUpdateRequest medicationUpdateRequest) {
+        this.medicationName = medicationUpdateRequest.getMedicationName();
+        this.medicationStartDate = medicationUpdateRequest.getMedicationStartDate();
+        this.medicationEndDate = medicationUpdateRequest.getMedicationEndDate();
     }
 }
