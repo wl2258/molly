@@ -42,7 +42,7 @@ public class PetReqDto {
         @DecimalMin(value = "0.0")
         private double weight;
 
-        private MultipartFile imageFile;
+        private MultipartFile petProfileImage;
 
         @Size(min = 1, max = 100)
         private String caution;
