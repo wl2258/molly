@@ -8,15 +8,21 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import SignUp from './SignUp';
 
-let CustomBody = styled.body`
-  margin-top: 140px;
-  padding: 0 10%;
+let CustomBody = styled.div`
+  margin: 240px 10% 0;
 `;
 
 let Schedule = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 130px;
+  justify-content: center;
+  margin: 0 30% 80px;
+`
+
+let Info = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: -5%;
 `
 
 const Home = () => {
@@ -27,16 +33,21 @@ const Home = () => {
       <Header />
       <CustomBody>
         <Schedule>
-          <div />
-          <Month />
-          <div />
-          <Dday />
-          <div />
+          <div style={{marginRight: "20%"}}>
+            <Month />
+          </div>
+          <div>
+            <Dday />
+          </div>
         </Schedule>
-        <div>
-          <Graph />
-          <Description />
-        </div>
+        <Info>
+          <div>
+            <Graph />
+          </div>
+          <div>
+            <Description />
+          </div>
+        </Info>
       </CustomBody>
       {id === 'signup' && <SignUp />}
     </div>

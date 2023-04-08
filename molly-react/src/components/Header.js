@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from '../css/Header.module.css'
 import styled from 'styled-components';
@@ -18,62 +18,119 @@ const Header = () => {
   const [userView, setUserView] = useState(false);
   const [petView, setPetView] = useState(false);
   const [alarmView, setAalarmView] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const navigate = useNavigate();
 
+  const updateScroll = () => {
+    setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+  }
+  useEffect(()=>{
+      window.addEventListener('scroll', updateScroll);
+  });
+
   return (
-    <div style={{zIndex:"3"}}>
-      <header className={styles.header}>
-        <div className={styles.empty}/>
-        <div className={styles.logo} onClick={() => navigate('/')}>
-          <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="120px"/>
-        </div>
-        <div className={styles.navcontainer}>
-          <nav className={styles.navigation}>
-            <div>
-              <CustomNavLink 
-                style={({ isActive }) => (isActive ? "active" : "")}
-                to="/home">
-                  Home
-              </CustomNavLink>
+    <div style={{zIndex:"3", position: "fixed"}}>
+      {scrollPosition < 100 ? 
+        <header className={styles.header}>
+          <div>
+            <div className={styles.weather}>
+              
             </div>
-            <div>
-              <CustomNavLink 
-                style={({ isActive }) => (isActive ? "active" : "")}
-                to="/calendar">
-                  Calendar
-              </CustomNavLink>
+            <div className={styles.logo} onClick={() => navigate('/')}>
+              <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="160px"/>
             </div>
-            <div>
-              <CustomNavLink
-                style={({ isActive }) => (isActive ? "active" : "")} 
-                to="/list">
-                  Community
-              </CustomNavLink>
+            <div className={styles.icon}>
+              <div onClick={() => {setUserView(!userView)}}>👤</div>
+              <div onClick={() => {setPetView(!petView)}}>🐶</div>
+              <div onClick={() => {setAalarmView(!alarmView)}}>🔔</div>
             </div>
-            <div>
-              <CustomNavLink 
-                style={({ isActive }) => (isActive ? "active" : "")}
-                to="/hospital">
-                  Hospital
-              </CustomNavLink>
+          </div>
+          <div className={styles.navcontainer}>
+            <nav className={styles.navigation}>
+              <div>
+                <CustomNavLink 
+                  style={({ isActive }) => (isActive ? "active" : "")}
+                  to="/home">
+                    Home
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink 
+                  style={({ isActive }) => (isActive ? "active" : "")}
+                  to="/calendar">
+                    Calendar
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink
+                  style={({ isActive }) => (isActive ? "active" : "")} 
+                  to="/list">
+                    Community
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink 
+                  style={({ isActive }) => (isActive ? "active" : "")}
+                  to="/hospital">
+                    Hospital
+                </CustomNavLink>
+              </div>
+              <div>
+                <CustomNavLink
+                  style={({ isActive }) => (isActive ? "active" : "")} 
+                  to="/about">
+                    About
+                </CustomNavLink>
+              </div>
+            </nav>
+          </div>
+        </header> :
+        <header className={styles.changeheader}>
+          <div>
+            <div className={styles.changelogo} onClick={() => navigate('/')}>
+              <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="130px"/>
             </div>
-            <div>
-              <CustomNavLink
-                style={({ isActive }) => (isActive ? "active" : "")} 
-                to="/about">
-                  About
-              </CustomNavLink>
+            <div className={styles.changenavcontainer}>
+              <nav className={styles.changenavigation}>
+                <div>
+                  <CustomNavLink 
+                    style={({ isActive }) => (isActive ? "active" : "")}
+                    to="/home">
+                      Home
+                  </CustomNavLink>
+                </div>
+                <div>
+                  <CustomNavLink 
+                    style={({ isActive }) => (isActive ? "active" : "")}
+                    to="/calendar">
+                      Calendar
+                  </CustomNavLink>
+                </div>
+                <div>
+                  <CustomNavLink
+                    style={({ isActive }) => (isActive ? "active" : "")} 
+                    to="/list">
+                      Community
+                  </CustomNavLink>
+                </div>
+                <div>
+                  <CustomNavLink 
+                    style={({ isActive }) => (isActive ? "active" : "")}
+                    to="/hospital">
+                      Hospital
+                  </CustomNavLink>
+                </div>
+                <div>
+                  <CustomNavLink
+                    style={({ isActive }) => (isActive ? "active" : "")} 
+                    to="/about">
+                      About
+                  </CustomNavLink>
+                </div>
+              </nav>
             </div>
-          </nav>
-        </div>
-        <div className={styles.iconempty}/>
-        <div className={styles.icon}>
-          <div onClick={() => {setUserView(!userView)}}>👤</div>
-          <div onClick={() => {setPetView(!petView)}}>🐶</div>
-          <div onClick={() => {setAalarmView(!alarmView)}}>🔔</div>
-        </div>
-        <div className={styles.iconempty}/>
-      </header>
+          </div>
+        </header>}
       <div className={styles.navuser}>
         <ul>
           { userView && <div className={styles.userinfo}>

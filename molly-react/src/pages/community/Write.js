@@ -6,8 +6,8 @@ import styles from '../../css/Write.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 import { Button } from '../../components/Button';
 
-let CustomBody = styled.body`
-  margin-top: 200px;
+let CustomBody = styled.div`
+  margin-top: 290px;
   padding: 0 5%;
 `;
 
