@@ -6,13 +6,10 @@ import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.PetCalendarResponse;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
-import kr.co.kumoh.illdang100.mollyspring.repository.medication.MedicationRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.cat.CatRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.dog.DogRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.pet.PetRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.rabbit.RabbitRepository;
-import kr.co.kumoh.illdang100.mollyspring.repository.surgery.SurgeryRepository;
-import kr.co.kumoh.illdang100.mollyspring.repository.vaccination.VaccinationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,35 +37,35 @@ public class PetService {
 
     /**
      * 반려동물 등록
-     * @param request
+     * @param petSaveRequest
      * @return
      * @throws IOException
      */
     @Transactional
-    public PetDetailResponse registerPet(PetSaveRequest request) throws IOException {
+    public PetDetailResponse registerPet(PetSaveRequest petSaveRequest) throws IOException {
 
-        Optional<Account> findUserOpt = accountRepository.findById(request.getUserId());
-        if (!findUserOpt.isPresent()) throw new CustomApiException("존재하지 않는 사용자입니다.");
+        Account findUser = accountRepository.findById(petSaveRequest.getUserId())
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
 
-        Account findUser = findUserOpt.get();
-        PetTypeEnum petType = request.getPetType();
+        PetTypeEnum petType = petSaveRequest.getPetType();
 
-        Optional<Pet> findPetOpt = petRepository.findByAccountIdAndPetTypeAndPetNameAndBirthDate(findUser.getId(), petType, request.getPetName(), request.getBirthDate());
+        Optional<Pet> findPetOpt = petRepository.findByAccountIdAndPetTypeAndPetNameAndBirthdate(findUser.getId(), petType, petSaveRequest.getPetName(), petSaveRequest.getBirthdate());
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
-        MultipartFile imageFile = request.getImageFile();
+        MultipartFile imageFile = petSaveRequest.getImageFile();
         if (petType.equals(CAT)) {
-            Pet savedCat = saveCat(request, petType, findUser, imageFile);
+            Pet savedCat = saveCat(petSaveRequest, petType, findUser, imageFile);
             return viewDetails(savedCat.getId());
         }
         else if (petType.equals(DOG)) {
-            Pet savedDog = saveDog(request, petType, findUser, imageFile);
+            Pet savedDog = saveDog(petSaveRequest, petType, findUser, imageFile);
             return viewDetails(savedDog.getId());
         }
         else if (petType.equals(RABBIT)) {
-            Pet savedRabbit = saveRabbit(request, petType, findUser, imageFile);
+            Pet savedRabbit = saveRabbit(petSaveRequest, petType, findUser, imageFile);
             return viewDetails(savedRabbit.getId());
         }
+
         throw new CustomApiException("반려동물 등록 실패");
     }
 
@@ -83,37 +80,37 @@ public class PetService {
 
         String petSpecies = getPetSpecies(findPet);
 
-        PetDetailResponse response = PetDetailResponse.builder()
+        PetDetailResponse petDetailResponse = PetDetailResponse.builder()
                 .userId(findPet.getAccount().getId())
                 .petId(petId)
                 .petType(petType)
                 .petName(findPet.getPetName())
-                .birthDate(findPet.getBirthDate())
+                .birthdate(findPet.getBirthdate())
                 .gender(findPet.getGender())
                 .neuteredStatus(findPet.isNeuteredStatus())
                 .weight(findPet.getWeight())
                 .species(petSpecies)
                 .build();
 
-        if (findPet.getCaution() != null) response.setCaution(findPet.getCaution());
-        if (findPet.getPetProfileImage() != null) response.setProfileImage(findPet.getPetProfileImage().getStoreFileName());
+        if (findPet.getCaution() != null) petDetailResponse.setCaution(findPet.getCaution());
+        if (findPet.getPetProfileImage() != null) petDetailResponse.setProfileImage(findPet.getPetProfileImage().getStoreFileName());
 
-        return response;
+        return petDetailResponse;
     }
 
     /**
      * 반려동물 기본 정보 수정
-     * @param request
+     * @param petUpdateRequest
      * @throws IOException
      */
     @Transactional
-    public Long updatePet(PetUpdateRequest request) {
+    public Long updatePet(PetUpdateRequest petUpdateRequest) {
 
-        Long petId = request.getPetId();
+        Long petId = petUpdateRequest.getPetId();
         Pet findPet = checkPresentPet(petId);
 
-        findPet.updatePet(request);
-        updatePetSpecies(request.getSpecies(), findPet);
+        findPet.updatePet(petUpdateRequest);
+        updatePetSpecies(petUpdateRequest.getSpecies(), findPet);
 
         return findPet.getId();
     }
@@ -132,15 +129,47 @@ public class PetService {
      * @return
      */
     public PetCalendarResponse viewAnnualCalendarSchedule(Long petId) {
-        PetDetailResponse response = viewDetails(petId);
+        PetDetailResponse petDetailResponse = viewDetails(petId);
         return PetCalendarResponse.builder()
-                .petType(response.getPetType())
-                .petName(response.getPetName())
-                .birthDate(response.getBirthDate())
-                .medication(response.getMedication())
-                .surgery(response.getSurgery())
-                .vaccination(response.getVaccination())
+                .petType(petDetailResponse.getPetType())
+                .petName(petDetailResponse.getPetName())
+                .birthdate(petDetailResponse.getBirthdate())
+                .medication(petDetailResponse.getMedication())
+                .surgery(petDetailResponse.getSurgery())
+                .vaccination(petDetailResponse.getVaccination())
                 .build();
+    }
+
+    /**
+     * 반려동물 프로필 이미지 변경
+     * @param petId
+     * @param multipartFile
+     * @throws IOException
+     */
+    @Transactional
+    public void updatePetProfileFile(Long petId, MultipartFile multipartFile) throws IOException {
+
+        Pet findPet = deletePetProfileFile(petId);
+        ImageFile updatedImageFile = s3Service.upload(multipartFile, FileRootPathVO.PET_PATH);
+        findPet.updatePetProfileImage(updatedImageFile);
+    }
+
+    /**
+     * 반려동물 프로필 이미지 삭제
+     * @param petId
+     * @return
+     */
+    @Transactional
+    public Pet deletePetProfileFile(Long petId) {
+
+        Pet findPet = findPetOrElseThrow(petId);
+
+        ImageFile petProfileImage = findPet.getPetProfileImage();
+        if (petProfileImage != null) {
+            s3Service.delete(petProfileImage.getStoreFileName());
+            findPet.updatePetProfileImage(null);
+        }
+        return findPet;
     }
 
     public Pet findPetOrElseThrow(Long petId) {
@@ -202,91 +231,91 @@ public class PetService {
         return findPet instanceof Rabbit;
     }
 
-    private Pet saveCat(PetSaveRequest request, PetTypeEnum petType, Account findUser, MultipartFile multipartFile) throws IOException {
+    private Pet saveCat(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser, MultipartFile multipartFile) throws IOException {
 
         ImageFile petProfileImage = null;
 
         if (multipartFile != null)
             petProfileImage = s3Service.upload(multipartFile, "pet");
 
-        Cat createdCat = createCat(request, petType, findUser, petProfileImage);
+        Cat createdCat = createCat(petSaveRequest, petType, findUser, petProfileImage);
         catRepository.save(createdCat);
 
         return createdCat;
     }
 
-    private Pet saveDog(PetSaveRequest request, PetTypeEnum petType, Account findUser, MultipartFile multipartFile) throws IOException {
+    private Pet saveDog(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser, MultipartFile multipartFile) throws IOException {
 
         ImageFile petProfileImage = null;
         if (multipartFile != null)
             petProfileImage = s3Service.upload(multipartFile, "pet");
 
-        Dog createdDog = createDog(request, petType, findUser, petProfileImage);
+        Dog createdDog = createDog(petSaveRequest, petType, findUser, petProfileImage);
         dogRepository.save(createdDog);
 
         return createdDog;
     }
 
-    private Pet saveRabbit(PetSaveRequest request, PetTypeEnum petType, Account findUser, MultipartFile multipartFile) throws IOException {
+    private Pet saveRabbit(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser, MultipartFile multipartFile) throws IOException {
 
         ImageFile petProfileImage = null;
         if (multipartFile != null)
             petProfileImage = s3Service.upload(multipartFile, "pet");
 
-        Rabbit createdRabbit = createRabbit(request, petType, findUser, petProfileImage);
+        Rabbit createdRabbit = createRabbit(petSaveRequest, petType, findUser, petProfileImage);
         rabbitRepository.save(createdRabbit);
 
         return createdRabbit;
     }
 
-    private Cat createCat(PetSaveRequest request, PetTypeEnum petType, Account findUser, ImageFile petProfileImage) {
+    private Cat createCat(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser, ImageFile petProfileImage) {
 
         return Cat.builder()
                 .account(findUser)
-                .petName(request.getPetName())
-                .gender(request.getGender())
-                .birthdate(request.getBirthDate())
-                .weight(request.getWeight())
-                .neuteredStatus(request.isNeuteredStatus())
+                .petName(petSaveRequest.getPetName())
+                .gender(petSaveRequest.getGender())
+                .birthdate(petSaveRequest.getBirthdate())
+                .weight(petSaveRequest.getWeight())
+                .neuteredStatus(petSaveRequest.isNeuteredStatus())
                 .petType(petType)
-                .catSpecies(CatEnum.valueOf(request.getSpecies()))
-                .caution(request.getCaution())
+                .catSpecies(CatEnum.valueOf(petSaveRequest.getSpecies()))
+                .caution(petSaveRequest.getCaution())
                 .petProfileImage(petProfileImage)
-                .catSpecies(CatEnum.valueOf(request.getSpecies()))
+                .catSpecies(CatEnum.valueOf(petSaveRequest.getSpecies()))
                 .build();
     }
 
-    private Dog createDog(PetSaveRequest request, PetTypeEnum petType, Account findUser, ImageFile petProfileImage) {
+    private Dog createDog(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser, ImageFile petProfileImage) {
 
         return Dog.builder()
                 .account(findUser)
-                .petName(request.getPetName())
-                .gender(request.getGender())
-                .birthdate(request.getBirthDate())
-                .weight(request.getWeight())
-                .neuteredStatus(request.isNeuteredStatus())
+                .petName(petSaveRequest.getPetName())
+                .gender(petSaveRequest.getGender())
+                .birthdate(petSaveRequest.getBirthdate())
+                .weight(petSaveRequest.getWeight())
+                .neuteredStatus(petSaveRequest.isNeuteredStatus())
                 .petType(petType)
-                .dogSpecies(DogEnum.valueOf(request.getSpecies()))
-                .caution(request.getCaution())
+                .dogSpecies(DogEnum.valueOf(petSaveRequest.getSpecies()))
+                .caution(petSaveRequest.getCaution())
                 .petProfileImage(petProfileImage)
-                .dogSpecies(DogEnum.valueOf(request.getSpecies()))
+                .dogSpecies(DogEnum.valueOf(petSaveRequest.getSpecies()))
                 .build();
     }
 
-    private Rabbit createRabbit(PetSaveRequest request, PetTypeEnum petType, Account findUser, ImageFile petProfileImage) {
+    private Rabbit createRabbit(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser, ImageFile petProfileImage) {
 
         return Rabbit.builder()
                 .account(findUser)
-                .petName(request.getPetName())
-                .gender(request.getGender())
-                .birthdate(request.getBirthDate())
-                .weight(request.getWeight())
-                .neuteredStatus(request.isNeuteredStatus())
+                .petName(petSaveRequest.getPetName())
+                .gender(petSaveRequest.getGender())
+                .birthdate(petSaveRequest.getBirthdate())
+                .weight(petSaveRequest.getWeight())
+                .neuteredStatus(petSaveRequest.isNeuteredStatus())
                 .petType(petType)
-                .rabbitSpecies(RabbitEnum.valueOf(request.getSpecies()))
-                .caution(request.getCaution())
+                .rabbitSpecies(RabbitEnum.valueOf(petSaveRequest.getSpecies()))
+                .caution(petSaveRequest.getCaution())
                 .petProfileImage(petProfileImage)
-                .rabbitSpecies(RabbitEnum.valueOf(request.getSpecies()))
+                .rabbitSpecies(RabbitEnum.valueOf(petSaveRequest.getSpecies()))
                 .build();
     }
 }
