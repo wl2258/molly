@@ -82,4 +82,14 @@ public class PetReqDto {
         @Size(min = 1, max = 100)
         private String caution;
     }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class PetProfileUpdateRequest {
+        @NotNull
+        private Long petId;
+        @NotNull
+        private MultipartFile petProfileImage;
+    }
 }
