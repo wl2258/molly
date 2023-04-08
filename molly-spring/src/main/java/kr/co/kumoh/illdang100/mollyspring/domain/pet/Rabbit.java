@@ -17,11 +17,21 @@ import java.time.LocalDate;
 public class Rabbit extends Pet{
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 25)
     private RabbitEnum rabbitSpecies;
 
     @Builder
     public Rabbit(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, String caution, RabbitEnum rabbitSpecies) {
         super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage, caution);
+        this.rabbitSpecies = rabbitSpecies;
+    }
+
+    public boolean compareRabbitSpecies(RabbitEnum rabbitSpecies) {
+        if (this.rabbitSpecies != rabbitSpecies) return false;
+        return true;
+    }
+
+    public void updateRabbitSpecies(RabbitEnum rabbitSpecies) {
         this.rabbitSpecies = rabbitSpecies;
     }
 }

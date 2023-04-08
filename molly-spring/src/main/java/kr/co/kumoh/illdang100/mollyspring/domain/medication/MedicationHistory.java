@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+import static kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationReqDto.*;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,5 +42,11 @@ public class MedicationHistory extends BaseTimeEntity {
         this.medicationStartDate = medicationStartDate;
         this.medicationEndDate = medicationEndDate;
         this.medicationName = medicationName;
+    }
+
+    public void updateMedication(MedicationUpdateRequest medicationUpdateRequest) {
+        this.medicationName = medicationUpdateRequest.getMedicationName();
+        this.medicationStartDate = medicationUpdateRequest.getMedicationStartDate();
+        this.medicationEndDate = medicationUpdateRequest.getMedicationEndDate();
     }
 }
