@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +37,9 @@ class AccountApiControllerTest extends DummyObject {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private EntityManager em;
 
     @BeforeEach
     public void setUp() {
@@ -153,5 +158,6 @@ class AccountApiControllerTest extends DummyObject {
     private void dataSetting() {
 
         accountRepository.save(newAccount("molly_1234", "일당백"));
+        em.clear();
     }
 }
