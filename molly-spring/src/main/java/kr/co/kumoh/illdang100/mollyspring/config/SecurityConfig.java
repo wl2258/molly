@@ -1,6 +1,8 @@
 package kr.co.kumoh.illdang100.mollyspring.config;
 
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.*;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.filter.JwtAuthenticationFilter;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.filter.JwtAuthorizationFilter;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.CustomOAuth2UserService;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2FailureHandler;
 import kr.co.kumoh.illdang100.mollyspring.config.oauth.OAuth2SuccessHandler;

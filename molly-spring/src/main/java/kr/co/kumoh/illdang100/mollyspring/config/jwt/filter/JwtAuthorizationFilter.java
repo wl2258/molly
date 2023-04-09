@@ -1,7 +1,9 @@
-package kr.co.kumoh.illdang100.mollyspring.config.jwt;
+package kr.co.kumoh.illdang100.mollyspring.config.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.kumoh.illdang100.mollyspring.config.auth.PrincipalDetails;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtProcess;
+import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtVO;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
