@@ -20,7 +20,7 @@ public class PetReqDto {
         @NotNull
         private Long userId;
 
-        @NotEmpty
+        @NotNull
         private PetTypeEnum petType;
 
         @NotBlank(message = "반려동물 이름은 빈 문자열이면 안 됩니다.")
