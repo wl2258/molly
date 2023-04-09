@@ -32,7 +32,7 @@ public class PetApiController {
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 등록을 성공했습니다.", petDetailResponse), HttpStatus.CREATED);
     }
     @GetMapping("{petId}")
-    public ResponseEntity<?> viewDetails(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
+    public ResponseEntity<?> viewDetails(@PathVariable @NotNull Long petId) {
 
         PetDetailResponse petDetailResponse = petService.viewDetails(petId);
 
@@ -47,7 +47,7 @@ public class PetApiController {
     }
 
     @DeleteMapping("{petId}")
-    public ResponseEntity<?> deletePet(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
+    public ResponseEntity<?> deletePet(@PathVariable @NotNull Long petId) {
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 삭제를 성공했습니다.", null), HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class PetApiController {
     }
 
     @DeleteMapping("/image/{petId}")
-    public ResponseEntity<?> deletePetProfile(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
+    public ResponseEntity<?> deletePetProfile(@PathVariable @NotNull Long petId) {
 
         petService.deletePetProfile(petId);
 
