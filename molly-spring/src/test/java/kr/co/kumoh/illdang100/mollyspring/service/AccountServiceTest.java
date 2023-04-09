@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.kumoh.illdang100.mollyspring.config.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
-import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,14 +41,9 @@ class AccountServiceTest extends DummyObject {
         when(accountRepository.findByNickname(any())).thenReturn(Optional.empty());
 
         // when
-        ResponseDto responseDto = accountService.checkNicknameDuplicate(account.getNickname());
-        String responseBody = om.writeValueAsString(responseDto);
-        System.out.println("responseBody = " + responseBody);
+        accountService.checkNicknameDuplicate(account.getNickname());
 
         // then
-        assertThat(responseDto.getCode()).isEqualTo(1);
-        assertThat(responseDto.getMsg()).isEqualTo("사용 가능한 닉네임입니다");
-        assertThat(responseDto.getData()).isNull();
     }
 
     @Test
@@ -80,18 +73,13 @@ class AccountServiceTest extends DummyObject {
         when(accountRepository.findById(any())).thenReturn(Optional.of(account));
 
         // when
-        ResponseDto responseDto = accountService.saveAdditionalAccountInfo(accountId, saveAccountRequest);
-        String responseBody = om.writeValueAsString(responseDto);
-        System.out.println("responseBody = " + responseBody);
+        accountService.saveAdditionalAccountInfo(accountId, saveAccountRequest);
 
         // then
-        assertThat(responseDto.getCode()).isEqualTo(1);
-        assertThat(responseDto.getMsg()).isEqualTo("추가정보 기입 완료");
-        assertThat(responseDto.getData()).isNull();
     }
 
     @Test
-    public void saveAdditionalAccountInfo_failure_test() throws Exception{
+    public void saveAdditionalAccountInfo_failure_test() throws Exception {
 
         // given
         Long accountId = 1L;
