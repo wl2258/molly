@@ -2,6 +2,7 @@ package kr.co.kumoh.illdang100.mollyspring.handler;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
+import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomForbiddenException;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,13 @@ public class CustomExceptionHandler {
 
         log.error(e.getMessage());
         return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CustomForbiddenException.class)
+    public ResponseEntity<?> forbiddenException(CustomForbiddenException e) {
+
+        log.error(e.getMessage());
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(CustomValidationException.class)
