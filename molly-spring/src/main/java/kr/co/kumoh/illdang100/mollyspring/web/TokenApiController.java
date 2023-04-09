@@ -2,7 +2,7 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtVO;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
-import kr.co.kumoh.illdang100.mollyspring.service.AccountService;
+import kr.co.kumoh.illdang100.mollyspring.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/token")
 public class TokenApiController {
 
-    private final AccountService accountService;
+    private final TokenService tokenService;
 
     @PostMapping("/refresh")
     public ResponseEntity<?> reIssueAccessToken(@RequestHeader(JwtVO.REFRESH_TOKEN_HEADER) String refreshToken,
@@ -28,7 +28,7 @@ public class TokenApiController {
 
         log.debug("토큰 재발급 수행");
 
-        accountService.reIssueToken(response, refreshToken);
+        tokenService.reIssueToken(response, refreshToken);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "토큰 재발급에 성공하였습니다", null), HttpStatus.OK);
     }

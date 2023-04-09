@@ -2,6 +2,7 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.kumoh.illdang100.mollyspring.config.dummy.DummyObject;
+import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,16 +116,21 @@ class AccountApiControllerTest extends DummyObject {
         String nickname2 = "";
 
         // when
+        // 1. nickname 범위가 10을 넘어가는 경우
         ResultActions resultActions1 =
                 mvc.perform(post("/api/auth/account/save")
                         .param("nickname", nickname1)
                         .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
+
+        // 2. nickname 값이 빈 문자열인 경우
         ResultActions resultActions2 =
                 mvc.perform(post("/api/auth/account/save")
                         .param("nickname", nickname2)
                         .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
+
+        // 3. nickname 값이 null인 경우
         ResultActions resultActions3 =
                 mvc.perform(post("/api/auth/account/save")
                         .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
@@ -135,8 +141,8 @@ class AccountApiControllerTest extends DummyObject {
         String responseBody2 = resultActions2.andReturn().getResponse().getContentAsString();
         System.out.println("responseBody2 = " + responseBody2);
 
-        String responseBody3 = resultActions2.andReturn().getResponse().getContentAsString();
-        System.out.println("responseBody2 = " + responseBody2);
+        String responseBody3 = resultActions3.andReturn().getResponse().getContentAsString();
+        System.out.println("responseBody3 = " + responseBody3);
 
         // then
         resultActions1.andExpect(status().isBadRequest());
