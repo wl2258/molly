@@ -2,6 +2,7 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.config.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
+import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomForbiddenException;
 import kr.co.kumoh.illdang100.mollyspring.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,10 +34,15 @@ public class AccountApiController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> completeRegistration(@ModelAttribute @Valid SaveAccountRequest saveAccountRequest,
+    @PostMapping("/save/{userId}")
+    public ResponseEntity<?> completeRegistration(@PathVariable Long userId,
+                                                  @ModelAttribute @Valid SaveAccountRequest saveAccountRequest,
                                                   BindingResult bindingResult,
                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
+
+        if (!userId.equals(principalDetails.getAccount().getId())) {
+            throw new CustomForbiddenException("권한이 없습니다.");
+        }
 
         ResponseDto responseDto = accountService.saveAdditionalAccountInfo(principalDetails.getAccount().getId(), saveAccountRequest);
 
