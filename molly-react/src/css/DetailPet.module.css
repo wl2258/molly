@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .info {
@@ -45,6 +45,11 @@
 
 .surgery > span:first-child {
   margin-right: 15px;
+}
+
+.weight {
+  margin-left: -60px;
+  margin-right: 150px;
 }
 
 .care, .weight {

@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from '../css/Header.module.css'
 import styled from 'styled-components';
+import {RiAccountCircleLine} from 'react-icons/ri';
+import {TbDog, TbBell} from 'react-icons/tb';
 
 let CustomNavLink = styled(NavLink)`
   color: #AFA79F;
@@ -15,9 +17,12 @@ let CustomNavLink = styled(NavLink)`
 `;
 
 const Header = () => {
+  const userDropdownRef = useRef(null);
+  const petDropdownRef = useRef(null);
+  const alarmRef = useRef(null);
   const [userView, setUserView] = useState(false);
   const [petView, setPetView] = useState(false);
-  const [alarmView, setAalarmView] = useState(false);
+  const [alarmView, setAlarmView] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const navigate = useNavigate();
 
@@ -27,6 +32,33 @@ const Header = () => {
   useEffect(()=>{
       window.addEventListener('scroll', updateScroll);
   });
+
+  useEffect(() => {
+    const handleOutsideClose = (e) => {
+      if(userView && (!userDropdownRef.current.contains(e.target))) setUserView(false);
+    };
+    document.addEventListener('click', handleOutsideClose);
+    
+    return () => document.removeEventListener('click', handleOutsideClose);
+  }, [userView]);
+  
+  useEffect(() => {
+    const handleOutsideClose = (e) => {
+      if(petView && (!petDropdownRef.current.contains(e.target))) setPetView(false);
+    };
+    document.addEventListener('click', handleOutsideClose);
+    
+    return () => document.removeEventListener('click', handleOutsideClose);
+  }, [petView]);
+
+  useEffect(() => {
+    const handleOutsideClose = (e) => {
+      if(alarmView && (!alarmRef.current.contains(e.target))) setAlarmView(false);
+    };
+    document.addEventListener('click', handleOutsideClose);
+    
+    return () => document.removeEventListener('click', handleOutsideClose);
+  }, [alarmView]);
 
   return (
     <div style={{zIndex:"3", position: "fixed"}}>
@@ -40,9 +72,21 @@ const Header = () => {
               <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="160px"/>
             </div>
             <div className={styles.icon}>
-              <div onClick={() => {setUserView(!userView)}}>👤</div>
-              <div onClick={() => {setPetView(!petView)}}>🐶</div>
-              <div onClick={() => {setAalarmView(!alarmView)}}>🔔</div>
+              <div ref={userDropdownRef} onClick={() => {setUserView(!userView)}}>
+                <span><RiAccountCircleLine color="#AFA79F" size="29px"/></span>
+                { userView && <div className={styles.userinfo}>
+                  <UserDropdown/></div> }
+              </div>
+              <div ref={petDropdownRef} onClick={() => {setPetView(!petView)}}>
+                <span><TbDog color="#AFA79F" size="29px"/></span>
+                { petView && <div className={styles.petinfo}>
+                  <PetDropdown/></div> }
+              </div>
+              <div ref={alarmRef} onClick={() => {setAlarmView(!alarmView)}}>
+                <span><TbBell color="#AFA79F" size="29px"/></span>
+                { alarmView && <div className={styles.alarm}>
+                  <AlarmDropdown/></div> }
+              </div>
             </div>
           </div>
           <div className={styles.navcontainer}>
@@ -131,20 +175,6 @@ const Header = () => {
             </div>
           </div>
         </header>}
-      <div className={styles.navuser}>
-        <ul>
-          { userView && <div className={styles.userinfo}>
-            <UserDropdown/></div> }
-        </ul>
-        <ul>
-          { petView && <div className={styles.petinfo}>
-            <PetDropdown/></div> }
-        </ul>
-        <ul>
-          { alarmView && <div className={styles.alarm}>
-            <AlarmDropdown/></div> }
-        </ul>
-      </div>
     </div>
   );
 };

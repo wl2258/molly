@@ -5,8 +5,8 @@ import Header from '../../components/Header';
 import styled from 'styled-components';
 
 let CustomBody = styled.div`
-  margin-top: 140px;
-  padding: 0 10%;
+  margin-top: 240px;
+  margin-bottom: 50px;
 `;
 
 const DetailPet = () => {
