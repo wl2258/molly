@@ -44,8 +44,7 @@ public class PetService {
     @Transactional
     public PetDetailResponse registerPet(PetSaveRequest petSaveRequest) throws IOException {
 
-        Account findUser = accountRepository.findById(petSaveRequest.getUserId())
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
+        Account findUser = findAccountOrElseThrow(petSaveRequest.getUserId());
 
         PetTypeEnum petType = petSaveRequest.getPetType();
 
@@ -75,7 +74,7 @@ public class PetService {
      * @return
      */
     public PetDetailResponse viewDetails(Long petId) {
-        Pet findPet = checkPresentPet(petId);
+        Pet findPet = findPetOrElseThrow(petId);
         PetTypeEnum petType = findPet.getPetType();
 
         String petSpecies = getPetSpecies(findPet);
@@ -106,13 +105,20 @@ public class PetService {
     @Transactional
     public Long updatePet(PetUpdateRequest petUpdateRequest) {
 
+        findAccountOrElseThrow(petUpdateRequest.getUserId());
+
         Long petId = petUpdateRequest.getPetId();
-        Pet findPet = checkPresentPet(petId);
+        Pet findPet = findPetOrElseThrow(petId);
 
         findPet.updatePet(petUpdateRequest);
         updatePetSpecies(petUpdateRequest.getSpecies(), findPet);
 
         return findPet.getId();
+    }
+
+    private Account findAccountOrElseThrow(Long userId) {
+        return accountRepository.findById(userId)
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다."));
     }
 
     /**
@@ -176,13 +182,6 @@ public class PetService {
     public Pet findPetOrElseThrow(Long petId) {
         return petRepository.findById(petId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 반려동물입니다."));
-    }
-
-    private Pet checkPresentPet(Long petId) {
-        Pet findPet = petRepository.findById(petId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 반려동물입니다."));
-
-        return findPet;
     }
 
     private static String getPetSpecies(Pet findPet) {
