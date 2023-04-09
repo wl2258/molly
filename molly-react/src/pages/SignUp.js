@@ -30,11 +30,14 @@ const SignUp = () => {
   const params = new URLSearchParams(location.search);
   let color = disabled ? "#D6CCC3" : "#B27910";
 
-  const accessToken = params.get('accessToken');
-  const refreshToken = params.get('refreshToken');
 
-  localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
+  useEffect(() => {
+    const accessToken = params.get('accessToken');
+    const refreshToken = params.get('refreshToken');
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+  }, []);
+  
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -53,13 +56,15 @@ const SignUp = () => {
           const preRefreshToken = localStorage.getItem("refreshToken");
           if(preRefreshToken) {
             async function issuedToken() {
+              const config = {
+                headers: {
+                  "Refresh-Token": preRefreshToken
+                }
+              }
               return await axios
-                .post(`http://localhost:8080/api/token/refresh`, {
-                  "Refresh-Token": preRefreshToken,
-                })
+                .post(`http://localhost:8080/api/token/refresh`, null, config)
                 .then(async (res) => {
-                  localStorage.removeItem('accessToken');
-                  localStorage.removeItem('refreshToken');
+                  localStorage.clear();
                   const reAccessToken = res.headers.get("Authorization");
                   const reRefreshToken = res.headers.get("Refresh-token");
                   localStorage.setItem("accessToken", reAccessToken);
@@ -70,11 +75,7 @@ const SignUp = () => {
                   return await axios(prevRequest);
                 })
                 .catch((e) => {
-                  localStorage.removeItem('accessToken');
-                  localStorage.removeItem('refreshToken');
                   console.log("토큰 재발급 실패");
-                  window.location.replace("/login");
-
                   return new Error(e);
                 });
             }
@@ -104,16 +105,20 @@ const SignUp = () => {
       formData.append("accountProfileImage", imgRef.current.files[0]);
     }
 
+    const config = {
+      headers: {
+        Authorization : localStorage.getItem("accessToken"),
+      }
+    }
+
     const fetchData = async function fetch() {
-      const response = await axiosInstance.post(`/api/auth/account/save`, {
-        headers: {
-          Authorization : localStorage.getItem("accessToken"),
-        },
-        data: formData
-      })
+      const response = await axiosInstance.post(`/api/auth/account/save`, formData, config)
       console.log(response); 
-      if(response.code === 1) {
+      if(response.data.code === 1) {
         window.location.replace("/");
+      }
+      else if(response.data.code === -1) {
+        console.log(response.data.msg);
       }
     }
 
@@ -123,26 +128,32 @@ const SignUp = () => {
   const checkDuplicate = (e) => {
     setDisabled(true);
     setDuplicate(0);
+
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken"),
+        "Content-Type": "application/json"
+      }
+    }
+
+    const data = {
+      "nickname" : nickname
+    }
+
     if(effective === false) {
       setEffectiveColor("red");
-    } else if(effective === true) {
+    } 
+    else if(effective === true) {
       setEffectiveColor("#827870");
+      
       const fetchData = async function fetch() {
-        const response = await axiosInstance.post(`/api/auth/account/duplicate`, {
-          headers: {
-            Authorization : localStorage.getItem("accessToken"),
-            "Content-Type": "application/json"
-          },
-          data: {
-            nickname : nickname
-          }
-        })
+        const response = await axiosInstance.post(`/api/auth/account/duplicate`, data, config);
         console.log(response); 
-        if(response.code === 1) {
+        if(response.data.code === 1) {
           setDisabled(false);
           setDuplicate(2);
         } 
-        else if(response.code === -1) {
+        else if(response.data.code === -1) {
           setDisabled(true);
           setDuplicate(1);
         }

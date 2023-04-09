@@ -50,8 +50,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         String redirectUrl = makeRedirectUrl(additionalInputUri, principal, accessToken, refreshToken);
-        log.info("accessToken={}", accessToken);
-        log.info("redirectUrl={}", redirectUrl);
+        log.debug("accessToken={}", accessToken);
+        log.debug("redirectUrl={}", redirectUrl);
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
@@ -64,7 +64,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refreshToken =
                 jwtProcess.createRefreshToken(accountId, role);
 
-        log.info("생성된 refreshToken={}", refreshToken);
+        log.debug("생성된 refreshToken={}", refreshToken);
 
         refreshTokenRedisRepository.save(RefreshToken.builder()
                 .id(accountId)

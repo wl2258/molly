@@ -20,8 +20,8 @@ class JwtProcessTest extends DummyObject {
     public void createAccessToken_test() throws Exception {
 
         // given
-        Account account1 = newMockUser(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
-        Account account2 = newMockUser(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
+        Account account1 = newMockAccount(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
+        Account account2 = newMockAccount(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
         PrincipalDetails principalDetails1 = new PrincipalDetails(account1);
         PrincipalDetails principalDetails2 = new PrincipalDetails(account2);
 
@@ -56,20 +56,26 @@ class JwtProcessTest extends DummyObject {
     public void verify_test() throws Exception {
 
         // given
-        String jwtToken1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiLssL3snZjshKTqs4TtlITroZzsoJ3tirjsnbzri7nrsLHrqrDrpqwiLCJyb2xlIjoiQ1VTVE9NRVIiLCJpZCI6MSwiZXhwIjoxNjgwODY3Mjc1fQ.btwJHo3cfi9xrwGzpxJyBQVDYKLiJUmmF2jlm1aJLTqJxpfXCSFwC8JjpIzbyVzJBJu-u2qBEnzJmyitSEztig";
-        String jwtToken2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiLssL3snZjshKTqs4TtlITroZzsoJ3tirjsnbzri7nrsLHrqrDrpqwiLCJyb2xlIjoiQURNSU4iLCJpZCI6MiwiZXhwIjoxNjgwODY3Mjc1fQ.hh4ouZaXSWvSE5qa6UdSG2JYqbrVuskp2XOzZMuLi_iAFGy-ItCWXv2XlwgIylIy3ehZMSSQ7u2kfczmhTUSFw";
+        Account account1 = newMockAccount(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
+        Account account2 = newMockAccount(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
+
+        String accessToken1 = jwtProcess.createNewAccessToken(account1.getId(), account1.getRole().toString());
+        String accessToken2 = jwtProcess.createNewAccessToken(account2.getId(), account2.getRole().toString());
+
+        String jwtToken1 = accessToken1.replace(JwtVO.TOKEN_PREFIX, "");
+        String jwtToken2 = accessToken2.replace(JwtVO.TOKEN_PREFIX, "");
 
         // when
-        PrincipalDetails principalDetails1 = jwtProcess.verify(jwtToken1);
-        PrincipalDetails principalDetails2 = jwtProcess.verify(jwtToken2);
-        Account account1 = principalDetails1.getAccount();
-        Account account2 = principalDetails2.getAccount();
+        PrincipalDetails createdPrincipalDetails1 = jwtProcess.verify(jwtToken1);
+        PrincipalDetails createdPrincipalDetails2 = jwtProcess.verify(jwtToken2);
+        Account createdAccount1 = createdPrincipalDetails1.getAccount();
+        Account createdAccount2 = createdPrincipalDetails2.getAccount();
 
         // then
-        assertThat(account1.getId()).isEqualTo(1L);
-        assertThat(account2.getId()).isEqualTo(2L);
+        assertThat(createdAccount1.getId()).isEqualTo(1L);
+        assertThat(createdAccount2.getId()).isEqualTo(2L);
 
-        assertThat(account1.getRole()).isEqualTo(AccountEnum.CUSTOMER);
-        assertThat(account2.getRole()).isEqualTo(AccountEnum.ADMIN);
+        assertThat(createdAccount1.getRole()).isEqualTo(AccountEnum.CUSTOMER);
+        assertThat(createdAccount2.getRole()).isEqualTo(AccountEnum.ADMIN);
     }
 }

@@ -1,0 +1,96 @@
+.title {
+  display: flex;
+  margin-left: 7%;
+}
+
+.title > div:first-child {
+  margin-right: 45px;
+}
+
+.title > div:first-child > h1 {
+  font-size: 40px;
+  color: #656565;
+}
+
+.title > div:nth-child(2) > h1{
+  font-size: 28px;
+  padding-top: 15px;
+  color: #656565;
+}
+
+.calendar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.container {
+  width: 260px;
+  height: 390px;
+  padding: 20px 15px 10px;
+  margin: 20px 3% 45px 0;
+  background-color: #FAFAFA;
+  border-radius: 20px;
+}
+
+.calendartr > td {
+  height: 45px;
+  position: relative;
+  text-align: center;
+}
+
+.month {
+  margin-bottom: 15px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.month > span {
+  font-weight: bold;
+  font-size: 18px;
+  color: #656565;
+}
+
+.week > td {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 10px 0 20px 0;
+}
+
+.monthline {
+  height: 12px;
+}
+
+.calendartr > td > span {
+  position: absolute;
+  top: 5px;
+  right: 30%;
+}
+
+.todaycontainer {
+  position: relative;
+  color: #656565;
+}
+
+.today {
+  background-color: #F4E1D4;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  position: absolute;
+  top: -14px;
+  left: 6px;
+}
+
+.vaccine {
+  width: 31px;
+  height: 11px;
+  background-color: #DCCFC2;
+  border-radius: 3px;
+  position: absolute;
+  top: 32px;
+  left: 11px;
+}
