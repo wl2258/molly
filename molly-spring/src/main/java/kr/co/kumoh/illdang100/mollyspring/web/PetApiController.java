@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
@@ -32,7 +33,7 @@ public class PetApiController {
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 등록을 성공했습니다.", petDetailResponse), HttpStatus.CREATED);
     }
     @GetMapping("{petId}")
-    public ResponseEntity<?> viewDetails(@PathVariable Long petId) {
+    public ResponseEntity<?> viewDetails(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
 
         PetDetailResponse petDetailResponse = petService.viewDetails(petId);
 
@@ -47,24 +48,24 @@ public class PetApiController {
     }
 
     @DeleteMapping("{petId}")
-    public ResponseEntity<?> deletePet(@PathVariable Long petId) {
+    public ResponseEntity<?> deletePet(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 삭제를 성공했습니다.", null), HttpStatus.OK);
     }
 
 
     @PutMapping(path = "/image", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updatePetProfile(Long petId, @ModelAttribute MultipartFile profileImage) throws IOException {
+    public ResponseEntity<?> updatePetProfile(@ModelAttribute @Valid PetProfileUpdateRequest petProfileUpdateRequest, BindingResult bindingResult) throws IOException {
 
-        petService.updatePetProfileFile(petId, profileImage);
+        petService.updatePetProfile(petProfileUpdateRequest);
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 수정했습니다.", null), HttpStatus.OK);
     }
 
-    @DeleteMapping("/image")
-    public ResponseEntity<?> deletePetProfile(Long petId) {
+    @DeleteMapping("/image/{petId}")
+    public ResponseEntity<?> deletePetProfile(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
 
-        petService.deletePetProfileFile(petId);
+        petService.deletePetProfile(petId);
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 삭제했습니다.", null), HttpStatus.OK);
     }

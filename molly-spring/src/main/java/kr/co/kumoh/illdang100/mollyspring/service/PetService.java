@@ -52,7 +52,7 @@ public class PetService {
         Optional<Pet> findPetOpt = petRepository.findByAccountIdAndPetTypeAndPetNameAndBirthdate(findUser.getId(), petType, petSaveRequest.getPetName(), petSaveRequest.getBirthdate());
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
-        MultipartFile imageFile = petSaveRequest.getImageFile();
+        MultipartFile imageFile = petSaveRequest.getPetProfileImage();
         if (petType.equals(CAT)) {
             Pet savedCat = saveCat(petSaveRequest, petType, findUser, imageFile);
             return viewDetails(savedCat.getId());
@@ -142,15 +142,16 @@ public class PetService {
 
     /**
      * 반려동물 프로필 이미지 변경
-     * @param petId
-     * @param multipartFile
+     * @param petProfileUpdateRequest
      * @throws IOException
      */
     @Transactional
-    public void updatePetProfileFile(Long petId, MultipartFile multipartFile) throws IOException {
+    public void updatePetProfile(PetProfileUpdateRequest petProfileUpdateRequest) throws IOException {
 
-        Pet findPet = deletePetProfileFile(petId);
-        ImageFile updatedImageFile = s3Service.upload(multipartFile, FileRootPathVO.PET_PATH);
+        Long petId = petProfileUpdateRequest.getPetId();
+        MultipartFile petProfileImage = petProfileUpdateRequest.getPetProfileImage();
+        Pet findPet = deletePetProfile(petId);
+        ImageFile updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
         findPet.updatePetProfileImage(updatedImageFile);
     }
 
@@ -160,7 +161,7 @@ public class PetService {
      * @return
      */
     @Transactional
-    public Pet deletePetProfileFile(Long petId) {
+    public Pet deletePetProfile(Long petId) {
 
         Pet findPet = findPetOrElseThrow(petId);
 

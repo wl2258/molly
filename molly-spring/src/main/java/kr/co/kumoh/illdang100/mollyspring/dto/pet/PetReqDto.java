@@ -20,7 +20,7 @@ public class PetReqDto {
         @NotNull
         private Long userId;
 
-        @NotEmpty
+        @NotNull
         private PetTypeEnum petType;
 
         @NotBlank(message = "반려동물 이름은 빈 문자열이면 안 됩니다.")
@@ -42,7 +42,7 @@ public class PetReqDto {
         @DecimalMin(value = "0.0")
         private double weight;
 
-        private MultipartFile imageFile;
+        private MultipartFile petProfileImage;
 
         @Size(min = 1, max = 100)
         private String caution;
@@ -81,5 +81,15 @@ public class PetReqDto {
 
         @Size(min = 1, max = 100)
         private String caution;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class PetProfileUpdateRequest {
+        @NotNull
+        private Long petId;
+        @NotNull
+        private MultipartFile petProfileImage;
     }
 }
