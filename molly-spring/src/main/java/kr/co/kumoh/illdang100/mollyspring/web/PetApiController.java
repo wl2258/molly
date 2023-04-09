@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -25,7 +24,7 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 public class PetApiController {
 
     private final PetService petService;
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetSaveRequest petSaveRequest, BindingResult bindingResult) throws IOException {
 
         PetDetailResponse petDetailResponse = petService.registerPet(petSaveRequest);
@@ -54,7 +53,7 @@ public class PetApiController {
     }
 
 
-    @PutMapping(path = "/image", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePetProfile(@ModelAttribute @Valid PetProfileUpdateRequest petProfileUpdateRequest, BindingResult bindingResult) throws IOException {
 
         petService.updatePetProfile(petProfileUpdateRequest);
