@@ -1,7 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.kumoh.illdang100.mollyspring.config.dummy.DummyObject;
+import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;

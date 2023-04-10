@@ -1,8 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.kumoh.illdang100.mollyspring.config.dummy.DummyObject;
-import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
+import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
