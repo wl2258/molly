@@ -30,6 +30,9 @@ const First = () => {
       localStorage.setItem("refreshToken", refreshToken);
       setLogin(true);
     }
+    else if(localStorage.getItem("accessToken") !== null && localStorage.getItem("refreshToken") !== null) {
+      setLogin(true);
+    }
   }, []);
 
   const handleLogout = () => {
