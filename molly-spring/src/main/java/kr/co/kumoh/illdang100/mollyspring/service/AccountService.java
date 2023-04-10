@@ -1,9 +1,11 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.AccountImage;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.image.AccountImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,13 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final AccountImageRepository accountImageRepository;
     private final S3Service s3Service;
 
+    /**
+     * 닉네임 중복 검사
+     * @param nickname 중복 검사를 원하는 닉네임
+     */
     @Transactional(readOnly = true)
     public void checkNicknameDuplicate(String nickname) {
 
@@ -33,6 +40,11 @@ public class AccountService {
         }
     }
 
+    /**
+     * 회원가입 시 닉네임과 프로필 이미지 저장
+     * @param accountId 회원가입을 원하는 사용자 pk
+     * @param saveAccountRequest 사용자 닉네임과 프로필 이미지 정보가 담긴 request dto
+     */
     @Transactional
     public void saveAdditionalAccountInfo(Long accountId, SaveAccountRequest saveAccountRequest) throws IOException {
 
@@ -49,7 +61,11 @@ public class AccountService {
 
             ImageFile accountImageFile =
                     s3Service.upload(saveAccountRequest.getAccountProfileImage(), FileRootPathVO.ACCOUNT_PATH);
-            account.changeProfileImage(accountImageFile);
+
+            accountImageRepository.save(AccountImage.builder()
+                    .account(account)
+                    .accountProfileImage(accountImageFile)
+                    .build());
         }
     }
 }
