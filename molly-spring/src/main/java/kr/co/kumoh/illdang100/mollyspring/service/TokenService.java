@@ -1,9 +1,9 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtProcess;
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtVO;
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.RefreshToken;
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.RefreshTokenRedisRepository;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.JwtProcess;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.JwtVO;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshToken;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshTokenRedisRepository;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

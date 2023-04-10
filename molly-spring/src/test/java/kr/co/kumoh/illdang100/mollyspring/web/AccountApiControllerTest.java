@@ -1,8 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.kumoh.illdang100.mollyspring.config.dummy.DummyObject;
-import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
+import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,6 +36,9 @@ class AccountApiControllerTest extends DummyObject {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private EntityManager em;
 
     @BeforeEach
     public void setUp() {
@@ -153,5 +157,6 @@ class AccountApiControllerTest extends DummyObject {
     private void dataSetting() {
 
         accountRepository.save(newAccount("molly_1234", "일당백"));
+        em.clear();
     }
 }

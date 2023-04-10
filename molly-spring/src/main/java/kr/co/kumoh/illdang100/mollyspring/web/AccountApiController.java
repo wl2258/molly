@@ -1,6 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
-import kr.co.kumoh.illdang100.mollyspring.config.auth.PrincipalDetails;
+import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,9 @@ public class AccountApiController {
                                            BindingResult bindingResult) {
 
         String nickname = inputNicknameRequest.getNickname();
-        ResponseDto responseDto = accountService.checkNicknameDuplicate(nickname);
+        accountService.checkNicknameDuplicate(nickname);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용 가능한 닉네임입니다", null), HttpStatus.OK);
     }
 
     @PostMapping("/save")
@@ -38,8 +38,8 @@ public class AccountApiController {
                                                   BindingResult bindingResult,
                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
 
-        ResponseDto responseDto = accountService.saveAdditionalAccountInfo(principalDetails.getAccount().getId(), saveAccountRequest);
+        accountService.saveAdditionalAccountInfo(principalDetails.getAccount().getId(), saveAccountRequest);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "추가정보 기입 완료", null), HttpStatus.OK);
     }
 }

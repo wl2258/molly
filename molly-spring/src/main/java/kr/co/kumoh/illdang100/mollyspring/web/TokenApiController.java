@@ -1,6 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
-import kr.co.kumoh.illdang100.mollyspring.config.jwt.JwtVO;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.JwtVO;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.service.TokenService;
 import lombok.RequiredArgsConstructor;
