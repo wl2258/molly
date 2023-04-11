@@ -32,4 +32,8 @@ public class PetImage {
         this.pet = pet;
         this.petProfileImage = petProfileImage;
     }
+
+    public void updatePetProfileImage(ImageFile petProfileImage){
+        this.petProfileImage = petProfileImage;
+    }
 }
