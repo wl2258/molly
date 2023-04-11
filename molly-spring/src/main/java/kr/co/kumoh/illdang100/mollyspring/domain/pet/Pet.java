@@ -49,9 +49,6 @@ public abstract class Pet extends BaseTimeEntity {
     @Column(nullable = false, length = 15)
     private PetTypeEnum petType;
 
-    @Embedded
-    private ImageFile petProfileImage;
-
     @Column(length = 100)
     private String caution;
 
@@ -83,10 +80,6 @@ public abstract class Pet extends BaseTimeEntity {
     public boolean compareCaution(String caution) {
         if (this.caution != caution) return false;
         return true;
-    }
-
-    public void updatePetProfileImage(ImageFile petProfileImage){
-        this.petProfileImage = petProfileImage;
     }
 
     public void updatePet(PetUpdateRequest petUpdateRequest) {
