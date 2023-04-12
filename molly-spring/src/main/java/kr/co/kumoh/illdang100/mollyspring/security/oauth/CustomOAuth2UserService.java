@@ -9,6 +9,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -70,10 +71,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String oauthEmail = oAuth2UserInfo.getEmail();
         if (accountOptional.isEmpty()) {
 
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
             account = Account.builder()
                     .username(username)
                     .email(oauthEmail)
-                    .password(UUID.randomUUID().toString())
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .role(AccountEnum.CUSTOMER)
                     .build();
             accountRepository.save(account);
