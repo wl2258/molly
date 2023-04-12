@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -72,6 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             account = Account.builder()
                     .username(username)
                     .email(oauthEmail)
+                    .password(UUID.randomUUID().toString())
                     .role(AccountEnum.CUSTOMER)
                     .build();
             accountRepository.save(account);
