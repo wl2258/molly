@@ -2,7 +2,6 @@ package kr.co.kumoh.illdang100.mollyspring.security.dummy;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
-import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -39,16 +38,14 @@ public class DummyObject {
                 .build();
     }
 
-    protected Pet newMockPet(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, String caution, DogEnum species) {
+    protected Pet newPet(Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, String caution, DogEnum species) {
         return Dog.builder()
-                .id(id)
                 .account(account)
                 .petName(petName)
                 .gender(gender)
                 .neuteredStatus(neuteredStatus)
                 .weight(weight)
                 .petType(petType)
-                .petProfileImage(petProfileImage)
                 .birthdate(birthdate)
                 .caution(caution)
                 .dogSpecies(species)
