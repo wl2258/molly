@@ -2,7 +2,6 @@ package kr.co.kumoh.illdang100.mollyspring.domain.pet;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
-import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.PetUpdateRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -49,9 +48,6 @@ public abstract class Pet extends BaseTimeEntity {
     @Column(nullable = false, length = 15)
     private PetTypeEnum petType;
 
-    @Embedded
-    private ImageFile petProfileImage;
-
     @Column(length = 100)
     private String caution;
 
@@ -83,10 +79,6 @@ public abstract class Pet extends BaseTimeEntity {
     public boolean compareCaution(String caution) {
         if (this.caution != caution) return false;
         return true;
-    }
-
-    public void updatePetProfileImage(ImageFile petProfileImage){
-        this.petProfileImage = petProfileImage;
     }
 
     public void updatePet(PetUpdateRequest petUpdateRequest) {

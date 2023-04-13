@@ -2,7 +2,10 @@ package kr.co.kumoh.illdang100.mollyspring.security.dummy;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
+import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.time.LocalDate;
 
 public class DummyObject {
 
@@ -32,6 +35,20 @@ public class DummyObject {
                 .email(username + "@naver.com")
                 .nickname(nickname)
                 .role(accountEnum)
+                .build();
+    }
+
+    protected Pet newPet(Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, String caution, DogEnum species) {
+        return Dog.builder()
+                .account(account)
+                .petName(petName)
+                .gender(gender)
+                .neuteredStatus(neuteredStatus)
+                .weight(weight)
+                .petType(petType)
+                .birthdate(birthdate)
+                .caution(caution)
+                .dogSpecies(species)
                 .build();
     }
 }

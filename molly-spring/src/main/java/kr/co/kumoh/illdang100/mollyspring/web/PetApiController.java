@@ -10,13 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
 
 @Slf4j
 @RestController
@@ -25,15 +25,15 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 public class PetApiController {
 
     private final PetService petService;
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetSaveRequest petSaveRequest, BindingResult bindingResult) throws IOException {
 
-        PetDetailResponse petDetailResponse = petService.registerPet(petSaveRequest);
+        Long petId = petService.registerPet(petSaveRequest);
 
-        return new ResponseEntity<>(new ResponseDto(1, "반려동물 등록을 성공했습니다.", petDetailResponse), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto(1, "반려동물 등록을 성공했습니다.", new PetSaveResponse(petId)), HttpStatus.CREATED);
     }
     @GetMapping("{petId}")
-    public ResponseEntity<?> viewDetails(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
+    public ResponseEntity<?> viewDetails(@PathVariable @NotNull Long petId) {
 
         PetDetailResponse petDetailResponse = petService.viewDetails(petId);
 
@@ -48,13 +48,15 @@ public class PetApiController {
     }
 
     @DeleteMapping("{petId}")
-    public ResponseEntity<?> deletePet(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
+    public ResponseEntity<?> deletePet(@PathVariable @NotNull Long petId) {
+
+        petService.deletePet(petId);
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 삭제를 성공했습니다.", null), HttpStatus.OK);
     }
 
 
-    @PutMapping(path = "/image", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePetProfile(@ModelAttribute @Valid PetProfileUpdateRequest petProfileUpdateRequest, BindingResult bindingResult) throws IOException {
 
         petService.updatePetProfile(petProfileUpdateRequest);
@@ -63,7 +65,7 @@ public class PetApiController {
     }
 
     @DeleteMapping("/image/{petId}")
-    public ResponseEntity<?> deletePetProfile(@PathVariable @NotNull Long petId, BindingResult bindingResult) {
+    public ResponseEntity<?> deletePetProfile(@PathVariable @NotNull Long petId) {
 
         petService.deletePetProfile(petId);
 
