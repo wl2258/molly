@@ -6,6 +6,8 @@ import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.image.AccountImageRepository;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshToken;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountImageRepository accountImageRepository;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final S3Service s3Service;
 
     /**
@@ -66,6 +69,17 @@ public class AccountService {
                     .account(account)
                     .accountProfileImage(accountImageFile)
                     .build());
+        }
+    }
+
+    @Transactional
+    public void deleteRefreshToken(String refreshToken) {
+
+        Optional<RefreshToken> refreshTokenOpt = refreshTokenRedisRepository.findByRefreshToken(refreshToken);
+
+        if (refreshTokenOpt.isPresent()) {
+            RefreshToken findRefreshToken = refreshTokenOpt.get();
+            refreshTokenRedisRepository.delete(findRefreshToken);
         }
     }
 }
