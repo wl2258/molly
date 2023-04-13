@@ -39,7 +39,7 @@ public class PetApiController {
 
         return new ResponseEntity<>(new ResponseDto(1, "해당 반려동물의 정보입니다.", petDetailResponse), HttpStatus.OK);
     }
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<?> updatePet(@ModelAttribute @Valid PetUpdateRequest petUpdateRequest, BindingResult bindingResult) {
 
         petService.updatePet(petUpdateRequest);
@@ -56,7 +56,7 @@ public class PetApiController {
     }
 
 
-    @PutMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePetProfile(@ModelAttribute @Valid PetProfileUpdateRequest petProfileUpdateRequest, BindingResult bindingResult) throws IOException {
 
         petService.updatePetProfile(petProfileUpdateRequest);

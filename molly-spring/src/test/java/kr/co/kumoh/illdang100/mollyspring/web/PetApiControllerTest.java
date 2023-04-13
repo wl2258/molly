@@ -157,7 +157,7 @@ class PetApiControllerTest extends DummyObject {
         petRepository.save(pet);
 
         //when
-        ResultActions resultActions = mockMvc.perform(put("/api/auth/pet")
+        ResultActions resultActions = mockMvc.perform(patch("/api/auth/pet")
                 .param("userId", String.valueOf(account.getId()))
                 .param("petId", String.valueOf(pet.getId()))
                 .param("petName", "강아지")
@@ -184,7 +184,7 @@ class PetApiControllerTest extends DummyObject {
         accountRepository.save(account);
 
         //when
-        ResultActions resultActions = mockMvc.perform(put("/api/auth/pet")
+        ResultActions resultActions = mockMvc.perform(patch("/api/auth/pet")
                 .param("userId", String.valueOf(account.getId()))
                 .param("petId", String.valueOf(56))
                 .param("petName", "몽이")
