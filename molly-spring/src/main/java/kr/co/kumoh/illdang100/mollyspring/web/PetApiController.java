@@ -56,7 +56,7 @@ public class PetApiController {
     }
 
 
-    @PutMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePetProfile(@ModelAttribute @Valid PetProfileUpdateRequest petProfileUpdateRequest, BindingResult bindingResult) throws IOException {
 
         petService.updatePetProfile(petProfileUpdateRequest);
