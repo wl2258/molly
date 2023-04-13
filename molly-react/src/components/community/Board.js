@@ -15,9 +15,11 @@ const Board = () => {
       <Tap setTap={setTap} name={"고양이"} tap={tap === '고양이'? styles.click : styles.tap} style={styles.cat}/>
       <Tap setTap={setTap} name={"토끼"} tap={tap === '토끼'? styles.click : styles.tap} style={styles.rabbit}/>
       
-      <div style={{position:"absolute", top:"-70px", right:"20px"}}>
-        <input className={styles.search} placeholder="글을 검색해보세요"></input>
-        <span style={{position:"absolute", right: "113px", bottom:"17px"}}><MdSearch color="#AFA79F" /></span>
+      <div className={styles.container}>
+        <div>
+          <input className={styles.search} placeholder="글을 검색해보세요"></input>
+          <span style={{position:"absolute", right: "-5px", top:"8px"}}><MdSearch color="#AFA79F" /></span>
+        </div>
         <Button onClick={() => navigate('/list/write')} name={"글쓰기"}/>
       </div>
     </div>

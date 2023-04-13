@@ -1,0 +1,33 @@
+.container {
+  margin-top: 80px;
+  width: 800px;
+  box-sizing: border-box;
+  padding: 0px 30px;
+}
+
+.container > div {
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.container > div > h1 {
+  font-weight: bold;
+  font-size: 23px;
+  color: #656565;
+  display: inline-block;
+  margin-right: 12px;
+}
+
+.container > div > p {
+  width: 770px;
+  color: #807F7F;
+  font-size: 17px;
+  line-height: 30px;
+  text-justify: inter-cluster;
+}
+
+.container > div > span {
+  position: absolute;
+  top: 18px;
+  cursor: pointer;
+}

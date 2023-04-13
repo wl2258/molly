@@ -7,6 +7,7 @@ import Month from '../components/home/Month';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import SignUp from './SignUp';
+import AddVaccine from './AddVaccine';
 
 let CustomBody = styled.div`
   margin: 240px 10% 0;
@@ -15,7 +16,7 @@ let CustomBody = styled.div`
 let Schedule = styled.div`
   display: flex;
   justify-content: center;
-  margin: 0 30% 80px;
+  margin: 0 30% 50px;
 `
 
 let Info = styled.div`
@@ -50,6 +51,7 @@ const Home = () => {
         </Info>
       </CustomBody>
       {id === 'signup' && <SignUp />}
+      {id === 'addvaccine' && <AddVaccine />}
     </div>
   );
 };

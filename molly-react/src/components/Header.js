@@ -180,9 +180,11 @@ const Header = () => {
 };
 
 const UserDropdown = () => {
+  let navigate = useNavigate();
+  
   return (
     <div className={styles.userdropdown}>
-      <li onClick={() => {}}>사용자 정보</li>
+      <li onClick={() => {navigate('/userinfo')}}>사용자 정보</li>
       <li onClick={() => {}}>로그아웃</li>
     </div>
   )
