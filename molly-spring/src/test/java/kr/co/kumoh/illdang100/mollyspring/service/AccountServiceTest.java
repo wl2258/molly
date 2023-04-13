@@ -1,6 +1,10 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.AccountImage;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto;
+import kr.co.kumoh.illdang100.mollyspring.repository.image.AccountImageRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
@@ -16,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -27,6 +32,9 @@ class AccountServiceTest extends DummyObject {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private AccountImageRepository accountImageRepository;
 
     @Spy
     private ObjectMapper om;
@@ -92,5 +100,31 @@ class AccountServiceTest extends DummyObject {
         // then
         assertThatThrownBy(() -> accountService.saveAdditionalAccountInfo(accountId, saveAccountRequest))
                 .isInstanceOf(CustomApiException.class);
+    }
+
+    @Test
+    public void getAccountDetail_test() throws Exception {
+
+        // given
+        Long accountId = 1L;
+
+        // stub 1
+        Account account = newMockAccount(accountId, "kakao_1234", "molly", AccountEnum.CUSTOMER);
+        when(accountRepository.findById(any())).thenReturn(Optional.of(account));
+
+        // stub 2
+        ImageFile imageFile =
+                new ImageFile("uploadFileName", "storeFileName", "storeFileUrl");
+        AccountImage accountImage = new AccountImage(1L, account, imageFile);
+        when(accountImageRepository.findByAccount_id(any())).thenReturn(Optional.of(accountImage));
+
+        // when
+        AccountProfileResponse accountProfileResponse = accountService.getAccountDetail(accountId);
+
+        // then
+        assertThat(accountProfileResponse.getNickname()).isEqualTo("molly");
+        assertThat(accountProfileResponse.getEmail()).isEqualTo("kakao_1234@naver.com");
+        assertThat(accountProfileResponse.getProfileImage()).isEqualTo("storeFileUrl");
+        assertThat(accountProfileResponse.getProvider()).isEqualTo("kakao");
     }
 }
