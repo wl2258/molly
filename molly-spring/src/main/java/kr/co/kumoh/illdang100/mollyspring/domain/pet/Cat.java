@@ -21,8 +21,8 @@ public class Cat extends Pet{
     private CatEnum catSpecies;
 
     @Builder
-    public Cat(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, String caution, CatEnum catSpecies) {
-        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage, caution);
+    public Cat(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, String caution, CatEnum catSpecies) {
+        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, caution);
         this.catSpecies = catSpecies;
     }
 

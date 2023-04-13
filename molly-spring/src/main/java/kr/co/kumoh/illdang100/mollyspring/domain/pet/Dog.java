@@ -21,8 +21,8 @@ public class Dog extends Pet{
     private DogEnum dogSpecies;
 
     @Builder
-    public Dog(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, ImageFile petProfileImage, String caution, DogEnum dogSpecies) {
-        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, petProfileImage, caution);
+    public Dog(Long id, Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, String caution, DogEnum dogSpecies) {
+        super(id, account, petName, birthdate, gender, neuteredStatus, weight, petType, caution);
         this.dogSpecies = dogSpecies;
     }
 

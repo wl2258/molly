@@ -2,7 +2,6 @@ package kr.co.kumoh.illdang100.mollyspring.domain.pet;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
-import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.PetUpdateRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
