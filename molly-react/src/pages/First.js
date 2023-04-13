@@ -3,6 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import styles from '../css/First.module.css'
 import styled from 'styled-components';
 import { MdArrowForwardIos } from 'react-icons/md';
+import axios from 'axios';
 
 let CustomNavLink = styled(NavLink)`
   color: #AFA79F;
@@ -37,18 +38,14 @@ const First = () => {
   }, []);
 
   const handleLogout = () => {
-    fetch(`"http://localhost:8080/api/account/logout`, {
-      method : "DELETE",
+    axios.delete(`http://localhost:8080/api/account/logout`, {
       headers : {
         "Refresh-Token": localStorage.getItem("refreshToken"),
       }
-      .then(res => {
-        if(res.status === 200) {
-          localStorage.clear();
-          setLogin(false);
-        }
-      })
     })
+
+    localStorage.clear();
+    setLogin(false);
   }
 
   return (
