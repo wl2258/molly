@@ -4,39 +4,59 @@
   position: relative;
 }
 
-.board > h2 {
-  color: #645C56;
-  padding: 35px 60px 0;
+.top {
+  padding: 20px 60px 0;
 }
 
-.board > span:nth-child(2) {
+.top > h2 {
+  color: #645C56;
+}
+
+.top > span:nth-child(2) {
   position: absolute;
   left: 63px;
   top: 85px;
   color: #A19C97;
 }
 
-.board > span:nth-child(3){
+.top > span:nth-child(3){
   position: absolute;
   left: 85px;
   top: 82px;
   color: #A19C97;
 }
 
-.board > span:nth-child(4){
+.top > span:nth-child(4){
   position: absolute;
   left: 176px;
   top: 83px;
   color: #A19C97;
 }
 
-.board > p {
+.top > span:nth-child(5) {
+  position: absolute;
+  color: #A19C97;
+  right: 60px;
+  top: 40px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.top > span:nth-child(6) {
+  position: absolute;
+  color: #A19C97;
+  right: 60px;
+  top: 68px;
+  font-size: 13px;
+}
+
+.middle > p {
   padding-left: 63px;
   padding-top: 50px;
   color: #787471;
 }
 
-.board > img {
+.middle > img {
   padding-left: 63px;
 }
 
@@ -75,45 +95,68 @@
 
 .comment {
   background-color: #F9F9F9;
-  padding: 30px 20px;
-  border-top: 1px solid #B2ACA7;
+  padding: 40px 20px 12px;
+  border-top: 1px solid #e6e6e6;
+  width: 100%;
+  box-sizing: border-box;
   position: relative;
-  min-height: 50px;
+  overflow: hidden;
+  height: auto;
 }
 
-.comment > span:nth-child(1) {
+.commentinfo {
+  width: 70%;
+  display: inline-block;
+}
+
+.commentinfo > span:nth-child(1) {
   color: #87827F;
   position: absolute;
   left: 60px;
+  top: 20px;
 }
 
-.comment > span:nth-child(2) {
+.commentinfo > span:nth-child(2) {
   color: #87827F;
   font-weight: 700;
   position: absolute;
   left: 80px;
-  top: 27px;
+  top: 17px;
 }
 
-.comment > span:nth-child(3) {
+.commentinfo > span:nth-child(3) {
+  color: #87827F;
+  position: absolute;
+  font-size: small;
+  left: 170px;
+  top: 20px;
+}
+
+.commentinfo > span:nth-child(4) {
   color: #87827F;
   font-size: small;
   position: absolute;
-  left: 175px;
-  top: 30px;
+  right: 60px;
+  top: 21px;
+  cursor: pointer;
 }
 
-.comment > span:nth-child(4) {
-  color: #87827F;
-  position: absolute;
-  left: 70px;
-  top: 60px;
+.commentinfo > div {
+  width: 120%;
+}
+
+.commentinfo > div > p {
+  margin-left: 50px;
+  color: #A19C97;
+  font-size: small;
+  box-sizing: border-box;
+  word-break: break-all;
 }
 
 .footer {
   background-color: #F9F9F9;
   padding: 20px 60px;
-  border-top: 1px solid #B2ACA7;
+  border-top: 1px solid #e6e6e6;
 }
 
 .footer > input {

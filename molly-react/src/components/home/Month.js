@@ -138,7 +138,6 @@ const Month = () => {
             <td>금</td>
             <td style={{color: "blue"}}>토</td>
           </tr>
-          <div className={styles.monthline}/>
           {calendarArr()}
         </tbody>
       </table>

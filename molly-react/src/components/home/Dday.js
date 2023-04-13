@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../../css/Dday.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Dday = () => {
   return (
@@ -25,6 +26,8 @@ const Dday = () => {
 };
 
 const DdayList = (props) => {
+  const navigate = useNavigate();
+
   return (
     <div style={{width:"350px", marginBottom: "40px"}}>
       <div className={styles.petinfo}>
@@ -33,7 +36,7 @@ const DdayList = (props) => {
       </div>
       {props.vaccine.map((item, index) => {
         return (
-          <div className={styles.list} style={{backgroundColor: props.color}}>
+          <div onClick={() => {navigate('/home/addvaccine')}} className={styles.list} style={{backgroundColor: props.color}}>
             <span className={styles.vaccine} style={{color: props.textColor}}>{props.vaccine[index]}</span>
             <span className={styles.day}>{props.day[index]}</span>
           </div>

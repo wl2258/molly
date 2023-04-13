@@ -57,12 +57,18 @@ const BoardDetail = (props) => {
     <div style={{position:"relative", width:"75%", margin:"auto"}}>
       <Board />
       <div className={styles.board}>
-        <h2>{post[0].title}</h2>
-        <span><CgProfile /></span>
-        <span>{post[0].writer}</span>
-        <span>{post[0].time}</span>
-        <p>{post[0].detail}</p>
-        {post[0].id === 1 ? <img src={process.env.PUBLIC_URL + '/img/puppy.jpg'} alt="puppy"/> : null}
+        <div className={styles.top}>
+          <h2>{post[0].title}</h2>
+          <span><CgProfile /></span>
+          <span>{post[0].writer}</span>
+          <span>{post[0].time}</span>
+          <span>신고</span>
+          <span>조회수 {post[0].views}</span>
+        </div>
+        <div className={styles.middle}>
+          <p>{post[0].detail}</p>
+          {post[0].id === 1 ? <img src={process.env.PUBLIC_URL + '/img/puppy.jpg'} alt="puppy"/> : null}
+        </div>
         <div className={styles.count}>
           <span><IoMdThumbsUp color="#B27910" size="18px"/></span>
           <span>{post[0].good}</span>
@@ -71,10 +77,15 @@ const BoardDetail = (props) => {
         </div>
       </div>
       <div className={styles.comment}>
-        <span><CgProfile /></span>
-        <span>{post[0].commentwriter}</span>
-        <span>{post[0].commenttime}</span>
-        <span>{post[0].commenttext}</span>
+        <div className={styles.commentinfo}>
+          <span><CgProfile color="#87827F"/></span>
+          <span>{post[0].commentwriter}</span>
+          <span>{post[0].commenttime}</span>
+          <span>신고</span>
+          <div>
+            <p>{post[0].commenttext}</p>
+          </div>
+        </div>
       </div>
       <div className={styles.footer}>
         <input></input>

@@ -37,6 +37,10 @@
   position: relative;
 }
 
+.icon > div > span {
+  cursor: pointer;
+}
+
 .navcontainer {
   border-top: 1px solid #ECE5E0;
   border-bottom: 1px solid #ECE5E0;

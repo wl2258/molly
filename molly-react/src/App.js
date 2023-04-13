@@ -12,6 +12,7 @@ import LogIn from './pages/LogIn';
 import First from './pages/First';
 import DetailPet from './pages/pet/DetailPet';
 import ManagerLogin from './pages/ManagerLogin';
+import UserInfo from './pages/UserInfo';
 
 function App() {
   return (
@@ -21,13 +22,13 @@ function App() {
         <Route path="/login" element={<LogIn />}/>
         <Route path="/home" element={<Home />}/>
         <Route path="/home/:id/*" element={<Home />}/>
-        <Route path="/login" element={<LogIn />}/>
         <Route path="/calendar" element={<Calendar />}/>
         <Route path="/list" element={<List />}/>
         <Route path="/hospital" element={<Hospital />}/>
         <Route path="/about" element={<About />}/>
         <Route path="/list/:id" element={<Detail />}/>
         <Route path="/list/write" element={<Write />}/>
+        <Route path="/userinfo" element={<UserInfo/>} />
         <Route path="/registerpet" element={<RegisterPet />}/>
         <Route path="/detailpet/:id" element={<DetailPet />}/>
         <Route path="/manager/login" element={<ManagerLogin />} />
