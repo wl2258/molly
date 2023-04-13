@@ -1,5 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
+import kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto;
 import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.security.jwt.JwtVO;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +46,26 @@ public class AccountApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "추가정보 기입 완료", null), HttpStatus.OK);
     }
 
+    @GetMapping("/auth/account")
+    public ResponseEntity<?> getAccountProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        AccountProfileResponse accountProfileResponse =
+                accountService.getAccountDetail(principalDetails.getAccount().getId());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "사용자 정보 조회 성공", accountProfileResponse), HttpStatus.OK);
+    }
+
+    // TODO: 사용자 정보 (닉네임) 수정
+    @PatchMapping("/auth/account/nickname")
+    public ResponseEntity<?> updateAccountProfile(@RequestBody @Valid InputNicknameRequest inputNicknameRequest,
+                                                  BindingResult bindingResult,
+                                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        accountService.updateAccountNickname(principalDetails.getAccount().getId(), inputNicknameRequest.getNickname());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그아웃 성공", null), HttpStatus.OK);
+    }
+
     @DeleteMapping("/account/logout")
     public ResponseEntity<?> logout(@RequestHeader(JwtVO.REFRESH_TOKEN_HEADER) String refreshToken) {
 
@@ -51,8 +73,6 @@ public class AccountApiController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "로그아웃 성공", null), HttpStatus.OK);
     }
-
-    // TODO: 사용자 정보 (닉네임) 수정
 
     // TODO: 사용자 프로필 이미지 변경 및 수정
 }

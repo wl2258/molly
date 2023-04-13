@@ -3,6 +3,7 @@ package kr.co.kumoh.illdang100.mollyspring.service;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.AccountImage;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.image.AccountImageRepository;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto.*;
 
 @Slf4j
 @Service
@@ -72,6 +74,32 @@ public class AccountService {
         }
     }
 
+    public AccountProfileResponse getAccountDetail(Long accountId) {
+
+        Account account = accountRepository
+                .findById(accountId)
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다"));
+
+        String provider = getProviderFromUsername(account.getUsername());
+
+        AccountProfileResponse accountProfileResponse = AccountProfileResponse.builder()
+                .nickname(account.getNickname())
+                .email(account.getEmail())
+                .provider(provider)
+                .build();
+
+        Optional<AccountImage> accountImageOpt = accountImageRepository.findByAccount_id(accountId);
+        accountImageOpt.map(AccountImage::getAccountProfileImage)
+                .ifPresent(image -> accountProfileResponse.setProfileImage(image.getStoreFileUrl()));
+
+        return accountProfileResponse;
+    }
+
+    @Transactional
+    public void updateAccountNickname(Long accountId, String nickname) {
+
+    }
+
     @Transactional
     public void deleteRefreshToken(String refreshToken) {
 
@@ -81,5 +109,10 @@ public class AccountService {
             RefreshToken findRefreshToken = refreshTokenOpt.get();
             refreshTokenRedisRepository.delete(findRefreshToken);
         }
+    }
+
+    private String getProviderFromUsername(String username) {
+        int idx = username.indexOf('_');
+        return username.substring(0, idx);
     }
 }
