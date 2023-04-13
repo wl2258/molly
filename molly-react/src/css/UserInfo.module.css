@@ -84,14 +84,16 @@
   font-weight: bold;
   margin-bottom: 20px;
   margin-right: 15px;
-  width: 200px;
+  padding: 0 30px;
+  width: 220px;
   height: 48px;
   border-radius: 14px;
   color: #656565;
   background-color: #E5E1DC;
   border: none;
-  text-align: center;
   caret-color: #C7C3BF;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .modal > input:focus {
@@ -100,6 +102,7 @@
 
 .modal > input::placeholder {
   color: #b4b1ad;
+  text-align: center;
 }
 
 .modal > span:nth-child(3) {
@@ -107,22 +110,48 @@
   color: #827870;
   position: absolute;
   right: -60px;
-  bottom: 28px;
+  bottom: 36px;
   cursor: pointer;
 }
 
 .cancle {
   width: 78px;
   position: absolute;
-  top: 60px;
-  left: 240px;
+  top: 12px;
+  left: 355px;
 }
+
+.cancle > span {
+  color: #B27910;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+/* .cancle > button {
+  background-color: #B27910;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 6px 10px 6px 10px;
+  margin: 10px;
+  cursor: pointer
+} */
 
 .save {
   width: 78px;
   position: absolute;
-  top: 60px;
-  left: 310px;
+  top: 12px;
+  left: 390px;
+}
+
+.save > button {
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .editicon {

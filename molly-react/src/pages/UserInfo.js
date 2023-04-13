@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Header from '../components/Header';
 import styles from '../css/UserInfo.module.css';
-import {Button} from '../components/Button';
 import {MdModeEdit, MdDelete} from 'react-icons/md';
 
 const UserInfo = () => {
@@ -9,6 +8,7 @@ const UserInfo = () => {
   const [edit, setEdit] = useState(false);
   const [nickname, setNickName] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const [cursor, setCursor] = useState("");
   const [duplicate, setDuplicate] = useState(0);
   const [effective, setEffective] = useState(false);
   const [effectiveColor, setEffectiveColor] = useState("");
@@ -18,7 +18,12 @@ const UserInfo = () => {
   const imgRef = useRef();
 
   const handleChange = (e) => {
-    setNickName(e.target.value);
+    if (e.target.value.length <= 10) {
+      setNickName(e.target.value);
+    }
+    else {
+      setNickName(e.target.value.slice(0, 10))
+    }
   }
 
   const saveImgFile = () => {
@@ -99,8 +104,8 @@ const UserInfo = () => {
                   {duplicate === 0 ? null : 
                     duplicate === 1 ? <span style={{color:"red"}} className={styles.duplicatepass}>사용 불가능한 닉네임입니다.</span> 
                     : <span className={styles.duplicatepass}>사용 가능한 닉네임입니다.</span>}
-                  <span className={styles.cancle}><Button onClick={() => {setEdit(false)}} name="취소"/></span>
-                  <span className={styles.save}><Button disabled={disabled} bgcolor={color} name="저장"/></span>
+                  <span className={styles.cancle}><span onClick={() => {setEdit(false)}}>취소</span></span>
+                  <span className={styles.save}><button disabled={disabled} style={{color:`${color}`, cursor: `${cursor}`}}>저장</button></span>
                 </div> :
                 <div className={styles.modal}>
                   <div className={styles.nickname}>

@@ -164,7 +164,12 @@ const SignUp = () => {
   }
 
   const handleChange = (e) => {
-    setNickName(e.target.value);
+    if (e.target.value.length <= 10) {
+      setNickName(e.target.value);
+    }
+    else {
+      setNickName(e.target.value.slice(0, 10))
+    }
   }
 
   const saveImgFile = () => {
