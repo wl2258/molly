@@ -86,7 +86,7 @@ public class PetReqDto {
     @Data
     @Builder
     @AllArgsConstructor
-    public static class PetProfileUpdateRequest {
+    public static class PetProfileImageUpdateRequest {
         @NotNull
         private Long petId;
         @NotNull

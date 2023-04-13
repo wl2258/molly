@@ -57,17 +57,17 @@ public class PetApiController {
 
 
     @PatchMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updatePetProfile(@ModelAttribute @Valid PetProfileUpdateRequest petProfileUpdateRequest, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<?> updatePetProfileImage(@ModelAttribute @Valid PetProfileImageUpdateRequest petProfileImageUpdateRequest, BindingResult bindingResult) throws IOException {
 
-        petService.updatePetProfile(petProfileUpdateRequest);
+        petService.updatePetProfileImage(petProfileImageUpdateRequest);
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 수정했습니다.", null), HttpStatus.OK);
     }
 
     @DeleteMapping("/image/{petId}")
-    public ResponseEntity<?> deletePetProfile(@PathVariable @NotNull Long petId) {
+    public ResponseEntity<?> deletePetProfileImage(@PathVariable @NotNull Long petId) {
 
-        petService.deletePetProfile(petId);
+        petService.deletePetProfileImage(petId);
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 삭제했습니다.", null), HttpStatus.OK);
     }

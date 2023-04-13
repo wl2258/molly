@@ -158,7 +158,7 @@ public class PetService {
         deleteSurgeryHistory(petId);
         deleteMedicationHistory(petId);
         deleteVaccinationHistory(petId);
-        deletePetProfile(petId);
+        deletePetProfileImage(petId);
 
         petRepository.delete(findPet);
     }
@@ -219,15 +219,15 @@ public class PetService {
 
     /**
      * 반려동물 프로필 이미지 변경
-     * @param petProfileUpdateRequest
+     * @param petProfileImageUpdateRequest
      * @throws IOException
      */
-    public void updatePetProfile(PetProfileUpdateRequest petProfileUpdateRequest) throws IOException {
+    public void updatePetProfileImage(PetProfileImageUpdateRequest petProfileImageUpdateRequest) throws IOException {
 
-        Long petId = petProfileUpdateRequest.getPetId();
-        MultipartFile petProfileImage = petProfileUpdateRequest.getPetProfileImage();
+        Long petId = petProfileImageUpdateRequest.getPetId();
+        MultipartFile petProfileImage = petProfileImageUpdateRequest.getPetProfileImage();
 
-        Pet findPet = deletePetProfile(petId);
+        Pet findPet = deletePetProfileImage(petId);
         ImageFile updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
 
         Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
@@ -243,7 +243,7 @@ public class PetService {
      * @return
      */
     @Transactional
-    public Pet deletePetProfile(Long petId) {
+    public Pet deletePetProfileImage(Long petId) {
 
         Pet findPet = findPetOrElseThrow(petId);
 
