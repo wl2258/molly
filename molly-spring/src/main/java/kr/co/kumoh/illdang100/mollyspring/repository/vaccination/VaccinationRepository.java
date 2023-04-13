@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface VaccinationRepository extends JpaRepository<VaccinationHistory, Long> {
 
-    List<VaccinationHistory> findByPetId(Long petId);
+    List<VaccinationHistory> findByPet_Id(Long petId);
 
-    List<VaccinationHistory> findByPetIdOrderByVaccinationDateAsc(Long petId);
+    List<VaccinationHistory> findByPet_IdOrderByVaccinationDateAsc(Long petId);
 }
