@@ -39,7 +39,7 @@ public class PetApiController {
 
         return new ResponseEntity<>(new ResponseDto(1, "해당 반려동물의 정보입니다.", petDetailResponse), HttpStatus.OK);
     }
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<?> updatePet(@ModelAttribute @Valid PetUpdateRequest petUpdateRequest, BindingResult bindingResult) {
 
         petService.updatePet(petUpdateRequest);
