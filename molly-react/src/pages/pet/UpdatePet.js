@@ -36,7 +36,7 @@ const RegisterPet = () => {
     <div className={styles.container}>
       <Header />
       <div className={styles.board}>
-        <h1>반려동물 등록</h1>
+        <h1>반려동물 수정</h1>
         <input className={styles.name} placeholder="이름" type="text"></input>
         <br />
         <h4>품종</h4>
@@ -108,7 +108,7 @@ const RegisterPet = () => {
           </div>
           <br />
           <h4>예방접종 이력</h4>
-          <button onClick={handleModal}>추가</button>
+          <button onClick={handleModal}>수정</button>
         </div>
         <div style={{marginLeft: "500px", marginBottom: "10px"}}>
           <Button name="등록"/>

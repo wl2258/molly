@@ -1,0 +1,141 @@
+.header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 75px;
+  background-color: #FAF5F1;
+  padding-top: 10px;
+}
+
+.header > div:first-child {
+  display: flex;
+}
+
+.logo {
+  padding: 0 7% 0 10%;
+}
+
+.navcontainer {
+  padding: 18px 10% 0 0;
+  width: 60%;
+}
+
+.navigation {
+  display: flex;
+}
+
+.navigation > div {
+  margin-right: 10%;
+}
+
+.logout {
+  width: 10%;
+  color: #AFA79F;
+  font-size: 13px;
+  margin-right: 40px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.accuse {
+  width: 50%;
+  margin-right: 10%;
+}
+
+.accuse > h1 {
+  color: #645C56;
+  font-size: 20px;
+  margin-left: 20px;
+}
+
+.accuseBoard {
+  margin-top: 25px;
+  background-color: #EBE7E3;
+  padding: 20px 30px;
+  border-radius: 20px;
+  min-height: 450px;
+}
+
+.accuseBoard > div {
+  padding: 10px 0;
+  border-bottom: 1px solid #AFA79F;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accuseBoard > div > h3 {
+  color: #645C56;
+  font-size: 15px;
+  margin-left: 25px;
+  margin-right: 15px;
+}
+
+.accuseBoard > div > span {
+  color: #AFA79F;
+  font-size: 13px;
+  margin-right: 28px;
+}
+
+.member {
+  width: 50%;
+}
+
+.member > div:first-child {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.member > div > h1 {
+  color: #645C56;
+  font-size: 20px;
+  margin-right: 8%;
+  margin-left: 10px;
+}
+
+.search {
+  width: 50%;
+  height: 35px;
+  border-radius: 10px;
+  background-color: #EEECEC;
+  border: none;
+  padding-left: 20px;
+  box-sizing: border-box;
+  caret-color: #C7C3BF;
+}
+
+.search:focus {
+  outline: none;
+}
+
+.search::placeholder {
+  color: #b4b1ad;
+}
+
+.memberlist {
+  margin-top: 40px;
+  width: 100%;
+}
+
+.memberlist > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F5F5F4;
+  margin-bottom: 15px;
+  border-radius: 16px;
+  padding: 0 30px 0 40px;
+  box-sizing: border-box;
+}
+
+.memberlist > div > h3 {
+  color: #645C56;
+  font-size: 17px;
+}
+
+.memberlist > div > span {
+  color: #AFA79F;
+  font-weight: 800;
+}

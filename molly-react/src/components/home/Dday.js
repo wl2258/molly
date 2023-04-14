@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../../css/Dday.module.css';
-import { useNavigate } from 'react-router-dom';
+import AddVaccine from '../../pages/AddVaccine';
 
 const Dday = () => {
   return (
@@ -26,7 +26,11 @@ const Dday = () => {
 };
 
 const DdayList = (props) => {
-  const navigate = useNavigate();
+  const [modal, setModal] = useState(false);
+
+  const handleClick = () => {
+    setModal(!modal);
+  }
 
   return (
     <div style={{width:"350px", marginBottom: "40px"}}>
@@ -36,12 +40,13 @@ const DdayList = (props) => {
       </div>
       {props.vaccine.map((item, index) => {
         return (
-          <div onClick={() => {navigate('/home/addvaccine')}} className={styles.list} style={{backgroundColor: props.color}}>
+          <div onClick={() => {handleClick()}} className={styles.list} style={{backgroundColor: props.color}}>
             <span className={styles.vaccine} style={{color: props.textColor}}>{props.vaccine[index]}</span>
             <span className={styles.day}>{props.day[index]}</span>
           </div>
         );
       })}
+      {modal && <AddVaccine onClick={handleClick}/>}
     </div>
   )
 }

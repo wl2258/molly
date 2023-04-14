@@ -13,6 +13,8 @@ import First from './pages/First';
 import DetailPet from './pages/pet/DetailPet';
 import ManagerLogin from './pages/ManagerLogin';
 import UserInfo from './pages/UserInfo';
+import UpdatePet from './pages/pet/UpdatePet';
+import ManagerHome from './pages/ManagerHome';
 
 function App() {
   return (
@@ -31,7 +33,9 @@ function App() {
         <Route path="/userinfo" element={<UserInfo/>} />
         <Route path="/registerpet" element={<RegisterPet />}/>
         <Route path="/detailpet/:id" element={<DetailPet />}/>
+        <Route path="/updatepet/:id" element={<UpdatePet />}/>
         <Route path="/manager/login" element={<ManagerLogin />} />
+        <Route path="/manager/home" element={<ManagerHome />} />
       </Routes>
     </div>
   );

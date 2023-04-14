@@ -192,7 +192,7 @@ const UserDropdown = () => {
 
 const PetDropdown = () => {
   let navigate = useNavigate();
-  const [pet] = useState(['까까', '보리', '마루']);
+  const [pet] = useState(['까까', '마루', '보리']);
 
   return (
     <div className={styles.petdropdown}>
@@ -201,7 +201,8 @@ const PetDropdown = () => {
           item !== '' && <li onClick={() => {navigate(`/detailpet/${index+1}`)}}>{item}</li>
         )
       })}
-      <li onClick={() => {navigate('/registerpet')}}>추가하기</li>
+      {pet.length === 0 ? <li style={{borderRadius: "10px"}} onClick={() => {navigate('/registerpet')}}>추가하기</li>:
+        <li onClick={() => {navigate('/registerpet')}}>추가하기</li>}
     </div>
   )
 }

@@ -7,7 +7,6 @@ import Month from '../components/home/Month';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import SignUp from './SignUp';
-import AddVaccine from './AddVaccine';
 
 let CustomBody = styled.div`
   margin: 240px 10% 0;
@@ -51,7 +50,6 @@ const Home = () => {
         </Info>
       </CustomBody>
       {id === 'signup' && <SignUp />}
-      {id === 'addvaccine' && <AddVaccine />}
     </div>
   );
 };
