@@ -130,16 +130,16 @@
 .petinfo {
   position: absolute;
   top: 50px;
-  left: -30px;
-  width: 90px;
+  left: -40px;
+  width: 110px;
   background-color: #E1D8D0;
-  border-radius: 10px;
+  border-radius: 13px;
 }
 
 .petinfo::after {
   position: absolute;
   top: -24px;
-  right: 35px;
+  right: 45px;
   content: "";
   border: 0.7em solid transparent; 
   border-bottom: 0.8em solid #E1D8D0;
@@ -149,8 +149,10 @@
   font-weight: bold;
   font-size: 14px;
   list-style: none;
-  padding: 10px 10px;
-  text-align: center;
+  padding: 11px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .petdropdown > li:first-child {
@@ -165,6 +167,11 @@
 
 .petdropdown > li:hover {
   background-color: #D6CABF;
+}
+
+.petimg {
+  margin-left: -2px;
+  margin-right: 6px;
 }
 
 .alarm {

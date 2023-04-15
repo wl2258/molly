@@ -138,4 +138,5 @@
 .memberlist > div > span {
   color: #AFA79F;
   font-weight: 800;
+  cursor: pointer;
 }
