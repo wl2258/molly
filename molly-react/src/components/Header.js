@@ -192,16 +192,20 @@ const UserDropdown = () => {
 
 const PetDropdown = () => {
   let navigate = useNavigate();
-  const [pet] = useState(['까까', '보리', '마루']);
+  const [pet] = useState(['까까', '마루', '보리']);
 
   return (
     <div className={styles.petdropdown}>
       {pet.map((item, index) => {
         return (
-          item !== '' && <li onClick={() => {navigate(`/detailpet/${index+1}`)}}>{item}</li>
+          item !== '' && 
+            <li onClick={() => {navigate(`/detailpet/${index+1}`)}}>
+              <img className={styles.petimg} src={process.env.PUBLIC_URL + '/img/puppy-logo.png'} alt="puppy" width="36px"/>{item}
+            </li>
         )
       })}
-      <li onClick={() => {navigate('/registerpet')}}>추가하기</li>
+      {pet.length === 0 ? <li style={{borderRadius: "10px"}} onClick={() => {navigate('/registerpet')}}>추가하기</li>:
+        <li onClick={() => {navigate('/registerpet')}}>추가하기</li>}
     </div>
   )
 }
