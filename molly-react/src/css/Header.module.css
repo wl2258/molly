@@ -3,9 +3,9 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: 165px;
+  height: 100px;
   background-color: #FAF5F1;
-  padding-top: 10px;
+  box-sizing: border-box;
 }
 
 .header > div:first-child {
@@ -27,7 +27,7 @@
 
 .icon {
   width: 10%;
-  margin-top: 25px;
+  margin-top: 20px;
   display: flex;
   position: relative;
 }
@@ -37,12 +37,16 @@
   position: relative;
 }
 
+.icon > div > span {
+  cursor: pointer;
+}
+
 .navcontainer {
   border-top: 1px solid #ECE5E0;
   border-bottom: 1px solid #ECE5E0;
   background-color: #FAF5F1;
   padding: 20px 14%;
-  /*margin-top: -5px;*/
+  margin-top: -10px;
 }
 
 .navigation {

@@ -18,7 +18,7 @@ public class ImageFile  {
     @Column(length = 75)
     private String storeFileName;
 
-    @Column(length = 150)
+    @Column(length = 200)
     private String storeFileUrl;
 
     public ImageFile(String uploadFileName, String storeFileName, String storeFileUrl) {

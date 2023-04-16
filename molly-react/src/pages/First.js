@@ -30,11 +30,25 @@ const First = () => {
       localStorage.setItem("refreshToken", refreshToken);
       setLogin(true);
     }
+    else if(localStorage.getItem("accessToken") !== "null" && localStorage.getItem("refreshToken") !== "null"
+     && localStorage.getItem("accessToken") !== null && localStorage.getItem("refreshToken") !== null) {
+      setLogin(true);
+    }
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
-    setLogin(false);
+    fetch(`"http://localhost:8080/api/account/logout`, {
+      method : "DELETE",
+      headers : {
+        "Refresh-Token": localStorage.getItem("refreshToken"),
+      }
+      .then(res => {
+        if(res.status === 200) {
+          localStorage.clear();
+          setLogin(false);
+        }
+      })
+    })
   }
 
   return (

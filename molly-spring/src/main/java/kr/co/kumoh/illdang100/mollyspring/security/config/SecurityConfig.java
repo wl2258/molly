@@ -90,8 +90,6 @@ public class SecurityConfig {
 
     public CorsConfigurationSource configurationSource() {
 
-        log.debug("디버그: configurationSource cors 설정이 SecurityFilterChain에 등록된다.");
-
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*"); // GET, POST, PUT, DELETE (Javascript 요청 허용)

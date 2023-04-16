@@ -1,6 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto;
 import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,7 +50,7 @@ class AccountApiControllerTest extends DummyObject {
         dataSetting();
     }
 
-    @WithUserDetails(value = "molly_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "kakao_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void checkNickname_success_test() throws Exception {
 
@@ -64,7 +69,7 @@ class AccountApiControllerTest extends DummyObject {
         resultActions.andExpect(status().isOk());
     }
 
-    @WithUserDetails(value = "molly_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "kakao_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void checkNickname_failure_test() throws Exception {
 
@@ -91,7 +96,7 @@ class AccountApiControllerTest extends DummyObject {
         resultActions2.andExpect(status().isBadRequest());
     }
 
-    @WithUserDetails(value = "molly_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "kakao_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void completeRegistration_success_test() throws Exception {
 
@@ -111,7 +116,7 @@ class AccountApiControllerTest extends DummyObject {
         resultActions.andExpect(status().isOk());
     }
 
-    @WithUserDetails(value = "molly_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "kakao_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void completeRegistration_failure_test() throws Exception {
 
@@ -154,9 +159,26 @@ class AccountApiControllerTest extends DummyObject {
         resultActions3.andExpect(status().isBadRequest());
     }
 
+    @WithUserDetails(value = "kakao_1234", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void getAccountProfile_test() throws Exception {
+
+        // given
+
+        // when
+        ResultActions resultActions =
+                mvc.perform(get("/api/auth/account").contentType(MediaType.APPLICATION_JSON));
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        MockHttpServletResponse response = resultActions.andReturn().getResponse();
+        System.out.println("responseBody = " + responseBody);
+        // then
+        resultActions.andExpect(status().isOk());
+    }
+
     private void dataSetting() {
 
-        accountRepository.save(newAccount("molly_1234", "일당백"));
+        accountRepository.save(newAccount("kakao_1234", "일당백"));
         em.clear();
     }
 }
