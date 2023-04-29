@@ -18,9 +18,6 @@ public class PetReqDto {
     @AllArgsConstructor
     public static class PetSaveRequest {
         @NotNull
-        private Long userId;
-
-        @NotNull
         private PetTypeEnum petType;
 
         @NotBlank(message = "반려동물 이름은 빈 문자열이면 안 됩니다.")
@@ -52,9 +49,6 @@ public class PetReqDto {
     @Builder
     @AllArgsConstructor
     public static class PetUpdateRequest {
-        @NotNull
-        private Long userId;
-
         @NotNull
         private Long petId;
 
