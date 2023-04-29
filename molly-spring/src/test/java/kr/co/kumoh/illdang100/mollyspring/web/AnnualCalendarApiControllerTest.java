@@ -68,7 +68,6 @@ class AnnualCalendarApiControllerTest extends DummyObject {
     @WithUserDetails(value = "molly!", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void viewAnnualSchedule_success() throws Exception {
 
-        // given
         //given
         Account account = newAccount( "user2", "testUser2");
         accountRepository.save(account);
