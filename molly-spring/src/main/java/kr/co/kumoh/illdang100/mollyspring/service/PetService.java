@@ -55,9 +55,8 @@ public class PetService {
      * @throws IOException
      */
     @Transactional
-    public Long registerPet(PetSaveRequest petSaveRequest) throws IOException {
-
-        Account findUser = findAccountOrElseThrow(petSaveRequest.getUserId());
+    public Long registerPet(PetSaveRequest petSaveRequest, Account account) throws IOException {
+        Account findUser = findAccountOrElseThrow(account.getId());
 
         PetTypeEnum petType = petSaveRequest.getPetType();
 
@@ -65,7 +64,6 @@ public class PetService {
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
         MultipartFile imageFile = petSaveRequest.getPetProfileImage();
-        // request get ?Image 안하고 따로 뺀 이유?
         if (petType.equals(CAT)) {
             Pet savedCat = saveCat(petSaveRequest, petType, findUser);
            return savedCat.getId();
@@ -126,9 +124,9 @@ public class PetService {
      * @throws IOException
      */
     @Transactional
-    public Long updatePet(PetUpdateRequest petUpdateRequest) {
+    public Long updatePet(PetUpdateRequest petUpdateRequest, Account account) {
 
-        findAccountOrElseThrow(petUpdateRequest.getUserId());
+        findAccountOrElseThrow(account.getId());
 
         Long petId = petUpdateRequest.getPetId();
         Pet findPet = findPetOrElseThrow(petId);
