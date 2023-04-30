@@ -6,9 +6,11 @@ import {IoMdThumbsUp} from 'react-icons/io';
 import {FaComment} from 'react-icons/fa';
 import {CgProfile} from 'react-icons/cg';
 import { Button } from '../Button';
+import Accuse from './Accuse';
 
 const BoardDetail = (props) => {
   let {id} = useParams();
+  const [modal, setModal] = useState(false);
   const [text] = useState([
     {
       id: 1,
@@ -53,6 +55,10 @@ const BoardDetail = (props) => {
 
   let post = text.filter((item) => item.id === parseInt(id));
 
+  const handleClick = () => {
+    setModal(!modal);
+  }
+
   return (
     <div style={{position:"relative", width:"75%", margin:"auto"}}>
       <Board />
@@ -62,7 +68,7 @@ const BoardDetail = (props) => {
           <span><CgProfile /></span>
           <span>{post[0].writer}</span>
           <span>{post[0].time}</span>
-          <span>신고</span>
+          <span onClick={() => {handleClick()}}>신고</span>
           <span>조회수 {post[0].views}</span>
         </div>
         <div className={styles.middle}>
@@ -81,7 +87,7 @@ const BoardDetail = (props) => {
           <span><CgProfile color="#87827F"/></span>
           <span>{post[0].commentwriter}</span>
           <span>{post[0].commenttime}</span>
-          <span>신고</span>
+          <span onClick={() => {handleClick()}}>신고</span>
           <div>
             <p>{post[0].commenttext}</p>
           </div>
@@ -91,6 +97,7 @@ const BoardDetail = (props) => {
         <input></input>
         <Button name={"등록"} />
       </div>
+      {modal && <Accuse onClick={handleClick}/>}
     </div>
   );
 };

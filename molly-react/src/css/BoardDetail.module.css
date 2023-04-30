@@ -10,6 +10,7 @@
 
 .top > h2 {
   color: #645C56;
+  display: inline-block;
 }
 
 .top > span:nth-child(2) {
@@ -52,7 +53,7 @@
 
 .middle > p {
   padding-left: 63px;
-  padding-top: 50px;
+  padding-top: 35px;
   color: #787471;
 }
 

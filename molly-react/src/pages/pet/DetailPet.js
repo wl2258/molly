@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from '../../css/DetailPet.module.css';
 import Header from '../../components/Header';
 import styled from 'styled-components';
+import {Button} from '../../components/Button';
 
 let CustomBody = styled.div`
   margin-top: 240px;
@@ -56,6 +57,7 @@ const DetailPet = () => {
     }
   ])
 
+  const navigate = useNavigate();
   let detail = text.filter((item) => item.id === parseInt(id));
   let gender = detail[0].gender === 'female' ? true : false;
   let neutered = detail[0].neutered === true ? true : false;
@@ -172,6 +174,10 @@ const DetailPet = () => {
               )
             })}
           </div>
+        </div>
+        <div className={styles.btn}>
+          <Button name="삭제하기"/>
+          <Button name="수정하기" onClick={() => {navigate(`/updatepet/${id}`)}}/>
         </div>
       </CustomBody>
     </div>

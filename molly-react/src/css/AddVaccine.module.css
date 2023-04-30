@@ -10,14 +10,14 @@
 
 .modalContainer {
   width: 480px;
-  height: 300px;
+  height: 260px;
   border-radius: 25px;
   background-color: #FDFDFD;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-left: -260px;
-  margin-top: -150px;
+  margin-left: -240px;
+  margin-top: -130px;
 }
 
 .modalContainer > div:first-child {
@@ -25,4 +25,152 @@
   font-size: 12px;
   margin-top: 40px;
   color: #646464;
+  margin-left: -15px;
+}
+
+.modalContainer > div:nth-child(2) {
+  position: absolute;
+  top: 95px;
+  left: 20px;
+  display: flex;
+}
+
+.defaultyear {
+  display: inline-block;
+  background-color: #FDFDFD;
+  border: 1px solid #827870;
+  padding: 5px 30px 7px 30px;
+  color: #827870;
+  font-weight: 700;
+}
+
+.dropdownBtn {
+  display: inline-block;
+  background-color: #827870;
+  padding: 3px 3px;
+  position: absolute;
+}
+
+.yearDropdown {
+  width: 97px;
+  border-right: 1px solid #827870;
+  border-left: 1px solid #827870;
+  border-bottom: 1px solid #827870;
+  background-color: #FDFDFD;
+  z-index: 7;
+  position: relative;
+}
+
+.yearDropdown > li {
+  list-style: none;
+  padding: 5px 10px;
+  text-align: center;
+  font-weight: 700;
+  color: #827870;
+}
+
+.yearDropdown > li:hover {
+  background-color: #efefef;
+}
+
+.defaultmonth {
+  margin-left: 10px;
+  display: inline-block;
+  background-color: #FDFDFD;
+  border: 1px solid #827870;
+  padding: 5px 20px 7px 20px;
+  color: #827870;
+  font-weight: 700;
+}
+
+.monthDropdown {
+  margin-left: 10px;
+  width: 59px;
+  height: 97px;
+  overflow-y: scroll;
+  border-right: 1px solid #827870;
+  border-left: 1px solid #827870;
+  border-bottom: 1px solid #827870;
+  background-color: #FDFDFD;
+  z-index: 7;
+  position: relative;
+}
+
+.monthDropdown::-webkit-scrollbar {
+  width: 8px;
+}
+.monthDropdown::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.monthDropdown::-webkit-scrollbar-thumb {
+  background-color: #AFA79F;
+  border-radius: 100px;
+  background-clip: padding-box;
+  border: 3px solid transparent;
+}
+
+.monthDropdown > li {
+  list-style: none;
+  padding: 5px 10px 5px 17px;
+  text-align: center;
+  font-weight: 700;
+  color: #827870;
+}
+
+.monthDropdown > li:hover {
+  background-color: #efefef;
+}
+
+.defaultdate {
+  margin-left: 10px;
+  display: inline-block;
+  background-color: #FDFDFD;
+  border: 1px solid #827870;
+  padding: 5px 20px 7px 20px;
+  color: #827870;
+  font-weight: 700;
+}
+
+.dateDropdown {
+  margin-left: 10px;
+  width: 59px;
+  height: 97px;
+  overflow-y: scroll;
+  border-right: 1px solid #827870;
+  border-left: 1px solid #827870;
+  border-bottom: 1px solid #827870;
+  background-color: #FDFDFD;
+  z-index: 7;
+  position: relative;
+}
+
+.dateDropdown::-webkit-scrollbar {
+  width: 8px;
+}
+.dateDropdown::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.dateDropdown::-webkit-scrollbar-thumb {
+  background-color: #AFA79F;
+  border-radius: 100px;
+  background-clip: padding-box;
+  border: 3px solid transparent;
+}
+
+.dateDropdown > li {
+  list-style: none;
+  padding: 5px 10px 5px 19px;
+  text-align: center;
+  font-weight: 700;
+  color: #827870;
+}
+
+.dateDropdown > li:hover {
+  background-color: #efefef;
+}
+
+.btn {
+  position: absolute;
+  bottom: 30px;
+  left: 170px;
 }

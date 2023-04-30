@@ -4,16 +4,57 @@
 }
 
 .board {
-  margin-top: 220px;
+  margin-top: 230px;
   position: relative;
 }
 
-.board > h1 {
+.board > div:first-child {
+  display: flex;
+  margin-left: -130px;
+}
+
+.petimg {
+  margin-left: -10px;
+  margin-right: 40px;
+  filter: drop-shadow(2px 2px 1px #BFBFBF);
+}
+
+.dropdowncontainer {
+  position: absolute;
+  z-index: 2;
+  left: -140px;
+  margin-top: 20px;
+}
+
+.typedropdown {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.typedropdown > li > img {
+  filter: drop-shadow(2px 2px 1px #BFBFBF);
+}
+
+.board > div:first-child > h1 {
   color: #656565;
   font-size: 28px;
 }
 
-.board > input, .surgeryname, .weight, .drug > input, .caution > input {
+.upload {
+  display: flex;
+  margin-top: 35px;
+}
+
+.upload > label {
+  margin-left: -20px;
+  margin-bottom: 36px;
+  width: 80px;
+  height: 80px;
+}
+
+.board > input, .surgeryname, .weight, .drug > input, .caution > input, .upload > input {
   width: 120px;
   border-radius: 10px;
   color: #656565;
@@ -27,7 +68,8 @@
 .surgeryname:focus, 
 .weight:focus, 
 .drug > input:focus,
-.caution > input:focus {
+.caution > input:focus,
+.name {
   outline: none;
 }
 
@@ -35,7 +77,8 @@
 .surgeryname::placeholder,
 .weight::placeholder,
 .drug > input::placeholder,
-.caution > input::placeholder {
+.caution > input::placeholder
+.upload > input::placeholder {
   color: #b4b1ad;
 }
 
@@ -43,10 +86,14 @@
   height: 30px;
   font-size: 15px;
   font-weight: bold;
-  margin-bottom: 30px;
+  position: absolute;
+  top: 150px;
+  left: 100px;
+  height: 35px;
+  width: 150px;
 }
 
-.board > h4, .info > h4 {
+.boarddetail > h4, .info > h4 {
   display: inline-block;
   color: #827870;
   font-weight: bold;
@@ -119,6 +166,7 @@
   position: absolute;
   top: 5px;
   right: 160px;
+  cursor: pointer;
 }
 
 .surgeryname {
@@ -186,4 +234,61 @@
   border: none;
   padding: 5px 14px;
   border-radius: 8px;
+}
+
+.profilepet {
+  width: 100px;
+  height: 100px;
+  border-radius: 70%;
+  overflow: hidden;
+  cursor: pointer;
+  position: absolute;
+  left: -30px;
+  top: 100px;
+}
+
+.profileinput[type="file"] {
+  display: none;
+}
+
+.profileimg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delete {
+  width: 100px;
+  height: 50px;
+  border-radius: 0 0 50px 50px;
+  background : linear-gradient( to bottom, rgba(255, 255, 255, 0), #65656575 60%);;
+  position: absolute;
+  top: 150px;
+  left: -30px;
+  cursor: pointer;
+  display: none;
+}
+
+.upload > label:hover .delete {
+  display: block;
+}
+
+.delete > span {
+  position: absolute;
+  top: 18px;
+  left: 41px;
+}
+
+.datepicker {
+  display: inline-block;
+}
+
+.custominput {
+  color: #827870;
+  background-color: #EBE7E3;
+  border-style: none;
+  border-radius: 10px;
+  padding: 7px;
+  box-sizing: border-box;
+  width: 110px;
 }
