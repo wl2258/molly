@@ -2,15 +2,17 @@ package kr.co.kumoh.illdang100.mollyspring.dto.medication;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 public class MedicationReqDto {
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class MedicationSaveRequest {
 
@@ -21,15 +23,16 @@ public class MedicationReqDto {
         private String medicationName;
 
         @NotNull
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "복용약 시작 날짜는 yyyy-MM-dd 형식이어야 합니다.")
+        @DateTimeFormat(pattern="yyyy-MM-dd")
         private LocalDate medicationStartDate;
 
         @NotNull
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "복용약 종료 날짜는 yyyy-MM-dd 형식이어야 합니다.")
+        @DateTimeFormat(pattern="yyyy-MM-dd")
         private LocalDate medicationEndDate;
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class MedicationUpdateRequest {
         @NotNull
@@ -42,15 +45,16 @@ public class MedicationReqDto {
         private String medicationName;
 
         @NotNull
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "복용약 시작 날짜는 yyyy-MM-dd 형식이어야 합니다.")
+        @DateTimeFormat(pattern="yyyy-MM-dd")
         private LocalDate medicationStartDate;
 
         @NotNull
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "복용약 종료 날짜는 yyyy-MM-dd 형식이어야 합니다.")
+        @DateTimeFormat(pattern="yyyy-MM-dd")
         private LocalDate medicationEndDate;
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class MedicationDeleteRequest {
         @NotNull
