@@ -21,24 +21,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
 
+import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@Transactional
+@Sql("classpath:db/teardown.sql")
 class PetApiControllerTest extends DummyObject {
 
     @Autowired
@@ -54,12 +56,9 @@ class PetApiControllerTest extends DummyObject {
     @Autowired
     private PetRepository petRepository;
     @Autowired private PetImageRepository petImageRepository;
-
     @Autowired private SurgeryRepository surgeryRepository;
     @Autowired private VaccinationRepository vaccinationRepository;
     @Autowired private MedicationRepository medicationRepository;
-
-    private Pet savedPet;
 
     @BeforeEach
     public void setUp() {
@@ -115,18 +114,16 @@ class PetApiControllerTest extends DummyObject {
     void updatePet_success() throws Exception {
 
         //given
+        Long petId = 1L;
+
+        PetUpdateRequest updateRequest = new PetUpdateRequest(petId, PetTypeEnum.DOG, "강아지", DogEnum.GRATE_DANE.toString(),
+                LocalDate.now().minusYears(1), PetGenderEnum.FEMALE, true, 3.0, null);
+        String requestBody = om.writeValueAsString(updateRequest);
 
         //when
         ResultActions resultActions = mockMvc.perform(patch("/api/auth/pet")
-                .param("petId", String.valueOf(savedPet.getId()))
-                .param("petName", "강아지")
-                .param("petType", "DOG")
-                .param("species", DogEnum.AUSTRALIAN_SILKY_TERRIER.toString())
-                .param("weight", String.valueOf(3.0))
-                .param("birthdate", LocalDate.now().minusYears(3).toString())
-                .param("gender", "FEMALE")
-                .param("neuteredStatus", "true")
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON));
 
         //then
         resultActions.andExpect(status().isOk());
@@ -138,19 +135,16 @@ class PetApiControllerTest extends DummyObject {
     void updatePet_failure() throws Exception {
 
         //given
+        Long petId = 56L;
+
+        PetUpdateRequest updateRequest = new PetUpdateRequest(petId, PetTypeEnum.DOG, "강아지", DogEnum.GRATE_DANE.toString(),
+                LocalDate.now().minusYears(1), PetGenderEnum.FEMALE, true, 3.0, null);
+        String requestBody = om.writeValueAsString(updateRequest);
 
         //when
         ResultActions resultActions = mockMvc.perform(patch("/api/auth/pet")
-                .param("petId", String.valueOf(56))
-                .param("petName", "몽이")
-                .param("petType", "DOG")
-                .param("species", DogEnum.BICHON_FRIZE.toString())
-                .param("weight", String.valueOf(3.7))
-                .param("birthdate", "2022-04-10")
-                .param("gender", "MALE")
-                .param("neuteredStatus", "true")
-                .param("caution", "물릴 수도 있음")
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON));
 
         //then
         resultActions.andExpect(status().isBadRequest());
@@ -162,9 +156,10 @@ class PetApiControllerTest extends DummyObject {
     void viewDetails_success() throws Exception {
 
         // given
+        Long petId = 1L;
 
         //when
-        ResultActions resultActions = mockMvc.perform(get("/api/auth/pet/" + savedPet.getId().toString()).contentType(MediaType.APPLICATION_JSON_VALUE));
+        ResultActions resultActions = mockMvc.perform(get("/api/auth/pet/" + petId.toString()).contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then
         resultActions.andExpect(status().isOk());
@@ -191,30 +186,10 @@ class PetApiControllerTest extends DummyObject {
     void deletePet_success() throws Exception {
 
         // given
-        SurgeryHistory surgery = SurgeryHistory.builder()
-                .pet(savedPet)
-                .surgeryName("surgery1")
-                .surgeryDate(LocalDate.now().minusDays(3))
-                .build();
-        surgeryRepository.save(surgery);
-
-        MedicationHistory medication = MedicationHistory.builder()
-                .pet(savedPet)
-                .medicationName("medication1")
-                .medicationStartDate(LocalDate.now().minusDays(7))
-                .medicationEndDate(LocalDate.now().plusDays(7))
-                .build();
-        medicationRepository.save(medication);
-
-        VaccinationHistory vaccination = VaccinationHistory.builder()
-                .pet(savedPet)
-                .vaccinationName("vaccination1")
-                .vaccinationDate(LocalDate.of(2022, 4, 2))
-                .build();
-        vaccinationRepository.save(vaccination);
+        Long petId = 1L;
 
         //when
-        ResultActions resultActions = mockMvc.perform(delete("/api/auth/pet/" + savedPet.getId().toString()).contentType(MediaType.APPLICATION_JSON_VALUE));
+        ResultActions resultActions = mockMvc.perform(delete("/api/auth/pet/" + petId.toString()).contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then
         resultActions.andExpect(status().isOk());
@@ -239,7 +214,16 @@ class PetApiControllerTest extends DummyObject {
         accountRepository.save(account);
 
         Pet pet = newPet(account, "몰리", LocalDate.now().minusYears(1), PetGenderEnum.FEMALE, true, 3.5, PetTypeEnum.DOG, null, DogEnum.CHIHUAHUA);
-        savedPet =  petRepository.save(pet);
+        petRepository.save(pet);
+
+        MedicationHistory medication = newMockMedication(pet, "쓸개골 탈구");
+        medicationRepository.save(medication);
+
+        SurgeryHistory surgery = newMockSurgery(pet, "종양 제거 수술");
+        surgeryRepository.save(surgery);
+
+        VaccinationHistory vaccination = newMockVaccination(pet, "심장사상충");
+        vaccinationRepository.save(vaccination);
 
         em.clear();
     }
