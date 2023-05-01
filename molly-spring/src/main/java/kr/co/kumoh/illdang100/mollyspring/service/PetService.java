@@ -7,7 +7,10 @@ import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import kr.co.kumoh.illdang100.mollyspring.domain.surgery.SurgeryHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.vaccinations.VaccinationHistory;
+import kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationRespDto;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.PetCalendarResponse;
+import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto;
+import kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationRespDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.cat.CatRepository;
@@ -29,8 +32,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.domain.pet.PetTypeEnum.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationRespDto.*;
 
 @Slf4j
 @Service
@@ -47,23 +53,23 @@ public class PetService {
     private final VaccinationRepository vaccinationRepository;
     private final MedicationRepository medicationRepository;
     private final PetImageRepository petImageRepository;
+    private final MedicationService medicationService;
+    private final SurgeryService surgeryService;
+    private final VaccinationService vaccinationService;
 
     /**
      * 반려동물 등록
      * @param petSaveRequest
-     * @return
-     * @throws IOException
      */
     @Transactional
-    public Long registerPet(PetSaveRequest petSaveRequest, Account account) throws IOException {
+    public Long registerPet(PetSaveRequest petSaveRequest, Account account) {
         Account findUser = findAccountOrElseThrow(account.getId());
 
         PetTypeEnum petType = petSaveRequest.getPetType();
 
-        Optional<Pet> findPetOpt = petRepository.findByAccount_IdAndPetTypeAndPetNameAndBirthdate(findUser.getId(), petType, petSaveRequest.getPetName(), petSaveRequest.getBirthdate());
+        Optional<Pet> findPetOpt = petRepository.findByAccount_IdAndPetName(findUser.getId(), petSaveRequest.getPetName());
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
-        MultipartFile imageFile = petSaveRequest.getPetProfileImage();
         if (petType.equals(CAT)) {
             Pet savedCat = saveCat(petSaveRequest, petType, findUser);
            return savedCat.getId();
@@ -83,7 +89,6 @@ public class PetService {
     /**
      * 반려동물 정보 상세보기
      * @param petId
-     * @return
      */
     public PetDetailResponse viewDetails(Long petId) {
 
@@ -115,13 +120,20 @@ public class PetService {
             }
         }
 
+        List<SurgeryResponse> surgery = surgeryService.viewSurgeryList(petId);
+        List<MedicationResponse> medication = medicationService.viewMedicationList(petId);
+        List<VaccinationResponse> vaccination = vaccinationService.viewVaccinationList(petId);
+
+        petDetailResponse.setSurgery(surgery);
+        petDetailResponse.setMedication(medication);
+        petDetailResponse.setVaccination(vaccination);
+
         return petDetailResponse;
     }
 
     /**
      * 반려동물 기본 정보 수정
      * @param petUpdateRequest
-     * @throws IOException
      */
     @Transactional
     public Long updatePet(PetUpdateRequest petUpdateRequest, Account account) {
@@ -152,7 +164,6 @@ public class PetService {
 
         Pet findPet = findPetOrElseThrow(petId);
 
-        deletePetProfileImageInRepository(petId);
         deleteSurgeryHistory(petId);
         deleteMedicationHistory(petId);
         deleteVaccinationHistory(petId);
@@ -164,7 +175,7 @@ public class PetService {
     private void deleteSurgeryHistory(Long petId) {
 
         List<SurgeryHistory> sHistory = surgeryRepository.findByPet_Id(petId);
-        if (sHistory.isEmpty()) {
+        if (!sHistory.isEmpty()) {
             for (SurgeryHistory s : sHistory)
                 surgeryRepository.delete(s);
         }
@@ -173,7 +184,7 @@ public class PetService {
     private void deleteMedicationHistory(Long petId) {
 
         List<MedicationHistory> mHistory = medicationRepository.findByPet_Id(petId);
-        if (mHistory.isEmpty()) {
+        if (!mHistory.isEmpty()) {
             for (MedicationHistory m : mHistory)
                 medicationRepository.delete(m);
         }
@@ -182,25 +193,15 @@ public class PetService {
     private void deleteVaccinationHistory(Long petId) {
 
         List<VaccinationHistory> vHistory = vaccinationRepository.findByPet_Id(petId);
-        if (vHistory.isEmpty()) {
+        if (!vHistory.isEmpty()) {
             for (VaccinationHistory v : vHistory)
                 vaccinationRepository.delete(v);
-        }
-    }
-
-    private void deletePetProfileImageInRepository(Long petId) {
-
-        Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
-        if (findPetImageOpt.isPresent()) {
-            PetImage findPetImage = findPetImageOpt.get();
-            petImageRepository.delete(findPetImage);
         }
     }
 
     /**
      * 연간 달력 정보
      * @param petId
-     * @return
      */
     public PetCalendarResponse viewAnnualCalendarSchedule(Long petId) {
 
@@ -216,17 +217,23 @@ public class PetService {
     }
 
     /**
-     * 반려동물 프로필 이미지 변경
+     * 반려동물 프로필  다른 이미지 변경
      * @param petProfileImageUpdateRequest
-     * @throws IOException
      */
-    public void updatePetProfileImage(PetProfileImageUpdateRequest petProfileImageUpdateRequest) throws IOException {
+    @Transactional
+    public void updatePetProfileImage(PetProfileImageUpdateRequest petProfileImageUpdateRequest) {
 
         Long petId = petProfileImageUpdateRequest.getPetId();
         MultipartFile petProfileImage = petProfileImageUpdateRequest.getPetProfileImage();
 
-        Pet findPet = deletePetProfileImage(petId);
-        ImageFile updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
+        deleteImageByPet(petId);
+
+        ImageFile updatedImageFile = null;
+        try {
+            updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
+        } catch (IOException e) {
+            throw new CustomApiException(e.getMessage());
+        }
 
         Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
         if (findPetImageOpt.isPresent()) {
@@ -238,21 +245,23 @@ public class PetService {
     /**
      * 반려동물 프로필 이미지 삭제
      * @param petId
-     * @return
      */
     @Transactional
     public Pet deletePetProfileImage(Long petId) {
 
         Pet findPet = findPetOrElseThrow(petId);
+        deleteImageByPet(petId);
 
+        return findPet;
+    }
+
+    private void deleteImageByPet(Long petId) {
         Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
         if (findPetImageOpt.isPresent()) {
             PetImage findPetImage = findPetImageOpt.get();
+            petImageRepository.delete(findPetImage);
             s3Service.delete(findPetImage.getPetProfileImage().getStoreFileName());
-            deletePetProfileImageInRepository(petId);
         }
-
-        return findPet;
     }
 
     public Pet findPetOrElseThrow(Long petId) {
@@ -310,12 +319,19 @@ public class PetService {
         return findPet instanceof Rabbit;
     }
 
-    private Pet saveCat(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) throws IOException {
+    @Transactional
+    private Pet saveCat(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
 
         ImageFile petProfileImage = null;
 
-        if (petSaveRequest.getPetProfileImage() != null)
-            petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), "pet");
+        MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
+        if (multipartFile != null) {
+            try{
+                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), "pet");
+            } catch (IOException e) {
+                throw new CustomApiException(e.getMessage());
+            }
+        }
 
         Cat createdCat = createCat(petSaveRequest, petType, findUser);
         Cat savedCat = catRepository.save(createdCat);
@@ -325,12 +341,17 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveDog(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) throws IOException {
+    private Pet saveDog(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
-        if (multipartFile != null)
-            petProfileImage = s3Service.upload(multipartFile, "pet");
+        if (multipartFile != null) {
+            try {
+                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), "pet");
+            } catch (IOException e) {
+                throw new CustomApiException(e.getMessage());
+            }
+        }
 
         Dog createdDog = createDog(petSaveRequest, petType, findUser);
         Dog savedDog = dogRepository.save(createdDog);
@@ -339,12 +360,18 @@ public class PetService {
         return createdDog;
     }
 
-    private Pet saveRabbit(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) throws IOException {
+    @Transactional
+    private Pet saveRabbit(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
-        if (multipartFile != null)
-            petProfileImage = s3Service.upload(multipartFile, "pet");
+        if (multipartFile != null) {
+            try {
+                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), "pet");
+            } catch (IOException e) {
+                throw new CustomApiException(e.getMessage());
+            }
+        }
 
         Rabbit createdRabbit = createRabbit(petSaveRequest, petType, findUser);
         Rabbit savedRabbit = rabbitRepository.save(createdRabbit);
@@ -352,6 +379,7 @@ public class PetService {
 
         return savedRabbit;
     }
+
 
     private Cat createCat(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
 
