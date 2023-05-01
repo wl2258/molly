@@ -4,7 +4,12 @@ package kr.co.kumoh.illdang100.mollyspring.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.PetImage;
+import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
+import kr.co.kumoh.illdang100.mollyspring.domain.surgery.SurgeryHistory;
+import kr.co.kumoh.illdang100.mollyspring.domain.vaccinations.VaccinationHistory;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.cat.CatRepository;
@@ -22,8 +27,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
@@ -55,6 +62,14 @@ public class PetServiceTest extends DummyObject {
     private VaccinationRepository vaccinationRepository;
     @Mock
     private MedicationRepository medicationRepository;
+    @Mock
+    private S3Service s3Service;
+    @Mock
+    private MedicationService medicationService;
+    @Mock
+    private SurgeryService surgeryService;
+    @Mock
+    private VaccinationService vaccinationService;
     @Spy
     private ObjectMapper om;
 
@@ -71,9 +86,7 @@ public class PetServiceTest extends DummyObject {
         when(accountRepository.findById(any())).thenReturn(Optional.of(account));
 
         // stub
-        Pet pet = newPet(account, "삐삐", LocalDate.of(2020, 1, 5), PetGenderEnum.MALE, true, 3.4,
-                PetTypeEnum.DOG, null, DogEnum.BOXER);
-        when(petRepository.findByAccount_IdAndPetTypeAndPetNameAndBirthdate(any(), any(), any(), any())).thenReturn(Optional.empty());
+        when(petRepository.findByAccount_IdAndPetName(any(), any())).thenReturn(Optional.empty());
 
         //when
         Long petId = petService.registerPet(saveRequest, account);
@@ -152,10 +165,21 @@ public class PetServiceTest extends DummyObject {
         Pet pet = newPet(account, "몽이", LocalDate.now().minusYears(1), PetGenderEnum.MALE, true, 3.5,
                 PetTypeEnum.DOG, null, DogEnum.BICHON_FRIZE);
 
+        MedicationHistory medication = newMockMedication(pet, "medicationName");
+        SurgeryHistory surgery = newMockSurgery(pet, "surgeryName");
+        VaccinationHistory vaccination = newMockVaccination(pet, "vaccinationName");
+
         // stub
         when(petRepository.findById(any())).thenReturn(Optional.of(pet));
 
-        //given
+        // stub
+        when(medicationRepository.findByPet_Id(pet.getId())).thenReturn(List.of(medication));
+
+        // stub
+        when(vaccinationRepository.findByPet_Id(pet.getId())).thenReturn(List.of(vaccination));
+
+        // stub
+        when(surgeryRepository.findByPet_Id(pet.getId())).thenReturn(List.of(surgery));
 
         //when
         petService.deletePet(pet.getId());
@@ -248,5 +272,58 @@ public class PetServiceTest extends DummyObject {
         //then
         assertThatThrownBy(() -> petService.viewAnnualCalendarSchedule(pet.getId()))
                 .isInstanceOf(CustomApiException.class);
+    }
+
+    @Test
+    void 반려동물_프로필_수정() throws Exception {
+
+        //given
+        Account account = newMockAccount(1L, "google_1234", "molly", AccountEnum.CUSTOMER);
+
+        Pet pet = newPet(account, "해피", LocalDate.now().minusYears(5), PetGenderEnum.FEMALE, true, 2.7,
+                PetTypeEnum.DOG, null, DogEnum.GERMAN_SPITZ);
+
+        MockMultipartFile multipartFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+        PetProfileImageUpdateRequest petProfileImageUpdateRequest = new PetProfileImageUpdateRequest(pet.getId(), multipartFile);
+
+        PetImage petImage = PetImage.builder()
+                .petProfileImage(new ImageFile("uploadFile", "storeFile", "url"))
+                .build();
+
+        // stub
+        when(petImageRepository.findByPet_Id(pet.getId())).thenReturn(Optional.of(petImage));
+
+        //when
+        petService.updatePetProfileImage(petProfileImageUpdateRequest);
+
+        //then
+    }
+
+    @Test
+    void 반려동물_프로필_삭제() throws Exception {
+
+        //given
+        Account account = newMockAccount(1L, "google_1234", "molly", AccountEnum.CUSTOMER);
+
+        Pet pet = newPet(account, "해피", LocalDate.now().minusYears(5), PetGenderEnum.FEMALE, true, 2.7,
+                PetTypeEnum.DOG, null, DogEnum.GERMAN_SPITZ);
+
+        MockMultipartFile multipartFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+        PetProfileImageUpdateRequest petProfileImageUpdateRequest = new PetProfileImageUpdateRequest(pet.getId(), multipartFile);
+
+        PetImage petImage = PetImage.builder()
+                .petProfileImage(new ImageFile("uploadFile", "storeFile", "url"))
+                .build();
+
+        // stub
+        when(petImageRepository.findByPet_Id(pet.getId())).thenReturn(Optional.of(petImage));
+
+        // stub
+        when(petRepository.findById(pet.getId())).thenReturn(Optional.of(pet));
+
+        //when
+        petService.deletePetProfileImage(pet.getId());
+
+        //then\
     }
 }
