@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
@@ -30,7 +29,7 @@ public class PetApiController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetSaveRequest petSaveRequest,
                                          BindingResult bindingResult,
-                                         @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
+                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         Long petId = petService.registerPet(petSaveRequest, principalDetails.getAccount());
 
@@ -44,7 +43,7 @@ public class PetApiController {
         return new ResponseEntity<>(new ResponseDto(1, "해당 반려동물의 정보입니다.", petDetailResponse), HttpStatus.OK);
     }
     @PatchMapping
-    public ResponseEntity<?> updatePet(@ModelAttribute @Valid PetUpdateRequest petUpdateRequest,
+    public ResponseEntity<?> updatePet(@RequestBody @Valid PetUpdateRequest petUpdateRequest,
                                        BindingResult bindingResult,
                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
@@ -64,7 +63,7 @@ public class PetApiController {
 
     @PatchMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePetProfileImage(@ModelAttribute @Valid PetProfileImageUpdateRequest petProfileImageUpdateRequest,
-                                                   BindingResult bindingResult) throws IOException {
+                                                   BindingResult bindingResult) {
 
         petService.updatePetProfileImage(petProfileImageUpdateRequest);
 
