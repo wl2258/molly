@@ -37,11 +37,11 @@ public class AccountService {
     @Transactional(readOnly = true)
     public void checkNicknameDuplicate(String nickname) {
 
-        Optional<Account> accountOptional = accountRepository.findByNickname(nickname);
+        Optional<Account> accountOpt = accountRepository.findByNickname(nickname);
 
-        if (accountOptional.isPresent()) {
-            throw new CustomApiException("사용 불가능한 닉네임입니다");
-        }
+        accountOpt.ifPresent((findAccount) -> {
+            throw new CustomApiException("사용 불가능한 닉네임입니다.");
+        });
     }
 
     /**
