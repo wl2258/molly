@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,18 +29,23 @@ public class VaccinationService {
 
     /**
      * 예방접종 이력 추가
-     * @param request
+     * @param vaccinationSaveRequest
      * @return
      */
     @Transactional
-    public Long saveVaccination(VaccinationSaveRequest request) {
-        Long petId = request.getPetId();
+    public Long saveVaccination(VaccinationSaveRequest vaccinationSaveRequest) {
+        Long petId = vaccinationSaveRequest.getPetId();
         Pet findPet = findPetOrElseThrow(petId);
+
+        String vaccinationName = vaccinationSaveRequest.getVaccinationName();
+        LocalDate vaccinationDate = vaccinationSaveRequest.getVaccinationDate();
+        Boolean exists = vaccinationRepository.existsVaccinationByPet(petId, vaccinationName, vaccinationDate);
+        if (exists == Boolean.TRUE) throw new CustomApiException("해당 예방접종 이력이 이미 존재합니다.");
 
         VaccinationHistory vaccination = VaccinationHistory.builder()
                 .pet(findPet)
-                .vaccinationName(request.getVaccinationName())
-                .vaccinationDate(request.getVaccinationDate())
+                .vaccinationName(vaccinationName)
+                .vaccinationDate(vaccinationDate)
                 .build();
 
          vaccinationRepository.save(vaccination);
