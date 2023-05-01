@@ -40,7 +40,7 @@ public class SurgeryService {
         String surgeryName = request.getSurgeryName();
         LocalDate surgeryDate = request.getSurgeryDate();
         Boolean exists = existSurgeryByPet(petId, surgeryName, surgeryDate);
-        if (exists == true) throw new CustomApiException("해당 수술 이력이 이미 존재합니다.");
+        if (exists == Boolean.TRUE) throw new CustomApiException("해당 수술 이력이 이미 존재합니다.");
 
         SurgeryHistory surgery = SurgeryHistory.builder()
                 .pet(findPet)
