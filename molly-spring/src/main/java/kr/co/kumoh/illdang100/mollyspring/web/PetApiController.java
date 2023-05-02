@@ -75,6 +75,6 @@ public class PetApiController {
 
         petService.deletePetProfileImage(petId);
 
-        return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 삭제했습니다.", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 기본 이미지로 변경했습니다..", null), HttpStatus.OK);
     }
 }
