@@ -8,7 +8,7 @@
   position: relative;
 }
 
-.board > div:first-child {
+.board > form > div:first-child {
   display: flex;
   margin-left: -130px;
 }
@@ -37,7 +37,7 @@
   filter: drop-shadow(2px 2px 1px #BFBFBF);
 }
 
-.board > div:first-child > h1 {
+.board > form > div:first-child > h1 {
   color: #656565;
   font-size: 28px;
 }
@@ -162,10 +162,33 @@
   position: relative;
 }
 
+.surgeryHistory {
+  margin: 0 0 15px 12px;
+  position: relative;
+}
+
+.surgeryHistory > span:first-child {
+  color: #827870;
+  font-size: 14px;
+  margin-right: 25px;
+}
+
+.surgeryHistory > span:nth-child(2) {
+  color: #827870;
+  font-size: 14px;
+  margin-right: 20px;
+}
+
+.surgeryHistory > span:nth-child(3) {
+  position: absolute;
+  top: 2px;
+  cursor: pointer;
+}
+
 .surgery > span {
   position: absolute;
-  top: 5px;
-  right: 160px;
+  bottom: 5px;
+  right: 175px;
   cursor: pointer;
 }
 
@@ -189,6 +212,42 @@
   position: relative;
 }
 
+.medicineContainer {
+  margin: -61px 0 10px 100px;
+}
+
+.medicineData {
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.medicineData > p {
+  color: #827870;
+  background-color: #EBE7E3;
+  padding: 6px 15px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-right: 20px;
+}
+
+.medicineData > span:nth-child(2) {
+  color: #827870;
+  font-size: 14px;
+  margin-right: 20px;
+}
+
+.medicineData > span:nth-child(3) {
+  display: inline-block;
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+.drug {
+  margin-left: 90px;
+  margin-bottom: 20px;
+}
+
 .drug > input {
   width: 100px;
   height: 27px;
@@ -208,8 +267,9 @@
 
 .drug > span {
   position: absolute;
-  top: 5px;
+  bottom: 5px;
   right: -30px;
+  cursor: pointer;
 }
 
 .caution > input {
