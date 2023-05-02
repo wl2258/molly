@@ -1,10 +1,5 @@
 .box {
   margin-top: 260px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
 .container {
@@ -32,16 +27,16 @@
   object-fit: cover;
 }
 
-.profilelabel {
+/* .profilelabel {
   margin: 10px 0;
   font-weight: bold;
   font-size: 13px;
   color: #827870;
   display: inline-block;
   cursor: pointer;
-}
+} */
 
-.imgdelete {
+/* .imgdelete {
   position: absolute;
   top: 121px;
   margin-left: 10px;
@@ -50,7 +45,7 @@
   color: #827870;
   display: inline-block;
   cursor: pointer;
-}
+} */
 
 .profileinput[type="file"] {
   display: none;
@@ -215,4 +210,87 @@
 .info > p {
   color: #AFA79F;
   font-size: 12px;
+}
+
+.modalContainer {
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #adaaa790;
+}
+
+.profileUpdate {
+  width: 400px;
+  height: 240px;
+  border-radius: 20px;
+  background-color: #FDFDFD;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -120px;
+}
+
+.profileUpdate > div:not(:last-of-type) {
+  border-bottom: 1px solid #d1cbc6;
+}
+
+.profileUpdate > div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.profileUpdate > div:first-child {
+  padding: 20px 0;
+}
+
+.profileUpdate > div:not(:first-of-type) {
+  padding: 2px 0;
+}
+
+.profileUpdate > div > h1 {
+  color: #656565;
+  font-size: 18px;
+}
+
+.profileUpdate > div > h2 {
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.profileUpdate > div:nth-child(2) > label > button {
+  background-color: transparent;
+  border: none;
+}
+
+.profileUpdate > div:nth-child(2) > label > h2 {
+  font-size: 15px;
+  cursor: pointer;
+  color: rgb(104, 138, 217);
+}
+
+.profileUpdate > div:nth-child(3) > h2 {
+  color: rgb(218, 111, 124);
+}
+
+.profileUpdate > div > p {
+  margin: 12px 15px 0;
+  cursor: pointer;
+}
+
+.profileUpdate > div > button {
+  background-color: transparent;
+  border: none;
+}
+
+.profileUpdate > div > button > p {
+  font-weight: 800;
+  color: #656565;
+  cursor: pointer;
+  margin: 12px 15px 0;
+  font-size: 15px;
 }

@@ -51,8 +51,9 @@ const SignUp = () => {
       try {
         const errResponseStatus = error.response.status;
         const prevRequest = error.config;
+        const errMsg = error.response.data.msg;
 
-        if(errResponseStatus === 400) {
+        if(errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
           const preRefreshToken = localStorage.getItem("refreshToken");
           if(preRefreshToken) {
             async function issuedToken() {
@@ -84,6 +85,9 @@ const SignUp = () => {
             throw new Error("There is no refresh token");
           }
         }
+        else if(errResponseStatus === 400) {
+          return;
+        }
         else if(errResponseStatus === 401) {
           console.log("인증 실패");
           window.location.replace("/login");
@@ -103,6 +107,8 @@ const SignUp = () => {
     formData.append("nickname", nickname);
     if(imgRef.current.files[0] !== undefined) {
       formData.append("accountProfileImage", imgRef.current.files[0]);
+    } else {
+      formData.append("profileImage", "");
     }
 
     const config = {
@@ -153,7 +159,7 @@ const SignUp = () => {
           setDisabled(false);
           setDuplicate(2);
         } 
-        else if(response.data.code === -1) {
+        else {
           setDisabled(true);
           setDuplicate(1);
         }

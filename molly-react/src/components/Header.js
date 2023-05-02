@@ -200,7 +200,7 @@ const PetDropdown = () => {
         return (
           item !== '' && 
             <li onClick={() => {navigate(`/detailpet/${index+1}`)}}>
-              <img className={styles.petimg} src={process.env.PUBLIC_URL + '/img/puppy-logo.png'} alt="puppy" width="36px"/>{item}
+              <img className={styles.petimg} src={process.env.PUBLIC_URL + '/img/DOG-logo.png'} alt="puppy" width="36px"/>{item}
             </li>
         )
       })}
