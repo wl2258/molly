@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import styles from '../../css/Vaccine.module.css';
-import { Button } from '../Button';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
-import CustomDatePicker from '../../components/CustomDatePicker';
+import { FiPlus } from 'react-icons/fi';
+import { TiDelete, TiDeleteOutline } from 'react-icons/ti';
+import DatePicker from 'react-datepicker';
+import {ko} from 'date-fns/esm/locale';
+import moment from 'moment';
 
 const Vaccine = (props) => {
   useEffect(() => {
@@ -19,17 +22,17 @@ const Vaccine = (props) => {
   }, []);
   const [vaccine, setVaccine] = useState(false);
   const [vaccineValue, setVaccineValue] = useState('종합백신 1차');
+  const vaccineNo = useRef(1);
 
+  const [vaccineDate, setVaccineDate] = useState(new Date());
+ 
   return (
     <div className={styles.vaccine}>
+      <span onClick={props.onClick}><TiDeleteOutline color="#FDFDFD" size="35px"/></span>
       <div className={styles.modalContainer}>
         <h1>예방접종 이력 추가</h1>
-        <div>
-          <Button onClick={props.onClick} name="취소"/>
-          <Button name="저장"/>
-        </div>
-        <ul onClick={() => {setVaccine(!vaccine)}}>
-          <div className={styles.sort}>
+        <ul>
+          <div onClick={() => {setVaccine(!vaccine)}} className={styles.sort}>
             <span className={styles.default}>{vaccineValue}</span>
             {vaccine ? 
               <span style={{position:"absolute", right: "8px"}}><MdExpandLess size="25px" color="#AFA79F"/></span> : 
@@ -37,7 +40,35 @@ const Vaccine = (props) => {
             {vaccine && <VaccineDropdown setValue={setVaccineValue}/>}
           </div>
         </ul>
-        <span><CustomDatePicker /></span>
+        <div className={styles.datepicker}>
+          <DatePicker 
+            locale={ko}
+            selected={vaccineDate}
+            onChange={(date) => setVaccineDate(date)}
+            dateFormat="yyyy/MM/dd"
+            customInput={<CustomInput />}
+          />
+        </div> 
+        <span onClick={() => {
+          props.setVaccineHistory([...props.vaccineHistory, {
+            vaccineId : vaccineNo.current++,
+            vaccineName : vaccineValue,
+            vaccineDate : moment(vaccineDate).format("YYYY-MM-DD"),
+          }])
+        }}><FiPlus color="#AFA79F" size="18px"/></span>
+        <div>
+          {props.vaccineHistory.map((data, index) => {
+            return (
+              <div key={index} className={styles.vaccineHistory}> 
+                <span>{data.vaccineName}</span>
+                <span>{data.vaccineDate}</span>
+                <span onClick={() => {
+                  props.setVaccineHistory(props.vaccineHistory.filter(vaccineHistory => vaccineHistory.vaccineId !== data.vaccineId))
+                }}><TiDelete size="18px" color="#827870"/></span>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   );
@@ -52,5 +83,11 @@ const VaccineDropdown = (props) => {
     </div>
   )
 }
+
+const CustomInput = forwardRef(({value, onClick}, ref) => (
+  <button className={styles.custominput} onClick={onClick} ref={ref}>
+    {value}
+  </button>
+))
 
 export default Vaccine;
