@@ -7,10 +7,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import kr.co.kumoh.illdang100.mollyspring.domain.surgery.SurgeryHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.vaccinations.VaccinationHistory;
-import kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationRespDto;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.PetCalendarResponse;
-import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto;
-import kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationRespDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.cat.CatRepository;
@@ -224,44 +221,45 @@ public class PetService {
     public void updatePetProfileImage(PetProfileImageUpdateRequest petProfileImageUpdateRequest) {
 
         Long petId = petProfileImageUpdateRequest.getPetId();
+        Pet findPet = findPetOrElseThrow(petId);
         MultipartFile petProfileImage = petProfileImageUpdateRequest.getPetProfileImage();
 
-        deleteImageByPet(petId);
+        Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
 
-        ImageFile updatedImageFile = null;
         try {
-            updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
+            ImageFile updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
+
+            if (findPetImageOpt.isPresent()) {
+                PetImage findPetImage = findPetImageOpt.get();
+                s3Service.delete(findPetImage.getPetProfileImage().getStoreFileName());
+                findPetImage.updatePetProfileImage(updatedImageFile);
+            } else {
+                petImageRepository.save(PetImage.builder()
+                        .pet(findPet)
+                        .petProfileImage(updatedImageFile)
+                        .build());
+            }
         } catch (IOException e) {
             throw new CustomApiException(e.getMessage());
-        }
-
-        Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
-        if (findPetImageOpt.isPresent()) {
-            PetImage findPetImage = findPetImageOpt.get();
-            findPetImage.updatePetProfileImage(updatedImageFile);
         }
     }
 
     /**
-     * 반려동물 프로필 이미지 삭제
+     * 반려동물 프로필 이미지 삭제 (기본 이미지 변경)
      * @param petId
      */
     @Transactional
     public Pet deletePetProfileImage(Long petId) {
 
         Pet findPet = findPetOrElseThrow(petId);
-        deleteImageByPet(petId);
-
-        return findPet;
-    }
-
-    private void deleteImageByPet(Long petId) {
         Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
         if (findPetImageOpt.isPresent()) {
             PetImage findPetImage = findPetImageOpt.get();
             petImageRepository.delete(findPetImage);
             s3Service.delete(findPetImage.getPetProfileImage().getStoreFileName());
         }
+
+        return findPet;
     }
 
     public Pet findPetOrElseThrow(Long petId) {
@@ -327,7 +325,7 @@ public class PetService {
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
         if (multipartFile != null) {
             try{
-                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), "pet");
+                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), FileRootPathVO.PET_PATH);
             } catch (IOException e) {
                 throw new CustomApiException(e.getMessage());
             }
@@ -347,7 +345,7 @@ public class PetService {
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
         if (multipartFile != null) {
             try {
-                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), "pet");
+                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), FileRootPathVO.PET_PATH);
             } catch (IOException e) {
                 throw new CustomApiException(e.getMessage());
             }
@@ -367,7 +365,7 @@ public class PetService {
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
         if (multipartFile != null) {
             try {
-                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), "pet");
+                petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), FileRootPathVO.PET_PATH);
             } catch (IOException e) {
                 throw new CustomApiException(e.getMessage());
             }
