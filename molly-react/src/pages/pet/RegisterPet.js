@@ -135,7 +135,8 @@ const RegisterPet = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("peType", petType);
+    formData.append("userId", localStorage.getItem("accessToken"),)
+    formData.append("petType", petType);
     formData.append("petName", petNickName);
     formData.append("species", petValue);
     if(imgRef.current.files[0] !== undefined) {
