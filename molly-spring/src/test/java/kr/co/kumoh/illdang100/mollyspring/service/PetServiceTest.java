@@ -293,6 +293,9 @@ public class PetServiceTest extends DummyObject {
         // stub
         when(petImageRepository.findByPet_Id(pet.getId())).thenReturn(Optional.of(petImage));
 
+        // stub
+        when(petRepository.findById(pet.getId())).thenReturn(Optional.of(pet));
+
         //when
         petService.updatePetProfileImage(petProfileImageUpdateRequest);
 
