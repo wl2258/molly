@@ -13,7 +13,39 @@ let CustomBody = styled.div`
 
 const DetailPet = () => {
   let {id} = useParams();
-  const [text, setText] = useState([])
+  const [text, setText] = useState([{
+      "userId": 32492,
+      "petId": 1234,
+      "peType": "DOG",
+      "petName": "molly",
+      "species": "MALTESE",
+      "profileImage": "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
+      "birthDate": "2013-08-07",
+      "gender": "FEMALE",
+      "neuteredStatus" : "false",
+      "weight" : 3.4,
+      "caution" : "분리불안 심함",
+      "surgery": [
+        {
+          "surgeryName": "수직이도성형술",
+          "surgeryDate": "2023-01-01"
+        },
+      ],
+      "medication": [
+        {
+          "medicationName": "넥스가드",
+          "medicationStart": "2023-02-01",
+          "medicationEnd": "2023-02-15"
+        },
+      ],
+      "vaccination": [
+        {
+          "vaccinationName": "종합백신1차",
+          "vaccinationDate": "2018-01-01"
+        },
+      ]
+    }
+  ])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -97,9 +129,9 @@ const DetailPet = () => {
   }, [])
 
   const navigate = useNavigate();
-  let detail = text.filter((item) => item.id === parseInt(id));
-  let gender = detail[0].gender === 'female' ? true : false;
-  let neutered = detail[0].neutered === true ? true : false;
+  let detail = text.filter((item) => item.petName === parseInt(id));
+  let gender = detail[0].gender === 'FEMALE' ? true : false;
+  let neutered = detail[0].neutered === 'true' ? true : false;
   let surgery = detail[0].surgery[0] === undefined ? false : true;
   
   const now = new Date();

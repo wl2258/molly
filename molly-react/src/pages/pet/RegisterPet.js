@@ -135,7 +135,8 @@ const RegisterPet = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("peType", petType);
+    formData.append("userId", localStorage.getItem("accessToken"),)
+    formData.append("petType", petType);
     formData.append("petName", petNickName);
     formData.append("species", petValue);
     if(imgRef.current.files[0] !== undefined) {
@@ -210,7 +211,7 @@ const RegisterPet = () => {
       console.log(response); 
       if(response.data.code === 1) {
         setPetId(response.data.data.petId);
-        if(surgery === false && surgeryHistory !== []) {
+        if(surgeryHistory !== []) {
           const response = await axiosInstance.post(`/api/auth/pet/surgery`, surgeryData, addConfig)
         }
         if(medicine !== []) {
@@ -344,17 +345,17 @@ const RegisterPet = () => {
               <br />
               <h4>중성화</h4>
               <label className={styles.radio}>
-                <input type="radio" onChange={handleNeuteredButton} value="false" checked={neutered === "false"}/>
+                <input type="radio" onChange={handleNeuteredButton} value={false} checked={neutered === false}/>
                 <span>함</span>
-                <input type="radio" onChange={handleNeuteredButton} value="true" checked={neutered=== "true"}/>
+                <input type="radio" onChange={handleNeuteredButton} value={true} checked={neutered === true}/>
                 <span>안 함</span>
               </label>
               <br />
               <h4>수술이력</h4>
               <label className={styles.radio}>
-                <input type="radio" onChange={handleSurgeryButton} value="false" checked={surgery === "false"}/>
+                <input type="radio" onChange={handleSurgeryButton} value={false} checked={surgery === false}/>
                 <span>있음</span>
-                <input type="radio" onChange={handleSurgeryButton} value="true" checked={surgery === "true"}/>
+                <input type="radio" onChange={handleSurgeryButton} value={true} checked={surgery === true}/>
                 <span>없음</span>
               </label>
               {surgery === "있음" ? 

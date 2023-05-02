@@ -192,14 +192,14 @@ const UserDropdown = () => {
 
 const PetDropdown = () => {
   let navigate = useNavigate();
-  const [pet] = useState(['까까', '마루', '보리']);
+  const [pet] = useState(['molly']);
 
   return (
     <div className={styles.petdropdown}>
       {pet.map((item, index) => {
         return (
           item !== '' && 
-            <li onClick={() => {navigate(`/detailpet/${index+1}`)}}>
+            <li onClick={() => {navigate(`/detailpet/${item}`)}}>
               <img className={styles.petimg} src={process.env.PUBLIC_URL + '/img/DOG-logo.png'} alt="puppy" width="36px"/>{item}
             </li>
         )

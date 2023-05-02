@@ -16,18 +16,23 @@ class JwtProcessTest extends DummyObject {
     @Autowired
     private JwtProcess jwtProcess;
 
+    private String createAccessToken(Long id, String username, String nickname, AccountEnum accountEnum) {
+
+        Account account = newMockAccount(id, username, nickname, accountEnum);
+        PrincipalDetails principalDetails = new PrincipalDetails(account);
+
+        String jwtToken = jwtProcess.createAccessToken(principalDetails);
+        return jwtToken;
+    }
+
     @Test
     public void createAccessToken_test() throws Exception {
 
         // given
-        Account account1 = newMockAccount(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
-        Account account2 = newMockAccount(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
-        PrincipalDetails principalDetails1 = new PrincipalDetails(account1);
-        PrincipalDetails principalDetails2 = new PrincipalDetails(account2);
 
         // when
-        String jwtToken1 = jwtProcess.createAccessToken(principalDetails1);
-        String jwtToken2 = jwtProcess.createAccessToken(principalDetails2);
+        String jwtToken1 = createAccessToken(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
+        String jwtToken2 = createAccessToken(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
         System.out.println("jwtToken1 = " + jwtToken1);
         System.out.println("jwtToken2 = " + jwtToken2);
 
@@ -56,11 +61,8 @@ class JwtProcessTest extends DummyObject {
     public void verify_test() throws Exception {
 
         // given
-        Account account1 = newMockAccount(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
-        Account account2 = newMockAccount(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
-
-        String accessToken1 = jwtProcess.createNewAccessToken(account1.getId(), account1.getRole().toString());
-        String accessToken2 = jwtProcess.createNewAccessToken(account2.getId(), account2.getRole().toString());
+        String accessToken1 = createAccessToken(1L, "google_1234", "일당백", AccountEnum.CUSTOMER);
+        String accessToken2 = createAccessToken(2L, "kakao_1234", "몰리", AccountEnum.ADMIN);
 
         String jwtToken1 = accessToken1.replace(JwtVO.TOKEN_PREFIX, "");
         String jwtToken2 = accessToken2.replace(JwtVO.TOKEN_PREFIX, "");
