@@ -13,7 +13,7 @@ let CustomBody = styled.div`
 
 const DetailPet = () => {
   let {id} = useParams();
-  const [text, setText] = useState([{
+  const [text, setText] = useState({
       "userId": 32492,
       "petId": 1234,
       "peType": "DOG",
@@ -45,7 +45,7 @@ const DetailPet = () => {
         },
       ]
     }
-  ])
+  )
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -125,11 +125,10 @@ const DetailPet = () => {
   }
 
   useEffect(() => {
-    getPetInfo();
   }, [])
 
   const navigate = useNavigate();
-  let detail = text.filter((item) => item.petName === parseInt(id));
+  let detail = text.filter((item) => item.petName === id);
   let gender = detail[0].gender === 'FEMALE' ? true : false;
   let neutered = detail[0].neutered === 'true' ? true : false;
   let surgery = detail[0].surgery[0] === undefined ? false : true;

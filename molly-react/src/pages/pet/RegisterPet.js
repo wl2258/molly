@@ -17,7 +17,7 @@ const RegisterPet = () => {
   const [petType, setPetType] = useState('DOG'); // dog, cat, rabbit
   const [typeView, setTypeView] = useState(false); // 동물 종류 드롭다운 버튼
   const [pet, setPet] = useState(false); // 동물 품종 드롭다운 버튼
-  const [petValue, setPetValue] = useState('BICHON'); // 동물 품종
+  const [petValue, setPetValue] = useState('비숑'); // 동물 품종
   const [gender, setGender] = useState([]); // 성별 라디오 버튼
   const [neutered, setNeutered] = useState([]); // 중성화 라디오 버튼
   const [surgery, setSurgery] = useState([]); // 수술 라디오 버튼
@@ -135,7 +135,6 @@ const RegisterPet = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("userId", localStorage.getItem("accessToken"),)
     formData.append("petType", petType);
     formData.append("petName", petNickName);
     formData.append("species", petValue);
@@ -149,6 +148,37 @@ const RegisterPet = () => {
     formData.append("neuteredStatus", neutered);
     formData.append("weight", weight);
     formData.append("caution", caution);
+    formData.append("surgery", [
+      surgeryHistory.map((data) => {
+        return (
+          {
+            "surgeryName": data.surgeryName,
+            "surgeryDate": data.surgeryDate
+          }
+        )
+      })
+    ])
+    formData.append("medication", [
+      medicine.map((data) => {
+        return (
+          {
+            "medicationName": data.medicationName,
+            "medicationStart": data.startDate,
+            "medicationEnd": data.endDate
+          }
+        )
+      })
+    ])
+    formData.append("vaccination", [
+      vaccineHistory.map((data) => {
+        return (
+          {
+            "vaccinationName": data.vaccineName,
+            "vaccinationDate": data.vaccineDate
+          }
+        )
+      })
+    ])
 
     const config = {
       headers: {
@@ -156,70 +186,12 @@ const RegisterPet = () => {
       }
     }
 
-    const addConfig = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken"),
-        "Content-Type": "application/json"
-      }
-    }
-
-    const surgeryData = {
-      "petId" : petId,
-      "surgery": [
-        surgeryHistory.map((data) => {
-          return (
-            {
-              "surgeryName": data.surgeryName,
-              "surgeryDate": data.surgeryDate
-            }
-          )
-        })
-      ]
-    }
-
-    const medicineData = {
-      "petId" : petId,
-      "medication": [
-        medicine.map((data) => {
-          return (
-            {
-              "medicationName": data.medicationName,
-              "medicationStart": data.startDate,
-              "medicationEnd": data.endDate
-            }
-          )
-        })
-      ]
-    }
-
-    const vaccineData = {
-      "petId" : petId,
-      "vaccination": [
-        vaccineHistory.map((data) => {
-          return (
-            {
-              "vaccinationName": data.vaccineName,
-			        "vaccinationDate": data.vaccineDate
-            }
-          )
-        })
-      ]
-    }
-
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(`/api/auth/pet`, formData, config)
       console.log(response); 
       if(response.data.code === 1) {
         setPetId(response.data.data.petId);
-        if(surgeryHistory !== []) {
-          const response = await axiosInstance.post(`/api/auth/pet/surgery`, surgeryData, addConfig)
-        }
-        if(medicine !== []) {
-          const response = await axiosInstance.post(`/api/auth/pet/medication`, medicineData, addConfig)
-        }
-        if(vaccineHistory !== []) {
-          const response = await axiosInstance.post(`/api/auth/pet/vaccination`, vaccineData, addConfig)
-        }
+        window.location.replace("/");
       }
       else {
         console.log("동물 등록 실패");
@@ -237,7 +209,7 @@ const RegisterPet = () => {
     day = day >= 10 ? day : '0' + day;
 
     return date.getFullYear() + '-' + month + '-' + day;
-}
+  }
 
   return (
     <div className={styles.container}>
@@ -345,17 +317,18 @@ const RegisterPet = () => {
               <br />
               <h4>중성화</h4>
               <label className={styles.radio}>
-                <input type="radio" onChange={handleNeuteredButton} value={false} checked={neutered === false}/>
+                <input type="radio" onChange={handleNeuteredButton} value="안 함" checked={neutered === "안 함"}/>
                 <span>함</span>
-                <input type="radio" onChange={handleNeuteredButton} value={true} checked={neutered === true}/>
+                <input type="radio" onChange={handleNeuteredButton} value="함" checked={neutered === "함"}/>
                 <span>안 함</span>
+                {console.log(neutered, gender)}
               </label>
               <br />
               <h4>수술이력</h4>
               <label className={styles.radio}>
-                <input type="radio" onChange={handleSurgeryButton} value={false} checked={surgery === false}/>
+                <input type="radio" onChange={handleSurgeryButton} value="있음" checked={surgery === "있음"}/>
                 <span>있음</span>
-                <input type="radio" onChange={handleSurgeryButton} value={true} checked={surgery === true}/>
+                <input type="radio" onChange={handleSurgeryButton} value="없음" checked={surgery === "없음"}/>
                 <span>없음</span>
               </label>
               {surgery === "있음" ? 
@@ -485,10 +458,10 @@ const TypeDropdown = (props) => {
 const PetDropdown = (props) => {
   return (
     <div className={styles.dropdown}>
-      <li onClick={() => {props.setValue('BICHON')}}>비숑</li>
-      <li onClick={() => {props.setValue('MALTESE')}}>말티즈</li>
-      <li onClick={() => {props.setValue('POODLE')}}>푸들</li>
-      <li onClick={() => {props.setValue('WELSHCORGI')}}>웰시코기</li>
+      <li onClick={() => {props.setValue('비숑')}}>비숑</li>
+      <li onClick={() => {props.setValue('말티즈')}}>말티즈</li>
+      <li onClick={() => {props.setValue('푸들')}}>푸들</li>
+      <li onClick={() => {props.setValue('웰시코기')}}>웰시코기</li>
     </div>
   )
 }

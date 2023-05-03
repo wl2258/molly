@@ -28,8 +28,8 @@ const Vaccine = (props) => {
  
   return (
     <div className={styles.vaccine}>
-      <span onClick={props.onClick}><TiDeleteOutline color="#FDFDFD" size="35px"/></span>
       <div className={styles.modalContainer}>
+        <span onClick={props.onClick}><TiDeleteOutline color="#FDFDFD" size="35px"/></span>
         <h1>예방접종 이력 추가</h1>
         <ul>
           <div onClick={() => {setVaccine(!vaccine)}} className={styles.sort}>
