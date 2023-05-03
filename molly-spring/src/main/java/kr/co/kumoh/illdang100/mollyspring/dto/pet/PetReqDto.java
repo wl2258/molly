@@ -5,6 +5,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.pet.PetTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +18,6 @@ public class PetReqDto {
     @Builder
     @AllArgsConstructor
     public static class PetSaveRequest {
-        @NotNull
-        private Long userId;
-
         @NotNull
         private PetTypeEnum petType;
 
@@ -50,11 +48,9 @@ public class PetReqDto {
 
     @Data
     @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class PetUpdateRequest {
-        @NotNull
-        private Long userId;
-
         @NotNull
         private Long petId;
 

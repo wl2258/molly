@@ -68,35 +68,6 @@ class AnnualCalendarApiControllerTest extends DummyObject {
     @WithUserDetails(value = "molly!", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void viewAnnualSchedule_success() throws Exception {
 
-        // given
-        Long petId = 1L;
-
-        //when
-        ResultActions resultActions = mockMvc.perform(get("/api/auth/calendar/" + String.valueOf(petId)).contentType(MediaType.APPLICATION_JSON_VALUE));
-
-        //then
-        resultActions.andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("연간달력정보_존재하지 않는 반려동물")
-    @WithUserDetails(value = "molly!", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    void viewAnnualSchedule_failure() throws Exception {
-
-        // given
-        Long petId = 56L;
-
-        //when
-        ResultActions resultActions = mockMvc.perform(get("/api/auth/calendar/" + String.valueOf(petId)).contentType(MediaType.APPLICATION_JSON_VALUE));
-
-        //then
-        resultActions.andExpect(status().isBadRequest());
-    }
-    
-    private void dataSetting() {
-
-        accountRepository.save(newAccount("molly!", "일당백"));
-
         //given
         Account account = newAccount( "user2", "testUser2");
         accountRepository.save(account);
@@ -125,6 +96,31 @@ class AnnualCalendarApiControllerTest extends DummyObject {
                 .vaccinationDate(LocalDate.of(2022, 4, 2))
                 .build();
         vaccinationRepository.save(vaccination);
+        //when
+        ResultActions resultActions = mockMvc.perform(get("/api/auth/calendar/" + String.valueOf(pet.getId())).contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        //then
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("연간달력정보_존재하지 않는 반려동물")
+    @WithUserDetails(value = "molly!", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void viewAnnualSchedule_failure() throws Exception {
+
+        // given
+        Long petId = 56L;
+
+        //when
+        ResultActions resultActions = mockMvc.perform(get("/api/auth/calendar/" + String.valueOf(petId)).contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        //then
+        resultActions.andExpect(status().isBadRequest());
+    }
+    
+    private void dataSetting() {
+
+        accountRepository.save(newAccount("molly!", "일당백"));
 
         em.clear();
     }

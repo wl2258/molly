@@ -5,13 +5,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 public class SurgeryReqDto {
 
     @Data
     @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class SurgerySaveRequest {
 
@@ -21,13 +21,14 @@ public class SurgeryReqDto {
         @NotBlank(message = "수술명은 빈 문자열이면 안됩니다.")
         private String surgeryName;
 
+        @NotNull
         @DateTimeFormat(pattern="yyyy-MM-dd")
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "수술 날짜는 yyyy-MM-dd 형식이어야 합니다.")
         private LocalDate surgeryDate;
     }
 
     @Data
     @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class SurgeryUpdateRequest {
 
@@ -40,13 +41,14 @@ public class SurgeryReqDto {
         @NotBlank(message = "수술명은 빈 문자열이면 안됩니다.")
         private String surgeryName;
 
+        @NotNull
         @DateTimeFormat(pattern="yyyy-MM-dd")
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "수술 날짜는 yyyy-MM-dd 형식이어야 합니다.")
         private LocalDate surgeryDate;
     }
 
     @Data
     @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class SurgeryDeleteRequest {
 

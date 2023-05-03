@@ -2,18 +2,19 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.PetDetailResponse;
+import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.service.PetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
@@ -26,9 +27,11 @@ public class PetApiController {
 
     private final PetService petService;
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetSaveRequest petSaveRequest, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetSaveRequest petSaveRequest,
+                                         BindingResult bindingResult,
+                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Long petId = petService.registerPet(petSaveRequest);
+        Long petId = petService.registerPet(petSaveRequest, principalDetails.getAccount());
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 등록을 성공했습니다.", new PetSaveResponse(petId)), HttpStatus.CREATED);
     }
@@ -40,9 +43,11 @@ public class PetApiController {
         return new ResponseEntity<>(new ResponseDto(1, "해당 반려동물의 정보입니다.", petDetailResponse), HttpStatus.OK);
     }
     @PatchMapping
-    public ResponseEntity<?> updatePet(@ModelAttribute @Valid PetUpdateRequest petUpdateRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> updatePet(@RequestBody @Valid PetUpdateRequest petUpdateRequest,
+                                       BindingResult bindingResult,
+                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        petService.updatePet(petUpdateRequest);
+        petService.updatePet(petUpdateRequest, principalDetails.getAccount());
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 정보 수정을 성공했습니다.", null), HttpStatus.OK);
     }
@@ -57,7 +62,8 @@ public class PetApiController {
 
 
     @PatchMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updatePetProfileImage(@ModelAttribute @Valid PetProfileImageUpdateRequest petProfileImageUpdateRequest, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<?> updatePetProfileImage(@ModelAttribute @Valid PetProfileImageUpdateRequest petProfileImageUpdateRequest,
+                                                   BindingResult bindingResult) {
 
         petService.updatePetProfileImage(petProfileImageUpdateRequest);
 
@@ -69,6 +75,6 @@ public class PetApiController {
 
         petService.deletePetProfileImage(petId);
 
-        return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 삭제했습니다.", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 기본 이미지로 변경했습니다..", null), HttpStatus.OK);
     }
 }
