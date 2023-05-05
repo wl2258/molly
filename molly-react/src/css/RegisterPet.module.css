@@ -352,3 +352,9 @@
   box-sizing: border-box;
   width: 110px;
 }
+
+.birthdate {
+  position: absolute;
+  top: 275px;
+  left: 72px;
+}

@@ -52,16 +52,16 @@ const Vaccine = (props) => {
         <span onClick={() => {
           props.setVaccineHistory([...props.vaccineHistory, {
             vaccineId : vaccineNo.current++,
-            vaccineName : vaccineValue,
-            vaccineDate : moment(vaccineDate).format("YYYY-MM-DD"),
+            vaccinationName : vaccineValue,
+            vaccinationDate : props.dateFormat(vaccineDate),
           }])
         }}><FiPlus color="#AFA79F" size="18px"/></span>
         <div>
           {props.vaccineHistory.map((data, index) => {
             return (
               <div key={index} className={styles.vaccineHistory}> 
-                <span>{data.vaccineName}</span>
-                <span>{data.vaccineDate}</span>
+                <span>{data.vaccinationName}</span>
+                <span>{data.vaccinationDate}</span>
                 <span onClick={() => {
                   props.setVaccineHistory(props.vaccineHistory.filter(vaccineHistory => vaccineHistory.vaccineId !== data.vaccineId))
                 }}><TiDelete size="18px" color="#827870"/></span>
