@@ -56,4 +56,13 @@ public class VaccinationReqDto {
         @NotNull
         private Long vaccinationId;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class VaccinationRequest {
+        private String vaccinationName;
+        @DateTimeFormat(pattern="yyyy-MM-dd")
+        private LocalDate vaccinationDate;
+    }
 }
