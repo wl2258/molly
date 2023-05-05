@@ -13,7 +13,7 @@ let CustomBody = styled.div`
 
 const DetailPet = () => {
   let {id} = useParams();
-  const [text, setText] = useState({
+  const [text, setText] = useState([{
       "userId": 32492,
       "petId": 1234,
       "peType": "DOG",
@@ -22,7 +22,7 @@ const DetailPet = () => {
       "profileImage": "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
       "birthDate": "2013-08-07",
       "gender": "FEMALE",
-      "neuteredStatus" : "false",
+      "neuteredStatus" : false,
       "weight" : 3.4,
       "caution" : "분리불안 심함",
       "surgery": [
@@ -44,7 +44,7 @@ const DetailPet = () => {
           "vaccinationDate": "2018-01-01"
         },
       ]
-    }
+    }]
   )
 
   const axiosInstance = axios.create({
@@ -117,7 +117,7 @@ const DetailPet = () => {
     }
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.get(`/api/auth/pet/`, config);
+      const response = await axiosInstance.get(`/api/auth/pet/${parseInt(id)}`, config);
       setText(response.data);
     }
 
@@ -128,24 +128,22 @@ const DetailPet = () => {
   }, [])
 
   const navigate = useNavigate();
-  let detail = text.filter((item) => item.petName === id);
-  let gender = detail[0].gender === 'FEMALE' ? true : false;
-  let neutered = detail[0].neutered === 'true' ? true : false;
-  let surgery = detail[0].surgery[0] === undefined ? false : true;
+  let gender = text[0].gender === 'FEMALE' ? true : false;
+  let surgery = text[0].surgery[0] === undefined ? false : true;
   
   const now = new Date();
-  const start = new Date(detail[0].birthday);
+  const start = new Date(text[0].birthDate);
 
   const timeDiff = now.getTime() - start.getTime();
   const day = Math.floor(timeDiff / (1000*60*60*24)+1);
 
   const calFood = () => {
-    if (day <= 60) return detail[0].weight * 7
-    else if(day <= 90) return detail[0].weight * 6
-    else if(day <= 150) return detail[0].weight * 5
-    else if(day <= 365) return detail[0].weight * 3
-    else if(day >= 365 && day <= 1825) return detail[0].weight * 2.5
-    else if(day >= 1825) return detail[0].weight * 2
+    if (day <= 60) return text[0].weight * 7
+    else if(day <= 90) return text[0].weight * 6
+    else if(day <= 150) return text[0].weight * 5
+    else if(day <= 365) return text[0].weight * 3
+    else if(day >= 365 && day <= 1825) return text[0].weight * 2.5
+    else if(day >= 1825) return text[0].weight * 2
   }
 
   return (
@@ -160,13 +158,13 @@ const DetailPet = () => {
               alt="프로필 이미지"
               width="70px"
             />
-            <h1>{detail[0].name}</h1>
+            <h1>{text[0].petName}</h1>
             <div>
               <h4>품종</h4>
-              <span>{detail[0].species}</span>
+              <span>{text[0].species}</span>
               <br/>
               <h4>생일</h4>
-              <span style={{marginRight: "30px"}}>{detail[0].birthday}</span>
+              <span style={{marginRight: "30px"}}>{text[0].birthDate}</span>
               <br/>
               <h4>성별</h4>
               <label className={styles.radio}>
@@ -178,9 +176,9 @@ const DetailPet = () => {
               <br/>
               <h4>중성화</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="함" checked={neutered}/>
+                <input type="radio" readOnly={true} value="함" checked={text[0].neuteredStatus}/>
                 <span>함</span>
-                <input type="radio" readOnly={true} value="안 함" checked={!neutered}/>
+                <input type="radio" readOnly={true} value="안 함" checked={!text[0].neuteredStatus}/>
                 <span>안 함</span>
               </label>
               <br/>
@@ -193,7 +191,7 @@ const DetailPet = () => {
               </label>
               <br/>
               {surgery ? 
-                detail[0].surgery.map((item) => {
+                text[0].surgery.map((item) => {
                   return (
                     <div className={styles.surgery}>
                       <span>{item.surgeryDate}</span>
@@ -205,7 +203,7 @@ const DetailPet = () => {
               <div className={styles.medicine}>
                 <h4>복용약</h4>
                 <div>
-                  {detail[0].medication.map((item) => {
+                  {text[0].medication.map((item) => {
                       return (
                         <div className={styles.medicineinfo}> 
                           <p>{item.medicationName}</p>
@@ -218,12 +216,12 @@ const DetailPet = () => {
                 </div>
               </div>
               <h4>주의할 점</h4>
-              <p>{detail[0].caution}</p>
+              <p>{text[0].caution}</p>
             </div>
           </div>
           <div className={styles.weight}>
             <h4 style={{marginRight: "50px"}}>몸무게</h4>
-            <span>{detail[0].weight}  kg</span>
+            <span>{text[0].weight}  kg</span>
           </div>
           <div className={styles.care}>
             <h4>🦴 건강관리</h4>
@@ -231,15 +229,15 @@ const DetailPet = () => {
             <span>{calFood()}g</span>
             <br/>
             <span>권장 음수량</span>
-            <span>{detail[0].weight*80}ml</span>
+            <span>{text[0].weight*80}ml</span>
             <br/>
             <span>권장 운동량</span>
             <h4>💉 예방접종 이력</h4>
-            {detail[0].vaccine.map((item) => {
+            {text[0].vaccination.map((item) => {
               return (
                 <div className={styles.vaccine}>
-                  <span>{item.vaccineDate}</span>
-                  <span>{item.vaccineName}</span>
+                  <span>{item.vaccinationDate}</span>
+                  <span>{item.vaccinationName}</span>
                 </div>
               )
             })}
