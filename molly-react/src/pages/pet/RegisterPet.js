@@ -10,14 +10,13 @@ import {Button} from '../../components/Button.js';
 import Vaccine from '../../components/pet/Vaccine';
 import DatePicker from 'react-datepicker';
 import {ko} from 'date-fns/esm/locale';
-import moment from 'moment/moment';
 import axios from 'axios';
 
 const RegisterPet = () => {
   const [petType, setPetType] = useState('DOG'); // dog, cat, rabbit
   const [typeView, setTypeView] = useState(false); // 동물 종류 드롭다운 버튼
   const [pet, setPet] = useState(false); // 동물 품종 드롭다운 버튼
-  const [petValue, setPetValue] = useState('비숑'); // 동물 품종
+  const [petValue, setPetValue] = useState('BICHON'); // 동물 품종
   const [gender, setGender] = useState([]); // 성별 라디오 버튼
   const [neutered, setNeutered] = useState([]); // 중성화 라디오 버튼
   const [surgery, setSurgery] = useState([]); // 수술 라디오 버튼
@@ -92,7 +91,7 @@ const RegisterPet = () => {
           }
         }
         else if(errResponseStatus === 400) {
-          return;
+          console.log(error.response.data.data)
         }
         else if(errResponseStatus === 401) {
           console.log("인증 실패");
@@ -132,8 +131,12 @@ const RegisterPet = () => {
     };
   };
 
+  let neuteredStatus;
+  neutered === "함" ? neuteredStatus = false : neuteredStatus = true;
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append("petType", petType);
     formData.append("petName", petNickName);
@@ -141,44 +144,29 @@ const RegisterPet = () => {
     if(imgRef.current.files[0] !== undefined) {
       formData.append("profileImage", imgRef.current.files[0]);
     } else {
-      formData.append("profileImage", "");
+      formData.append("profileImage", null);
     }
-    formData.append("birthDate", dateFormat(birthdayDate));
+    formData.append("birthdate", dateFormat(birthdayDate));
     formData.append("gender", gender);
-    formData.append("neuteredStatus", neutered);
-    formData.append("weight", weight);
+    formData.append("neuteredStatus", neuteredStatus);
+    formData.append("weight", Number(weight));
     formData.append("caution", caution);
-    formData.append("surgery", [
-      surgeryHistory.map((data) => {
-        return (
-          {
-            "surgeryName": data.surgeryName,
-            "surgeryDate": data.surgeryDate
-          }
-        )
-      })
-    ])
-    formData.append("medication", [
-      medicine.map((data) => {
-        return (
-          {
-            "medicationName": data.medicationName,
-            "medicationStart": data.startDate,
-            "medicationEnd": data.endDate
-          }
-        )
-      })
-    ])
-    formData.append("vaccination", [
-      vaccineHistory.map((data) => {
-        return (
-          {
-            "vaccinationName": data.vaccineName,
-            "vaccinationDate": data.vaccineDate
-          }
-        )
-      })
-    ])
+    
+    for(let i =0; i<surgeryHistory.length; i++) {
+      formData.append("surgery["+i+"].surgeryName", surgeryHistory[i].surgeryName);
+      formData.append("surgery["+i+"].surgeryDate", surgeryHistory[i].surgeryDate);
+    }
+
+    for(let i =0; i<medicine.length; i++) {
+      formData.append("medication["+i+"].medicationName", medicine[i].medicationName);
+      formData.append("medication["+i+"].medicationStartDate", medicine[i].medicationStartDate);
+      formData.append("medication["+i+"].medicationEndDate", medicine[i].medicationStartDate);
+    }
+
+    for(let i =0; i<vaccineHistory.length; i++) {
+      formData.append("vaccination["+i+"].vaccinationName", vaccineHistory[i].vaccinationName);
+      formData.append("vaccination["+i+"].vaccinationDate", vaccineHistory[i].vaccinationDate);
+    }
 
     const config = {
       headers: {
@@ -191,7 +179,7 @@ const RegisterPet = () => {
       console.log(response); 
       if(response.data.code === 1) {
         setPetId(response.data.data.petId);
-        window.location.replace("/");
+        window.location.replace(`/detailpet/${parseInt(petId)}`);
       }
       else {
         console.log("동물 등록 실패");
@@ -321,7 +309,6 @@ const RegisterPet = () => {
                 <span>함</span>
                 <input type="radio" onChange={handleNeuteredButton} value="함" checked={neutered === "함"}/>
                 <span>안 함</span>
-                {console.log(neutered, gender)}
               </label>
               <br />
               <h4>수술이력</h4>
@@ -363,7 +350,7 @@ const RegisterPet = () => {
                     if(surgeryName !== "") 
                       setSurgeryHistory([...surgeryHistory, {
                         surgeryId : surgeryNo.current++,
-                        surgeryDate: moment(surgeryDate).format("YYYY-MM-DD"), 
+                        surgeryDate: dateFormat(surgeryDate), 
                         surgeryName: surgeryName
                       }])
                     setSurgeryName("");
@@ -375,8 +362,8 @@ const RegisterPet = () => {
                 {medicine.map((data, index) => {
                   return (
                     <div className={styles.medicineData} key={index}>
-                      <p>{data.medicineName}</p>
-                      <span>{data.startDate} ~ {data.endDate}</span>
+                      <p>{data.medicationName}</p>
+                      <span>{data.medicationStartDate} ~ {data.medicationEndDate}</span>
                       <span onClick={() => {
                         setMedicine(medicine.filter(medicine => medicine.medicineId !== data.medicineId))
                       }}><TiDelete size="18px" color="#827870"/></span>
@@ -414,9 +401,9 @@ const RegisterPet = () => {
                   if(medicineName !== "") 
                     setMedicine([...medicine, {
                       medicineId : medicineNo.current++,
-                      startDate: moment(startDate).format("YYYY-MM-DD"), 
-                      endDate: moment(endDate).format("YYYY-MM-DD"),
-                      medicineName: medicineName
+                      medicationStartDate: dateFormat(startDate), 
+                      medicationEndDate: dateFormat(endDate),
+                      medicationName: medicineName
                     }])
                   setMedicineName("");
                 }}><FiPlus color="#AFA79F" size="18px"/></span>
@@ -439,8 +426,8 @@ const RegisterPet = () => {
               <Button name="등록"/>
             </div>
           </div>
+        {modal && <Vaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} dateFormat={dateFormat} />}
         </form>
-        {modal && <Vaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} />}
       </div>  
     </div>
   );
@@ -458,10 +445,10 @@ const TypeDropdown = (props) => {
 const PetDropdown = (props) => {
   return (
     <div className={styles.dropdown}>
-      <li onClick={() => {props.setValue('비숑')}}>비숑</li>
-      <li onClick={() => {props.setValue('말티즈')}}>말티즈</li>
-      <li onClick={() => {props.setValue('푸들')}}>푸들</li>
-      <li onClick={() => {props.setValue('웰시코기')}}>웰시코기</li>
+      <li onClick={() => {props.setValue('BICHON')}}>비숑</li>
+      <li onClick={() => {props.setValue('MALTESE')}}>말티즈</li>
+      <li onClick={() => {props.setValue('POODLE')}}>푸들</li>
+      <li onClick={() => {props.setValue('WELSHCORGI')}}>웰시코기</li>
     </div>
   )
 }
