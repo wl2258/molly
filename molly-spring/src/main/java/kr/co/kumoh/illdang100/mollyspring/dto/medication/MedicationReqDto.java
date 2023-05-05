@@ -63,4 +63,15 @@ public class MedicationReqDto {
         @NotNull
         private Long medicationId;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MedicationRequest {
+        private String medicationName;
+        @DateTimeFormat(pattern="yyyy-MM-dd")
+        private LocalDate medicationStartDate;
+        @DateTimeFormat(pattern="yyyy-MM-dd")
+        private LocalDate medicationEndDate;
+    }
 }
