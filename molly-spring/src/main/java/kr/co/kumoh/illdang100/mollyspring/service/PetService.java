@@ -8,6 +8,8 @@ import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import kr.co.kumoh.illdang100.mollyspring.domain.surgery.SurgeryHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.vaccinations.VaccinationHistory;
 import kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.PetCalendarResponse;
+import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto.SurgeryResponse;
+import kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationRespDto.VaccinationResponse;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.cat.CatRepository;
@@ -25,15 +27,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static kr.co.kumoh.illdang100.mollyspring.domain.pet.PetTypeEnum.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
-import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto.*;
-import static kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationRespDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationReqDto.*;
+
 
 @Slf4j
 @Service
@@ -68,19 +74,61 @@ public class PetService {
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
         if (petType.equals(CAT)) {
-            Pet savedCat = saveCat(petSaveRequest, petType, findUser);
+            Pet savedCat = saveCat(petSaveRequest, findUser);
+            recordMedicalHistory(petSaveRequest, savedCat);
            return savedCat.getId();
         }
         else if (petType.equals(DOG)) {
-            Pet savedDog = saveDog(petSaveRequest, petType, findUser);
+            Pet savedDog = saveDog(petSaveRequest, findUser);
+            recordMedicalHistory(petSaveRequest, savedDog);
             return savedDog.getId();
         }
         else if (petType.equals(RABBIT)) {
-            Pet savedRabbit = saveRabbit(petSaveRequest, petType, findUser);
+            Pet savedRabbit = saveRabbit(petSaveRequest, findUser);
+            recordMedicalHistory(petSaveRequest, savedRabbit);
             return savedRabbit.getId();
         }
 
         throw new CustomApiException("반려동물 등록 실패");
+    }
+
+    private void recordMedicalHistory(PetSaveRequest petSaveRequest, Pet pet) {
+        List<MedicationRequest> medicationList = petSaveRequest.getMedication();
+        if (!medicationList.isEmpty()) {
+            for (MedicationRequest medication : medicationList) {
+                MedicationHistory medicationHistory = MedicationHistory.builder()
+                        .pet(pet)
+                        .medicationName(medication.getMedicationName())
+                        .medicationStartDate(medication.getMedicationStartDate())
+                        .medicationEndDate(medication.getMedicationEndDate())
+                        .build();
+                medicationRepository.save(medicationHistory);
+            }
+        }
+
+        List<SurgeryRequest> surgeryList = petSaveRequest.getSurgery();
+        if (!surgeryList.isEmpty()) {
+            for (SurgeryRequest surgery : surgeryList) {
+                SurgeryHistory surgeryHistory = SurgeryHistory.builder()
+                        .pet(pet)
+                        .surgeryName(surgery.getSurgeryName())
+                        .surgeryDate(surgery.getSurgeryDate())
+                        .build();
+                surgeryRepository.save(surgeryHistory);
+            }
+        }
+
+        List<VaccinationRequest> vaccinationList = petSaveRequest.getVaccination();
+        if (!vaccinationList.isEmpty()) {
+            for (VaccinationRequest vaccination : vaccinationList) {
+                VaccinationHistory vaccinationHistory = VaccinationHistory.builder()
+                        .pet(pet)
+                        .vaccinationName(vaccination.getVaccinationName())
+                        .vaccinationDate(vaccination.getVaccinationDate())
+                        .build();
+                vaccinationRepository.save(vaccinationHistory);
+            }
+        }
     }
 
     /**
@@ -318,7 +366,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveCat(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
+    private Pet saveCat(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
 
@@ -331,7 +379,7 @@ public class PetService {
             }
         }
 
-        Cat createdCat = createCat(petSaveRequest, petType, findUser);
+        Cat createdCat = createCat(petSaveRequest, findUser);
         Cat savedCat = catRepository.save(createdCat);
         savePetProfileImage(savedCat, petProfileImage);
 
@@ -339,7 +387,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveDog(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
+    private Pet saveDog(PetSaveRequest petSaveRequest,  Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
@@ -351,7 +399,7 @@ public class PetService {
             }
         }
 
-        Dog createdDog = createDog(petSaveRequest, petType, findUser);
+        Dog createdDog = createDog(petSaveRequest, findUser);
         Dog savedDog = dogRepository.save(createdDog);
         savePetProfileImage(savedDog, petProfileImage);
 
@@ -359,7 +407,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveRabbit(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
+    private Pet saveRabbit(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
@@ -371,7 +419,7 @@ public class PetService {
             }
         }
 
-        Rabbit createdRabbit = createRabbit(petSaveRequest, petType, findUser);
+        Rabbit createdRabbit = createRabbit(petSaveRequest, findUser);
         Rabbit savedRabbit = rabbitRepository.save(createdRabbit);
         savePetProfileImage(savedRabbit, petProfileImage);
 
@@ -379,7 +427,7 @@ public class PetService {
     }
 
 
-    private Cat createCat(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
+    private Cat createCat(PetSaveRequest petSaveRequest, Account findUser) {
 
         return Cat.builder()
                 .account(findUser)
@@ -388,14 +436,14 @@ public class PetService {
                 .birthdate(petSaveRequest.getBirthdate())
                 .weight(petSaveRequest.getWeight())
                 .neuteredStatus(petSaveRequest.isNeuteredStatus())
-                .petType(petType)
+                .petType(petSaveRequest.getPetType())
                 .catSpecies(CatEnum.valueOf(petSaveRequest.getSpecies()))
                 .caution(petSaveRequest.getCaution())
                 .catSpecies(CatEnum.valueOf(petSaveRequest.getSpecies()))
                 .build();
     }
 
-    private Dog createDog(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
+    private Dog createDog(PetSaveRequest petSaveRequest, Account findUser) {
 
         return Dog.builder()
                 .account(findUser)
@@ -404,14 +452,14 @@ public class PetService {
                 .birthdate(petSaveRequest.getBirthdate())
                 .weight(petSaveRequest.getWeight())
                 .neuteredStatus(petSaveRequest.isNeuteredStatus())
-                .petType(petType)
+                .petType(petSaveRequest.getPetType())
                 .dogSpecies(DogEnum.valueOf(petSaveRequest.getSpecies()))
                 .caution(petSaveRequest.getCaution())
                 .dogSpecies(DogEnum.valueOf(petSaveRequest.getSpecies()))
                 .build();
     }
 
-    private Rabbit createRabbit(PetSaveRequest petSaveRequest, PetTypeEnum petType, Account findUser) {
+    private Rabbit createRabbit(PetSaveRequest petSaveRequest, Account findUser) {
 
         return Rabbit.builder()
                 .account(findUser)
@@ -420,7 +468,7 @@ public class PetService {
                 .birthdate(petSaveRequest.getBirthdate())
                 .weight(petSaveRequest.getWeight())
                 .neuteredStatus(petSaveRequest.isNeuteredStatus())
-                .petType(petType)
+                .petType(petSaveRequest.getPetType())
                 .rabbitSpecies(RabbitEnum.valueOf(petSaveRequest.getSpecies()))
                 .caution(petSaveRequest.getCaution())
                 .rabbitSpecies(RabbitEnum.valueOf(petSaveRequest.getSpecies()))
