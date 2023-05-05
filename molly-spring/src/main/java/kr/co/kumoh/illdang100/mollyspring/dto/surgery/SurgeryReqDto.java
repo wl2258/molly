@@ -58,4 +58,13 @@ public class SurgeryReqDto {
         @NotNull
         private Long surgeryId;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SurgeryRequest {
+        private String surgeryName;
+        @DateTimeFormat(pattern="yyyy-MM-dd")
+        private LocalDate surgeryDate;
+    }
 }
