@@ -61,7 +61,7 @@ const Header = () => {
   }, [alarmView]);
 
   return (
-    <div style={{zIndex:"3", position: "fixed"}}>
+    <div style={{zIndex:"4", position: "fixed"}}>
       {scrollPosition < 100 ? 
         <header className={styles.header}>
           <div>
