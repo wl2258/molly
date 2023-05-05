@@ -310,6 +310,27 @@ public class PetService {
         return findPet;
     }
 
+    public List<PetSpeciesResponse> getDogSpecies() {
+        List<DogEnum> dogSpecies = Arrays.asList(DogEnum.values());
+        return dogSpecies.stream()
+                .map(d -> new PetSpeciesResponse(d.getValue(), d.toString()))
+                .collect(Collectors.toList());
+    }
+
+    public List<PetSpeciesResponse> getCatSpecies() {
+        List<CatEnum> catSpecies = Arrays.asList(CatEnum.values());
+        return catSpecies.stream()
+                .map(c -> new PetSpeciesResponse(c.getValue(), c.toString()))
+                .collect(Collectors.toList());
+    }
+
+    public List<PetSpeciesResponse> getRabbitSpecies() {
+        List<RabbitEnum> rabbitSpecies = Arrays.asList(RabbitEnum.values());
+        return rabbitSpecies.stream()
+                .map(r -> new PetSpeciesResponse(r.getValue(), r.toString()))
+                .collect(Collectors.toList());
+    }
+
     public Pet findPetOrElseThrow(Long petId) {
 
         return petRepository.findById(petId)
