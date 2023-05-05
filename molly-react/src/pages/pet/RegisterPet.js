@@ -23,6 +23,8 @@ const RegisterPet = () => {
   const [modal, setModal] = useState(false); // 예방접종 이력 추가 모달
   const [imgFile, setImgFile] = useState(""); 
   const [petId, setPetId] = useState("");
+  const [bottomPx, setBottomPx] = useState(210);
+
   const surgeryNo = useRef(1);
   const medicineNo = useRef(1);
 
@@ -203,6 +205,15 @@ const RegisterPet = () => {
     <div className={styles.container}>
       <Header />
       <div className={styles.board}>
+        <div className={styles.birthdate}>
+          <DatePicker 
+            locale={ko}
+            selected={birthdayDate}
+            onChange={(date) => setBirthdayDate(date)}
+            dateFormat="yyyy/MM/dd"
+            customInput={<CustomInput />}
+          />
+        </div>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div>
             <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${petType}-logo.png`} alt="pet-icon" width="90px"/>
@@ -257,69 +268,76 @@ const RegisterPet = () => {
           </div>
           <div className={styles.boarddetail}>
             <h4>품종</h4>
-            <div onClick={() => {setPet(!pet)}} className={styles.sort}>
-              <span className={styles.default}>{petValue}</span>
-              {pet ? <span style={{position:"absolute", top:"2px", right:"10px"}}>
-                <MdExpandLess size="25px" color="#AFA79F"/></span> : 
-                <span style={{position:"absolute", top: "2px", right:"10px"}}>
-                  <MdExpandMore size="25px" color="#AFA79F"/>
-                </span>
-              }
-              {pet && <PetDropdown setValue={setPetValue}/>}
-            </div>
             <div className={styles.info}>
-              <h4>생일</h4>
-              <div className={styles.datepicker}>
-                <DatePicker 
-                  locale={ko}
-                  selected={birthdayDate}
-                  onChange={(date) => setBirthdayDate(date)}
-                  dateFormat="yyyy/MM/dd"
-                  customInput={<CustomInput />}
-                />
+              <div onClick={() => {setPet(!pet)}} className={styles.sort} style={{borderRadius: pet? "10px 10px 0 0" : "10px"}}>
+                <span className={styles.default}>{petValue}</span>
+                {pet ? <span style={{position:"absolute", top:"2px", right:"10px"}}>
+                  <MdExpandLess size="25px" color="#AFA79F"/></span> : 
+                  <span style={{position:"absolute", top: "2px", right:"10px"}}>
+                    <MdExpandMore size="25px" color="#AFA79F"/>
+                  </span>
+                }
+                {pet && <PetDropdown setValue={setPetValue}/>}
               </div>
-              <h4 style={{marginLeft: "80px"}}>몸무게</h4>
-              <input 
-                className={styles.weight} 
-                type="number"
-                step="0.001"
-                value={weight}
-                onChange={(e) => {
-                  setWeight(e.target.value);
-                }}
-                required
-              ></input>
-              <span style={{
-                color: "#827870",
-                fontSize: "14px",
-                marginLeft: "-25px"
-              }}>kg</span>
-              <br />
-              <h4>성별</h4>
-              <label className={styles.radio}>
-                <input type="radio" onChange={handleGenderButton} value="MALE" checked={gender === "MALE"}/>
-                <span>암컷</span>
-                <input type="radio" onChange={handleGenderButton} value="FEMALE" checked={gender === "FEMALE"}/>
-                <span>수컷</span>
-              </label>
-              <br />
-              <h4>중성화</h4>
-              <label className={styles.radio}>
-                <input type="radio" onChange={handleNeuteredButton} value="안 함" checked={neutered === "안 함"}/>
-                <span>함</span>
-                <input type="radio" onChange={handleNeuteredButton} value="함" checked={neutered === "함"}/>
-                <span>안 함</span>
-              </label>
-              <br />
-              <h4>수술이력</h4>
-              <label className={styles.radio}>
-                <input type="radio" onChange={handleSurgeryButton} value="있음" checked={surgery === "있음"}/>
-                <span>있음</span>
-                <input type="radio" onChange={handleSurgeryButton} value="없음" checked={surgery === "없음"}/>
-                <span>없음</span>
-              </label>
-              {surgery === "있음" ? 
-                <div className={styles.surgery}>
+            <h4>생일</h4>
+            <h4 style={{marginLeft: "200px"}}>몸무게</h4>
+            <input 
+              className={styles.weight} 
+              type="number"
+              step="0.001"
+              value={weight}
+              onChange={(e) => {
+                setWeight(e.target.value);
+              }}
+              required
+            ></input>
+            <span style={{
+              color: "#827870",
+              fontSize: "14px",
+              marginLeft: "-25px"
+            }}>kg</span>
+            <br />
+            <h4>성별</h4>
+            <label className={styles.radio}>
+              <input type="radio" onChange={handleGenderButton} value="MALE" checked={gender === "MALE"}/>
+              <span>암컷</span>
+              <input type="radio" onChange={handleGenderButton} value="FEMALE" checked={gender === "FEMALE"}/>
+              <span>수컷</span>
+            </label>
+            <br />
+            <h4>중성화</h4>
+            <label className={styles.radio}>
+              <input type="radio" onChange={handleNeuteredButton} value="안 함" checked={neutered === "안 함"}/>
+              <span>함</span>
+              <input type="radio" onChange={handleNeuteredButton} value="함" checked={neutered === "함"}/>
+              <span>안 함</span>
+            </label>
+            <br />
+            <h4>수술이력</h4>
+            <label className={styles.radio}>
+              <input type="radio" onChange={handleSurgeryButton} value="있음" checked={surgery === "있음"}/>
+              <span>있음</span>
+              <input type="radio" onChange={handleSurgeryButton} value="없음" checked={surgery === "없음"}/>
+              <span>없음</span>
+            </label>
+            {surgery === "있음" ? 
+              <div className={styles.surgery}>
+                <input 
+                  className={styles.surgeryname} 
+                  placeholder="수술명" 
+                  type="text" 
+                  onChange={(e) => {setSurgeryName(e.target.value)}} 
+                  value={surgeryName}></input>
+                <span onClick={() => {
+                  if(surgeryName !== "") 
+                    setSurgeryHistory([...surgeryHistory, {
+                      surgeryId : surgeryNo.current++,
+                      surgeryDate: dateFormat(surgeryDate), 
+                      surgeryName: surgeryName
+                    }])
+                  setSurgeryName("");
+                }}><FiPlus color="#AFA79F" size="18px"/></span>
+                <div>
                   {surgeryHistory.map((data, index)=>{
                     return (
                       <div key={index} className={styles.surgeryHistory}>
@@ -330,87 +348,48 @@ const RegisterPet = () => {
                         }}><TiDelete size="18px" color="#827870"/></span>
                       </div>
                     )
-                  })}
-                  <div className={styles.datepicker}>
-                    <DatePicker 
-                      locale={ko}
-                      selected={surgeryDate}
-                      onChange={(date) => setSurgeryDate(date)}
-                      dateFormat="yyyy/MM/dd"
-                      customInput={<CustomInput />}
-                    />
-                  </div> 
-                  <input 
-                    className={styles.surgeryname} 
-                    placeholder="수술명" 
-                    type="text" 
-                    onChange={(e) => {setSurgeryName(e.target.value)}} 
-                    value={surgeryName}></input>
-                  <span onClick={() => {
-                    if(surgeryName !== "") 
-                      setSurgeryHistory([...surgeryHistory, {
-                        surgeryId : surgeryNo.current++,
-                        surgeryDate: dateFormat(surgeryDate), 
-                        surgeryName: surgeryName
-                      }])
-                    setSurgeryName("");
-                  }}><FiPlus color="#AFA79F" size="18px"/></span>
-                </div> : null}
-              <br />
-              <h4>복용약</h4>
-              <div className={styles.medicineContainer}>
-                {medicine.map((data, index) => {
-                  return (
-                    <div className={styles.medicineData} key={index}>
-                      <p>{data.medicationName}</p>
-                      <span>{data.medicationStartDate} ~ {data.medicationEndDate}</span>
-                      <span onClick={() => {
-                        setMedicine(medicine.filter(medicine => medicine.medicineId !== data.medicineId))
-                      }}><TiDelete size="18px" color="#827870"/></span>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className={styles.drug}>
-                <input 
-                  placeholder="복용약명" 
-                  type="text"
-                  onChange={(e) => {setMedicineName(e.target.value)}}
-                  value={medicineName}></input>
-                <p>start</p>
-                <div className={styles.datepicker}>
-                  <DatePicker 
-                    locale={ko}
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    dateFormat="yyyy/MM/dd"
-                    customInput={<CustomInput />}
-                  />
+                  })} 
                 </div>
-                <p>end</p>
-                <div className={styles.datepicker}>
-                  <DatePicker 
-                    locale={ko}
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    dateFormat="yyyy/MM/dd"
-                    customInput={<CustomInput />}
-                  />
-                </div>
-                <span onClick={() => {
-                  if(medicineName !== "") 
-                    setMedicine([...medicine, {
-                      medicineId : medicineNo.current++,
-                      medicationStartDate: dateFormat(startDate), 
-                      medicationEndDate: dateFormat(endDate),
-                      medicationName: medicineName
-                    }])
-                  setMedicineName("");
-                }}><FiPlus color="#AFA79F" size="18px"/></span>
-              </div>
-              <br />
-              <h4>주의할 점</h4>
-              <div className={styles.caution}>
+              </div> : null}
+            <br />
+            <h4>복용약</h4>
+            <div className={styles.drug}>
+              <input 
+                placeholder="복용약명" 
+                type="text"
+                onChange={(e) => {setMedicineName(e.target.value)}}
+                value={medicineName}></input>
+              <p>start</p>
+              <p>end</p>
+              <span onClick={() => {
+                if(medicineName !== "") 
+                  setMedicine([...medicine, {
+                    medicineId : medicineNo.current++,
+                    medicationStartDate: dateFormat(startDate), 
+                    medicationEndDate: dateFormat(endDate),
+                    medicationName: medicineName
+                  }])
+                setBottomPx(bottomPx+45);
+                setMedicineName("");
+              }}><FiPlus color="#AFA79F" size="18px"/></span>
+            </div>
+            <div className={styles.medicineContainer}>
+              {medicine.map((data, index) => {
+                return (
+                  <div className={styles.medicineData} key={index}>
+                    <p>{data.medicationName}</p>
+                    <span>{data.medicationStartDate} ~ {data.medicationEndDate}</span>
+                    <span onClick={() => {
+                      setMedicine(medicine.filter(medicine => medicine.medicineId !== data.medicineId))
+                      setBottomPx(bottomPx-45);
+                    }}><TiDelete size="18px" color="#827870"/></span>
+                  </div>
+                )
+              })}
+            </div>
+            <br />
+            <h4>주의할 점</h4>
+            <div className={styles.caution}>
                 <input 
                   type="text"
                   value={caution}
@@ -426,8 +405,36 @@ const RegisterPet = () => {
               <Button name="등록"/>
             </div>
           </div>
-        {modal && <Vaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} dateFormat={dateFormat} />}
         </form>
+        {surgery === "있음" ? 
+          <div className={styles.surgerydate}>
+            <DatePicker 
+              locale={ko}
+              selected={surgeryDate}
+              onChange={(date) => setSurgeryDate(date)}
+              dateFormat="yyyy/MM/dd"
+              customInput={<CustomInput />}
+            />
+          </div> : null}
+        <div className={styles.startdate} style={{bottom: `${bottomPx}px`}}>
+          <DatePicker 
+            locale={ko}
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            dateFormat="yyyy/MM/dd"
+            customInput={<CustomInput />}
+          />
+        </div>
+        <div className={styles.enddate} style={{bottom: `${bottomPx}px`}}>
+          <DatePicker 
+            locale={ko}
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            dateFormat="yyyy/MM/dd"
+            customInput={<CustomInput />}
+          />
+        </div>
+        {modal && <Vaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} dateFormat={dateFormat} />}
       </div>  
     </div>
   );
