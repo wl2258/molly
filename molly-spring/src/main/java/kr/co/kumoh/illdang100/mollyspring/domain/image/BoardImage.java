@@ -1,5 +1,6 @@
-package kr.co.kumoh.illdang100.mollyspring.domain.board;
+package kr.co.kumoh.illdang100.mollyspring.domain.image;
 
+import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
 import lombok.Builder;
