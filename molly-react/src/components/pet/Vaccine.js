@@ -5,7 +5,6 @@ import { FiPlus } from 'react-icons/fi';
 import { TiDelete, TiDeleteOutline } from 'react-icons/ti';
 import DatePicker from 'react-datepicker';
 import {ko} from 'date-fns/esm/locale';
-import moment from 'moment';
 
 const Vaccine = (props) => {
   useEffect(() => {
@@ -40,7 +39,7 @@ const Vaccine = (props) => {
             {vaccine && <VaccineDropdown setValue={setVaccineValue}/>}
           </div>
         </ul>
-        <div className={styles.datepicker}>
+        <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
           <DatePicker 
             locale={ko}
             selected={vaccineDate}

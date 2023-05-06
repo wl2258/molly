@@ -103,7 +103,7 @@
 
 .sort {
   position: absolute;
-  top: -16px;
+  top: -45px;
   left: 72px;
   color: #827870;
   background-color: #EBE7E3;
@@ -124,6 +124,7 @@
 .dropdown {
   position: absolute;
   width: 140px;
+  z-index: 1;
 }
 
 .dropdown > li {
@@ -193,16 +194,16 @@
 .surgery > span {
   position: absolute;
   top: 5px;
-  right: 160px;
+  right: 170px;
   cursor: pointer;
 }
 
-.surgery > div {
+.surgery > div:nth-child(4) {
   margin-top: 20px;
 }
 
 .surgeryname {
-  margin-left: 140px;
+  margin-left: 35px;
   width: 130px;
   height: 29px;
   font-size: 13px;
@@ -222,7 +223,7 @@
 }
 
 .medicineContainer {
-  margin: -40px 0 10px 100px;
+  margin: -10px 0 10px 100px;
 }
 
 .medicineData {
@@ -254,7 +255,7 @@
 }
 
 .drug {
-  margin-bottom: 50px;
+  margin-bottom: 5px;
 }
 
 .drug > input {
@@ -272,13 +273,12 @@
 
 .drug > p:nth-child(2) {
   margin-left: 40px;
-  margin-right: 130px;
 }
 
 .drug > span {
   position: absolute;
-  bottom: 5px;
-  right: -160px;
+  top: 5px;
+  right: -40px;
   cursor: pointer;
 }
 
@@ -357,6 +357,10 @@
   padding: 7px;
   box-sizing: border-box;
   width: 110px;
+}
+
+.datepicker {
+  display: inline-block;
 }
 
 .birthdate {
