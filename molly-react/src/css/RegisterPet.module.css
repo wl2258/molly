@@ -103,11 +103,11 @@
 
 .sort {
   position: absolute;
-  top: -47px;
+  top: -45px;
   left: 72px;
   color: #827870;
   background-color: #EBE7E3;
-  width: 110px;
+  width: 140px;
   position: relative;
   box-sizing: border-box;
   padding-top: 7px;
@@ -119,6 +119,12 @@
   left: 13px;
   bottom: 6px;
   font-size: small;
+}
+
+.dropdown {
+  position: absolute;
+  width: 140px;
+  z-index: 1;
 }
 
 .dropdown > li {
@@ -187,13 +193,17 @@
 
 .surgery > span {
   position: absolute;
-  bottom: 5px;
-  right: 175px;
+  top: 5px;
+  right: 170px;
   cursor: pointer;
 }
 
+.surgery > div:nth-child(4) {
+  margin-top: 20px;
+}
+
 .surgeryname {
-  margin-left: 20px;
+  margin-left: 35px;
   width: 130px;
   height: 29px;
   font-size: 13px;
@@ -213,13 +223,14 @@
 }
 
 .medicineContainer {
-  margin: -61px 0 10px 100px;
+  margin: -10px 0 10px 100px;
 }
 
 .medicineData {
   display: flex;
   align-items: center;
   z-index: 2;
+  margin-bottom: -10px;
 }
 
 .medicineData > p {
@@ -244,8 +255,7 @@
 }
 
 .drug {
-  margin-left: 90px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .drug > input {
@@ -262,13 +272,13 @@
 }
 
 .drug > p:nth-child(2) {
-  margin-left: 30px;
+  margin-left: 40px;
 }
 
 .drug > span {
   position: absolute;
-  bottom: 5px;
-  right: -30px;
+  top: 5px;
+  right: -40px;
   cursor: pointer;
 }
 
@@ -339,10 +349,6 @@
   left: 41px;
 }
 
-.datepicker {
-  display: inline-block;
-}
-
 .custominput {
   color: #827870;
   background-color: #EBE7E3;
@@ -353,8 +359,30 @@
   width: 110px;
 }
 
+.datepicker {
+  display: inline-block;
+}
+
 .birthdate {
   position: absolute;
   top: 275px;
   left: 72px;
+}
+
+.surgerydate {
+  position: absolute;
+  top: 465px;
+  left: 102px;
+}
+
+.startdate {
+  position: absolute;
+  bottom: 210px;
+  left: 290px;
+}
+
+.enddate {
+  position: absolute;
+  bottom: 210px;
+  left: 470px;
 }

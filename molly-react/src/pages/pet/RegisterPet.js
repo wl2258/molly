@@ -160,7 +160,7 @@ const RegisterPet = () => {
     for(let i =0; i<medicine.length; i++) {
       formData.append("medication["+i+"].medicationName", medicine[i].medicationName);
       formData.append("medication["+i+"].medicationStartDate", medicine[i].medicationStartDate);
-      formData.append("medication["+i+"].medicationEndDate", medicine[i].medicationStartDate);
+      formData.append("medication["+i+"].medicationEndDate", medicine[i].medicationEndDate);
     }
 
     for(let i =0; i<vaccineHistory.length; i++) {
@@ -257,7 +257,7 @@ const RegisterPet = () => {
           </div>
           <div className={styles.boarddetail}>
             <h4>품종</h4>
-            <div onClick={() => {setPet(!pet)}} className={styles.sort}>
+            <div onClick={() => {setPet(!pet)}} className={styles.sort} style={{borderRadius: pet? "10px 10px 0 0" : "10px"}}>
               <span className={styles.default}>{petValue}</span>
               {pet ? <span style={{position:"absolute", top:"2px", right:"10px"}}>
                 <MdExpandLess size="25px" color="#AFA79F"/></span> : 
@@ -269,11 +269,12 @@ const RegisterPet = () => {
             </div>
             <div className={styles.info}>
               <h4>생일</h4>
-              <div className={styles.datepicker}>
+              <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
                 <DatePicker 
                   locale={ko}
                   selected={birthdayDate}
-                  onChange={(date) => setBirthdayDate(date)}
+                  onChange={(date) => {
+                    setBirthdayDate(date)}}
                   dateFormat="yyyy/MM/dd"
                   customInput={<CustomInput />}
                 />
@@ -320,22 +321,11 @@ const RegisterPet = () => {
               </label>
               {surgery === "있음" ? 
                 <div className={styles.surgery}>
-                  {surgeryHistory.map((data, index)=>{
-                    return (
-                      <div key={index} className={styles.surgeryHistory}>
-                        <span>{data.surgeryDate}</span>
-                        <span>{data.surgeryName}</span>
-                        <span onClick={() => {
-                          setSurgeryHistory(surgeryHistory.filter(surgeryHistory => surgeryHistory.surgeryId !== data.surgeryId))
-                        }}><TiDelete size="18px" color="#827870"/></span>
-                      </div>
-                    )
-                  })}
-                  <div className={styles.datepicker}>
+                  <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
                     <DatePicker 
                       locale={ko}
                       selected={surgeryDate}
-                      onChange={(date) => setSurgeryDate(date)}
+                      onChange={(date) => {setSurgeryDate(date)}}
                       dateFormat="yyyy/MM/dd"
                       customInput={<CustomInput />}
                     />
@@ -355,22 +345,22 @@ const RegisterPet = () => {
                       }])
                     setSurgeryName("");
                   }}><FiPlus color="#AFA79F" size="18px"/></span>
+                  <div>
+                    {surgeryHistory.map((data, index)=>{
+                      return (
+                        <div key={index} className={styles.surgeryHistory}>
+                          <span>{data.surgeryDate}</span>
+                          <span>{data.surgeryName}</span>
+                          <span onClick={() => {
+                            setSurgeryHistory(surgeryHistory.filter(surgeryHistory => surgeryHistory.surgeryId !== data.surgeryId))
+                          }}><TiDelete size="18px" color="#827870"/></span>
+                        </div>
+                      )
+                    })} 
+                  </div>
                 </div> : null}
               <br />
               <h4>복용약</h4>
-              <div className={styles.medicineContainer}>
-                {medicine.map((data, index) => {
-                  return (
-                    <div className={styles.medicineData} key={index}>
-                      <p>{data.medicationName}</p>
-                      <span>{data.medicationStartDate} ~ {data.medicationEndDate}</span>
-                      <span onClick={() => {
-                        setMedicine(medicine.filter(medicine => medicine.medicineId !== data.medicineId))
-                      }}><TiDelete size="18px" color="#827870"/></span>
-                    </div>
-                  )
-                })}
-              </div>
               <div className={styles.drug}>
                 <input 
                   placeholder="복용약명" 
@@ -378,7 +368,7 @@ const RegisterPet = () => {
                   onChange={(e) => {setMedicineName(e.target.value)}}
                   value={medicineName}></input>
                 <p>start</p>
-                <div className={styles.datepicker}>
+                <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
                   <DatePicker 
                     locale={ko}
                     selected={startDate}
@@ -388,7 +378,7 @@ const RegisterPet = () => {
                   />
                 </div>
                 <p>end</p>
-                <div className={styles.datepicker}>
+                <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
                   <DatePicker 
                     locale={ko}
                     selected={endDate}
@@ -407,6 +397,19 @@ const RegisterPet = () => {
                     }])
                   setMedicineName("");
                 }}><FiPlus color="#AFA79F" size="18px"/></span>
+              </div>
+              <div className={styles.medicineContainer}>
+                {medicine.map((data, index) => {
+                  return (
+                    <div className={styles.medicineData} key={index}>
+                      <p>{data.medicationName}</p>
+                      <span>{data.medicationStartDate} ~ {data.medicationEndDate}</span>
+                      <span onClick={() => {
+                        setMedicine(medicine.filter(medicine => medicine.medicineId !== data.medicineId))
+                      }}><TiDelete size="18px" color="#827870"/></span>
+                    </div>
+                  )
+                })}
               </div>
               <br />
               <h4>주의할 점</h4>
