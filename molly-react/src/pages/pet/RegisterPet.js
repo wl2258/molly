@@ -11,6 +11,8 @@ import Vaccine from '../../components/pet/Vaccine';
 import DatePicker from 'react-datepicker';
 import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { registerPet } from '../store/petSlice';
 
 const RegisterPet = () => {
   const [petType, setPetType] = useState('DOG'); // dog, cat, rabbit
@@ -21,8 +23,7 @@ const RegisterPet = () => {
   const [neutered, setNeutered] = useState([]); // 중성화 라디오 버튼
   const [surgery, setSurgery] = useState([]); // 수술 라디오 버튼
   const [modal, setModal] = useState(false); // 예방접종 이력 추가 모달
-  const [imgFile, setImgFile] = useState(""); 
-  const [petId, setPetId] = useState("");
+  const [imgFile, setImgFile] = useState("");
   const surgeryNo = useRef(1);
   const medicineNo = useRef(1);
 
@@ -43,6 +44,7 @@ const RegisterPet = () => {
   const [caution, setCaution] = useState(""); // 주의할 점 input
 
   const imgRef = useRef();
+  const dispatch = useDispatch();
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -178,7 +180,8 @@ const RegisterPet = () => {
       const response = await axiosInstance.post(`/api/auth/pet`, formData, config)
       console.log(response); 
       if(response.data.code === 1) {
-        setPetId(response.data.data.petId);
+        const petId = response.data.data.petId;
+        dispatch(registerPet({name: petNickName, petId: petId}));
         window.location.replace(`/detailpet/${petId}`);
       }
       else {

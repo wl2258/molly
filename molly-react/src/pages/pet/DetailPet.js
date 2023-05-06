@@ -13,7 +13,7 @@ let CustomBody = styled.div`
 
 const DetailPet = () => {
   let {id} = useParams();
-  const [text, setText] = useState([]);
+  const [text, setText] = useState({});
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const DetailPet = () => {
       const response = await axiosInstance.get(`/api/auth/pet/${id}`, config);
       if(response.data.code === 1) {
         setText(response.data.data);
-        if(text[0] !== undefined) {
+        if(text !== undefined) {
           setLoading(true);
         }
       }
@@ -101,18 +101,18 @@ const DetailPet = () => {
   const navigate = useNavigate();
 
   const now = new Date();
-  const start = new Date(text[0]?.birthdate);
+  const start = new Date(text?.birthdate);
 
   const timeDiff = now.getTime() - start.getTime();
   const day = Math.floor(timeDiff / (1000*60*60*24)+1);
 
   const calFood = () => {
-    if (day <= 60) return text[0].weight * 7
-    else if(day <= 90) return text[0].weight * 6
-    else if(day <= 150) return text[0].weight * 5
-    else if(day <= 365) return text[0].weight * 3
-    else if(day >= 365 && day <= 1825) return text[0].weight * 2.5
-    else if(day >= 1825) return text[0].weight * 2
+    if (day <= 60) return text.weight * 7
+    else if(day <= 90) return text.weight * 6
+    else if(day <= 150) return text.weight * 5
+    else if(day <= 365) return text.weight * 3
+    else if(day >= 365 && day <= 1825) return text.weight * 2.5
+    else if(day >= 1825) return text.weight * 2
   }
 
   return (
@@ -127,40 +127,40 @@ const DetailPet = () => {
               alt="프로필 이미지"
               width="70px"
             />
-            <h1>{text[0].petName}</h1>
+            <h1>{text.petName}</h1>
             <div>
               <h4>품종</h4>
-              <span>{text[0].species}</span>
+              <span>{text.species}</span>
               <br/>
               <h4>생일</h4>
-              <span style={{marginRight: "30px"}}>{text[0].birthdate}</span>
+              <span style={{marginRight: "30px"}}>{text.birthdate}</span>
               <br/>
               <h4>성별</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="암컷" checked={text[0].gender === 'FEMALE' ? true : false}/>
+                <input type="radio" readOnly={true} value="암컷" checked={text.gender === 'FEMALE' ? true : false}/>
                 <span>암컷</span>
-                <input type="radio" readOnly={true} value="수컷" checked={text[0].gender === 'FEMALE' ? false : true}/>
+                <input type="radio" readOnly={true} value="수컷" checked={text.gender === 'FEMALE' ? false : true}/>
                 <span>수컷</span>
               </label>
               <br/>
               <h4>중성화</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="함" checked={text[0].neuteredStatus}/>
+                <input type="radio" readOnly={true} value="함" checked={text.neuteredStatus}/>
                 <span>함</span>
-                <input type="radio" readOnly={true} value="안 함" checked={!text[0].neuteredStatus}/>
+                <input type="radio" readOnly={true} value="안 함" checked={!text.neuteredStatus}/>
                 <span>안 함</span>
               </label>
               <br/>
               <h4 style={{marginRight: "27px"}}>수술이력</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="있음" checked={text[0].surgery[0] === undefined ? false : true}/>
+                <input type="radio" readOnly={true} value="있음" checked={text.surgery[0] === undefined ? false : true}/>
                 <span>있음</span>
-                <input type="radio" readOnly={true} value="없음" checked={text[0].surgery[0] === undefined ? true : false}/>
+                <input type="radio" readOnly={true} value="없음" checked={text.surgery[0] === undefined ? true : false}/>
                 <span>없음</span>
               </label>
               <br/>
-              {text[0].surgery[0] !== undefined ? 
-                text[0].surgery.map((item) => {
+              {text.surgery[0] !== undefined ? 
+                text.surgery.map((item) => {
                   return (
                     <div className={styles.surgery}>
                       <span>{item.surgeryDate}</span>
@@ -172,7 +172,7 @@ const DetailPet = () => {
               <div className={styles.medicine}>
                 <h4>복용약</h4>
                 <div>
-                  {text[0].medication.map((item) => {
+                  {text.medication.map((item) => {
                       return (
                         <div className={styles.medicineinfo}> 
                           <p>{item.medicationName}</p>
@@ -185,12 +185,12 @@ const DetailPet = () => {
                 </div>
               </div>
               <h4>주의할 점</h4>
-              <p>{text[0].caution}</p>
+              <p>{text.caution}</p>
             </div>
           </div>
           <div className={styles.weight}>
             <h4 style={{marginRight: "50px"}}>몸무게</h4>
-            <span>{text[0].weight}  kg</span>
+            <span>{text.weight}  kg</span>
           </div>
           <div className={styles.care}>
             <h4>🦴 건강관리</h4>
@@ -198,11 +198,11 @@ const DetailPet = () => {
             <span>{calFood()}g</span>
             <br/>
             <span>권장 음수량</span>
-            <span>{text[0].weight*80}ml</span>
+            <span>{text.weight*80}ml</span>
             <br/>
             <span>권장 운동량</span>
             <h4>💉 예방접종 이력</h4>
-            {text[0].vaccination.map((item) => {
+            {text.vaccination.map((item) => {
               return (
                 <div className={styles.vaccine}>
                   <span>{item.vaccinationDate}</span>
