@@ -14,6 +14,27 @@ let CustomBody = styled.div`
 const DetailPet = () => {
   let {id} = useParams();
   const [text, setText] = useState([]);
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken")
+      }
+    }
+
+    const fetchData = async function fetch() {
+      const response = await axiosInstance.get(`/api/auth/pet/${id}`, config);
+      if(response.data.code === 1) {
+        setText(response.data.data);
+        if(text[0] !== undefined) {
+          setLoading(true);
+        }
+      }
+    }
+
+    fetchData();
+  }, [])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -62,7 +83,7 @@ const DetailPet = () => {
           }
         }
         else if(errResponseStatus === 400) {
-          return;
+          console.log(error.response.data.data)
         }
         else if(errResponseStatus === 401) {
           console.log("인증 실패");
@@ -77,31 +98,10 @@ const DetailPet = () => {
     }
   );
 
-  const getPetInfo = () => {
-    const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
-      }
-    }
-
-    const fetchData = async function fetch() {
-      const response = await axiosInstance.get(`/api/auth/pet/${parseInt(id)}`, config);
-      setText(response.data);
-    }
-
-    fetchData();
-  }
-
-  useEffect(() => {
-    getPetInfo();
-  }, [])
-
   const navigate = useNavigate();
-  let gender = text[0].gender === 'FEMALE' ? true : false;
-  let surgery = text[0].surgery[0] === undefined ? false : true;
-  
+
   const now = new Date();
-  const start = new Date(text[0].birthdate);
+  const start = new Date(text[0]?.birthdate);
 
   const timeDiff = now.getTime() - start.getTime();
   const day = Math.floor(timeDiff / (1000*60*60*24)+1);
@@ -118,7 +118,7 @@ const DetailPet = () => {
   return (
     <div>
       <Header />
-      <CustomBody>
+      {loading ? <CustomBody>
         <div className={styles.container}>
           <div className={styles.info}>
             <img
@@ -133,13 +133,13 @@ const DetailPet = () => {
               <span>{text[0].species}</span>
               <br/>
               <h4>생일</h4>
-              <span style={{marginRight: "30px"}}>{text[0].birthDate}</span>
+              <span style={{marginRight: "30px"}}>{text[0].birthdate}</span>
               <br/>
               <h4>성별</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="암컷" checked={gender}/>
+                <input type="radio" readOnly={true} value="암컷" checked={text[0].gender === 'FEMALE' ? true : false}/>
                 <span>암컷</span>
-                <input type="radio" readOnly={true} value="수컷" checked={!gender}/>
+                <input type="radio" readOnly={true} value="수컷" checked={text[0].gender === 'FEMALE' ? false : true}/>
                 <span>수컷</span>
               </label>
               <br/>
@@ -153,13 +153,13 @@ const DetailPet = () => {
               <br/>
               <h4 style={{marginRight: "27px"}}>수술이력</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="있음" checked={surgery}/>
+                <input type="radio" readOnly={true} value="있음" checked={text[0].surgery[0] === undefined ? false : true}/>
                 <span>있음</span>
-                <input type="radio" readOnly={true} value="없음" checked={!surgery}/>
+                <input type="radio" readOnly={true} value="없음" checked={text[0].surgery[0] === undefined ? true : false}/>
                 <span>없음</span>
               </label>
               <br/>
-              {surgery ? 
+              {text[0].surgery[0] !== undefined ? 
                 text[0].surgery.map((item) => {
                   return (
                     <div className={styles.surgery}>
@@ -216,7 +216,7 @@ const DetailPet = () => {
           <Button name="삭제하기"/>
           <Button name="수정하기" onClick={() => {navigate(`/updatepet/${id}`)}}/>
         </div>
-      </CustomBody>
+      </CustomBody> : <CustomBody><p style={{marginLeft: "100px"}}>loading</p></CustomBody>}
     </div>
   );
 };

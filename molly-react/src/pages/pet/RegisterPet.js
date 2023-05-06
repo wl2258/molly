@@ -179,7 +179,7 @@ const RegisterPet = () => {
       console.log(response); 
       if(response.data.code === 1) {
         setPetId(response.data.data.petId);
-        window.location.replace(`/detailpet/${parseInt(petId)}`);
+        window.location.replace(`/detailpet/${petId}`);
       }
       else {
         console.log("동물 등록 실패");
