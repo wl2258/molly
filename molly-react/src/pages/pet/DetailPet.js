@@ -13,39 +13,7 @@ let CustomBody = styled.div`
 
 const DetailPet = () => {
   let {id} = useParams();
-  const [text, setText] = useState([{
-      "userId": 32492,
-      "petId": 1234,
-      "peType": "DOG",
-      "petName": "molly",
-      "species": "MALTESE",
-      "profileImage": "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
-      "birthDate": "2013-08-07",
-      "gender": "FEMALE",
-      "neuteredStatus" : false,
-      "weight" : 3.4,
-      "caution" : "분리불안 심함",
-      "surgery": [
-        {
-          "surgeryName": "수직이도성형술",
-          "surgeryDate": "2023-01-01"
-        },
-      ],
-      "medication": [
-        {
-          "medicationName": "넥스가드",
-          "medicationStart": "2023-02-01",
-          "medicationEnd": "2023-02-15"
-        },
-      ],
-      "vaccination": [
-        {
-          "vaccinationName": "종합백신1차",
-          "vaccinationDate": "2018-01-01"
-        },
-      ]
-    }]
-  )
+  const [text, setText] = useState([]);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -125,6 +93,7 @@ const DetailPet = () => {
   }
 
   useEffect(() => {
+    getPetInfo();
   }, [])
 
   const navigate = useNavigate();
@@ -132,7 +101,7 @@ const DetailPet = () => {
   let surgery = text[0].surgery[0] === undefined ? false : true;
   
   const now = new Date();
-  const start = new Date(text[0].birthDate);
+  const start = new Date(text[0].birthdate);
 
   const timeDiff = now.getTime() - start.getTime();
   const day = Math.floor(timeDiff / (1000*60*60*24)+1);
@@ -207,8 +176,8 @@ const DetailPet = () => {
                       return (
                         <div className={styles.medicineinfo}> 
                           <p>{item.medicationName}</p>
-                          <span>{item.medicationStart} ~</span>
-                          <span>{item.medicationEnd}</span>
+                          <span>{item.medicationStartDate} ~</span>
+                          <span>{item.medicationEndDate}</span>
                         </div>
                       )
                     })
