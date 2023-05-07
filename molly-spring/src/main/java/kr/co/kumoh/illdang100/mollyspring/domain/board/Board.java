@@ -4,11 +4,12 @@ import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.PetTypeEnum;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
 
 @Entity
 @Getter
@@ -44,14 +45,13 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isNotice;
 
-    @Builder
-    public Board(Long id, Account account, String title, String content, BoardEnum category, PetTypeEnum petType, int views) {
-        this.id = id;
+    public Board(Account account, CreatePostRequest createPostRequest) {
         this.account = account;
-        this.boardTitle = title;
-        this.boardContent = content;
-        this.category = category;
-        this.petType = petType;
-        this.views = views;
+        this.boardTitle = createPostRequest.getTitle();
+        this.boardContent = createPostRequest.getContent();
+        this.category = BoardEnum.valueOf(createPostRequest.getCategory());
+        this.petType = PetTypeEnum.valueOf(createPostRequest.getPetType());
+        this.views = 0;
+        this.isNotice = false;
     }
 }
