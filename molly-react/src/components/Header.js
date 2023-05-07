@@ -206,7 +206,7 @@ const PetDropdown = () => {
             </li>
         )
       })}
-      {pet.length === 0 ? <li style={{borderRadius: "10px"}} onClick={() => {navigate('/registerpet')}}>추가하기</li>:
+      {pet[0].name === "" ? <li style={{borderRadius: "10px"}} onClick={() => {navigate('/registerpet')}}>추가하기</li>:
         <li onClick={() => {navigate('/registerpet')}}>추가하기</li>}
     </div>
   )
