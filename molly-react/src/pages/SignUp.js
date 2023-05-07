@@ -86,7 +86,8 @@ const SignUp = () => {
           }
         }
         else if(errResponseStatus === 400) {
-          return;
+          console.log(error.response.data.data);
+          return error.response;
         }
         else if(errResponseStatus === 401) {
           console.log("인증 실패");

@@ -14,7 +14,7 @@ let CustomBody = styled.div`
 const DetailPet = () => {
   let {id} = useParams();
   const [text, setText] = useState({});
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const config = {
@@ -27,9 +27,9 @@ const DetailPet = () => {
       const response = await axiosInstance.get(`/api/auth/pet/${id}`, config);
       if(response.data.code === 1) {
         setText(response.data.data);
-        if(text !== undefined) {
+        if(Object.keys(text).length === 0) {
           setLoading(true);
-        }
+        } else setLoading(false);
       }
     }
 
@@ -118,7 +118,7 @@ const DetailPet = () => {
   return (
     <div>
       <Header />
-      {loading ? <CustomBody>
+      {!loading ? <CustomBody>
         <div className={styles.container}>
           <div className={styles.info}>
             <img

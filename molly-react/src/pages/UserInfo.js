@@ -5,21 +5,43 @@ import {MdModeEdit} from 'react-icons/md';
 import axios from 'axios';
 
 const UserInfo = () => {
-  const [user, setUser] = useState([]);
-  const [imgFile, setImgFile] = useState("");
-  const [edit, setEdit] = useState(false);
-  const [nickname, setNickName] = useState("");
-  const [disabled, setDisabled] = useState(true);
-  const [cursor, setCursor] = useState("");
-  const [duplicate, setDuplicate] = useState(0);
-  const [effective, setEffective] = useState(false);
-  const [effectiveColor, setEffectiveColor] = useState("");
-  const [modal, setModal] = useState(false);
-  const [save, setSave] = useState(false);
+  const [user, setUser] = useState({}); // user 정보
+  const [imgFile, setImgFile] = useState(""); // 이미지 파일 저장
+  const [edit, setEdit] = useState(false); // 수정 버튼 on/off
+  const [nickname, setNickName] = useState(""); // 닉네임 input value
+  const [disabled, setDisabled] = useState(true); // 저장 버튼 활성화
+  const [cursor, setCursor] = useState(""); // 저장 버튼 마우스 커서
+  const [duplicate, setDuplicate] = useState(0); // 닉네임 안내 문구
+  const [effective, setEffective] = useState(false); // 닉네임 유효성
+  const [effectiveColor, setEffectiveColor] = useState(""); // 안내 문구 색 설정
+  const [modal, setModal] = useState(false); // 프로필 이미지 업로드 모달
+  const [save, setSave] = useState(false); // 저장 여부
+  const [loading, setLoading] = useState(true); // 로딩 여부
 
   let color = disabled ? "#D6CCC3" : "#B27910";
 
   const imgRef = useRef();
+
+  // 유저 정보 get
+  useEffect(() => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken")
+      }
+    }
+
+    const fetchData = async function fetch() {
+      const response = await axiosInstance.get(`/api/auth/account`, config);
+      setUser(response.data);
+      setImgFile(response.data.profileImage);
+      if(Object.keys(user).length === 0) {
+        setLoading(true);
+      } else setLoading(false);
+    }
+
+    fetchData();
+
+  }, [save])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -68,7 +90,8 @@ const UserInfo = () => {
           }
         }
         else if(errResponseStatus === 400) {
-          return;
+          console.log(error.response.data.data);
+          return error.response;
         }
         else if(errResponseStatus === 401) {
           console.log("인증 실패");
@@ -83,26 +106,7 @@ const UserInfo = () => {
     }
   );
 
-  const getUserInfo = () => {
-    const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
-      }
-    }
-
-    const fetchData = async function fetch() {
-      const response = await axiosInstance.get(`/api/auth/account`, config);
-      setUser(response.data);
-      setImgFile(response.data.profileImage)
-    }
-
-    fetchData();
-  }
-
-  useEffect(() => {
-    getUserInfo();
-  }, [])
-
+  // 닉네임 input value 
   const handleChange = (e) => {
     if (e.target.value.length <= 10) {
       setNickName(e.target.value);
@@ -112,16 +116,39 @@ const UserInfo = () => {
     }
   }
 
+
+  // 이미지 업로드 patch
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = () => {
-        setImgFile(reader.result);
-    };
-    console.log(imgRef);
+
+    const formData = new FormData();
+    if(imgRef.current.files[0] !== undefined) {
+      formData.append("accountProfileImage", imgRef.current.files[0]);
+    }
+
+    const config = {
+      headers: {
+        Authorization : localStorage.getItem("accessToken"),
+      }
+    }
+
+    const fetchData = async function fetch() {
+      const response = await axiosInstance.patch(`/api/auth/account/profile-image`, formData, config)
+      if(response.data.code === 1) {
+        console.log("사용자 이미지 수정 완료");
+        reader.onloadend = () => {
+          setImgFile(reader.result);
+        };
+        setModal(!modal);
+      }
+    }
+
+    fetchData();
   };
 
+  // 닉네임 유효성 검사
   const checkNickname = (e) => {
     const regExp = /^[가-힣a-zA-Z]{1,10}$/;
     if(regExp.test(e.target.value) === true) {
@@ -132,6 +159,7 @@ const UserInfo = () => {
     }
   }
 
+  // 닉네임 중복 검사
   const checkDuplicate = (e) => {
     setDisabled(true);
     setDuplicate(0);
@@ -172,9 +200,8 @@ const UserInfo = () => {
     }
   }
 
+  // 기본 이미지 변경 delete
   const deleteImg = () => {
-    setImgFile("");
-
     const config = {
       headers : {
         Authorization : localStorage.getItem("accessToken")
@@ -185,6 +212,8 @@ const UserInfo = () => {
       const response = await axiosInstance.delete(`/api/auth/account/profile-image`, null, config);
       if(response.data.code === 1) {
         console.log("기본 이미지 변경 완료");
+        setImgFile("");
+        setModal(!modal);
       }
     }
 
@@ -195,33 +224,14 @@ const UserInfo = () => {
     setModal(!modal);
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    console.log(imgRef.current.files[0]);
-  
-    const formData = new FormData();
-    if(imgRef.current.files[0] !== undefined) {
-      formData.append("accountProfileImage", imgRef.current.files[0]);
-    }
+  //   console.log(imgRef.current.files[0]);
+  // }
 
-    const config = {
-      headers: {
-        Authorization : localStorage.getItem("accessToken"),
-      }
-    }
-
-    const fetchData = async function fetch() {
-      const response = await axiosInstance.patch(`/api/auth/account/profile-image`, formData, config)
-      if(response.data.code === 1) {
-        console.log("사용자 이미지 수정 완료");
-      }
-    }
-
-    fetchData();
-  }
-
-  const handleSave = () => {
+  // 닉네임 수정 patch
+  const handleNicknameSave = () => {
     const config = {
       headers : {
         Authorization : localStorage.getItem("accessToken"),
@@ -237,6 +247,7 @@ const UserInfo = () => {
       const response = await axiosInstance.post(`/api/auth/account/save`, data, config)
       console.log(response); 
       if(response.data.code === 1) {
+        setEdit(!edit);
         setSave(true);
         console.log("닉네임 수정 완료");
       }
@@ -251,14 +262,14 @@ const UserInfo = () => {
   return (
     <div>
       <Header />
-      <div className={styles.box}>
+      {!loading ? <div className={styles.box}>
         <div className={styles.container}>
           <div className={styles.profile}>
-            <form encType="multipart/form-data" onSubmit={handleSubmit}>
+            <form encType="multipart/form-data">
               <div className={styles.profileuser} onClick={handleModal}>
                 <img
                   className={styles.profileimg}
-                  src={imgFile ? imgFile : process.env.PUBLIC_URL + '/img/profile.png'}
+                  src={imgFile && imgFile !== "" ? imgFile : process.env.PUBLIC_URL + '/img/profile.png'}
                   alt="프로필 이미지"
                 />
               </div>
@@ -294,14 +305,14 @@ const UserInfo = () => {
                   : <span className={styles.duplicatepass}>사용 가능한 닉네임입니다.</span>}
                 <span className={styles.cancle}><span onClick={() => {setEdit(false)}}>취소</span></span>
                 <span className={styles.save}>
-                  <button disabled={disabled} style={{color:`${color}`, cursor: `${cursor}`}} onClick={handleSave}>
+                  <button disabled={disabled} style={{color:`${color}`, cursor: `${cursor}`}} onClick={handleNicknameSave}>
                     저장
                   </button>
                 </span>
               </div> :
               <div className={styles.modal}>
                 <div className={styles.nickname}>
-                  {user[0].nickname}
+                  {user.nickname}
                 </div>
                 <span className={styles.editicon} onClick={()=>{setEdit(true)}}><MdModeEdit color="#827870" size="25px"/></span>
               </div>
@@ -312,11 +323,11 @@ const UserInfo = () => {
           <div className={styles.info}>
             <div>
               <h1>회원가입 정보</h1>
-              {user[0].provider === "kakao" ? 
+              {user.provider === "kakao" ? 
                 <img src={process.env.PUBLIC_URL + '/img/kakao-account.png'} alt="kakao 로고" width="40px" height="40px"/> 
                 : <img src={process.env.PUBLIC_URL + '/img/google-account.png'} alt="google 로고" width="50px"/> 
               }
-              <p>{user[0].email}</p>
+              <p>{user.email}</p>
             </div>
             <div>
               <h1>탈퇴하기</h1>
@@ -325,7 +336,7 @@ const UserInfo = () => {
             <p>탈퇴 시 작성하신 포스트 및 댓글과 반려동물 등록 정보가 모두 삭제되며 복구되지 않습니다.</p>
           </div>
         </div>
-      </div>
+      </div> : <div className={styles.box} style={{marginLeft: "100px"}}>loading</div>}
     </div>
   );
 };
@@ -360,7 +371,6 @@ const Profile = (props) => {
         </div>
         <div>
           <p onClick={props.onClick}>취소</p>
-          <button><p>저장</p></button>
         </div>
       </div>
     </div>
