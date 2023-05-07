@@ -7,7 +7,6 @@ import kr.co.kumoh.illdang100.mollyspring.service.PetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
@@ -26,7 +27,7 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
 public class PetApiController {
 
     private final PetService petService;
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<?> registerPet(@ModelAttribute @Valid PetSaveRequest petSaveRequest,
                                          BindingResult bindingResult,
                                          @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -42,7 +43,7 @@ public class PetApiController {
 
         return new ResponseEntity<>(new ResponseDto(1, "해당 반려동물의 정보입니다.", petDetailResponse), HttpStatus.OK);
     }
-    @PatchMapping
+    @PostMapping("{petId}")
     public ResponseEntity<?> updatePet(@RequestBody @Valid PetUpdateRequest petUpdateRequest,
                                        BindingResult bindingResult,
                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -60,8 +61,7 @@ public class PetApiController {
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 삭제를 성공했습니다.", null), HttpStatus.OK);
     }
 
-
-    @PatchMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/image")
     public ResponseEntity<?> updatePetProfileImage(@ModelAttribute @Valid PetProfileImageUpdateRequest petProfileImageUpdateRequest,
                                                    BindingResult bindingResult) {
 
@@ -76,5 +76,26 @@ public class PetApiController {
         petService.deletePetProfileImage(petId);
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 기본 이미지로 변경했습니다..", null), HttpStatus.OK);
+    }
+
+    @GetMapping("/dog-species")
+    public ResponseEntity<?> getDogSpecies() {
+        List<PetSpeciesResponse> dogSpecies = petService.getDogSpecies();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "강아지 품종 리스트", dogSpecies), HttpStatus.OK);
+    }
+
+    @GetMapping("/cat-species")
+    public ResponseEntity<?> getCatSpecies() {
+        List<PetSpeciesResponse> catSpecies = petService.getCatSpecies();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "고양이 품종 리스트", catSpecies), HttpStatus.OK);
+    }
+
+    @GetMapping("/rabbit-species")
+    public ResponseEntity<?> getRabbitSpecies() {
+        List<PetSpeciesResponse> rabbitSpecies = petService.getRabbitSpecies();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "토끼 품종 리스트", rabbitSpecies), HttpStatus.OK);
     }
 }

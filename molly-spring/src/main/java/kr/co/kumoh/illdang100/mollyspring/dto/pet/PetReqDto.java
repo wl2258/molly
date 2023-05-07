@@ -11,6 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.List;
+
+import static kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationReqDto.*;
 
 public class PetReqDto {
 
@@ -42,8 +47,12 @@ public class PetReqDto {
 
         private MultipartFile petProfileImage;
 
-        @Size(min = 1, max = 100)
+        @Size(max = 100)
         private String caution;
+
+        private List<MedicationRequest> medication;
+        private List<SurgeryRequest> surgery;
+        private List<VaccinationRequest> vaccination;
     }
 
     @Data
@@ -75,7 +84,7 @@ public class PetReqDto {
         @DecimalMin(value = "0.0")
         private double weight;
 
-        @Size(min = 1, max = 100)
+        @Size(max = 100)
         private String caution;
     }
 
