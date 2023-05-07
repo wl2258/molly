@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,9 +35,9 @@ public class BoardApiController {
                                            BindingResult bindingResult,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Long boardId = boardService.createPost(principalDetails.getAccount().getId(), createPostRequest);
+        CreatePostResponse createPostResponse = boardService.createPost(principalDetails.getAccount().getId(), createPostRequest);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성에 성공했습니다", boardId), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성에 성공했습니다", createPostResponse), HttpStatus.OK);
     }
 
     @PutMapping("/auth/board/{boardId}")

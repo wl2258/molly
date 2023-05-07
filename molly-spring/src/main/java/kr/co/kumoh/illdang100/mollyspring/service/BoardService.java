@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 
 @Slf4j
 @Service
@@ -31,7 +32,7 @@ public class BoardService {
     private final BoardImageRepository boardImageRepository;
 
     @Transactional
-    public Long createPost(Long accountId, CreatePostRequest createPostRequest) {
+    public CreatePostResponse createPost(Long accountId, CreatePostRequest createPostRequest) {
 
         Account findAccount = findAccountByIdOrThrowException(accountId);
 
@@ -49,7 +50,7 @@ public class BoardService {
             }
         }
 
-        return board.getId();
+        return new CreatePostResponse(board.getId());
     }
 
     // TODO: 게시글 전체 리스트 조회 (페이징)
