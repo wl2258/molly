@@ -56,4 +56,12 @@ public class PetRespDto {
         private List<MedicationResponse> medication;
         private List<VaccinationResponse> vaccination;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PetSpeciesResponse {
+        private String speciesKo;
+        private String speciesEn;
+    }
 }
