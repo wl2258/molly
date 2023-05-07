@@ -4,6 +4,7 @@ import styles from '../css/Header.module.css'
 import styled from 'styled-components';
 import {RiAccountCircleLine} from 'react-icons/ri';
 import {TbDog, TbBell} from 'react-icons/tb';
+import { useSelector } from 'react-redux';
 
 let CustomNavLink = styled(NavLink)`
   color: #AFA79F;
@@ -192,15 +193,16 @@ const UserDropdown = () => {
 
 const PetDropdown = () => {
   let navigate = useNavigate();
-  const [pet] = useState(['molly']);
+  let state = useSelector((state) => state);
+  const [pet] = useState(state.pet);
 
   return (
     <div className={styles.petdropdown}>
       {pet.map((item, index) => {
         return (
-          item !== '' && 
-            <li onClick={() => {navigate(`/detailpet/${item}`)}}>
-              <img className={styles.petimg} src={process.env.PUBLIC_URL + '/img/DOG-logo.png'} alt="puppy" width="36px"/>{item}
+          item.name !== '' && 
+            <li onClick={() => {navigate(`/detailpet/${item.petId}`)}}>
+              <img className={styles.petimg} src={process.env.PUBLIC_URL + '/img/DOG-logo.png'} alt="puppy" width="36px"/>{item.name}
             </li>
         )
       })}

@@ -1,9 +1,5 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-
-let pet = createSlice({
-  name : 'pet',
-  initialState : {name: "", petId: ""}
-})
+import { configureStore } from "@reduxjs/toolkit";
+import pet from '../pages/store/petSlice.js';
 
 export default configureStore({
   reducer: {
