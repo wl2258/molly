@@ -434,6 +434,7 @@ const RegisterPet = () => {
           </div>
         {modal && <Vaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} dateFormat={dateFormat} />}
         </form>
+        <button>확인</button>
       </div>  
     </div>
   );

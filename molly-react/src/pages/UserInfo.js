@@ -34,9 +34,9 @@ const UserInfo = () => {
 
     axiosInstance.get(`/api/auth/account`, config)
       .then((response) => {
-        setLoading(false);
         setUser(response.data);
         setImgFile(response.data.profileImage);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e);
@@ -260,10 +260,25 @@ const UserInfo = () => {
     fetchData();
   }
 
+  if (loading) {
+    return(
+      <div>
+        <Header />
+        <div className={styles.box} style={{marginLeft: "100px"}}>
+          loading
+        </div>
+      </div>
+    )
+  }
+
+  if (Object.keys(user).length === 0 ) {
+    return null;
+  }
+
   return (
     <div>
       <Header />
-      {!loading ? <div className={styles.box}>
+      <div className={styles.box}>
         <div className={styles.container}>
           <div className={styles.profile}>
             <form encType="multipart/form-data">
@@ -337,7 +352,7 @@ const UserInfo = () => {
             <p>탈퇴 시 작성하신 포스트 및 댓글과 반려동물 등록 정보가 모두 삭제되며 복구되지 않습니다.</p>
           </div>
         </div>
-      </div> : <div className={styles.box} style={{marginLeft: "100px"}}>loading</div>}
+      </div> 
     </div>
   );
 };

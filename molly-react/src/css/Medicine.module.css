@@ -1,0 +1,115 @@
+.medicineContainer {
+    z-index: 5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #adaaa790;
+}
+
+.modalContainer {
+    width: 560px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #FDFDFD;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -280px;
+    margin-top: -250px;
+}
+
+.modalContainer>span:first-child {
+    position: absolute;
+    top: -30px;
+    right: 560px;
+    cursor: pointer;
+}
+
+.modalContainer>h1 {
+    font-size: 20px;
+    margin: 30px 40px;
+    color: #656565;
+}
+
+.datepicker {
+    display: inline-block;
+}
+
+.custominput {
+    color: #827870;
+    background-color: #EBE7E3;
+    border-style: none;
+    border-radius: 10px;
+    padding: 7px;
+    box-sizing: border-box;
+    width: 110px;
+}
+
+.drug {
+    margin-bottom: 10px;
+}
+
+.drug>input {
+    width: 120px;
+    border-radius: 10px;
+    color: #656565;
+    background-color: #EBE7E3;
+    border: none;
+    text-align: center;
+    caret-color: #C7C3BF;
+    height: 27px;
+    font-size: 13px;
+    margin-left: 35px;
+}
+
+.drug>input:focus {
+    outline: none;
+}
+
+.drug>input::placeholder {
+    color: #b4b1ad;
+}
+
+.drug>p {
+    display: inline-block;
+    margin: 0 10px 0 20px;
+    color: #827870;
+}
+
+.drug>span {
+    position: absolute;
+    top: 88px;
+    right: 30px;
+    cursor: pointer;
+}
+
+.medicineData {
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    margin-bottom: -10px;
+    margin-left: 34px;
+}
+
+.medicineData>p {
+    color: #827870;
+    background-color: #EBE7E3;
+    padding: 6px 15px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-right: 20px;
+}
+
+.medicineData>span:nth-child(2) {
+    color: #827870;
+    font-size: 14px;
+    margin-right: 20px;
+}
+
+.medicineData>span:nth-child(3) {
+    display: inline-block;
+    padding-top: 5px;
+    cursor: pointer;
+}
