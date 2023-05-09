@@ -7,12 +7,12 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Button} from '../../components/Button.js';
-import Vaccine from '../../components/pet/Vaccine';
 import DatePicker from 'react-datepicker';
 import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { registerPet } from '../store/petSlice';
+import RegisterVaccine from '../../components/pet/RegiterVaccine';
 
 const RegisterPet = () => {
   const [petType, setPetType] = useState('DOG'); // dog, cat, rabbit
@@ -432,9 +432,8 @@ const RegisterPet = () => {
               <Button name="등록"/>
             </div>
           </div>
-        {modal && <Vaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} dateFormat={dateFormat} />}
+        {modal && <RegisterVaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} dateFormat={dateFormat} />}
         </form>
-        <button>확인</button>
       </div>  
     </div>
   );
