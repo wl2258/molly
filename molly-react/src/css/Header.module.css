@@ -99,7 +99,7 @@
 
 .userinfo::before {
   position: absolute;
-  bottom: 67px;
+  bottom: 64px;
   left: 38px;
   content: "";
   border: 0.7em solid transparent; 
@@ -138,7 +138,7 @@
 
 .petinfo::after {
   position: absolute;
-  top: -24px;
+  top: -23px;
   right: 45px;
   content: "";
   border: 0.7em solid transparent; 

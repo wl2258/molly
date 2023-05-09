@@ -16,7 +16,7 @@ const UserInfo = () => {
   const [effectiveColor, setEffectiveColor] = useState(""); // 안내 문구 색 설정
   const [modal, setModal] = useState(false); // 프로필 이미지 업로드 모달
   const [save, setSave] = useState(false); // 저장 여부
-  const [loading, setLoading] = useState(true); // 로딩 여부
+  const [loading, setLoading] = useState(false); // 로딩 여부
 
   let color = disabled ? "#D6CCC3" : "#B27910";
 
@@ -24,22 +24,23 @@ const UserInfo = () => {
 
   // 유저 정보 get
   useEffect(() => {
+    setLoading(true);
+
     const config = {
       headers : {
         Authorization : localStorage.getItem("accessToken")
       }
     }
 
-    const fetchData = async function fetch() {
-      const response = await axiosInstance.get(`/api/auth/account`, config);
-      setUser(response.data);
-      setImgFile(response.data.profileImage);
-      if(Object.keys(user).length === 0) {
-        setLoading(true);
-      } else setLoading(false);
-    }
-
-    fetchData();
+    axiosInstance.get(`/api/auth/account`, config)
+      .then((response) => {
+        setLoading(false);
+        setUser(response.data);
+        setImgFile(response.data.profileImage);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
 
   }, [save])
 

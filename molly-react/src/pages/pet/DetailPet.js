@@ -13,27 +13,26 @@ let CustomBody = styled.div`
 
 const DetailPet = () => {
   let {id} = useParams();
-  const [text, setText] = useState({});
-  const [loading, setLoading] = useState(true)
+  const [text, setText] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
+
     const config = {
       headers : {
         Authorization : localStorage.getItem("accessToken")
       }
     }
 
-    const fetchData = async function fetch() {
-      const response = await axiosInstance.get(`/api/auth/pet/${id}`, config);
-      if(response.data.code === 1) {
+    axiosInstance.get(`/api/auth/pet/${id}`, config)
+      .then((response) => {
+        setLoading(false);
         setText(response.data.data);
-        if(Object.keys(text).length === 0) {
-          setLoading(true);
-        } else setLoading(false);
-      }
-    }
-
-    fetchData();
+      })
+      .catch((e) => {
+        console.log(e);
+      })
   }, [])
 
   const axiosInstance = axios.create({
@@ -115,10 +114,24 @@ const DetailPet = () => {
     else if(day >= 1825) return text.weight * 2
   }
 
+  if (loading) {
+    return (
+      <div>
+        <Header />
+        <CustomBody><p style={{marginLeft: "100px"}}>loading</p>
+        </CustomBody>
+      </div>
+    )
+  }
+
+  if (!text) {
+    return null;
+  }
+
   return (
     <div>
       <Header />
-      {!loading ? <CustomBody>
+      <CustomBody>
         <div className={styles.container}>
           <div className={styles.info}>
             <img
@@ -216,7 +229,7 @@ const DetailPet = () => {
           <Button name="삭제하기"/>
           <Button name="수정하기" onClick={() => {navigate(`/updatepet/${id}`)}}/>
         </div>
-      </CustomBody> : <CustomBody><p style={{marginLeft: "100px"}}>loading</p></CustomBody>}
+      </CustomBody>
     </div>
   );
 };
