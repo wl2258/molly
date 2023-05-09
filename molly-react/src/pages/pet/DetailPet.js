@@ -13,7 +13,7 @@ let CustomBody = styled.div`
 
 const DetailPet = () => {
   let {id} = useParams();
-  const [text, setText] = useState(null);
+  const [text, setText] = useState({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,8 +27,8 @@ const DetailPet = () => {
 
     axiosInstance.get(`/api/auth/pet/${id}`, config)
       .then((response) => {
-        setLoading(false);
         setText(response.data.data);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e);
@@ -114,6 +114,23 @@ const DetailPet = () => {
     else if(day >= 1825) return text.weight * 2
   }
 
+  const deletePet = () => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken")
+      }
+    }
+
+    axiosInstance.delete(`/api/auth/pet/${id}`, config)
+      .then((response) => {
+        console.log(response);
+        console.log("삭제 완료");
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
   if (loading) {
     return (
       <div>
@@ -124,7 +141,7 @@ const DetailPet = () => {
     )
   }
 
-  if (!text) {
+  if (Object.keys(text).length === 0 ) {
     return null;
   }
 
@@ -166,13 +183,13 @@ const DetailPet = () => {
               <br/>
               <h4 style={{marginRight: "27px"}}>수술이력</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="있음" checked={text.surgery[0] === undefined ? false : true}/>
+                <input type="radio" readOnly={true} value="있음" checked={text.surgery === null ? false : true}/>
                 <span>있음</span>
-                <input type="radio" readOnly={true} value="없음" checked={text.surgery[0] === undefined ? true : false}/>
+                <input type="radio" readOnly={true} value="없음" checked={text.surgery === null ? true : false}/>
                 <span>없음</span>
               </label>
               <br/>
-              {text.surgery[0] !== undefined ? 
+              {text.surgery !== null ? 
                 text.surgery.map((item) => {
                   return (
                     <div className={styles.surgery}>
@@ -185,7 +202,7 @@ const DetailPet = () => {
               <div className={styles.medicine}>
                 <h4>복용약</h4>
                 <div>
-                  {text.medication.map((item) => {
+                  {text.medication !== null ? text.medication.map((item) => {
                       return (
                         <div className={styles.medicineinfo}> 
                           <p>{item.medicationName}</p>
@@ -194,7 +211,7 @@ const DetailPet = () => {
                         </div>
                       )
                     })
-                  }
+                  : null}
                 </div>
               </div>
               <h4>주의할 점</h4>
@@ -215,18 +232,18 @@ const DetailPet = () => {
             <br/>
             <span>권장 운동량</span>
             <h4>💉 예방접종 이력</h4>
-            {text.vaccination.map((item) => {
+            {text.vaccination !== null ? text.vaccination.map((item) => {
               return (
                 <div className={styles.vaccine}>
                   <span>{item.vaccinationDate}</span>
                   <span>{item.vaccinationName}</span>
                 </div>
               )
-            })}
+            }) : null}
           </div>
         </div>
         <div className={styles.btn}>
-          <Button name="삭제하기"/>
+          <Button name="삭제하기" onClick={deletePet}/>
           <Button name="수정하기" onClick={() => {navigate(`/updatepet/${id}`)}}/>
         </div>
       </CustomBody>

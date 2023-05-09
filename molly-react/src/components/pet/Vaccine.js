@@ -21,10 +21,11 @@ const Vaccine = (props) => {
   }, []);
   const [vaccine, setVaccine] = useState(false);
   const [vaccineValue, setVaccineValue] = useState('종합백신 1차');
+  const [vaccineDate, setVaccineDate] = useState(new Date());
+  const [vaccineHistory, setVaccineHistory] = useState(props.text.vaccination);
   const vaccineNo = useRef(1);
 
-  const [vaccineDate, setVaccineDate] = useState(new Date());
- 
+  
   return (
     <div className={styles.vaccine}>
       <div className={styles.modalContainer}>
@@ -49,20 +50,20 @@ const Vaccine = (props) => {
           />
         </div> 
         <span onClick={() => {
-          props.setVaccineHistory([...props.vaccineHistory, {
+          setVaccineHistory([...vaccineHistory, {
             vaccineId : vaccineNo.current++,
             vaccinationName : vaccineValue,
             vaccinationDate : props.dateFormat(vaccineDate),
           }])
         }}><FiPlus color="#AFA79F" size="18px"/></span>
         <div>
-          {props.vaccineHistory.map((data, index) => {
+          {vaccineHistory.map((data, index) => {
             return (
               <div key={index} className={styles.vaccineHistory}> 
                 <span>{data.vaccinationName}</span>
                 <span>{data.vaccinationDate}</span>
                 <span onClick={() => {
-                  props.setVaccineHistory(props.vaccineHistory.filter(vaccineHistory => vaccineHistory.vaccineId !== data.vaccineId))
+                  setVaccineHistory(vaccineHistory.filter(vaccineHistory => vaccineHistory.vaccineId !== data.vaccineId))
                 }}><TiDelete size="18px" color="#827870"/></span>
               </div>
             )
