@@ -3,9 +3,7 @@ package kr.co.kumoh.illdang100.mollyspring.domain.board;
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.PetTypeEnum;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,6 +12,8 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Board extends BaseTimeEntity {
 
     @Id
@@ -43,6 +43,15 @@ public class Board extends BaseTimeEntity {
     private long views;
 
     @Column(nullable = false)
+    private long likyCnt;
+
+    @Column(nullable = false)
+    private long commentCnt;
+
+    @Column(nullable = false)
+    private boolean hasImage;
+
+    @Column(nullable = false)
     private boolean isNotice;
 
     public Board(Account account, CreatePostRequest createPostRequest) {
@@ -52,6 +61,13 @@ public class Board extends BaseTimeEntity {
         this.category = BoardEnum.valueOf(createPostRequest.getCategory());
         this.petType = PetTypeEnum.valueOf(createPostRequest.getPetType());
         this.views = 0;
+        this.likyCnt = 0;
+        this.commentCnt = 0;
+        this.hasImage = false;
         this.isNotice = false;
+    }
+
+    public void changeHasImage(boolean hasImage) {
+        this.hasImage = hasImage;
     }
 }
