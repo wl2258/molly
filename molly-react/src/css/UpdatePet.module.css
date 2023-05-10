@@ -144,7 +144,7 @@ margin-top: -30px;
 margin-left: -3px;
 }
 
-.radio > span {
+.radio > label > span {
 color: #827870;
 font-size: 15px;
 margin-right: 20px;
