@@ -10,6 +10,8 @@ import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.image.BoardImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,10 +42,11 @@ public class BoardService {
 
         // 게시글 이미지 저장
         List<MultipartFile> boardImages = createPostRequest.getBoardImages();
-        if (!boardImages.isEmpty()) {
+        if (boardImages != null && !boardImages.isEmpty()) {
             for (MultipartFile boardImage : boardImages) {
                 try {
                     saveBoardImage(board, boardImage);
+                    board.changeHasImage(true);
                 } catch (Exception e) {
                     throw new CustomApiException(e.getMessage());
                 }
@@ -54,8 +57,9 @@ public class BoardService {
     }
 
     // TODO: 게시글 전체 리스트 조회 (페이징)
-    public void getPostList() {
+    public Page<SearchPostListDto> getPostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
 
+        return boardRepository.findPagePostList(retrievePostListCondition, pageable);
     }
 
     // TODO: 게시글 상세조회
