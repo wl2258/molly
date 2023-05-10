@@ -17,12 +17,14 @@ const UserInfo = () => {
   const [modal, setModal] = useState(false); // 프로필 이미지 업로드 모달
   const [save, setSave] = useState(false); // 저장 여부
   const [loading, setLoading] = useState(false); // 로딩 여부
+  const [accountLogo, setAccountLogo] = useState("");
+  const [email, setEmail] = useState("");
 
   let color = disabled ? "#D6CCC3" : "#B27910";
 
   const imgRef = useRef();
 
-  // 유저 정보 get
+  //유저 정보 get
   useEffect(() => {
     setLoading(true);
 
@@ -35,14 +37,29 @@ const UserInfo = () => {
     axiosInstance.get(`/api/auth/account`, config)
       .then((response) => {
         setUser(response.data);
-        setImgFile(response.data.profileImage);
         setLoading(false);
       })
       .catch((e) => {
         console.log(e);
       })
 
-  }, [save])
+  }, [])
+
+  // useEffect(() => {
+  //   setUser({
+  //     "profileImage": "이미지 URL",
+  //     "nickname": "사용자 닉네임",
+  //     "provider": "kakao",
+  //     "email": "ddd@naver.com"
+  //   })
+  // }, [])
+
+  useEffect(() => {
+    setImgFile(user.profileImage);
+    setNickName(user.nickname);
+    setAccountLogo(user.provider);
+    setEmail(user.email);
+  }, [user]);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -123,6 +140,9 @@ const UserInfo = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImgFile(reader.result);
+    };
 
     const formData = new FormData();
     if(imgRef.current.files[0] !== undefined) {
@@ -139,9 +159,6 @@ const UserInfo = () => {
       const response = await axiosInstance.patch(`/api/auth/account/profile-image`, formData, config)
       if(response.data.code === 1) {
         console.log("사용자 이미지 수정 완료");
-        reader.onloadend = () => {
-          setImgFile(reader.result);
-        };
         setModal(!modal);
       }
     }
@@ -208,12 +225,12 @@ const UserInfo = () => {
         Authorization : localStorage.getItem("accessToken")
       }
     }
+    setImgFile("");
 
     const fetchData = async function fetch() {
       const response = await axiosInstance.delete(`/api/auth/account/profile-image`, null, config);
       if(response.data.code === 1) {
         console.log("기본 이미지 변경 완료");
-        setImgFile("");
         setModal(!modal);
       }
     }
@@ -285,7 +302,7 @@ const UserInfo = () => {
               <div className={styles.profileuser} onClick={handleModal}>
                 <img
                   className={styles.profileimg}
-                  src={imgFile && imgFile !== "" ? imgFile : process.env.PUBLIC_URL + '/img/profile.png'}
+                  src={imgFile !== null ? imgFile : process.env.PUBLIC_URL + '/img/profile.png'}
                   alt="프로필 이미지"
                 />
               </div>
@@ -328,7 +345,7 @@ const UserInfo = () => {
               </div> :
               <div className={styles.modal}>
                 <div className={styles.nickname}>
-                  {user.nickname}
+                  {nickname}
                 </div>
                 <span className={styles.editicon} onClick={()=>{setEdit(true)}}><MdModeEdit color="#827870" size="25px"/></span>
               </div>
@@ -339,11 +356,11 @@ const UserInfo = () => {
           <div className={styles.info}>
             <div>
               <h1>회원가입 정보</h1>
-              {user.provider === "kakao" ? 
+              {accountLogo === "kakao" ? 
                 <img src={process.env.PUBLIC_URL + '/img/kakao-account.png'} alt="kakao 로고" width="40px" height="40px"/> 
                 : <img src={process.env.PUBLIC_URL + '/img/google-account.png'} alt="google 로고" width="50px"/> 
               }
-              <p>{user.email}</p>
+              <p>{email}</p>
             </div>
             <div>
               <h1>탈퇴하기</h1>

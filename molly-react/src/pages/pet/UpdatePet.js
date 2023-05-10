@@ -26,6 +26,7 @@ const UpdatePet = () => {
   const [imgFile, setImgFile] = useState("");
   const [birthdayDate, setBirthdayDate] = useState(new Date());
   const [profile, setProfile] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({});
 
@@ -97,6 +98,7 @@ const UpdatePet = () => {
     setNeutered(text.neuteredStatus === false ? "안 함" : "함");
     setWeight(text.weight);
     setCaution(text.caution);
+    setImgFile(text.profileImage);
     setLoading(false);
   }, [text])
 
@@ -186,14 +188,14 @@ const UpdatePet = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImgFile(reader.result);
+    };
 
     const formData = new FormData();
     formData.append("petId", Number(id));
-    formData.append("profileImageName", imgRef.current.files[0].name);
     if (imgRef.current.files[0] !== undefined) {
-      formData.append("profileImage", imgRef.current.files[0]);
-    } else {
-      formData.append("profileImage", null);
+      formData.append("petProfileImage", imgRef.current.files[0]);
     }
 
     const config = {
@@ -205,9 +207,6 @@ const UpdatePet = () => {
     axiosInstance.post(`/api/auth/pet/image`, formData, config)
       .then((response)=>{
         console.log(response);
-        reader.onloadend = () => {
-          setImgFile(reader.result);
-        };
         setProfile(!profile);
       })
   };
@@ -256,19 +255,18 @@ const UpdatePet = () => {
     }
 
     const data = {
-      "petId" : Number(id),
       "petType" : petType,
       "petName" : petNickName,
       "species" : petValue,
       "birthdate" : birthdayDate,
       "gender" : gender,
-      "neuteredStatus" : false,
-      "weight" : 3,
+      "neuteredStatus" : neuteredStatus,
+      "weight" : Number(weight),
       "caution" : caution
     }
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.post(`/api/auth/pet`, data, config);
+      const response = await axiosInstance.post(`/api/auth/pet/${id}`, data, config);
       console.log(response);
     }
 
@@ -282,18 +280,22 @@ const UpdatePet = () => {
         Authorization : localStorage.getItem("accessToken")
       }
     }
+    setImgFile("");
 
     axiosInstance.delete(`/api/auth/pet/image/${id}`, null, config)
       .then((response) => {
         console.log(response);
         console.log("기본 이미지 변경 완료")
-        setImgFile("");
         setProfile(!profile);
       });
   }
 
   const handleProfile = () => {
     setProfile(!profile);
+  }
+
+  const handleConfirm = () => {
+    setConfirm(!confirm);
   }
 
   function dateFormat(date) {
@@ -453,6 +455,7 @@ const UpdatePet = () => {
           <button style={{ cursor: "pointer" }} onClick={handleVaccineModal} type="button">수정</button>
           {vaccineModal && <Vaccine onClick={handleVaccineModal} dateFormat={dateFormat} text={text}/>}
         </div>
+        {confirm && <ConfirmModal onClick={handleConfirm}/>}
       </div>
     </div>
   );
@@ -514,6 +517,32 @@ const Profile = (props) => {
         </div>
         <div>
           <p onClick={props.onClick}>취소</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ConfirmModal = (props) => {
+  useEffect(() => {
+    document.body.style.cssText = `
+      position: fixed; 
+      top: -${window.scrollY}px;
+      overflow-y: scroll;
+      width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    };
+  }, []);
+
+  return (
+    <div className={styles.confirmModal}>
+      <div className={styles.confirm}>
+        <div>
+          <p>수정되었습니다</p>
+          <Button name="확인" onClick={props.onClick}/>
         </div>
       </div>
     </div>

@@ -108,8 +108,6 @@ const SignUp = () => {
     formData.append("nickname", nickname);
     if(imgRef.current.files[0] !== undefined) {
       formData.append("accountProfileImage", imgRef.current.files[0]);
-    } else {
-      formData.append("profileImage", "");
     }
 
     const config = {
