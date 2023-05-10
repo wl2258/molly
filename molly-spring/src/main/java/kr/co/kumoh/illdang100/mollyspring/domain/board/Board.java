@@ -12,8 +12,6 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Board extends BaseTimeEntity {
 
     @Id
