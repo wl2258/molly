@@ -57,7 +57,7 @@ public class BoardService {
     }
 
     // TODO: 게시글 전체 리스트 조회 (페이징)
-    public Page<SearchPostListDto> getPostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
+    public Page<RetrievePostListDto> getPostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
 
         return boardRepository.findPagePostList(retrievePostListCondition, pageable);
     }

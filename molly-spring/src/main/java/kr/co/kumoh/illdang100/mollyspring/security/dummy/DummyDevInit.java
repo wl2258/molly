@@ -13,9 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class DummyDevInit extends DummyObject{
-
-    private final AccountRepository accountRepository;
+public class DummyDevInit extends DummyObject {
 
     private final BCryptPasswordEncoder passwordEncoder;
 

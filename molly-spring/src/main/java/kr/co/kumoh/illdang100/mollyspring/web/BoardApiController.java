@@ -51,16 +51,20 @@ public class BoardApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정에 성공했습니다", null), HttpStatus.OK);
     }
 
+    /**
+     * 게시글 리스트 조회
+     *
+     * @param retrievePostListCondition 조회 조건
+     * @param pageable                  정렬 조건, 페이지, 사이즈
+     * @return 게시글 리스트
+     */
     @GetMapping("/board/list")
     public ResponseEntity<?> retrievePostList(@ModelAttribute @Valid RetrievePostListCondition retrievePostListCondition,
                                               @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
                                               BindingResult bindingResult) {
 
-        Page<SearchPostListDto> postList = boardService.getPostList(retrievePostListCondition, pageable);
-
-        SearchPostListResult searchPostListResult = new SearchPostListResult();
-        searchPostListResult.setResult(postList);
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 리스트 조회에 성공했습니다", searchPostListResult), HttpStatus.OK);
+        Page<RetrievePostListDto> postList = boardService.getPostList(retrievePostListCondition, pageable);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 리스트 조회에 성공했습니다", postList), HttpStatus.OK);
     }
 
     @GetMapping("/board/{boardId}")
