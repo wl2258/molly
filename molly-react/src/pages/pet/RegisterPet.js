@@ -144,9 +144,7 @@ const RegisterPet = () => {
     formData.append("petName", petNickName);
     formData.append("species", petValue);
     if(imgRef.current.files[0] !== undefined) {
-      formData.append("profileImage", imgRef.current.files[0]);
-    } else {
-      formData.append("profileImage", null);
+      formData.append("petProfileImage", imgRef.current.files[0]);
     }
     formData.append("birthdate", dateFormat(birthdayDate));
     formData.append("gender", gender);

@@ -153,7 +153,7 @@ const DetailPet = () => {
           <div className={styles.info}>
             <img
               className={styles.profileimg}
-              src={process.env.PUBLIC_URL + '/img/profile.png'}
+              src={text.profileImage !== null ? text.profileImage : process.env.PUBLIC_URL + '/img/profile.png'}
               alt="프로필 이미지"
               width="70px"
             />

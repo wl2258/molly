@@ -278,7 +278,7 @@ bottom: 210px;
 left: 470px;
 }
 
-.profileModal {
+.profileModal, .confirmModal {
   z-index: 5;
   position: fixed;
   top: 0;
@@ -356,4 +356,29 @@ left: 470px;
   cursor: pointer;
   margin: 12px 15px 0;
   font-size: 15px;
+}
+
+.confirm {
+  width: 240px;
+  height: 120px;
+  border-radius: 20px;
+  background-color: #FDFDFD;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -120px;
+  margin-top: -60px;
+  display: flex;
+  justify-content: center;
+}
+
+.confirm > div {
+  display: flex;
+  align-items: center;
+}
+
+.confirm > div > p {
+  color: #656565;
+  font-weight: 800;
+  margin: 0 10px;
 }
