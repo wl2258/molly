@@ -10,8 +10,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 public class BoardReqDto {
 
-    @Getter
-    @Setter
+    @Getter @Setter
     public static class CreatePostRequest {
 
         @NotBlank
@@ -24,6 +23,16 @@ public class BoardReqDto {
         private List<MultipartFile> boardImages;
         @NotBlank
         @Pattern(regexp = "(MEDICAL|FREE)$")
+        private String category;
+        @NotBlank
+        @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
+        private String petType;
+    }
+
+    @Getter @Setter
+    public static class RetrievePostListCondition {
+        @NotBlank
+        @Pattern(regexp = "(MEDICAL|FREE|ALL)$")
         private String category;
         @NotBlank
         @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")

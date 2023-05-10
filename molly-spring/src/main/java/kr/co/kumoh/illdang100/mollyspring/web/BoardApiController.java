@@ -5,6 +5,10 @@ import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,8 +30,9 @@ public class BoardApiController {
 
     /**
      * 게시글 작성
+     *
      * @param createPostRequest 게시글 정보
-     * @param principalDetails 인증된 사용자 정보
+     * @param principalDetails  인증된 사용자 정보
      * @return 저장된 게시글 PK
      */
     @PostMapping("/auth/board")
@@ -47,9 +52,15 @@ public class BoardApiController {
     }
 
     @GetMapping("/board/list")
-    public ResponseEntity<?> retrievePostList() {
+    public ResponseEntity<?> retrievePostList(@ModelAttribute @Valid RetrievePostListCondition retrievePostListCondition,
+                                              @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+                                              BindingResult bindingResult) {
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 리스트 조회에 성공했습니다", null), HttpStatus.OK);
+        Page<SearchPostListDto> postList = boardService.getPostList(retrievePostListCondition, pageable);
+
+        SearchPostListResult searchPostListResult = new SearchPostListResult();
+        searchPostListResult.setResult(postList);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 리스트 조회에 성공했습니다", searchPostListResult), HttpStatus.OK);
     }
 
     @GetMapping("/board/{boardId}")
