@@ -18,8 +18,8 @@ const UpdatePet = () => {
   const [typeView, setTypeView] = useState(false); // 동물 종류 드롭다운 버튼
   const [pet, setPet] = useState(false); // 동물 품종 드롭다운 버튼
   const [petValue, setPetValue] = useState('BICHON'); // 동물 품종
-  const [gender, setGender] = useState([]); // 성별 라디오 버튼
-  const [neutered, setNeutered] = useState([]); // 중성화 라디오 버튼
+  const [gender, setGender] = useState(""); // 성별 라디오 버튼
+  const [neutered, setNeutered] = useState(""); // 중성화 라디오 버튼
   const [vaccineModal, setVaccineModal] = useState(false); // 예방접종 이력 추가 모달
   const [surgeryModal, setSurgeryModal] = useState(false); // 수술 이력 추가 모달
   const [medicineModal, setMedicineModal] = useState(false); // 복용약 이력 추가 모달
@@ -35,31 +35,71 @@ const UpdatePet = () => {
 
   const imgRef = useRef();
 
-  useEffect(() => {
-    setLoading(true);
+  // useEffect(() => {
+  //   setLoading(true);
 
-    const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
-      }
-    }
+  //   const config = {
+  //     headers : {
+  //       Authorization : localStorage.getItem("accessToken")
+  //     }
+  //   }
 
-    axiosInstance.get(`/api/auth/pet/${id}`, config)
-      .then((response) => {
-        setText(response.data.data);
-        setPetType(text.petType);
-        setPetNickName(text.petName);
-        setPetValue(text.species);
-        setBirthdayDate(new Date(text.birthdate));
-        setWeight(text.weight);
-        setCaution(text.caution);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-  }, [])
+  //   axiosInstance.get(`/api/auth/pet/${id}`, config)
+  //     .then((response) => {
+  //       setText(response.data.data);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     })
+  // }, [])
   
+  useEffect(() => {
+    setText({
+			"userId": 32492,
+			"petId": 1234,
+			"petType": "DOG",
+			"petName": "molly",
+			"species": "MALTESE",
+			"profileImage": "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
+			"birthDate": "2013-08-07",
+			"gender": "FEMALE",
+			"neuteredStatus" : false,
+			"weight" : 3.4,
+			"caution" : "분리불안 심함",
+			"surgery": [
+				{
+					"surgeryName": "수직이도성형술",
+					"surgeryDate": "2023-01-01"
+				},
+			],
+			"medication": [
+				{
+					"medicationName": "넥스가드",
+					"medicationStart": "2023-02-01",
+					"medicationEnd": "2023-02-15"
+				},
+			],
+			"vaccination": [
+				{
+					"vaccinationName": "종합백신1차",
+					"vaccinationDate": "2018-01-01"
+				},
+			]
+	  })
+  }, [])
+
+  useEffect(() => {
+    setPetType(text.petType);
+    setPetNickName(text.petName);
+    setPetValue(text.species);
+    setBirthdayDate(new Date());
+    setGender(text.gender);
+    setNeutered(text.neuteredStatus === false ? "안 함" : "함");
+    setWeight(text.weight);
+    setCaution(text.caution);
+    setLoading(false);
+  }, [text])
+
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
   });
@@ -162,7 +202,7 @@ const UpdatePet = () => {
       }
     }
 
-    axiosInstance.put(`/api/auth/pet/image`, formData, config)
+    axiosInstance.post(`/api/auth/pet/image`, formData, config)
       .then((response)=>{
         console.log(response);
         reader.onloadend = () => {
@@ -171,9 +211,6 @@ const UpdatePet = () => {
         setProfile(!profile);
       })
   };
-
-  let neuteredStatus;
-  neutered === "함" ? neuteredStatus = false : neuteredStatus = true;
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -208,6 +245,9 @@ const UpdatePet = () => {
   // }
 
   const handleUpdate = () => {
+    let neuteredStatus;
+    neutered === "함" ? neuteredStatus = true : neuteredStatus = false;
+
     const config = {
       headers : {
         Authorization : localStorage.getItem("accessToken"),
@@ -222,13 +262,13 @@ const UpdatePet = () => {
       "species" : petValue,
       "birthdate" : birthdayDate,
       "gender" : gender,
-      "neuteredStatus" : neuteredStatus,
-      "weight" : Number(weight),
+      "neuteredStatus" : false,
+      "weight" : 3,
       "caution" : caution
     }
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.put(`/api/auth/pet`, data, config);
+      const response = await axiosInstance.post(`/api/auth/pet`, data, config);
       console.log(response);
     }
 
@@ -372,18 +412,18 @@ const UpdatePet = () => {
             <br />
             <h4>성별</h4>
             <label className={styles.radio}>
-              <input type="radio" onChange={handleGenderButton} value="MALE" checked={text.gender === "MALE"} />
-              <span>암컷</span>
-              <input type="radio" onChange={handleGenderButton} value="FEMALE" checked={text.gender === "FEMALE"} />
-              <span>수컷</span>
+              <input type="radio" id="female" onChange={handleGenderButton} value="FEMALE" checked={gender === "FEMALE"}/>
+              <label htmlFor="female"><span>암컷</span></label>
+              <input type="radio" id="male" onChange={handleGenderButton} value="MALE" checked={gender === "MALE"} />
+              <label htmlFor="male"><span>수컷</span></label>
             </label>
             <br />
             <h4>중성화</h4>
             <label className={styles.radio}>
-              <input type="radio" onChange={handleNeuteredButton} value="안 함" checked={neuteredStatus === true ? false : true} />
-              <span>함</span>
-              <input type="radio" onChange={handleNeuteredButton} value="함" checked={neuteredStatus === true ? true : false} />
-              <span>안 함</span>
+              <input type="radio" id="true" onChange={handleNeuteredButton} value="함" checked={neutered === "함"} />
+              <label htmlFor="true"><span>함</span></label>
+              <input type="radio" id="false" onChange={handleNeuteredButton} value="안 함" checked={neutered === "안 함"} />
+              <label htmlFor="false"><span>안 함</span></label>
             </label>
             <br />
             <h4>주의할 점</h4>
