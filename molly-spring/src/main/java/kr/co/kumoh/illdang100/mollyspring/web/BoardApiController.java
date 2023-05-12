@@ -2,6 +2,7 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
+import kr.co.kumoh.illdang100.mollyspring.security.jwt.JwtVO;
 import kr.co.kumoh.illdang100.mollyspring.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,23 +55,29 @@ public class BoardApiController {
     /**
      * 게시글 리스트 조회
      *
-     * @param retrievePostListCondition 조회 조건
+     * @param retrievePostListCondition 조회 조건, 검색어
      * @param pageable                  정렬 조건, 페이지, 사이즈
      * @return 게시글 리스트
      */
     @GetMapping("/board/list")
     public ResponseEntity<?> retrievePostList(@ModelAttribute @Valid RetrievePostListCondition retrievePostListCondition,
-                                              @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
-                                              BindingResult bindingResult) {
+                                              BindingResult bindingResult,
+                                              @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<RetrievePostListDto> postList = boardService.getPostList(retrievePostListCondition, pageable);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 리스트 조회에 성공했습니다", postList), HttpStatus.OK);
     }
 
     @GetMapping("/board/{boardId}")
-    public ResponseEntity<?> retrievePostDetail(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity<?> retrievePostDetail(@PathVariable("boardId") Long boardId,
+                                                @RequestHeader(value = JwtVO.ACCESS_TOKEN_HEADER, required = false) String jwtToken) {
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세 조회에 성공했습니다", null), HttpStatus.OK);
+        // 만약 사용자가 로그인을 수행한 상태라면 AccessToken을 받아 verify 수행 후 얻은 PrincipalDetails 객체로 사용자 구분
+        // 이때 AccessToken은 null일 수 있다.
+
+        PostDetailResponse postDetailResponse = boardService.getPostDetail(boardId, jwtToken);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세 조회에 성공했습니다", postDetailResponse), HttpStatus.OK);
     }
 
     @DeleteMapping("/auth/board/{boardId}")

@@ -1,10 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.domain.Page;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,14 +14,9 @@ public class BoardRespDto {
         private Long boardId;
     }
 
-    @Getter @Setter
-    public static class SearchPostListResult {
-        Page<SearchPostListDto> result;
-    }
-
     @AllArgsConstructor
     @Getter @Setter
-    public static class SearchPostListDto {
+    public static class RetrievePostListDto {
         private String title;
         private String writerNick;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -35,5 +27,34 @@ public class BoardRespDto {
         private long likyCount;
         private boolean hasImage;
         private boolean isNotice;
+    }
+
+    @AllArgsConstructor
+    @Builder
+    @Getter @Setter
+    public static class PostDetailResponse {
+        private boolean isOwner;
+        private String title;
+        private List<String> boardImages;
+        private String content;
+        private String writerNick;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime createdAt;
+        private long views;
+        private String writerProfileImage;
+        private List<BoardCommentDto> comments;
+        private boolean thumbsUp;
+        private long likyCnt;
+    }
+
+    @AllArgsConstructor
+    @Getter @Setter
+    public static class BoardCommentDto {
+        private long commentUserId;
+        private String commentWriteNick;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime commentCreatedAt;
+        private String content;
+        private String commentProfileImage;
     }
 }

@@ -3,16 +3,15 @@ package kr.co.kumoh.illdang100.mollyspring.domain.comment;
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -24,21 +23,16 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    @Column(nullable = false, length = 800)
+    private String commentContent;
+
     @Column(nullable = false)
     private Long accountId;
 
+    // TODO: 사용자 닉네임 또한 마찬가지
     @Column(nullable = false, length = 20)
     private String writerNickname;
 
-    @Embedded
-    private ImageFile writerProfileImage;
-
-    @Builder
-    public Comment(Long id, Board board, Long accountId, String writerNickname, ImageFile writerProfileImage) {
-        this.id = id;
-        this.board = board;
-        this.accountId = accountId;
-        this.writerNickname = writerNickname;
-        this.writerProfileImage = writerProfileImage;
-    }
+    // TODO: 사용자 프로필 이미지 필드 없애고 조회할 때마다 사용자 프로필 이미지 별도로 조회해오기
+    private String writerProfileUrl;
 }
