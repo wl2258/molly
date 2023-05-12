@@ -32,10 +32,10 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public Page<SearchPostListDto> findPagePostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
+    public Page<RetrievePostListDto> findPagePostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
 
-        JPAQuery<SearchPostListDto> query = queryFactory
-                .select(Projections.constructor(SearchPostListDto.class,
+        JPAQuery<RetrievePostListDto> query = queryFactory
+                .select(Projections.constructor(RetrievePostListDto.class,
                         board.boardTitle,
                         account.nickname,
                         board.createdDate,
@@ -48,7 +48,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .from(board)
                 .join(board.account, account)
                 .where(categoryEq(retrievePostListCondition.getCategory()),
-                        board.petType.eq(PetTypeEnum.valueOf(retrievePostListCondition.getPetType())))
+                        petTypeEq(retrievePostListCondition.getPetType()),
+                        searchWordLike(retrievePostListCondition.getSearchWord()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(board.isNotice.desc());
@@ -61,19 +62,26 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                     pathBuilder.get(o.getProperty())));
         }
 
-        List<SearchPostListDto> content = query.fetch();
+        List<RetrievePostListDto> content = query.fetch();
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(board.count())
                 .from(board)
                 .where(categoryEq(retrievePostListCondition.getCategory()),
-                        board.petType.eq(PetTypeEnum.valueOf(retrievePostListCondition.getPetType())));
-
+                        petTypeEq(retrievePostListCondition.getPetType()));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     private BooleanExpression categoryEq(String category) {
         return category.equals("ALL") ? null : board.category.eq(BoardEnum.valueOf(category));
+    }
+
+    private BooleanExpression petTypeEq(String petType) {
+        return petType.equals("ALL") ? null : board.petType.eq(PetTypeEnum.valueOf(petType));
+    }
+
+    private BooleanExpression searchWordLike(String searchWord) {
+        return searchWord != null ? board.boardTitle.like("%" + searchWord + "%") : null;
     }
 }

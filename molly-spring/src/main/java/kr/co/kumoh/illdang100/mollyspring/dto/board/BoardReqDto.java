@@ -3,6 +3,7 @@ package kr.co.kumoh.illdang100.mollyspring.dto.board;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.util.annotation.Nullable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -35,7 +36,9 @@ public class BoardReqDto {
         @Pattern(regexp = "(MEDICAL|FREE|ALL)$")
         private String category;
         @NotBlank
-        @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
+        @Pattern(regexp = "(CAT|DOG|RABBIT|ALL)$")
         private String petType;
+        @Nullable
+        private String searchWord;
     }
 }

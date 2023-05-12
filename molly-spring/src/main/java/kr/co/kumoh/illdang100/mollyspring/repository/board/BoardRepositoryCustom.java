@@ -8,5 +8,5 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 
 public interface BoardRepositoryCustom {
 
-    Page<SearchPostListDto> findPagePostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable);
+    Page<RetrievePostListDto> findPagePostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable);
 }
