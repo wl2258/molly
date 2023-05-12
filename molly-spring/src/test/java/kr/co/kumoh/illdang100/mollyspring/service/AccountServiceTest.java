@@ -1,9 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.kumoh.illdang100.mollyspring.domain.image.AccountImage;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
-import kr.co.kumoh.illdang100.mollyspring.repository.image.AccountImageRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
@@ -33,9 +31,6 @@ class AccountServiceTest extends DummyObject {
 
     @Mock
     private AccountRepository accountRepository;
-
-    @Mock
-    private AccountImageRepository accountImageRepository;
 
     @Mock
     private S3Service s3Service;
@@ -116,19 +111,13 @@ class AccountServiceTest extends DummyObject {
         Account account = newMockAccount(accountId, "kakao_1234", "molly", AccountEnum.CUSTOMER);
         when(accountRepository.findById(any())).thenReturn(Optional.of(account));
 
-        // stub 2
-        ImageFile imageFile =
-                new ImageFile("uploadFileName", "storeFileName", "storeFileUrl");
-        AccountImage accountImage = new AccountImage(1L, account, imageFile);
-        when(accountImageRepository.findByAccount_id(any())).thenReturn(Optional.of(accountImage));
-
         // when
         AccountProfileResponse accountProfileResponse = accountService.getAccountDetail(accountId);
 
         // then
         assertThat(accountProfileResponse.getNickname()).isEqualTo("molly");
         assertThat(accountProfileResponse.getEmail()).isEqualTo("kakao_1234@naver.com");
-        assertThat(accountProfileResponse.getProfileImage()).isEqualTo("storeFileUrl");
+        assertThat(accountProfileResponse.getProfileImage()).isNull();
         assertThat(accountProfileResponse.getProvider()).isEqualTo("kakao");
     }
 
@@ -153,7 +142,7 @@ class AccountServiceTest extends DummyObject {
     }
 
     @Test
-    public void updateAccountProfileImage_test1() throws IOException {
+    public void updateAccountProfileImage_test() throws IOException {
 
         // given
         Long accountId = 1L;
@@ -164,39 +153,8 @@ class AccountServiceTest extends DummyObject {
         when(accountRepository.findById(any())).thenReturn(Optional.of(account));
 
         // stub 2
-        ImageFile imageFile1 =
-                new ImageFile("uploadFileName1", "storeFileName1", "storeFileUrl1");
-        AccountImage accountImage = new AccountImage(1L, account, imageFile1);
-        when(accountImageRepository.findByAccount_id(any())).thenReturn(Optional.of(accountImage));
-
-        // stub 3
         ImageFile imageFile2 =
                 new ImageFile("uploadFileName2", "storeFileName2", "storeFileUrl2");
-        when(s3Service.upload(any(), any())).thenReturn(imageFile2);
-
-        // when
-        accountService.updateAccountProfileImage(accountId, multipartFile);
-
-        // then
-    }
-
-    @Test
-    public void updateAccountProfileImage_test2() throws IOException {
-
-        // given
-        Long accountId = 1L;
-        MockMultipartFile multipartFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
-
-        // stub 1
-        Account account = newMockAccount(accountId, "kakao_1234", "molly", AccountEnum.CUSTOMER);
-        when(accountRepository.findById(any())).thenReturn(Optional.of(account));
-
-        // stub 2
-        when(accountImageRepository.findByAccount_id(any())).thenReturn(Optional.empty());
-
-        // stub 3
-        ImageFile imageFile2 =
-                new ImageFile("uploadFileName", "storeFileName", "storeFileUrl");
         when(s3Service.upload(any(), any())).thenReturn(imageFile2);
 
         // when
@@ -213,10 +171,7 @@ class AccountServiceTest extends DummyObject {
 
         // stub
         Account account = newMockAccount(accountId, "kakao_1234", "molly", AccountEnum.CUSTOMER);
-        ImageFile imageFile1 =
-                new ImageFile("uploadFileName1", "storeFileName1", "storeFileUrl1");
-        AccountImage accountImage = new AccountImage(1L, account, imageFile1);
-        when(accountImageRepository.findByAccount_id(any())).thenReturn(Optional.of(accountImage));
+        when(accountRepository.findById(any())).thenReturn(Optional.of(account));
 
         // when
         accountService.deleteAccountProfileImage(accountId);

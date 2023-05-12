@@ -1,6 +1,5 @@
 SET REFERENTIAL_INTEGRITY FALSE; -- 모든 제약 조건 비활성화
 truncate table account;
-truncate table account_image;
 truncate table board;
 truncate table board_image;
 truncate table comment;
