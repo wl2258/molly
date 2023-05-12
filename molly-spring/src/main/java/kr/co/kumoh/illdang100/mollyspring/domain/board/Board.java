@@ -26,7 +26,7 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false, length = 60)
     private String boardTitle;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 2000)
     private String boardContent;
 
     @Enumerated(EnumType.STRING)
@@ -67,5 +67,9 @@ public class Board extends BaseTimeEntity {
 
     public void changeHasImage(boolean hasImage) {
         this.hasImage = hasImage;
+    }
+
+    public void increaseViews() {
+        views++;
     }
 }
