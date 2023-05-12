@@ -1,11 +1,9 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
-import kr.co.kumoh.illdang100.mollyspring.domain.image.AccountImage;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
-import kr.co.kumoh.illdang100.mollyspring.repository.image.AccountImageRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshToken;
 import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +24,12 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountRespDto.*;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final AccountImageRepository accountImageRepository;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final S3Service s3Service;
 
     /**
      * 닉네임 중복 검사
+     *
      * @param nickname 중복 검사를 원하는 닉네임
      */
     @Transactional(readOnly = true)
@@ -46,11 +44,12 @@ public class AccountService {
 
     /**
      * 회원가입 시 닉네임과 프로필 이미지 저장
+     *
      * @param accountId          회원가입을 원하는 사용자 pk
      * @param saveAccountRequest 사용자 닉네임과 프로필 이미지 정보가 담긴 request dto
      */
     @Transactional
-    public void saveAdditionalAccountInfo(Long accountId, SaveAccountRequest saveAccountRequest){
+    public void saveAdditionalAccountInfo(Long accountId, SaveAccountRequest saveAccountRequest) {
 
         Account account = findAccountByIdOrThrowException(accountId);
 
@@ -60,15 +59,10 @@ public class AccountService {
         account.changeNickname(nickname);
 
         if (saveAccountRequest.getAccountProfileImage() != null) {
-
             try {
                 ImageFile accountImageFile =
                         s3Service.upload(saveAccountRequest.getAccountProfileImage(), FileRootPathVO.ACCOUNT_PATH);
-
-                accountImageRepository.save(AccountImage.builder()
-                        .account(account)
-                        .accountProfileImage(accountImageFile)
-                        .build());
+                account.changeProfileImage(accountImageFile);
             } catch (Exception e) {
                 throw new CustomApiException(e.getMessage());
             }
@@ -90,20 +84,15 @@ public class AccountService {
 
         Account account = findAccountByIdOrThrowException(accountId);
 
-        String provider = getProviderFromUsername(account.getUsername());
+        AccountProfileResponse accountProfileResponse = new AccountProfileResponse(account);
 
-        AccountProfileResponse accountProfileResponse = AccountProfileResponse.builder()
-                .nickname(account.getNickname())
-                .email(account.getEmail())
-                .provider(provider)
-                .build();
-
-        Optional<AccountImage> accountImageOpt = accountImageRepository.findByAccount_id(accountId);
-        accountImageOpt.map(AccountImage::getAccountProfileImage)
-                .ifPresent(image -> accountProfileResponse.setProfileImage(image.getStoreFileUrl()));
+        if (hasAccountProfileImage(account)) {
+            accountProfileResponse.setProfileImage(account.getAccountProfileImage().getStoreFileUrl());
+        }
 
         return accountProfileResponse;
     }
+
 
     @Transactional
     public void updateAccountNickname(Long accountId, String nickname) {
@@ -116,6 +105,7 @@ public class AccountService {
 
     /**
      * 사용자 로그아웃 - 리프래시 토큰 삭제
+     *
      * @param refreshToken 리프래시 토큰
      */
     @Transactional
@@ -130,13 +120,9 @@ public class AccountService {
         }
     }
 
-    private String getProviderFromUsername(String username) {
-        int idx = username.indexOf('_');
-        return username.substring(0, idx);
-    }
-
     /**
      * 사용자 프로필 이미지 변경
+     *
      * @param accountProfileImage 변경하고자 하는 사용자 이미지
      */
     @Transactional
@@ -144,24 +130,21 @@ public class AccountService {
 
         Account account = findAccountByIdOrThrowException(accountId);
 
-        Optional<AccountImage> accountImageOpt = accountImageRepository.findByAccount_id(accountId);
-
         try {
             ImageFile accountImageFile = s3Service.upload(accountProfileImage, FileRootPathVO.ACCOUNT_PATH);
 
-            if (accountImageOpt.isPresent()) {
-                AccountImage findAccountImage = accountImageOpt.get();
-                s3Service.delete(findAccountImage.getAccountProfileImage().getStoreFileName());
-                findAccountImage.changeProfileImage(accountImageFile);
-            } else {
-                accountImageRepository.save(AccountImage.builder()
-                        .account(account)
-                        .accountProfileImage(accountImageFile)
-                        .build());
-            }
+            if (hasAccountProfileImage(account))
+                s3Service.delete(account.getAccountProfileImage().getStoreFileName());
+
+            account.changeProfileImage(accountImageFile);
+
         } catch (Exception e) {
             throw new CustomApiException(e.getMessage());
         }
+    }
+
+    private static boolean hasAccountProfileImage(Account account) {
+        return account.getAccountProfileImage() != null;
     }
 
     /**
@@ -171,11 +154,11 @@ public class AccountService {
     @Transactional
     public void deleteAccountProfileImage(Long accountId) {
 
-        Optional<AccountImage> accountImageOpt = accountImageRepository.findByAccount_id(accountId);
+        Account findAccount = findAccountByIdOrThrowException(accountId);
 
-        accountImageOpt.ifPresent(findAccountImage -> {
-            s3Service.delete(findAccountImage.getAccountProfileImage().getStoreFileName());
-            accountImageRepository.delete(findAccountImage);
-        });
+        if (hasAccountProfileImage(findAccount)) {
+            s3Service.delete(findAccount.getAccountProfileImage().getStoreFileName());
+            findAccount.changeProfileImage(null);
+        }
     }
 }

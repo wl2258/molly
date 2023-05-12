@@ -1,16 +1,15 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.account;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Builder
 public class Account extends BaseTimeEntity {
 
@@ -35,17 +34,14 @@ public class Account extends BaseTimeEntity {
     @Column(unique = true, length = 25)
     private String email;
 
-    @Builder
-    public Account(Long id, String username, String password, String nickname, AccountEnum role, String email) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.nickname = nickname;
-        this.role = role;
-        this.email = email;
-    }
+    @Embedded
+    private ImageFile accountProfileImage;
 
     public void changeNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void changeProfileImage(ImageFile imageFile) {
+        this.accountProfileImage = imageFile;
     }
 }
