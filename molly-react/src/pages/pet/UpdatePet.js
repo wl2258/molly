@@ -69,19 +69,22 @@ const UpdatePet = () => {
 			"caution" : "분리불안 심함",
 			"surgery": [
 				{
+          "surgeryId": 1,
 					"surgeryName": "수직이도성형술",
 					"surgeryDate": "2023-01-01"
 				},
 			],
 			"medication": [
 				{
+          "medicationId": 1,
 					"medicationName": "넥스가드",
-					"medicationStart": "2023-02-01",
-					"medicationEnd": "2023-02-15"
+					"medicationStartDate": "2023-02-01",
+					"medicationEndDate": "2023-02-15"
 				},
 			],
 			"vaccination": [
 				{
+          "vaccinationId": 1,
 					"vaccinationName": "종합백신1차",
 					"vaccinationDate": "2018-01-01"
 				},
@@ -268,6 +271,9 @@ const UpdatePet = () => {
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(`/api/auth/pet/${id}`, data, config);
       console.log(response);
+      if(response.status === 200) {
+        setConfirm(!confirm);
+      }
     }
 
     fetchData();
@@ -282,7 +288,7 @@ const UpdatePet = () => {
     }
     setImgFile("");
 
-    axiosInstance.delete(`/api/auth/pet/image/${id}`, null, config)
+    axiosInstance.delete(`/api/auth/pet/image/${id}`, config)
       .then((response) => {
         console.log(response);
         console.log("기본 이미지 변경 완료")
@@ -445,15 +451,15 @@ const UpdatePet = () => {
         <div className={styles.history}>
           <h4>수술이력</h4>
           <button style={{ cursor: "pointer" }} onClick={handleSurgeryModal} type="button">수정</button>
-          {surgeryModal && <Surgery onClick={handleSurgeryModal} dateFormat={dateFormat} text={text}/>}
+          {surgeryModal && <Surgery onClick={handleSurgeryModal} dateFormat={dateFormat} text={text} petId={id}/>}
           <br />
           <h4>복용약</h4>
           <button style={{ cursor: "pointer" }} onClick={handleMedicineModal} type="button">수정</button>
-          {medicineModal && <Medicine onClick={handleMedicineModal} dateFormat={dateFormat} text={text}/>}
+          {medicineModal && <Medicine onClick={handleMedicineModal} dateFormat={dateFormat} text={text} petId={id}/>}
           <br />
           <h4>예방접종 이력</h4>
           <button style={{ cursor: "pointer" }} onClick={handleVaccineModal} type="button">수정</button>
-          {vaccineModal && <Vaccine onClick={handleVaccineModal} dateFormat={dateFormat} text={text}/>}
+          {vaccineModal && <Vaccine onClick={handleVaccineModal} dateFormat={dateFormat} text={text} petId={id}/>}
         </div>
         {confirm && <ConfirmModal onClick={handleConfirm}/>}
       </div>

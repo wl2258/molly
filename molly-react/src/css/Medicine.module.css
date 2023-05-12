@@ -48,7 +48,8 @@
 }
 
 .drug {
-    margin-bottom: 10px;
+    margin: 10px 0;
+    position: relative;
 }
 
 .drug>input {
@@ -78,19 +79,26 @@
     color: #827870;
 }
 
-.drug>span {
+.plus {
     position: absolute;
-    top: 88px;
+    top: 5px;
     right: 30px;
     cursor: pointer;
+}
+
+.check {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 30px;
 }
 
 .medicineData {
     display: flex;
     align-items: center;
     z-index: 2;
-    margin-bottom: -10px;
     margin-left: 34px;
+    margin-bottom: -5px;
 }
 
 .medicineData>p {
@@ -112,4 +120,10 @@
     display: inline-block;
     padding-top: 5px;
     cursor: pointer;
+}
+
+.medicineData>span:last-child {
+    cursor: pointer;
+    margin-left: 10px;
+    margin-top: 5px;
 }

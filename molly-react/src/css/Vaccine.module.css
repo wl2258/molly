@@ -40,7 +40,16 @@
 }
 
 .sort {
-  z-index: 2;
+  z-index: 3;
+  color: #827870;
+  background-color: #EBE7E3;
+  width: 130px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.editSort {
+  z-index: 1;
   color: #827870;
   background-color: #EBE7E3;
   width: 130px;
@@ -49,6 +58,7 @@
 }
 
 .default {
+  z-index: 1;
   position: relative;
   left: 13px;
   bottom: 1px;
@@ -118,9 +128,28 @@
   margin-right: 65px;
 }
 
-.vaccineHistory > span:last-child {
+.vaccineHistory > span:nth-child(3) {
   position: absolute;
-  top: 3px;
   margin-left: 20px;
   cursor: pointer;
+}
+
+.vaccineHistory > span:last-child {
+  position: absolute;
+  margin-left: 55px;
+  cursor: pointer;
+}
+
+.editVaccine {
+  display: flex;
+}
+
+.editVaccine > ul {
+  margin: 0 20px 20px -60px;
+}
+
+.check {
+  cursor: pointer;
+  margin-left: 31px;
+  margin-top: 5px;
 }
