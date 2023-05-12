@@ -36,7 +36,7 @@ const UserInfo = () => {
 
     axiosInstance.get(`/api/auth/account`, config)
       .then((response) => {
-        setUser(response.data);
+        setUser(response.data.data);
         setLoading(false);
       })
       .catch((e) => {
@@ -225,10 +225,10 @@ const UserInfo = () => {
         Authorization : localStorage.getItem("accessToken")
       }
     }
-    setImgFile("");
+    setImgFile(null);
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.delete(`/api/auth/account/profile-image`, null, config);
+      const response = await axiosInstance.delete(`/api/auth/account/profile-image`, config);
       if(response.data.code === 1) {
         console.log("기본 이미지 변경 완료");
         setModal(!modal);
@@ -262,7 +262,7 @@ const UserInfo = () => {
     }
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.post(`/api/auth/account/save`, data, config)
+      const response = await axiosInstance.post(`/api/auth/account/nickname`, data, config)
       console.log(response); 
       if(response.data.code === 1) {
         setEdit(!edit);

@@ -125,6 +125,7 @@ const DetailPet = () => {
       .then((response) => {
         console.log(response);
         console.log("삭제 완료");
+        window.location.replace("/home");
       })
       .catch((e) => {
         console.log(e);
