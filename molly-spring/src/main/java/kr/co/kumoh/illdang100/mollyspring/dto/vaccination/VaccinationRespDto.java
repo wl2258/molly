@@ -14,6 +14,13 @@ public class VaccinationRespDto {
     @AllArgsConstructor
     public static class VaccinationSaveResponse {
         private Long vaccinationId;
+        private List<VaccineInfoResponse> vaccination;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class VaccinationUpdateResponse {
+        private List<VaccineInfoResponse> vaccination;
     }
 
     @Data
@@ -26,6 +33,14 @@ public class VaccinationRespDto {
     @AllArgsConstructor
     public static class VaccinationResponse {
         private Long vaccinationId;
+        private String vaccinationName;
+        @JsonFormat(pattern="yyyy-MM-dd")
+        private LocalDate vaccinationDate;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class VaccineInfoResponse {
         private String vaccinationName;
         @JsonFormat(pattern="yyyy-MM-dd")
         private LocalDate vaccinationDate;
