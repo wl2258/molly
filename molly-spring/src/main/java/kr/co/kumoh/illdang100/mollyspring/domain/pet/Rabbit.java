@@ -1,7 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.pet;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
-import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
