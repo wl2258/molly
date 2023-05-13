@@ -6,4 +6,4 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/97449471/232280029-59eebf27-43aa-4687-805d-875ca19097df.png" width=700 height=450 /></p>
 
 ## 데이터베이스 구조
-<p align="center"><img src="https://user-images.githubusercontent.com/97449471/232280244-0a2fa581-ef1b-4ec7-b0e6-99ea2658a30c.png" width=700 height=450 /></p>
+<p align="center"><img src="https://github.com/illdang100/molly/assets/97449471/988a6435-d669-45f6-b624-1091f286ae94.png" width=700 height=450 /></p>
