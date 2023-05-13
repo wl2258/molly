@@ -1,10 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.liky;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -25,9 +22,7 @@ public class Liky {
     @Column(nullable = false)
     private Long accountId;
 
-    @Builder
-    public Liky(Long id, Board board, Long accountId) {
-        this.id = id;
+    public Liky(Board board, Long accountId) {
         this.board = board;
         this.accountId = accountId;
     }
