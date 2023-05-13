@@ -28,11 +28,4 @@ public class Comment extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long accountId;
-
-    // TODO: 사용자 닉네임 또한 마찬가지
-    @Column(nullable = false, length = 20)
-    private String writerNickname;
-
-    // TODO: 사용자 프로필 이미지 필드 없애고 조회할 때마다 사용자 프로필 이미지 별도로 조회해오기
-    private String writerProfileUrl;
 }
