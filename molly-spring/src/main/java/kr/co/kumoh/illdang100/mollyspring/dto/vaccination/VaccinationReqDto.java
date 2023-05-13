@@ -31,9 +31,6 @@ public class VaccinationReqDto {
     public static class VaccinationUpdateRequest {
 
         @NotNull
-        private Long petId;
-
-        @NotNull
         private Long vaccinationId;
 
         @NotBlank(message = "예방접종 이름은 빈 문자열이면 안됩니다.")
