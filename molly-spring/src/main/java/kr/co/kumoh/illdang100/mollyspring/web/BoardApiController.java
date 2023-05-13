@@ -80,6 +80,6 @@ public class BoardApiController {
                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         boardService.deletePost(boardId, principalDetails.getAccount().getId());
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.NO_CONTENT);
     }
 }
