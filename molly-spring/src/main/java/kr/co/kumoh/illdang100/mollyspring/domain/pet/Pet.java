@@ -56,7 +56,7 @@ public abstract class Pet extends BaseTimeEntity {
         return true;
     }
 
-    public boolean comparebirthdate(LocalDate birthdate) {
+    public boolean compareBirthdate(LocalDate birthdate) {
         if (this.birthdate != birthdate) return false;
         return true;
     }
@@ -83,7 +83,7 @@ public abstract class Pet extends BaseTimeEntity {
 
     public void updatePet(PetUpdateRequest petUpdateRequest) {
         if (!comparePetName(petUpdateRequest.getPetName())) this.petName = petUpdateRequest.getPetName();
-        if (!comparebirthdate(petUpdateRequest.getBirthdate())) this.birthdate = petUpdateRequest.getBirthdate();
+        if (!compareBirthdate(petUpdateRequest.getBirthdate())) this.birthdate = petUpdateRequest.getBirthdate();
         if (!compareNeuteredStatus(petUpdateRequest.isNeuteredStatus())) this.neuteredStatus = petUpdateRequest.isNeuteredStatus();
         if (!compareGender(petUpdateRequest.getGender())) this.gender = petUpdateRequest.getGender();
         if (!compareWeight(petUpdateRequest.getWeight())) this.weight = petUpdateRequest.getWeight();
