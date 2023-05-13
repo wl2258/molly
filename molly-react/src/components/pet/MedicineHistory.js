@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styles from '../../css/Medicine.module.css';
 import { TiDelete } from 'react-icons/ti';
 import { MdModeEdit } from 'react-icons/md';
@@ -8,16 +8,16 @@ import { ko } from 'date-fns/esm/locale';
 import axios from 'axios';
 
 const MedicineHistory = (props) => {
-    const [editMedicineName, setEditMedicineName] = useState("");
-    const [editStartDate, setEditStartDate] = useState(new Date());
-    const [editEndDate, setEditEndDate] = useState(new Date());
+    const [editMedicineName, setEditMedicineName] = useState(props.data.medicationName);
+    const [editStartDate, setEditStartDate] = useState(new Date(props.data.medicationStartDate));
+    const [editEndDate, setEditEndDate] = useState(new Date(props.data.medicationEndDate));
     const [edit, setEdit] = useState(false);
 
-    useEffect(() => {
-        setEditMedicineName(props.data.medicationName);
-        setEditStartDate(new Date(props.data.medicationStartDate));
-        setEditEndDate(new Date(props.data.medicationEndDate))
-    }, [props.medicine])
+    // useEffect(() => {
+    //     setEditMedicineName(props.data.medicationName);
+    //     setEditStartDate(new Date(props.data.medicationStartDate));
+    //     setEditEndDate(new Date(props.data.medicationEndDate))
+    // }, [props.medicine])
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
@@ -70,6 +70,7 @@ const MedicineHistory = (props) => {
                 }
                 else if (errResponseStatus === 401) {
                     console.log("인증 실패");
+                    console.log(error.response.data.data)
                     window.location.replace("/login");
                 }
                 else if (errResponseStatus === 403) {
@@ -91,17 +92,14 @@ const MedicineHistory = (props) => {
         }
     
         const data = {
-            "petId": props.petId,
             "medicationId": medicationId,
-            "medication": {
-                "medicationName": editMedicineName,
-                "medicationStart": props.dateFormat(editStartDate),
-                "medicationEnd": props.dateFormat(editEndDate)
-            }
+            "medicationName": editMedicineName,
+            "medicationStartDate": props.dateFormat(editStartDate),
+            "medicationEndDate": props.dateFormat(editEndDate)
         }
     
         const fetchData = async function fetch() {
-            const response = await axiosInstance.post(`/api/auth/pet/medication`, data, config);
+            const response = await axiosInstance.post(`/api/auth/pet/medication/${props.petId}`, data, config);
             console.log(response);
             if(response.status === 200) {
                 console.log("복용약 수정완료")
@@ -115,25 +113,23 @@ const MedicineHistory = (props) => {
         const config = {
             headers: {
                 Authorization: localStorage.getItem("accessToken")
+            },
+            data: {
+                "petId": props.petId,
+                "medicationId": medicationId
             }
         }
 
-        const data = {
-            "petId": props.petId,
-            "medicationId": medicationId
-
-        }
-
-        axiosInstance.delete(`/api/auth/pet/medication`, data, config)
+        axiosInstance.delete(`/api/auth/pet/medication`, config)
             .then((response) => {
                 console.log(response);
-                console.log("수술 삭제");
+                console.log("복용약 이력 삭제");
             });
     }
 
     return (
         <div>
-            {edit ? <div key={props.index}>
+            {edit ? <div key={props.key}>
                 <div className={styles.drug}>
                     <input
                         type="text"
@@ -162,7 +158,8 @@ const MedicineHistory = (props) => {
                     <span className={styles.check} onClick={() => {
                         if (editMedicineName !== "") {
                             let updateMedicine = props.medicine;
-                            updateMedicine.splice(props.index, 1, {
+                            const index = props.medicine.indexOf(props.data.medicationId)
+                            updateMedicine.splice(index, 1, {
                                 medicationId: props.data.medicationId,
                                 medicationStartDate: props.dateFormat(editStartDate),
                                 medicationEndDate: props.dateFormat(editEndDate),
@@ -170,14 +167,14 @@ const MedicineHistory = (props) => {
                             })
                             props.setMedicine(updateMedicine)
                             UpdateMedicine(props.data.medicationId)
+                            setEdit(!edit)
                         }
-                        setEdit(!edit)
                     }}><AiFillCheckCircle color="#AFA79F" size="18px" /></span>
                 </div>
             </div>
-            : <div className={styles.medicineData} key={props.index}>
-                <p>{props.data.medicationName}</p>
-                <span>{props.data.medicationStartDate} ~ {props.data.medicationEndDate}</span>
+            : <div className={styles.medicineData} key={props.key}>
+                <p>{editMedicineName}</p>
+                <span>{props.dateFormat(editStartDate)} ~ {props.dateFormat(editEndDate)}</span>
                 <span onClick={() => {
                     props.setMedicine(props.medicine.filter(medicine => medicine.medicationId !== props.data.medicationId));
                     DeleteMedicine(props.data.medicationId);

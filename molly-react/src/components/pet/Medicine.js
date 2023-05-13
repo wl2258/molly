@@ -6,15 +6,19 @@ import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import MedicineHistory from './MedicineHistory';
 import axios from 'axios';
-import useDidMountEffect from '../../pages/useDidMountEffect';
+//import useDidMountEffect from '../../pages/useDidMountEffect';
 
 const Medicine = (props) => {
     const [medicineName, setMedicineName] = useState("");
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [medicine, setMedicine] = useState([]);
-    const [medicineNo, setMedicineNo] = useState("");
+    //const [medicineNo, setMedicineNo] = useState("");
     const [loading, setLoading] = useState(false);
+    // const [edit, setEdit] = useState(false);
+    // const [editMedicineName, setEditMedicineName] = useState("");
+    // const [editStartDate, setEditStartDate] = useState(new Date());
+    // const [editEndDate, setEditEndDate] = useState(new Date());
 
     useEffect(() => {
         document.body.style.cssText = `
@@ -40,13 +44,8 @@ const Medicine = (props) => {
 
         axiosInstance.get(`/api/auth/pet/medication/${props.petId}`, config)
             .then((response) => {
-                setMedicine(response.data.data.medication);
-            })
-            .then(() => {
-                setMedicineNo(medicine[medicine.length - 1].medicationId);
-            })
-            .then(() => {
-                setLoading(false);
+                console.log(response)
+                setMedicine(response.data.data);
             })
             .catch((e) => {
                 console.log(e);
@@ -64,11 +63,13 @@ const Medicine = (props) => {
     //             "medicationEndDate": "2023-02-15"
     //         }
     //     ])
-        
+    //     setLoading(false)
     // }, [])
 
     // useDidMountEffect(() => {
-    //     setMedicineNo(medicine[medicine.length - 1].medicationId);
+    //     console.log(" ")
+    //     medicine.length !== 0 ? setMedicineNo(medicine[medicine.length - 1].medicationId) :
+    //         setMedicineNo(1);
     //     setLoading(false);
     // }, [medicine]);
 
@@ -143,6 +144,7 @@ const Medicine = (props) => {
         }
 
         const data = {
+            "petId": props.petId,
             "medicationName": medicineName,
             "medicationStartDate": props.dateFormat(startDate),
             "medicationEndDate": props.dateFormat(endDate)
@@ -153,13 +155,13 @@ const Medicine = (props) => {
             console.log(response);
             if (response.data.code === 1) {
                 let updateMedicine = medicine;
-                updateMedicine.splice(medicine.length-1, 1, {
+                updateMedicine.splice(medicine.length - 1, 1, {
                     medicationId: response.data.data.medicationId,
                     medicationStartDate: props.dateFormat(startDate),
                     medicationEndDate: props.dateFormat(endDate),
                     medicationName: medicineName
                 })
-                props.setMedicine(updateMedicine)
+                setMedicine(updateMedicine)
                 console.log("복용약 추가 완료");
             }
             else {
@@ -180,10 +182,6 @@ const Medicine = (props) => {
                 </div>
             </div>
         )
-    }
-
-    if (medicine.length === 0) {
-        return null;
     }
 
     return (
@@ -220,23 +218,22 @@ const Medicine = (props) => {
                     <span className={styles.plus} onClick={() => {
                         if (medicineName !== "")
                             setMedicine([...medicine, {
-                                medicationId: parseInt(medicineNo) + 1,
+                                medicationId: props.medicine.length,
                                 medicationStartDate: props.dateFormat(startDate),
                                 medicationEndDate: props.dateFormat(endDate),
                                 medicationName: medicineName
                             }])
-                        setMedicineNo(medicine[medicine.length - 1].medicationId)
-                        console.log(medicine)
+                        //setMedicineNo(medicine[medicine.length - 1].medicationId);
                         setMedicineName("");
+                        console.log(medicine)
                         registerMedicine();
                     }}><FiPlus color="#AFA79F" size="18px" /></span>
                 </div>
-                {medicine.map((data, index) => {
+                {medicine.map((data) => {
                     return (
-                        <MedicineHistory
-                            petId={props.petId}
+                        <MedicineHistory 
+                            key={data.medicationId}
                             data={data}
-                            index={index}
                             medicine={medicine}
                             setMedicine={setMedicine}
                             dateFormat={props.dateFormat}

@@ -24,7 +24,6 @@ const RegisterPet = () => {
   const [surgery, setSurgery] = useState([]); // 수술 라디오 버튼
   const [modal, setModal] = useState(false); // 예방접종 이력 추가 모달
   const [imgFile, setImgFile] = useState("");
-  const [id, setId] = useState("");
   const surgeryNo = useRef(1);
   const medicineNo = useRef(1);
 
@@ -175,36 +174,20 @@ const RegisterPet = () => {
       }
     }
 
-    // const fetchData = async function fetch() {
-    //   const response = await axiosInstance.post(`/api/auth/pet`, formData, config)
-    //   console.log(response); 
-    //   if(response.data.code === 1) {
-    //     const petId = response.data.data.petId;
-    //     dispatch(registerPet({name: petNickName, petId: petId}));
-    //     window.location.replace(`/detailpet/${petId}`);
-    //   }
-    //   else {
-    //     console.log("동물 등록 실패");
-    //   }
-    // }
-
-    // fetchData();
-
-    axiosInstance.post(`/api/auth/pet`, formData, config)
-      .then((response) => {
-        if(response.data.code === 1) {
-          setId(response.data.data.petId);
-        }
-      })
-      .then(() => {
-        dispatch(registerPet({name: petNickName, petId: id}));
-      })
-      .then(() => {
-        window.location.replace(`/detailpet/${id}`);
-      })
-      .catch((e) => {
+    const fetchData = async function fetch() {
+      const response = await axiosInstance.post(`/api/auth/pet`, formData, config)
+      console.log(response); 
+      if(response.data.code === 1) {
+        const petId = response.data.data.petId;
+        dispatch(registerPet({name: petNickName, petId: petId}));
+        window.location.replace(`/detailpet/${petId}`);
+      }
+      else {
         console.log("동물 등록 실패");
-      });
+      }
+    }
+
+    fetchData();
   }
 
   function dateFormat(date) {
