@@ -1,7 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.dto.pet;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.PetGenderEnum;
-import kr.co.kumoh.illdang100.mollyspring.domain.pet.PetTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +23,8 @@ public class PetReqDto {
     @AllArgsConstructor
     public static class PetSaveRequest {
         @NotNull
-        private PetTypeEnum petType;
+        @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
+        private String petType;
 
         @NotBlank(message = "반려동물 이름은 빈 문자열이면 안 됩니다.")
         @Size(max = 20)
@@ -61,10 +61,8 @@ public class PetReqDto {
     @AllArgsConstructor
     public static class PetUpdateRequest {
         @NotNull
-        private Long petId;
-
-        @NotNull
-        private PetTypeEnum petType;
+        @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
+        private String petType;
 
         @NotBlank(message = "반려동물 이름은 빈 문자열이면 안 됩니다.")
         private String petName;
@@ -86,6 +84,10 @@ public class PetReqDto {
 
         @Size(max = 100)
         private String caution;
+
+        private List<MedicationUpdateRequest> medication;
+        private List<SurgeryUpdateRequest> surgery;
+        private List<VaccinationUpdateRequest> vaccination;
     }
 
     @Data
