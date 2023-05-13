@@ -76,9 +76,10 @@ public class BoardApiController {
     }
 
     @DeleteMapping("/auth/board/{boardId}")
-    public ResponseEntity<?> deletePost(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> deletePost(@PathVariable("boardId") Long boardId,
+                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        // 해당 게시글이 인증된 사용자가 작성한 게시글이 맞는지 검사하기
+        boardService.deletePost(boardId, principalDetails.getAccount().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.OK);
     }
 }

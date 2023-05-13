@@ -5,6 +5,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.BoardImage;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.domain.liky.Liky;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
@@ -71,10 +72,9 @@ public class BoardService {
     @Transactional
     public PostDetailResponse getPostDetail(Long boardId, Long accountId) {
 
-        Board board = boardRepository.findWithAccountById(boardId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 게시글입니다"));
+        Board findBoard = findBoardByIdOrThrowException(boardId);
 
-        board.increaseViews();
+        findBoard.increaseViews();
 
         List<String> boardImages = getBoardImages(boardId);
 
@@ -83,23 +83,23 @@ public class BoardService {
 
         if (accountId != null) {
             thumbsUp = likyRepository.existsByAccountIdAndBoard_Id(accountId, boardId);
-            isOwner = isAccountOfBoard(board, accountId);
+            isOwner = isAuthorizedToDeleteBoard(findBoard, accountId);
         }
 
         List<BoardCommentDto> commentDtoList = getBoardCommentDtoList(boardId);
 
         return PostDetailResponse.builder()
                 .isOwner(isOwner)
-                .title(board.getBoardTitle())
+                .title(findBoard.getBoardTitle())
                 .boardImages(boardImages)
-                .content(board.getBoardContent())
-                .writerNick(board.getAccount().getNickname())
-                .createdAt(board.getCreatedDate())
-                .views(board.getViews())
-                .writerProfileImage(extractAccountProfileUrlFromBoard(board))
+                .content(findBoard.getBoardContent())
+                .writerNick(findBoard.getAccount().getNickname())
+                .createdAt(findBoard.getCreatedDate())
+                .views(findBoard.getViews())
+                .writerProfileImage(extractAccountProfileUrlFromBoard(findBoard))
                 .comments(commentDtoList)
                 .thumbsUp(thumbsUp)
-                .likyCnt(board.getLikyCnt())
+                .likyCnt(findBoard.getLikyCnt())
                 .build();
     }
 
@@ -136,7 +136,7 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
-    private static boolean isAccountOfBoard(Board board, Long accountId) {
+    private boolean isAuthorizedToDeleteBoard(Board board, Long accountId) {
         return board.getAccount().getId().equals(accountId);
     }
 
@@ -164,10 +164,37 @@ public class BoardService {
 
     }
 
-    // TODO: 게시글 삭제
     @Transactional
-    public void deletePost() {
+    public void deletePost(Long boardId, Long accountId) {
 
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+
+        if (!isAuthorizedToDeleteBoard(findBoard, accountId)) {
+                    throw new CustomApiException("해당 게시글을 삭제할 권한이 없습니다");
+        }
+
+        deleteCommentsByBoardIdInBatch(boardId);
+        deleteLikiesByBoardIdInBatch(boardId);
+        deleteBoardImagesByBoardIdInBatch(boardId);
+        boardRepository.deleteById(boardId);
+    }
+
+    private void deleteBoardImagesByBoardIdInBatch(Long boardId) {
+        boardImageRepository.deleteAllByIdInBatch(boardImageRepository.findByBoard_id(boardId).stream()
+                .map(BoardImage::getId)
+                .collect(Collectors.toList()));
+    }
+
+    private void deleteLikiesByBoardIdInBatch(Long boardId) {
+        likyRepository.deleteAllByIdInBatch(likyRepository.findByBoard_Id(boardId).stream()
+                .map(Liky::getId)
+                .collect(Collectors.toList()));
+    }
+
+    private void deleteCommentsByBoardIdInBatch(Long boardId) {
+        commentRepository.deleteAllByIdInBatch(commentRepository.findByBoard_Id(boardId).stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList()));
     }
 
     private void saveBoardImage(Board board, MultipartFile boardImage) throws IOException {
@@ -184,5 +211,10 @@ public class BoardService {
         return accountRepository
                 .findById(accountId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다"));
+    }
+
+    private Board findBoardByIdOrThrowException(Long boardId) {
+        return boardRepository.findWithAccountById(boardId)
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 게시글입니다"));
     }
 }
