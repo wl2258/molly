@@ -36,9 +36,6 @@ public class MedicationReqDto {
     @AllArgsConstructor
     public static class MedicationUpdateRequest {
         @NotNull
-        private Long petId;
-
-        @NotNull
         private Long medicationId;
 
         @NotBlank(message = "복용약 이름은 빈 문자열이면 안 됩니다.")

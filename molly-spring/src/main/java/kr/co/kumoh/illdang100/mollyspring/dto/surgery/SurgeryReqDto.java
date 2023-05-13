@@ -31,10 +31,6 @@ public class SurgeryReqDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SurgeryUpdateRequest {
-
-        @NotNull
-        private Long petId;
-
         @NotNull
         private Long surgeryId;
 

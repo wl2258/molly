@@ -17,9 +17,11 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationResp
 
 public class PetRespDto {
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class PetSaveResponse {
         private Long petId;
+        private List<VaccineInfoResponse> vaccination;
     }
 
     @Data
@@ -63,5 +65,23 @@ public class PetRespDto {
     public static class PetSpeciesResponse {
         private String speciesKo;
         private String speciesEn;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class PetHomeResponse {
+        private List<PetHomeDetailResponse> pet;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class PetHomeDetailResponse {
+        private Long petId;
+        private PetTypeEnum petType;
+        private String petName;
+        @JsonFormat(pattern="yyyy-MM-dd")
+        private LocalDate birthdate;
+        private List<VaccinationResponse> vaccination;
+        private List<VaccineInfoResponse> vaccinePredict;
     }
 }

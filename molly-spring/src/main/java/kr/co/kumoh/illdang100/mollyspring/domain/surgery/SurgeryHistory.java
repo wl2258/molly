@@ -2,7 +2,6 @@ package kr.co.kumoh.illdang100.mollyspring.domain.surgery;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.Pet;
-import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
