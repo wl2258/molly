@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import styles from '../../css/Medicine.module.css';
 import { FiPlus } from 'react-icons/fi';
 import { TiDeleteOutline } from 'react-icons/ti';
@@ -13,8 +13,9 @@ const Medicine = (props) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [medicine, setMedicine] = useState([]);
-    //const [medicineNo, setMedicineNo] = useState("");
+    //const [medicineNo, setMedicineNo] = useState(props.text.medication[props.text.medication.length-1].medicationId + 1);
     const [loading, setLoading] = useState(false);
+    const medicineNo = useRef(props.text.medication.length === 0 ? 1 : props.text.medication[props.text.medication.length-1].medicationId + 1);
     // const [edit, setEdit] = useState(false);
     // const [editMedicineName, setEditMedicineName] = useState("");
     // const [editStartDate, setEditStartDate] = useState(new Date());
@@ -46,6 +47,7 @@ const Medicine = (props) => {
             .then((response) => {
                 console.log(response)
                 setMedicine(response.data.data);
+                setLoading(false)
             })
             .catch((e) => {
                 console.log(e);
@@ -53,6 +55,7 @@ const Medicine = (props) => {
     }, [])
 
     // useState(() => {
+    //     console.log("render")
     //     setLoading(true);
 
     //     setMedicine([
@@ -184,6 +187,11 @@ const Medicine = (props) => {
         )
     }
 
+    if (medicine === null) {
+        console.log("medicine이 null 입니다.")
+        return null
+    }
+
     return (
         <div className={styles.medicineContainer}>
             <div className={styles.modalContainer}>
@@ -218,12 +226,12 @@ const Medicine = (props) => {
                     <span className={styles.plus} onClick={() => {
                         if (medicineName !== "")
                             setMedicine([...medicine, {
-                                medicationId: props.medicine.length,
+                                medicationId: medicineNo.current++,
                                 medicationStartDate: props.dateFormat(startDate),
                                 medicationEndDate: props.dateFormat(endDate),
                                 medicationName: medicineName
                             }])
-                        //setMedicineNo(medicine[medicine.length - 1].medicationId);
+                        //setMedicineNo(medicine[medicine.length - 1].medicationId + 2);
                         setMedicineName("");
                         console.log(medicine)
                         registerMedicine();

@@ -177,6 +177,7 @@ const MedicineHistory = (props) => {
                 <span>{props.dateFormat(editStartDate)} ~ {props.dateFormat(editEndDate)}</span>
                 <span onClick={() => {
                     props.setMedicine(props.medicine.filter(medicine => medicine.medicationId !== props.data.medicationId));
+                    console.log(props.medicine)
                     DeleteMedicine(props.data.medicationId);
                 }}><TiDelete size="18px" color="#827870" /></span>
                 <span onClick={() => { setEdit(true) }}>
