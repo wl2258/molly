@@ -81,31 +81,31 @@ const MedicineHistory = (props) => {
             }
         }
     );
-    
+
 
     const UpdateMedicine = (medicationId) => {
         const config = {
-            headers : {
-              Authorization : localStorage.getItem("accessToken"),
-              "Content-Type": "application/json"
+            headers: {
+                Authorization: localStorage.getItem("accessToken"),
+                "Content-Type": "application/json"
             }
         }
-    
+
         const data = {
             "medicationId": medicationId,
             "medicationName": editMedicineName,
             "medicationStartDate": props.dateFormat(editStartDate),
             "medicationEndDate": props.dateFormat(editEndDate)
         }
-    
+
         const fetchData = async function fetch() {
             const response = await axiosInstance.post(`/api/auth/pet/medication/${props.petId}`, data, config);
             console.log(response);
-            if(response.status === 200) {
+            if (response.status === 200) {
                 console.log("복용약 수정완료")
             }
         }
-    
+
         fetchData();
     }
 
@@ -157,32 +157,45 @@ const MedicineHistory = (props) => {
                     </div>
                     <span className={styles.check} onClick={() => {
                         if (editMedicineName !== "") {
-                            let updateMedicine = props.medicine;
-                            const index = props.medicine.indexOf(props.data.medicationId)
-                            updateMedicine.splice(index, 1, {
-                                medicationId: props.data.medicationId,
-                                medicationStartDate: props.dateFormat(editStartDate),
-                                medicationEndDate: props.dateFormat(editEndDate),
-                                medicationName: editMedicineName
-                            })
-                            props.setMedicine(updateMedicine)
+                            const newMedicine = props.medicine.map((item) => {
+                                if (item.medicationId === props.data.medicationId) {
+                                    return (
+                                        {
+                                            medicationId: props.data.medicationId,
+                                            medicationStartDate: props.dateFormat(editStartDate),
+                                            medicationEndDate: props.dateFormat(editEndDate),
+                                            medicationName: editMedicineName
+                                        }
+                                    )
+                                } else {
+                                    return item;
+                                }
+                            });
+                            props.setMedicine(newMedicine);
+                            // updateMedicine.splice(index, 1, {
+                            //     medicationId: updateData[0].medicationId,
+                            //     medicationStartDate: props.dateFormat(editStartDate),
+                            //     medicationEndDate: props.dateFormat(editEndDate),
+                            //     medicationName: editMedicineName
+                            // })
+                            // props.setMedicine(updateMedicine)
                             UpdateMedicine(props.data.medicationId)
                             setEdit(!edit)
                         }
                     }}><AiFillCheckCircle color="#AFA79F" size="18px" /></span>
                 </div>
             </div>
-            : <div className={styles.medicineData} key={props.key}>
-                <p>{editMedicineName}</p>
-                <span>{props.dateFormat(editStartDate)} ~ {props.dateFormat(editEndDate)}</span>
-                <span onClick={() => {
-                    props.setMedicine(props.medicine.filter(medicine => medicine.medicationId !== props.data.medicationId));
-                    console.log(props.medicine)
-                    DeleteMedicine(props.data.medicationId);
-                }}><TiDelete size="18px" color="#827870" /></span>
-                <span onClick={() => { setEdit(true) }}>
-                    <MdModeEdit color="#827870" size="18px" /></span>
-            </div>}
+                : <div className={styles.medicineData} key={props.key}>
+                    <p>{editMedicineName}</p>
+                    <span>{props.dateFormat(editStartDate)} ~ {props.dateFormat(editEndDate)}</span>
+                    <span onClick={() => {
+                        props.setMedicine(props.medicine.filter(medicine => medicine.medicationId !== props.data.medicationId));
+                        console.log(props.medicine)
+                        DeleteMedicine(props.data.medicationId);
+                    }}><TiDelete size="18px" color="#827870" /></span>
+                    <span onClick={() => { setEdit(true) }}>
+                        <MdModeEdit color="#827870" size="18px" /></span>
+                </div>}
         </div>
     );
 };

@@ -59,16 +59,16 @@ const Home = () => {
 	// 			"petName": "몰리",
 	// 			"petType": "DOG",
 	// 			"birthdate": "2013-08-07",
-	// 			"preVaccine": [
+	// 			"vaccination": [
 	// 				{
 	// 					"vaccinationName": "종합백신1차",
 	// 					"vaccinationDate": "2023-03-14"
 	// 				},
 	// 			],
-	// 			"postVaccine": [
+	// 			"vaccinePredict": [
 	// 				{
 	// 					"vaccinationName": "종합백신2차",
-	// 					"vaccinationDate": "2023-07-30"
+	// 					"vaccinationDate": "2023-05-13"
 	// 				},
   //         {
 	// 					"vaccinationName": "종합백신3차",
@@ -81,13 +81,13 @@ const Home = () => {
 	// 			"petName": "보리",
 	// 			"petType": "CAT",
 	// 			"birthdate": "2019-01-10",
-	// 			"preVaccine": [
+	// 			"vaccination": [
 	// 				{
 	// 					"vaccinationName": "종합백신1차",
 	// 					"vaccinationDate": "2020-08-30"
 	// 				},
 	// 			],
-	// 			"postVaccine": [
+	// 			"vaccinePredict": [
 	// 				{
 	// 					"vaccinationName": "종합백신2차",
 	// 					"vaccinationDate": "2023-09-30"

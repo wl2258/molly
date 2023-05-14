@@ -8,6 +8,7 @@ const Month = (props) => {
   const today = getMoment;
   const firstWeek = today.clone().startOf('month').week();
   const lastWeek = today.clone().endOf('month').week() === 1 ? 53 : today.clone().endOf('month').week();
+  const [isHover, setIsHover] = useState(false);
   const color = ["#DCCFC2", "#C9DEEA", "#CFDBCA"];
   const petVaccine = props.pet.map((item) => {
     return (
@@ -59,7 +60,9 @@ const Month = (props) => {
                             date === days.format('YYYY-MM-DD') ? 
                             <div 
                               style={{backgroundColor: color[index]}}
-                              className={styles.vaccine}></div> : null
+                              className={styles.vaccine}
+                              onMouseOver={() => setIsHover(true)}
+                              onMouseOut={() => setIsHover(false)}></div> : null
                           )
                         }) 
                       )
@@ -69,7 +72,7 @@ const Month = (props) => {
                           item.vaccine.map((vaccine, index) => {
                             return(
                               vaccine.vaccinationDate === days.format('YYYY-MM-DD') ? 
-                                <div className={styles.vaccineInfo}>
+                                <div className={styles.vaccineInfo} style={{display: isHover ? "block" : "none"}}>
                                   {petVaccine.map((item) => {
                                     return (
                                       item.vaccine.map((vaccine, index) => {

@@ -47,6 +47,7 @@ const UpdatePet = () => {
 
     axiosInstance.get(`/api/auth/pet/${id}`, config)
       .then((response) => {
+        console.log(response.data.data);
         setText(response.data.data);
       })
       .catch((e) => {
@@ -74,8 +75,7 @@ const UpdatePet = () => {
 	// 				"surgeryDate": "2023-01-01"
 	// 			},
 	// 		],
-	// 		"medication": [
-  //     ],
+	// 		"medication": null,
 	// 		"vaccination": [
 	// 			{
   //         "vaccinationId": 1,
