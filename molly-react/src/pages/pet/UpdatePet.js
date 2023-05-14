@@ -75,13 +75,7 @@ const UpdatePet = () => {
 	// 			},
 	// 		],
 	// 		"medication": [
-	// 			{
-  //         "medicationId": 1,
-	// 				"medicationName": "넥스가드",
-	// 				"medicationStartDate": "2023-02-01",
-	// 				"medicationEndDate": "2023-02-15"
-	// 			},
-	// 		],
+  //     ],
 	// 		"vaccination": [
 	// 			{
   //         "vaccinationId": 1,
