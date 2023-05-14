@@ -9,7 +9,7 @@
 
 .calendartr > td {
   width: 40px;
-  height: 65px;
+  height: 78px;
   position: relative;
   text-align: center;
 }
@@ -72,9 +72,39 @@
 .vaccine {
   width: 31px;
   height: 11px;
-  background-color: #DCCFC2;
   border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  margin-bottom: 3px;
+}
+
+.vaccineInfo {
+  background-color: #939393d4;
+  color: white;
+  font-size: 10px;
+  width: 110px;
+  border-radius: 8px;
   position: absolute;
-  top: 32px;
-  left: 11px;
+  left: 55px;
+  top: 10px;
+  z-index: 2;
+  padding: 5px 0;
+}
+
+.vaccineInfo::after {
+  position: absolute;
+  top: 10px;
+  left: -14px;
+  content: "";
+  border: 0.6em solid transparent; 
+  border-right: 0.8em solid #939393d4;
+}
+
+.vaccineBox {
+  padding: 5px 0px;
+}
+
+.petName {
+  margin-right: 5px;
 }

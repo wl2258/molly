@@ -1,26 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../css/Dday.module.css';
 import AddVaccine from '../../pages/AddVaccine';
 
-const Dday = () => {
+const Dday = (props) => {
+  const bgColor = ["#DCCFC2", "#C9DEEA", "#CFDBCA"];
+  const textColor = ["#867D74", "#6A828F", "#778572"];
+  const today = new Date();
+
   return (
     <div>
-      <DdayList 
-        icon={"🐶"} 
-        name={"까까"}
-        health={"사료량 45g / 음수량 50ml / 운동량 373kcal"}
-        vaccine={["종합백신 2차"]}
-        day={["D-7"]}
-        color={"#DCCFC2"}
-        textColor={"#867D74"}/>
-      <DdayList 
-        icon={"🐶"} 
-        name={"마루"}
-        health={"사료량 50g / 음수량 70ml / 운동량 373kcal"}
-        vaccine={["컨넬코프 2차", "종합백신 4차"]}
-        day={["D-7", "D-19"]}
-        color={"#C9DEEA"}
-        textColor={"#6A828F"}/>
+      {props.pet.map((item, index) => {
+        return (
+          <DdayList
+            icon={item.petType === "DOG" ? "🐶" : "CAT" ? "🐱" : "🐰"}
+            name={item.petName}
+            vaccine={item.postVaccine.map((item) => {
+              return (item.vaccinationName);
+            })}
+            day={item.postVaccine.map((item) => {
+              const dday = new Date(item.vaccinationDate);
+              const gapNum = dday - today;
+              const day = Math.ceil(Math.ceil(gapNum / (1000 * 60 * 60 * 24)));
+              return (day)
+            })}
+            color={bgColor[index]}
+            textColor={textColor[index]} />)
+      })}
     </div>
   );
 };
@@ -33,20 +38,23 @@ const DdayList = (props) => {
   }
 
   return (
-    <div style={{width:"350px", marginBottom: "40px"}}>
+    <div style={{ width: "350px", marginBottom: "40px" }}>
       <div className={styles.petinfo}>
         <span className={styles.name}>{props.icon} {props.name}</span>
-        <span className={styles.health}>{props.health}</span>
       </div>
       {props.vaccine.map((item, index) => {
         return (
-          <div onClick={() => {handleClick()}} className={styles.list} style={{backgroundColor: props.color}}>
-            <span className={styles.vaccine} style={{color: props.textColor}}>{props.vaccine[index]}</span>
-            <span className={styles.day}>{props.day[index]}</span>
-          </div>
-        );
+          index < 2 ? 
+          <div onClick={() => { handleClick() }} className={styles.list} style={{ backgroundColor: props.color }}>
+            <span className={styles.vaccine} style={{ color: props.textColor }}>{props.vaccine[index]}</span>
+            <span className={styles.day}>
+              D{props.day[index] >= 0 ? '-' : '+'}
+              {props.day[index] === 0 ? 'day' : Math.abs(props.day[index])}
+            </span>
+          </div> : null
+        )
       })}
-      {modal && <AddVaccine onClick={handleClick}/>}
+      {modal && <AddVaccine onClick={handleClick} />}
     </div>
   )
 }
