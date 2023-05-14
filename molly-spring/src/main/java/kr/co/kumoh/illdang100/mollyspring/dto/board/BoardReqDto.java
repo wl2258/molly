@@ -1,5 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.dto.board;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
+
 public class BoardReqDto {
 
     @Getter @Setter
@@ -30,6 +32,7 @@ public class BoardReqDto {
         private String petType;
     }
 
+    @AllArgsConstructor
     @Getter @Setter
     public static class RetrievePostListCondition {
         @NotBlank

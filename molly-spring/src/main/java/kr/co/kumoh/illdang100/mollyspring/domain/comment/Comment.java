@@ -10,8 +10,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -28,4 +26,10 @@ public class Comment extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long accountId;
+
+    public Comment(Board board, String commentContent, Long accountId) {
+        this.board = board;
+        this.commentContent = commentContent;
+        this.accountId = accountId;
+    }
 }
