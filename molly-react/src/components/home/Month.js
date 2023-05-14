@@ -16,8 +16,8 @@ const Month = (props) => {
 				"petName": item.petName,
 				"petType": item.petType,
 				"birthdate": item.birthdate,
-        "vaccine": [...item.preVaccine, ...item.postVaccine],
-        "vaccineDate" : [...item.preVaccine, ...item.postVaccine].map((item) => {
+        "vaccine": [...item.vaccination, ...item.vaccinePredict],
+        "vaccineDate" : [...item.vaccination, ...item.vaccinePredict].map((item) => {
           return item.vaccinationDate
         })
       }

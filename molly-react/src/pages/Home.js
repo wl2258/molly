@@ -29,7 +29,7 @@ let Info = styled.div`
 const Home = () => {
   let { id } = useParams();
   const [loading, setLoading] = useState(false);
-  const [pet, setPet] = useState([]);
+  const [pet, setPet] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -42,6 +42,7 @@ const Home = () => {
 
     axiosInstance.get(`/api/auth/home`, config)
       .then((response) => {
+        console.log(response)
         setPet(response.data.data.pet);
         setLoading(false);
       })
@@ -181,8 +182,62 @@ const Home = () => {
     )
   }
 
-if (pet.length === 0) {
-  return null;
+if (pet === null) {
+  return (
+    <div>
+      <Header />
+      <CustomBody>
+        <Schedule>
+          <div style={{ marginRight: "20%" }}>
+            <Month pet={[]}/>
+          </div>
+          <div>
+            <div style={{ width: "350px", margin: "50px 0"}}>
+              <p style={{marginLeft: "50px"}}>동물을 등록하세요</p>
+            </div>
+          </div>
+        </Schedule>
+        <Info>
+          <div>
+            <Graph />
+          </div>
+          <div>
+            <Description />
+          </div>
+        </Info>
+      </CustomBody>
+      {id === 'signup' && <SignUp />}
+    </div >
+  )
+}
+
+if (pet !== null && pet.length === 0) {
+  return (
+    <div>
+      <Header />
+      <CustomBody>
+        <Schedule>
+          <div style={{ marginRight: "20%" }}>
+            <Month pet={[]}/>
+          </div>
+          <div>
+            <div style={{ width: "350px", margin: "50px 0"}}>
+              <p style={{marginLeft: "50px"}}>예방접종 이력을 등록하세요</p>
+            </div>
+          </div>
+        </Schedule>
+        <Info>
+          <div>
+            <Graph />
+          </div>
+          <div>
+            <Description />
+          </div>
+        </Info>
+      </CustomBody>
+      {id === 'signup' && <SignUp />}
+    </div >
+  )
 }
 
 return (
