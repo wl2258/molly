@@ -14,10 +14,10 @@ const Dday = (props) => {
           <DdayList
             icon={item.petType === "DOG" ? "🐶" : "CAT" ? "🐱" : "🐰"}
             name={item.petName}
-            vaccine={item.postVaccine.map((item) => {
+            vaccine={item.vaccinePredict.map((item) => {
               return (item.vaccinationName);
             })}
-            day={item.postVaccine.map((item) => {
+            day={item.vaccinePredict.map((item) => {
               const dday = new Date(item.vaccinationDate);
               const gapNum = dday - today;
               const day = Math.ceil(Math.ceil(gapNum / (1000 * 60 * 60 * 24)));
