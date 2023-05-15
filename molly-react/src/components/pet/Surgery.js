@@ -1,22 +1,21 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import styles from '../../css/Surgery.module.css';
 import { FiPlus } from 'react-icons/fi';
 import { TiDeleteOutline } from 'react-icons/ti';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
-import useDidMountEffect from '../../pages/useDidMountEffect';
 import SurgeryHistory from './SurgeryHistory';
 import axios from 'axios';
 import { Button } from '../../components/Button.js';
 
 const Surgery = (props) => {
-    const [surgery, setSurgery] = useState(""); // 수술 라디오 버튼
+    const [surgery, setSurgery] = useState(props.text.surgery === null ? "없음" : props.text.surgery.length !== 0 ? "있음" : "없음"); // 수술 라디오 버튼
     const [surgeryDate, setSurgeryDate] = useState(new Date());
     const [surgeryName, setSurgeryName] = useState("");
-    const [surgeryNo, setSurgeryNo] = useState("");
     const [surgeryHistory, setSurgeryHistory] = useState([]);
     const [loading, setLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const surgeryNo = useRef(props.text.surgery === null || props.text.surgery.length === 0? 1 : props.text.surgery[props.text.surgery.length-1].surgeryId + 1);
 
     useEffect(() => {
         document.body.style.cssText = `
@@ -42,7 +41,9 @@ const Surgery = (props) => {
 
         axiosInstance.get(`/api/auth/pet/surgery/${props.petId}`, config)
             .then((response) => {
-                setSurgeryHistory(response.data.data.surgery);
+                console.log(response);
+                setSurgeryHistory(response.data.data);
+                setLoading(false);
             })
             .catch((e) => {
                 console.log(e);
@@ -52,21 +53,9 @@ const Surgery = (props) => {
     // useEffect(() => {
     //     setLoading(true);
 
-    //     setSurgeryHistory([
-	// 		{
-	// 			"surgeryId": 1468,
-	// 			"surgeryName": "수직이도성형술",
-	// 			"surgeryDate": "2023-01-01"
-	// 		}
-	// 	])
+    //     setSurgeryHistory([])
+    //     setLoading(false);
     // }, [])
-
-    useDidMountEffect(() => {
-        setSurgery(surgeryHistory.length !== 0 ? "있음" : "없음");
-        surgeryHistory.length !== 0 ? setSurgeryNo(surgeryHistory[surgeryHistory.length - 1].surgeryId) :
-        setSurgeryNo(1);
-        setLoading(false);
-    }, [surgeryHistory]);
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
@@ -142,24 +131,23 @@ const Surgery = (props) => {
     const handleDeleteConfirm = () => {
         setConfirm(!confirm);
         setSurgery("없음")
-        const config = {
-            headers: {
-                Authorization: localStorage.getItem("accessToken")
-            }
-        }
 
         for(let i=0; i<surgeryHistory.length; i++) {
-            const data = {
-                "petId": props.petId,
-                "surgeryId": surgeryHistory[i].surgeryId
+            const config = {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
+                },
+                data : {
+                    "petId": props.petId,
+                    "surgeryId": surgeryHistory[i].surgeryId
+                }
             }
 
-            axiosInstance.delete(`/api/auth/pet/surgery`, data, config)
+            axiosInstance.delete(`/api/auth/pet/surgery`, config)
             .then((response) => {
                 console.log(response);
                 console.log("모든 수술 이력 삭제");
             });
-
         }  
     }
 
@@ -167,8 +155,6 @@ const Surgery = (props) => {
         setConfirm(!confirm);
         setSurgery("있음")
     }
-
-    console.log(surgery)
     
     const registerSurgery = () => {
         const config = {
@@ -179,6 +165,7 @@ const Surgery = (props) => {
         }
 
         const data = {
+            "petId": props.petId,
             "surgeryName": surgeryName,
             "surgeryDate": props.dateFormat(surgeryDate)
         }
@@ -193,7 +180,7 @@ const Surgery = (props) => {
                     surgeryDate: props.dateFormat(surgeryDate),
                     surgeryName: surgeryName
                 })
-                props.setSurgeryHistory(updateSurgery)
+                setSurgeryHistory(updateSurgery)
                 console.log("수술이력 추가 완료");
             }
             else {
@@ -216,14 +203,13 @@ const Surgery = (props) => {
         )
     }
 
-    if (surgeryHistory.length === 0) {
-        return null;
-    }
-
     return (
         <div className={styles.surgeryContainer}>
             <div className={styles.modalContainer}>
-                <span onClick={props.onClick}><TiDeleteOutline color="#FDFDFD" size="35px" /></span>
+                <span onClick={ () => {
+                    props.onClick();
+                    window.location.reload();
+                }}><TiDeleteOutline color="#FDFDFD" size="35px" /></span>
                 <h1>수술 이력 추가</h1>
                 <label className={styles.radio}>
                     <input type="radio" id="true" onChange={handleSurgeryButton} value="있음" checked={surgery === "있음"} />
@@ -249,29 +235,38 @@ const Surgery = (props) => {
                             onChange={(e) => { setSurgeryName(e.target.value) }}
                             value={surgeryName}></input>
                         <span onClick={() => {
-                            if (surgeryName !== "")
+                            if (surgeryHistory !== null && surgeryName !== "") {
                                 setSurgeryHistory([...surgeryHistory, {
-                                    surgeryId: parseInt(surgeryNo) + 1,
+                                    surgeryId: surgeryNo.current++,
                                     surgeryDate: props.dateFormat(surgeryDate),
                                     surgeryName: surgeryName
                                 }])
-                            setSurgeryNo(surgeryHistory[surgeryHistory.length - 1].surgeryId)
-                            setSurgeryName("");
+                            }
+                            else if (surgeryName !== "" && surgeryHistory === null) {
+                                setSurgeryHistory([{
+                                    surgeryId: surgeryNo.current++,
+                                    surgeryDate: props.dateFormat(surgeryDate),
+                                    surgeryName: surgeryName
+                                }])
+                            }
                             registerSurgery();
+                            setSurgeryName("");
                         }}><FiPlus color="#AFA79F" size="18px" /></span>
                         <div>
-                            {surgeryHistory.map((data, index) => {
-                                return (
-                                    <SurgeryHistory 
-                                        petId={props.petId}
-                                        data={data}
-                                        index={index}
-                                        surgeryHistory={surgeryHistory}
-                                        setSurgeryHistory={setSurgeryHistory}
-                                        dateFormat={props.dateFormat}
-                                    />
-                                )
-                            })}
+                            {surgeryHistory !== null || props.text.surgery !== null ?
+                                surgeryHistory.map((data, index) => {
+                                    return (
+                                        <SurgeryHistory 
+                                            petId={props.petId}
+                                            data={data}
+                                            key={data.surgeryId}
+                                            surgeryHistory={surgeryHistory}
+                                            setSurgeryHistory={setSurgeryHistory}
+                                            dateFormat={props.dateFormat}
+                                        />
+                                    )
+                                })
+                            : null }
                         </div>
                     </div> : confirm && <ConfirmModal onClickDelete={handleDeleteConfirm} onClickCancle={handleCancleConfirm}/>}
             </div>

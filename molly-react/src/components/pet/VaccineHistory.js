@@ -11,13 +11,8 @@ import axios from 'axios';
 const VaccineHistory = (props) => {
     const [edit, setEdit] = useState(false);
     const [vaccine, setVaccine] = useState(false);
-    const [editVaccineValue, setEditVaccineValue] = useState('종합백신 1차');
-    const [editVaccineDate, setEditVaccineDate] = useState(new Date())
-
-    useEffect(() => {
-        setEditVaccineValue(props.data.vaccinationName);
-        setEditVaccineDate(new Date(props.data.vaccinationDate));
-    }, [props.vaccineHistory])
+    const [editVaccineValue, setEditVaccineValue] = useState(props.data.vaccinationName);
+    const [editVaccineDate, setEditVaccineDate] = useState(new Date(props.data.vaccinationDate));
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
@@ -90,20 +85,16 @@ const VaccineHistory = (props) => {
         }
     
         const data = {
-            "petId": props.petId,
             "vaccinationId": vaccinationId,
-            "vaccination": 
-                {
-                    "vaccinationName": editVaccineValue,
-                    "vaccinationDate": props.dateFormat(editVaccineDate)
-                }
+            "vaccinationName": editVaccineValue,
+            "vaccinationDate": props.dateFormat(editVaccineDate)
         }
     
         const fetchData = async function fetch() {
-            const response = await axiosInstance.post(`/api/auth/pet/vaccination`, data, config);
+            const response = await axiosInstance.post(`/api/auth/pet/vaccination/${props.petId}`, data, config);
             console.log(response);
             if(response.status === 200) {
-                console.log("백신 수정완료")
+                console.log("백신 수정 완료")
             }
         }
     
@@ -114,25 +105,23 @@ const VaccineHistory = (props) => {
         const config = {
             headers: {
                 Authorization: localStorage.getItem("accessToken")
+            },
+            data: {
+                "petId": props.petId,
+                "vaccinationId": vaccinationId
             }
         }
 
-        const data = {
-            "petId": props.petId,
-            "vaccinationId": vaccinationId
-
-        }
-
-        axiosInstance.delete(`/api/auth/pet/vaccination`, data, config)
+        axiosInstance.delete(`/api/auth/pet/vaccination`, config)
             .then((response) => {
                 console.log(response);
-                console.log("백신 삭제");
+                console.log("백신 이력 삭제");
             });
     }
 
     return (
         <div>
-            {edit ? <div key={props.index} className={styles.editVaccine}>
+            {edit ? <div key={props.key} className={styles.editVaccine}>
                 <ul>
                     <div onClick={() => { setVaccine(!vaccine) }} className={styles.editSort}>
                         <span className={styles.default}>{editVaccineValue}</span>
@@ -152,19 +141,27 @@ const VaccineHistory = (props) => {
                     />
                 </div>
                 <span className={styles.check} onClick={() => {
-                        let updateVaccine = props.vaccineHistory;
-                        updateVaccine.splice(props.index, 1, {
-                            vaccinationId: props.data.vaccinationId,
-                            vaccinationName: editVaccineValue,
-                            vaccinationDate: props.dateFormat(editVaccineDate)
-                        })
-                        props.setVaccineHistory(updateVaccine)
-                        UpdateVaccine(props.data.vaccinationId)
-                        setEdit(!edit)
-                    }}><AiFillCheckCircle color="#AFA79F" size="18px" /></span>
-            </div> : <div key={props.index} className={styles.vaccineHistory}>
-                <span>{props.data.vaccinationName}</span>
-                <span>{props.data.vaccinationDate}</span>
+                    const newVaccine = props.vaccineHistory.map((item) => {
+                        if (item.vaccinationId === props.data.vaccinationId) {
+                            console.log(item.vaccinationId)
+                            return (
+                                {
+                                    vaccinationId: props.data.vaccinationId,
+                                    vaccinationName: editVaccineValue,
+                                    vaccinationDate: props.dateFormat(editVaccineDate)
+                                }
+                            )
+                        } else {
+                            return item;
+                        }
+                    });
+                    props.setVaccineHistory(newVaccine);
+                    UpdateVaccine(props.data.vaccinationId);
+                    setEdit(!edit)
+                }}><AiFillCheckCircle color="#AFA79F" size="18px" /></span>
+            </div> : <div key={props.key} className={styles.vaccineHistory}>
+                <span>{editVaccineValue}</span>
+                <span>{props.dateFormat(editVaccineDate)}</span>
                 <span onClick={() => {
                     props.setVaccineHistory(props.vaccineHistory.filter(vaccineHistory => vaccineHistory.vaccinationId !== props.data.vaccinationId))
                     DeleteVaccine(props.data.vaccinationId);
