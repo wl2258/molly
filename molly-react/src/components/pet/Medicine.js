@@ -195,7 +195,10 @@ const Medicine = (props) => {
     return (
         <div className={styles.medicineContainer}>
             <div className={styles.modalContainer}>
-                <span onClick={props.onClick}><TiDeleteOutline color="#FDFDFD" size="35px" /></span>
+                <span onClick={() => {
+                    props.onClick();
+                    window.location.reload();
+                }}><TiDeleteOutline color="#FDFDFD" size="35px" /></span>
                 <h1>복용약 이력 추가</h1>
                 <div className={styles.drug}>
                     <input

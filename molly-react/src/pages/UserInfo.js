@@ -118,6 +118,9 @@ const UserInfo = () => {
         else if(errResponseStatus === 403) {
           alert("권한이 없습니다.");
         }
+        else if(errResponseStatus === 404) {
+          console.log(error.response.data.data);
+        }
       } catch (e) {
         return Promise.reject(e);
       }
