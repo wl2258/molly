@@ -213,6 +213,28 @@ public class PetService {
         findPet.updatePet(petUpdateRequest);
         updatePetSpecies(petUpdateRequest.getSpecies(), findPet);
 
+        List<SurgeryUpdateRequest> surgery = petUpdateRequest.getSurgery();
+        List<MedicationUpdateRequest> medication = petUpdateRequest.getMedication();
+        List<VaccinationUpdateRequest> vaccination = petUpdateRequest.getVaccination();
+
+        if (surgery != null && !surgery.isEmpty()) {
+            for (SurgeryUpdateRequest s : surgery) {
+                surgeryService.updateSurgery(petId, s);
+            }
+        }
+
+        if (medication!= null && !medication.isEmpty()) {
+            for (MedicationUpdateRequest m : medication) {
+                medicationService.updateMedication(petId, m);
+            }
+        }
+
+        if (vaccination != null && !vaccination.isEmpty()) {
+            for (VaccinationUpdateRequest v : vaccination) {
+                vaccinationService.updateVaccination(petId, v);
+            }
+        }
+
         return findPet.getId();
     }
 
