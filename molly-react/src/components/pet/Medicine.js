@@ -6,20 +6,14 @@ import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import MedicineHistory from './MedicineHistory';
 import axios from 'axios';
-//import useDidMountEffect from '../../pages/useDidMountEffect';
 
 const Medicine = (props) => {
     const [medicineName, setMedicineName] = useState("");
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [medicine, setMedicine] = useState([]);
-    //const [medicineNo, setMedicineNo] = useState(props.text.medication[props.text.medication.length-1].medicationId + 1);
     const [loading, setLoading] = useState(false);
     const medicineNo = useRef(props.text.medication === null || props.text.medication.length === 0? 1 : props.text.medication[props.text.medication.length-1].medicationId + 1);
-    // const [edit, setEdit] = useState(false);
-    // const [editMedicineName, setEditMedicineName] = useState("");
-    // const [editStartDate, setEditStartDate] = useState(new Date());
-    // const [editEndDate, setEditEndDate] = useState(new Date());
 
     useEffect(() => {
         document.body.style.cssText = `
@@ -59,22 +53,15 @@ const Medicine = (props) => {
     //     setLoading(true);
 
     //     setMedicine([
-	// 		{
-	// 			"medicationId": 1432,
-	// 			"medicationName": "넥스가드",
-	// 			"medicationStartDate": "2023-02-01",
-	// 			"medicationEndDate": "2023-02-15"
-	// 		}
+	// 		// {
+	// 		// 	"medicationId": 1432,
+	// 		// 	"medicationName": "넥스가드",
+	// 		// 	"medicationStartDate": "2023-02-01",
+	// 		// 	"medicationEndDate": "2023-02-15"
+	// 		// }
 	// 	])
     //     setLoading(false)
     // }, [])
-
-    // useDidMountEffect(() => {
-    //     console.log(" ")
-    //     medicine.length !== 0 ? setMedicineNo(medicine[medicine.length - 1].medicationId) :
-    //         setMedicineNo(1);
-    //     setLoading(false);
-    // }, [medicine]);
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
@@ -171,7 +158,6 @@ const Medicine = (props) => {
                 console.log("복용약 추가 실패");
             }
         }
-
         fetchData();
     }
 
@@ -186,11 +172,6 @@ const Medicine = (props) => {
             </div>
         )
     }
-
-    // if (medicine === null || props.text.medication === null) {
-    //     console.log("medicine이 null 입니다.")
-    //     return null
-    // }
 
     return (
         <div className={styles.medicineContainer}>
@@ -227,13 +208,13 @@ const Medicine = (props) => {
                         />
                     </div>
                     <span className={styles.plus} onClick={() => {
-                        if (medicine !== null && medicineName !== "")
+                        if (medicine !== null && medicineName !== "") {
                             setMedicine([...medicine, {
                                 medicationId: medicineNo.current++,
                                 medicationStartDate: props.dateFormat(startDate),
                                 medicationEndDate: props.dateFormat(endDate),
                                 medicationName: medicineName
-                        }]) 
+                            }])}
                         else if (medicineName !== "" && medicine === null) {
                             setMedicine([{
                                 medicationId: medicineNo.current++,
@@ -242,10 +223,9 @@ const Medicine = (props) => {
                                 medicationName: medicineName
                             }])
                         }
-                        //setMedicineNo(medicine[medicine.length - 1].medicationId + 2);
+                        registerMedicine();
                         setMedicineName("");
                         console.log(medicine)
-                        registerMedicine();
                     }}><FiPlus color="#AFA79F" size="18px" /></span>
                 </div>
                 {medicine !== null || props.text.medication !== null ? medicine.map((data) => {
@@ -256,6 +236,7 @@ const Medicine = (props) => {
                             medicine={medicine}
                             setMedicine={setMedicine}
                             dateFormat={props.dateFormat}
+                            petId={props.petId}
                         />
                     )
                 }) : null}

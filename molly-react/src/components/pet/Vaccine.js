@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import styles from '../../css/Vaccine.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 import { FiPlus } from 'react-icons/fi';
@@ -7,15 +7,14 @@ import DatePicker from 'react-datepicker';
 import {ko} from 'date-fns/esm/locale';
 import VaccineHistory from './VaccineHistory';
 import axios from 'axios';
-import useDidMountEffect from '../../pages/useDidMountEffect';
 
 const Vaccine = (props) => {
   const [vaccine, setVaccine] = useState(false);
   const [vaccineValue, setVaccineValue] = useState('종합백신 1차');
   const [vaccineDate, setVaccineDate] = useState(new Date());
   const [vaccineHistory, setVaccineHistory] = useState([]);
-  const [vaccineNo, setVaccineNo] = useState("");
   const [loading, setLoading] = useState(false);
+  const vaccineNo = useRef(props.text.vaccination === null || props.text.vaccination.length === 0? 1 : props.text.vaccination[props.text.vaccination.length-1].vaccinationId + 1);
 
   useEffect(() => {
     document.body.style.cssText = `
@@ -30,22 +29,32 @@ const Vaccine = (props) => {
     };
   }, []);
 
-  useState(() => {
+  useEffect(() => {
     setLoading(true);
 
-    setVaccineHistory([
-      {
-				"vaccinationId": 1888,
-				"vaccinationName": "종합백신1차",
-				"vaccinationDate": "2018-01-01"
-			}
-    ])
+    const config = {
+        headers: {
+            Authorization: localStorage.getItem("accessToken")
+        }
+    }
+
+    axiosInstance.get(`/api/auth/pet/vaccination/${props.petId}`, config)
+      .then((response) => {
+          console.log(response)
+          setVaccineHistory(response.data.data);
+          setLoading(false)
+      })
+      .catch((e) => {
+          console.log(e);
+      })
   }, [])
 
-  useEffect(() => {
-    setVaccineNo(vaccineHistory[vaccineHistory.length - 1].vaccinationId);
-    setLoading(false);
-}, []);
+  // useState(() => {
+  //   setLoading(true);
+
+  //   setVaccineHistory([])
+  //   setLoading(false)
+  // }, [])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -118,6 +127,7 @@ const Vaccine = (props) => {
     }
 
     const data = {
+      "petId": props.petId,
       "vaccinationName": vaccineValue,
       "vaccinationDate": props.dateFormat(vaccineDate)
     }
@@ -132,7 +142,7 @@ const Vaccine = (props) => {
                 vaccinationName: vaccineValue,
                 vaccinationDate: props.dateFormat(vaccineDate)
             })
-            props.setVaccineHistory(updateVaccine)
+            setVaccineHistory(updateVaccine)
             console.log("백신 이력 추가 완료");
         }
         else {
@@ -155,14 +165,13 @@ const Vaccine = (props) => {
     )
   }
 
-  if (vaccineHistory.length === 0) {
-    return null;
-  }
-
   return (
     <div className={styles.vaccine}>
       <div className={styles.modalContainer}>
-        <span onClick={props.onClick}><TiDeleteOutline color="#FDFDFD" size="35px"/></span>
+        <span onClick={() => {
+          props.onClick();
+          window.location.reload();
+        }}><TiDeleteOutline color="#FDFDFD" size="35px"/></span>
         <h1>예방접종 이력 추가</h1>
         <ul>
           <div onClick={() => {setVaccine(!vaccine)}} className={styles.sort}>
@@ -183,28 +192,37 @@ const Vaccine = (props) => {
           />
         </div> 
         <span onClick={() => {
-          setVaccineHistory([...vaccineHistory, {
-            vaccinationId : parseInt(vaccineNo) + 1,
-            vaccinationName : vaccineValue,
-            vaccinationDate : props.dateFormat(vaccineDate),
-          }])
-          setVaccineNo(vaccineHistory[vaccineHistory.length-1].vaccinationId);
-          console.log(vaccineHistory)
+          if(vaccineHistory !== null) {
+            setVaccineHistory([...vaccineHistory, {
+              vaccinationId : vaccineNo.current++,
+              vaccinationName : vaccineValue,
+              vaccinationDate : props.dateFormat(vaccineDate),
+            }])
+          }
+          else if (vaccineHistory === null) {
+            setVaccineHistory([{
+              vaccinationId : vaccineNo.current++,
+              vaccinationName : vaccineValue,
+              vaccinationDate : props.dateFormat(vaccineDate),
+            }])
+          }
           registerVaccine();
+          console.log(vaccineHistory)
         }}><FiPlus color="#AFA79F" size="18px"/></span>
         <div>
-          {vaccineHistory.map((data, index) => {
-            return (
-              <VaccineHistory 
-                petId={props.petId}
-                data={data}
-                index={index}
-                vaccineHistory={vaccineHistory}
-                setVaccineHistory={setVaccineHistory}
-                dateFormat={props.dateFormat}
-              />
-            )
-          })}
+          {vaccineHistory !== null || props.text.vaccination !== null ? 
+            vaccineHistory.map((data, index) => {
+              return (
+                <VaccineHistory
+                  key={data.vaccinationId} 
+                  petId={props.petId}
+                  data={data}
+                  vaccineHistory={vaccineHistory}
+                  setVaccineHistory={setVaccineHistory}
+                  dateFormat={props.dateFormat}
+                />
+              )
+            }) : null}
         </div>
       </div>
     </div>
