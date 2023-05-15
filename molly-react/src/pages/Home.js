@@ -30,6 +30,7 @@ const Home = () => {
   let { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [pet, setPet] = useState(null);
+  const [save, setSave] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -49,9 +50,10 @@ const Home = () => {
       .catch((e) => {
         console.log(e);
       })
-  }, []);
+  }, [save]);
 
   // useEffect(() => {
+  //   console.log("render");
   //   setLoading(true);
   //   setPet([
 	// 		{
@@ -72,7 +74,7 @@ const Home = () => {
 	// 				},
   //         {
 	// 					"vaccinationName": "종합백신3차",
-	// 					"vaccinationDate": "2023-09-30"
+	// 					"vaccinationDate": "2023-05-30"
 	// 				}
 	// 			],
 	// 		},
@@ -96,7 +98,7 @@ const Home = () => {
 	// 		}
 	// 	])
   //   setLoading(false)
-  // }, [])
+  // }, [save])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -249,7 +251,7 @@ return (
           <Month pet={pet}/>
         </div>
         <div>
-          <Dday pet={pet}/>
+          <Dday pet={pet} save={save} setSave={setSave}/>
         </div>
       </Schedule>
       <Info>

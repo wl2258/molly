@@ -4,7 +4,7 @@ import styles from '../css/Header.module.css'
 import styled from 'styled-components';
 import { RiAccountCircleLine } from 'react-icons/ri';
 import { TbDog, TbBell } from 'react-icons/tb';
-import { useSelector } from 'react-redux';
+//import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 let CustomNavLink = styled(NavLink)`
@@ -149,65 +149,47 @@ const Header = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setPet([
-  // 		{
-  // 			"petId": 13,
-  // 			"petName": "몰리",
-  // 			"petType": "DOG",
-  // 			"birthdate": "2013-08-07",
-  // 			"preVaccine": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2023-03-14"
-  // 				},
-  // 			],
-  // 			"postVaccine": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-07-30"
-  // 				},
+	// 		{
+	// 			"petId": 13,
+	// 			"petName": "몰리",
+	// 			"petType": "DOG",
+	// 			"birthdate": "2013-08-07",
+	// 			"vaccination": [
+	// 				{
+	// 					"vaccinationName": "종합백신1차",
+	// 					"vaccinationDate": "2023-03-14"
+	// 				},
+	// 			],
+	// 			"vaccinePredict": [
+	// 				{
+	// 					"vaccinationName": "종합백신2차",
+	// 					"vaccinationDate": "2023-05-13"
+	// 				},
   //         {
-  // 					"vaccinationName": "종합백신3차",
-  // 					"vaccinationDate": "2023-09-30"
-  // 				}
-  // 			],
-  // 		},
+	// 					"vaccinationName": "종합백신3차",
+	// 					"vaccinationDate": "2023-05-30"
+	// 				}
+	// 			],
+	// 		},
   //     {
-  // 			"petId": 14,
-  // 			"petName": "보리",
-  // 			"petType": "CAT",
-  // 			"birthdate": "2019-01-10",
-  // 			"preVaccine": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2020-08-30"
-  // 				},
-  // 			],
-  // 			"postVaccine": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-09-30"
-  // 				},
-  // 			],
-  // 		},
-  //     {
-  // 			"petId": 14,
-  // 			"petName": "까까",
-  // 			"petType": "CAT",
-  // 			"birthdate": "2019-01-10",
-  // 			"preVaccine": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2020-08-30"
-  // 				},
-  // 			],
-  // 			"postVaccine": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-09-30"
-  // 				},
-  // 			],
-  // 		}
-  // 	])
+	// 			"petId": 14,
+	// 			"petName": "보리",
+	// 			"petType": "CAT",
+	// 			"birthdate": "2019-01-10",
+	// 			"vaccination": [
+	// 				{
+	// 					"vaccinationName": "종합백신1차",
+	// 					"vaccinationDate": "2020-08-30"
+	// 				},
+	// 			],
+	// 			"vaccinePredict": [
+	// 				{
+	// 					"vaccinationName": "종합백신2차",
+	// 					"vaccinationDate": "2023-09-30"
+	// 				},
+	// 			],
+	// 		}
+	// 	])
   //   setLoading(false)
   // }, [])
 
@@ -355,16 +337,20 @@ const PetDropdown = (props) => {
 
   return (
     <div className={styles.petdropdown}>
-      {props.pet.map((item, index) => {
-        return (
-          item.petName !== '' &&
-          <li onClick={() => { navigate(`/detailpet/${item.petId}`) }}>
-            <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${item.petType}-logo.png`} alt="puppy" width="36px" />{item.petName}
-          </li>
-        )
-      })}
-      {props.pet[0].petName === "" || props.pet === null ? <li style={{ borderRadius: "10px" }} onClick={() => { navigate('/registerpet') }}>추가하기</li> :
-        <li onClick={() => { navigate('/registerpet') }}>추가하기</li>}
+      {props.pet === null ? <li style={{ borderRadius: "10px" }} onClick={() => { navigate('/registerpet') }}>추가하기</li> :
+        props.pet.length === 0 ? <li style={{ borderRadius: "10px" }} onClick={() => { navigate('/registerpet') }}>추가하기</li> :
+        <>
+          {props.pet.map((item, index) => {
+            return (
+              item.petName !== '' &&
+              <li onClick={() => { navigate(`/detailpet/${item.petId}`) }}>
+                <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${item.petType}-logo.png`} alt="puppy" width="36px" />{item.petName}
+              </li>
+            )
+          })}
+          <li onClick={() => { navigate('/registerpet') }}>추가하기</li>
+        </>
+      }
     </div>
   )
 }
