@@ -10,6 +10,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import kr.co.kumoh.illdang100.mollyspring.domain.surgery.SurgeryHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.vaccinations.VaccinationHistory;
+import kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationReqDto.VaccinationRequest;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.cat.CatRepository;
@@ -30,11 +31,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static kr.co.kumoh.illdang100.mollyspring.dto.medication.MedicationReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -78,8 +82,18 @@ public class PetServiceTest extends DummyObject {
     void 반려동물_등록() throws Exception {
 
         // given
-        PetSaveRequest saveRequest = new PetSaveRequest(PetTypeEnum.DOG, "삐삐", DogEnum.BOXER.toString(),
-                LocalDate.of(2020, 1, 5), PetGenderEnum.MALE, true, 3.4, null, null);
+        MedicationRequest medication1 = new MedicationRequest("medication1", LocalDate.now().minusWeeks(1), LocalDate.now().minusDays(2));
+        List<MedicationRequest> medicationList = List.of(medication1);
+
+        SurgeryRequest surgery1 = new SurgeryRequest("surgery1", LocalDate.now().minusMonths(2));
+        List<SurgeryRequest> surgeryList = List.of(surgery1);
+
+        VaccinationRequest vaccination1 = new VaccinationRequest("vaccination1", LocalDate.now().minusDays(6));
+        List<VaccinationRequest> vaccinationList = List.of(vaccination1);
+
+        PetSaveRequest saveRequest = new PetSaveRequest(PetTypeEnum.DOG.toString(), "삐삐", DogEnum.BOXER.toString(),
+                LocalDate.of(2020, 1, 5), PetGenderEnum.MALE, true, 3.4, null, null,
+                medicationList, surgeryList, vaccinationList);
 
         // stub
         Account account = newMockAccount(1L, "google_1234", "molly", AccountEnum.CUSTOMER);
@@ -89,7 +103,7 @@ public class PetServiceTest extends DummyObject {
         when(petRepository.findByAccount_IdAndPetName(any(), any())).thenReturn(Optional.empty());
 
         //when
-        Long petId = petService.registerPet(saveRequest, account);
+        petService.registerPet(saveRequest, account.getId());
 
         //then
     }
@@ -98,8 +112,21 @@ public class PetServiceTest extends DummyObject {
     void 반려동물_등록_실패() throws Exception {
 
         // given
-        PetSaveRequest saveRequest = new PetSaveRequest(PetTypeEnum.DOG, "삐삐", DogEnum.BOXER.toString(),
-                LocalDate.of(2020, 1, 5), PetGenderEnum.MALE, true, 3.4, null, null);
+        MedicationRequest medication1 = new MedicationRequest("medication1", LocalDate.now().minusWeeks(1), LocalDate.now().minusDays(2));
+        MedicationRequest medication2 = new MedicationRequest("medication2", LocalDate.now().minusMonths(1), LocalDate.now().minusWeeks(2));
+        List<MedicationRequest> medicationList = List.of(medication1, medication2);
+
+        SurgeryRequest surgery1 = new SurgeryRequest("surgery1", LocalDate.now().minusMonths(2));
+        SurgeryRequest surgery2 = new SurgeryRequest("surgery2", LocalDate.now().minusYears(3));
+        List<SurgeryRequest> surgeryList = List.of(surgery1, surgery2);
+
+        VaccinationRequest vaccination1 = new VaccinationRequest("vaccination1", LocalDate.now().minusDays(6));
+        VaccinationRequest vaccination2 = new VaccinationRequest("vaccination2", LocalDate.now().minusYears(1));
+        List<VaccinationRequest> vaccinationList = List.of(vaccination1, vaccination2);
+
+        PetSaveRequest saveRequest = new PetSaveRequest(PetTypeEnum.DOG.toString(), "삐삐", DogEnum.BOXER.toString(),
+                LocalDate.of(2020, 1, 5), PetGenderEnum.MALE, true, 3.4, null, null,
+                medicationList, surgeryList, vaccinationList);
 
         // stub
         Account account = newMockAccount(1L, "google_1234", "molly", AccountEnum.CUSTOMER);
@@ -107,12 +134,15 @@ public class PetServiceTest extends DummyObject {
                 PetTypeEnum.DOG, null, DogEnum.BOXER);
 
         //then
-        assertThatThrownBy(() -> petService.registerPet(saveRequest, account))
+        assertThatThrownBy(() -> petService.registerPet(saveRequest, account.getId()))
                 .isInstanceOf(CustomApiException.class);
     }
 
     @Test
     void 반려동물_수정() throws Exception {
+
+        // given
+
 
         // stub
         Account account = newMockAccount(1L, "google_1234", "molly", AccountEnum.CUSTOMER);
@@ -125,11 +155,11 @@ public class PetServiceTest extends DummyObject {
         when(petRepository.findById(any())).thenReturn(Optional.of(pet));
 
         //given
-        PetUpdateRequest updateRequest = new PetUpdateRequest(pet.getId(), PetTypeEnum.DOG, "updatePetName", DogEnum.BICHON_FRIZE.toString(),
-                LocalDate.now(), PetGenderEnum.MALE, false, 4.0, "물 수도 있음");
+        PetUpdateRequest updateRequest = new PetUpdateRequest(PetTypeEnum.DOG.toString(), "updatePetName", DogEnum.BICHON_FRIZE.toString(),
+                LocalDate.now(), PetGenderEnum.MALE, false, 4.0, "물 수도 있음", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         //when
-        Long petId = petService.updatePet(updateRequest, account);
+        Long petId = petService.updatePet(pet.getId(), updateRequest, account.getId());
 
         //then
     }
@@ -148,11 +178,11 @@ public class PetServiceTest extends DummyObject {
         when(petRepository.findById(any())).thenReturn(Optional.empty());
 
         //given
-        PetUpdateRequest updateRequest = new PetUpdateRequest(pet.getId(), PetTypeEnum.DOG, "updatePetName", DogEnum.BICHON_FRIZE.toString(),
-                LocalDate.now(), PetGenderEnum.MALE, false, 4.0, "물 수도 있음");
+        PetUpdateRequest updateRequest = new PetUpdateRequest(PetTypeEnum.DOG.toString(), "updatePetName", DogEnum.BICHON_FRIZE.toString(),
+                LocalDate.now(), PetGenderEnum.MALE, false, 4.0, "물 수도 있음", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         //then
-        assertThatThrownBy(() -> petService.updatePet(updateRequest, account))
+        assertThatThrownBy(() -> petService.updatePet(pet.getId(), updateRequest, account.getId()))
                 .isInstanceOf(CustomApiException.class);
     }
 
@@ -217,7 +247,7 @@ public class PetServiceTest extends DummyObject {
         when(petRepository.findById(any())).thenReturn(Optional.of(pet));
 
         //when
-        PetDetailResponse detailResponse = petService.viewDetails(pet.getId());
+        PetDetailResponse detailResponse = petService.viewDetails(pet.getId(), account.getId());
 
         //then
     }
@@ -231,11 +261,8 @@ public class PetServiceTest extends DummyObject {
         Pet pet = newPet(account, "몽이", LocalDate.now().minusYears(1), PetGenderEnum.MALE, true, 3.5,
                 PetTypeEnum.DOG, null, DogEnum.BICHON_FRIZE);
 
-        // stub
-        when(petRepository.findById(any())).thenReturn(Optional.empty());
-
         //then
-        assertThatThrownBy(() -> petService.viewDetails(pet.getId()))
+        assertThatThrownBy(() -> petService.viewDetails(pet.getId(), account.getId()))
                 .isInstanceOf(CustomApiException.class);
     }
 
@@ -252,7 +279,7 @@ public class PetServiceTest extends DummyObject {
         when(petRepository.findById(any())).thenReturn(Optional.of(pet));
 
         // when
-        petService.viewAnnualCalendarSchedule(pet.getId());
+        petService.viewAnnualCalendarSchedule(pet.getId(), account.getId());
 
         //then
     }
@@ -266,11 +293,8 @@ public class PetServiceTest extends DummyObject {
         Pet pet = newPet(account, "해피", LocalDate.now().minusYears(5), PetGenderEnum.FEMALE, true, 2.7,
                 PetTypeEnum.DOG, null, DogEnum.GERMAN_SPITZ);
 
-        // stub
-        when(petRepository.findById(any())).thenReturn(Optional.empty());
-
         //then
-        assertThatThrownBy(() -> petService.viewAnnualCalendarSchedule(pet.getId()))
+        assertThatThrownBy(() -> petService.viewAnnualCalendarSchedule(pet.getId(), account.getId()))
                 .isInstanceOf(CustomApiException.class);
     }
 
