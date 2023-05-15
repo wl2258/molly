@@ -68,6 +68,7 @@ public class PetRespDto {
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class PetHomeResponse {
         private List<PetHomeDetailResponse> pet;
