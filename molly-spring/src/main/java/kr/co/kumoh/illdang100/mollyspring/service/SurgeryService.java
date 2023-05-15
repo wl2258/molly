@@ -61,8 +61,8 @@ public class SurgeryService {
     public List<SurgeryResponse> viewSurgeryList(Long petId) {
 
         List<SurgeryHistory> sHistory = surgeryRepository.findByPet_IdOrderBySurgeryDateAsc(petId);
-       if (sHistory == null) throw new CustomApiException("수술 이력이 존재하지 않습니다");
-       return sHistory.stream()
+        if (sHistory.isEmpty()) return null;
+        return sHistory.stream()
                .map(s -> new SurgeryResponse(s.getId(), s.getSurgeryName(), s.getSurgeryDate()))
                .collect(Collectors.toList());
     }
@@ -72,8 +72,7 @@ public class SurgeryService {
      * @param request
      */
     @Transactional
-    public void updateSurgery(SurgeryUpdateRequest request) {
-        Long petId = request.getPetId();
+    public void updateSurgery(Long petId, SurgeryUpdateRequest request) {
         findPetOrElseThrow(petId);
 
         Long surgeryId = request.getSurgeryId();

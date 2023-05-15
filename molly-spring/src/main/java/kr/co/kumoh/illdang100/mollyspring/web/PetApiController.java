@@ -32,23 +32,23 @@ public class PetApiController {
                                          BindingResult bindingResult,
                                          @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        Long petId = petService.registerPet(petSaveRequest, principalDetails.getAccount());
+        PetSaveResponse petSaveResponse = petService.registerPet(petSaveRequest, principalDetails.getAccount().getId());
 
-        return new ResponseEntity<>(new ResponseDto(1, "반려동물 등록을 성공했습니다.", new PetSaveResponse(petId)), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto(1, "반려동물 등록을 성공했습니다.", petSaveResponse), HttpStatus.CREATED);
     }
     @GetMapping("{petId}")
-    public ResponseEntity<?> viewDetails(@PathVariable @NotNull Long petId) {
-
-        PetDetailResponse petDetailResponse = petService.viewDetails(petId);
+    public ResponseEntity<?> viewDetails(@PathVariable @NotNull Long petId,
+                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        PetDetailResponse petDetailResponse = petService.viewDetails(petId, principalDetails.getAccount().getId());
 
         return new ResponseEntity<>(new ResponseDto(1, "해당 반려동물의 정보입니다.", petDetailResponse), HttpStatus.OK);
     }
     @PostMapping("{petId}")
-    public ResponseEntity<?> updatePet(@RequestBody @Valid PetUpdateRequest petUpdateRequest,
+    public ResponseEntity<?> updatePet(@PathVariable @NotNull Long petId,  @RequestBody @Valid PetUpdateRequest petUpdateRequest,
                                        BindingResult bindingResult,
                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        petService.updatePet(petUpdateRequest, principalDetails.getAccount());
+        petService.updatePet(petId, petUpdateRequest, principalDetails.getAccount().getId());
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 정보 수정을 성공했습니다.", null), HttpStatus.OK);
     }
@@ -61,7 +61,7 @@ public class PetApiController {
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 삭제를 성공했습니다.", null), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/image")
+    @PostMapping("/image")
     public ResponseEntity<?> updatePetProfileImage(@ModelAttribute @Valid PetProfileImageUpdateRequest petProfileImageUpdateRequest,
                                                    BindingResult bindingResult) {
 
@@ -75,7 +75,7 @@ public class PetApiController {
 
         petService.deletePetProfileImage(petId);
 
-        return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 기본 이미지로 변경했습니다..", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 기본 이미지로 변경했습니다.", null), HttpStatus.OK);
     }
 
     @GetMapping("/dog-species")
