@@ -68,13 +68,7 @@ const UpdatePet = () => {
 	// 		"neuteredStatus" : false,
 	// 		"weight" : 3.4,
 	// 		"caution" : "분리불안 심함",
-	// 		"surgery": [
-	// 			{
-  //         "surgeryId": 1,
-	// 				"surgeryName": "수직이도성형술",
-	// 				"surgeryDate": "2023-01-01"
-	// 			},
-	// 		],
+	// 		"surgery": [],
 	// 		"medication": null,
 	// 		"vaccination": [
 	// 			{

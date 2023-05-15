@@ -8,14 +8,9 @@ import { MdModeEdit } from 'react-icons/md';
 import axios from 'axios';
 
 const SurgeryHistory = (props) => {
-    const [editSurgeryName, setEditSurgeryName] = useState("");
-    const [editSurgeryDate, setEditSurgeryDate] = useState(new Date());
+    const [editSurgeryName, setEditSurgeryName] = useState(props.data.surgeryName);
+    const [editSurgeryDate, setEditSurgeryDate] = useState(new Date(props.data.surgeryDate));
     const [edit, setEdit] = useState(false);
-
-    useEffect(() => {
-        setEditSurgeryName(props.data.surgeryName);
-        setEditSurgeryDate(new Date(props.data.surgeryDate));
-    }, [props.surgeryHistory]);
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
@@ -88,17 +83,13 @@ const SurgeryHistory = (props) => {
         }
 
         const data = {
-            "petId": props.petId,
             "surgeryId": surgeryId,
-	        "surgery":
-            {
-                "surgeryName": editSurgeryName,
-                "surgeryDate": props.dateFormat(editSurgeryDate)
-            }
+            "surgeryName": editSurgeryName,
+            "surgeryDate": props.dateFormat(editSurgeryDate)
         }
 
         const fetchData = async function fetch() {
-            const response = await axiosInstance.post(`/api/auth/pet/surgery`, data, config);
+            const response = await axiosInstance.post(`/api/auth/pet/surgery/${props.petId}`, data, config);
             console.log(response);
             if (response.status === 200) {
                 console.log("수술이력 수정완료")
@@ -112,16 +103,14 @@ const SurgeryHistory = (props) => {
         const config = {
             headers: {
                 Authorization: localStorage.getItem("accessToken")
+            },
+            data : {
+                "petId": props.petId,
+                "surgeryId": surgeryId
             }
         }
 
-        const data = {
-            "petId": props.petId,
-            "surgeryId": surgeryId
-
-        }
-
-        axiosInstance.delete(`/api/auth/pet/surgery`, data, config)
+        axiosInstance.delete(`/api/auth/pet/surgery`, config)
             .then((response) => {
                 console.log(response);
                 console.log("수술 삭제");
@@ -147,20 +136,28 @@ const SurgeryHistory = (props) => {
                     value={editSurgeryName}></input>
                 <span className={styles.check} onClick={() => {
                     if (editSurgeryName !== "") {
-                        let updateSurgery = props.surgeryHistory;
-                        updateSurgery.splice(props.index, 1, {
-                            surgeryId: props.data.surgeryId,
-                            surgeryDate: props.dateFormat(editSurgeryDate),
-                            surgeryName: editSurgeryName
-                        })
-                        props.setSurgeryHistory(updateSurgery)
+                        const newSurgery = props.surgeryHistory.map((item) => {
+                            if (item.surgeryId === props.data.surgeryId) {
+                                console.log(item.surgeryId)
+                                return (
+                                    {
+                                        surgeryId: props.data.surgeryId,
+                                        surgeryDate: props.dateFormat(editSurgeryDate),
+                                        surgeryName: editSurgeryName
+                                    }
+                                )
+                            } else {
+                                return item;
+                            }
+                        });
+                        props.setSurgeryHistory(newSurgery)
                         UpdateSurgery(props.data.surgeryId)
+                        setEdit(!edit)
                     }
-                    setEdit(!edit)
                 }}><AiFillCheckCircle color="#AFA79F" size="18px" /></span>
             </div> : <div key={props.index} className={styles.surgeryHistory}>
-                <span>{props.data.surgeryDate}</span>
-                <span>{props.data.surgeryName}</span>
+                <span>{props.dateFormat(editSurgeryDate)}</span>
+                <span>{editSurgeryName}</span>
                 <span onClick={() => {
                     props.setSurgeryHistory(props.surgeryHistory.filter(surgeryHistory => surgeryHistory.surgeryId !== props.data.surgeryId))
                     DeleteSurgery(props.data.surgeryId);

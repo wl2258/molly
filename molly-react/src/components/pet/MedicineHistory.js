@@ -13,12 +13,6 @@ const MedicineHistory = (props) => {
     const [editEndDate, setEditEndDate] = useState(new Date(props.data.medicationEndDate));
     const [edit, setEdit] = useState(false);
 
-    // useEffect(() => {
-    //     setEditMedicineName(props.data.medicationName);
-    //     setEditStartDate(new Date(props.data.medicationStartDate));
-    //     setEditEndDate(new Date(props.data.medicationEndDate))
-    // }, [props.medicine])
-
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
     });
@@ -81,7 +75,6 @@ const MedicineHistory = (props) => {
             }
         }
     );
-
 
     const UpdateMedicine = (medicationId) => {
         const config = {
@@ -159,6 +152,7 @@ const MedicineHistory = (props) => {
                         if (editMedicineName !== "") {
                             const newMedicine = props.medicine.map((item) => {
                                 if (item.medicationId === props.data.medicationId) {
+                                    console.log(item.medicationId)
                                     return (
                                         {
                                             medicationId: props.data.medicationId,
@@ -172,13 +166,7 @@ const MedicineHistory = (props) => {
                                 }
                             });
                             props.setMedicine(newMedicine);
-                            // updateMedicine.splice(index, 1, {
-                            //     medicationId: updateData[0].medicationId,
-                            //     medicationStartDate: props.dateFormat(editStartDate),
-                            //     medicationEndDate: props.dateFormat(editEndDate),
-                            //     medicationName: editMedicineName
-                            // })
-                            // props.setMedicine(updateMedicine)
+                            console.log(props.data.medicationId)
                             UpdateMedicine(props.data.medicationId)
                             setEdit(!edit)
                         }
