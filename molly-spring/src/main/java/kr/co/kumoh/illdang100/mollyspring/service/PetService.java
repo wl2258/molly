@@ -27,9 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static kr.co.kumoh.illdang100.mollyspring.domain.pet.PetTypeEnum.*;
@@ -39,6 +38,7 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.pet.PetRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.vaccination.VaccinationRespDto.*;
 
 
 @Slf4j
@@ -65,36 +65,58 @@ public class PetService {
      * @param petSaveRequest
      */
     @Transactional
-    public Long registerPet(PetSaveRequest petSaveRequest, Account account) {
-        Account findUser = findAccountOrElseThrow(account.getId());
+    public PetSaveResponse registerPet(PetSaveRequest petSaveRequest, Long accountId) {
+        Account findUser = findAccountOrElseThrow(accountId);
 
-        PetTypeEnum petType = petSaveRequest.getPetType();
+        String petType = petSaveRequest.getPetType();
 
         Optional<Pet> findPetOpt = petRepository.findByAccount_IdAndPetName(findUser.getId(), petSaveRequest.getPetName());
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
-        if (petType.equals(CAT)) {
+        LocalDate birthdate = petSaveRequest.getBirthdate();
+        List<VaccinationRequest> vaccination = petSaveRequest.getVaccination();
+
+        List<VaccineInfoResponse> vaccinePredictList = new ArrayList<>();
+        if (petType.equals(CAT.toString())) {
             Pet savedCat = saveCat(petSaveRequest, findUser);
             recordMedicalHistory(petSaveRequest, savedCat);
-           return savedCat.getId();
-        }
-        else if (petType.equals(DOG)) {
-            Pet savedDog = saveDog(petSaveRequest, findUser);
-            recordMedicalHistory(petSaveRequest, savedDog);
-            return savedDog.getId();
-        }
-        else if (petType.equals(RABBIT)) {
-            Pet savedRabbit = saveRabbit(petSaveRequest, findUser);
-            recordMedicalHistory(petSaveRequest, savedRabbit);
-            return savedRabbit.getId();
+
+            if (vaccination == null || vaccination.isEmpty())
+                vaccinePredictList.addAll(vaccinationService.predictCat_anyRecord(birthdate));
+            else
+                vaccinePredictList.addAll(vaccinationService.predictCat(birthdate, vaccination));
+
+            return new PetSaveResponse(savedCat.getId(), vaccinePredictList);
         }
 
+        else if (petType.equals(DOG.toString())) {
+            Pet savedDog = saveDog(petSaveRequest, findUser);
+            recordMedicalHistory(petSaveRequest, savedDog);
+            if (vaccination == null || vaccination.isEmpty())
+                vaccinePredictList.addAll(vaccinationService.predictDog_anyRecord(birthdate));
+            else
+                vaccinePredictList.addAll(vaccinationService.predictDog(birthdate, vaccination));
+
+            return new PetSaveResponse(savedDog.getId(), vaccinePredictList);
+        }
+
+        else if (petType.equals(RABBIT.toString())) {
+            Pet savedRabbit = saveRabbit(petSaveRequest, findUser);
+            recordMedicalHistory(petSaveRequest, savedRabbit);
+            if (vaccination == null || vaccination.isEmpty())
+                    vaccinePredictList.addAll(vaccinationService.predictRabbit_anyRecord(birthdate));
+            else
+                vaccinePredictList.addAll(vaccinationService.predictRabbit(birthdate, vaccination));
+
+            return new PetSaveResponse(savedRabbit.getId(), vaccinePredictList);
+        }
         throw new CustomApiException("반려동물 등록 실패");
     }
 
     private void recordMedicalHistory(PetSaveRequest petSaveRequest, Pet pet) {
+
         List<MedicationRequest> medicationList = petSaveRequest.getMedication();
-        if (!medicationList.isEmpty()) {
+        if (medicationList != null && !medicationList.isEmpty()) {
             for (MedicationRequest medication : medicationList) {
                 MedicationHistory medicationHistory = MedicationHistory.builder()
                         .pet(pet)
@@ -107,7 +129,7 @@ public class PetService {
         }
 
         List<SurgeryRequest> surgeryList = petSaveRequest.getSurgery();
-        if (!surgeryList.isEmpty()) {
+        if (surgeryList != null && !surgeryList.isEmpty()) {
             for (SurgeryRequest surgery : surgeryList) {
                 SurgeryHistory surgeryHistory = SurgeryHistory.builder()
                         .pet(pet)
@@ -119,7 +141,7 @@ public class PetService {
         }
 
         List<VaccinationRequest> vaccinationList = petSaveRequest.getVaccination();
-        if (!vaccinationList.isEmpty()) {
+        if (vaccinationList != null && !vaccinationList.isEmpty()) {
             for (VaccinationRequest vaccination : vaccinationList) {
                 VaccinationHistory vaccinationHistory = VaccinationHistory.builder()
                         .pet(pet)
@@ -135,9 +157,10 @@ public class PetService {
      * 반려동물 정보 상세보기
      * @param petId
      */
-    public PetDetailResponse viewDetails(Long petId) {
+    public PetDetailResponse viewDetails(Long petId, Long accountId) {
 
         Pet findPet = findPetOrElseThrow(petId);
+        if (findPet.getAccount().getId().longValue() != accountId.longValue()) throw new CustomApiException("해당 사용자의 반려동물이 아닙니다.");
         PetTypeEnum petType = findPet.getPetType();
 
         String petSpecies = getPetSpecies(findPet);
@@ -161,7 +184,7 @@ public class PetService {
         if (findPetImageOpt.isPresent()) {
             PetImage findPetImage = findPetImageOpt.get();
             if (findPetImage.getPetProfileImage() != null) {
-                petDetailResponse.setProfileImage(findPetImage.getPetProfileImage().getStoreFileName());
+                petDetailResponse.setProfileImage(findPetImage.getPetProfileImage().getStoreFileUrl());
             }
         }
 
@@ -169,9 +192,9 @@ public class PetService {
         List<MedicationResponse> medication = medicationService.viewMedicationList(petId);
         List<VaccinationResponse> vaccination = vaccinationService.viewVaccinationList(petId);
 
-        petDetailResponse.setSurgery(surgery);
-        petDetailResponse.setMedication(medication);
-        petDetailResponse.setVaccination(vaccination);
+        if (surgery != null) petDetailResponse.setSurgery(surgery);
+        if (medication != null) petDetailResponse.setMedication(medication);
+        if (vaccination != null) petDetailResponse.setVaccination(vaccination);
 
         return petDetailResponse;
     }
@@ -181,15 +204,36 @@ public class PetService {
      * @param petUpdateRequest
      */
     @Transactional
-    public Long updatePet(PetUpdateRequest petUpdateRequest, Account account) {
+    public Long updatePet(Long petId, PetUpdateRequest petUpdateRequest, Long accountId) {
 
-        findAccountOrElseThrow(account.getId());
+        findAccountOrElseThrow(accountId);
 
-        Long petId = petUpdateRequest.getPetId();
         Pet findPet = findPetOrElseThrow(petId);
 
         findPet.updatePet(petUpdateRequest);
         updatePetSpecies(petUpdateRequest.getSpecies(), findPet);
+
+        List<SurgeryUpdateRequest> surgery = petUpdateRequest.getSurgery();
+        List<MedicationUpdateRequest> medication = petUpdateRequest.getMedication();
+        List<VaccinationUpdateRequest> vaccination = petUpdateRequest.getVaccination();
+
+        if (surgery != null && !surgery.isEmpty()) {
+            for (SurgeryUpdateRequest s : surgery) {
+                surgeryService.updateSurgery(petId, s);
+            }
+        }
+
+        if (medication!= null && !medication.isEmpty()) {
+            for (MedicationUpdateRequest m : medication) {
+                medicationService.updateMedication(petId, m);
+            }
+        }
+
+        if (vaccination != null && !vaccination.isEmpty()) {
+            for (VaccinationUpdateRequest v : vaccination) {
+                vaccinationService.updateVaccination(petId, v);
+            }
+        }
 
         return findPet.getId();
     }
@@ -248,9 +292,9 @@ public class PetService {
      * 연간 달력 정보
      * @param petId
      */
-    public PetCalendarResponse viewAnnualCalendarSchedule(Long petId) {
+    public PetCalendarResponse viewAnnualCalendarSchedule(Long petId, Long accountId) {
 
-        PetDetailResponse petDetailResponse = viewDetails(petId);
+        PetDetailResponse petDetailResponse = viewDetails(petId, accountId);
         return PetCalendarResponse.builder()
                 .petType(petDetailResponse.getPetType())
                 .petName(petDetailResponse.getPetName())
@@ -309,6 +353,55 @@ public class PetService {
 
         return findPet;
     }
+
+
+    /**
+     * 홈화면 정보
+     * 예방접종 과거, 미래 이력 포함
+     * @param accountId
+     * @return
+     */
+    public PetHomeResponse getHome(Long accountId) {
+        List<Pet> petListByAccount = petRepository.findByAccount_Id(accountId);
+
+        if (petListByAccount.isEmpty()) return new PetHomeResponse();
+        List<PetHomeDetailResponse> resultList = new ArrayList<>();
+        for (Pet pet : petListByAccount) {
+            List<VaccinationResponse> preVaccineList = vaccinationService.viewVaccinationList(pet.getId());
+
+            List<VaccineInfoResponse> postVaccineList = new ArrayList<>();
+            PetTypeEnum petType = pet.getPetType();
+            LocalDate birthdate = pet.getBirthdate();
+
+            if (!preVaccineList.isEmpty()) {
+                List<VaccinationRequest> vaccineRequestList = preVaccineList.stream()
+                        .map(v -> new VaccinationRequest(v.getVaccinationName(), v.getVaccinationDate()))
+                        .collect(Collectors.toList());
+
+                if (petType.equals(DOG)) {
+                    postVaccineList.addAll(vaccinationService.predictDog(birthdate, vaccineRequestList));
+                } else if (petType.equals(CAT)) {
+                    postVaccineList.addAll(vaccinationService.predictCat(birthdate, vaccineRequestList));
+                } else if (petType.equals(RABBIT)) {
+                    postVaccineList.addAll(vaccinationService.predictRabbit(birthdate, vaccineRequestList));
+                }
+                resultList.add(new PetHomeDetailResponse(pet.getId(), pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
+            }
+
+            else {
+                if (petType.equals(DOG)) {
+                    postVaccineList.addAll(vaccinationService.predictDog_anyRecord(birthdate));
+                } else if (petType.equals(CAT)) {
+                    postVaccineList.addAll(vaccinationService.predictCat_anyRecord(birthdate));
+                } else if (petType.equals(RABBIT)) {
+                    postVaccineList.addAll(vaccinationService.predictRabbit_anyRecord(birthdate));
+                }
+                resultList.add(new PetHomeDetailResponse(pet.getId(), pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
+            }
+        }
+        return  new PetHomeResponse(resultList);
+    }
+
 
     public List<PetSpeciesResponse> getDogSpecies() {
         List<DogEnum> dogSpecies = Arrays.asList(DogEnum.values());
@@ -412,6 +505,7 @@ public class PetService {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
+
         if (multipartFile != null) {
             try {
                 petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), FileRootPathVO.PET_PATH);
@@ -432,6 +526,7 @@ public class PetService {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
+
         if (multipartFile != null) {
             try {
                 petProfileImage = s3Service.upload(petSaveRequest.getPetProfileImage(), FileRootPathVO.PET_PATH);
@@ -457,7 +552,7 @@ public class PetService {
                 .birthdate(petSaveRequest.getBirthdate())
                 .weight(petSaveRequest.getWeight())
                 .neuteredStatus(petSaveRequest.isNeuteredStatus())
-                .petType(petSaveRequest.getPetType())
+                .petType(PetTypeEnum.valueOf(petSaveRequest.getPetType()))
                 .catSpecies(CatEnum.valueOf(petSaveRequest.getSpecies()))
                 .caution(petSaveRequest.getCaution())
                 .catSpecies(CatEnum.valueOf(petSaveRequest.getSpecies()))
@@ -473,7 +568,7 @@ public class PetService {
                 .birthdate(petSaveRequest.getBirthdate())
                 .weight(petSaveRequest.getWeight())
                 .neuteredStatus(petSaveRequest.isNeuteredStatus())
-                .petType(petSaveRequest.getPetType())
+                .petType(PetTypeEnum.valueOf(petSaveRequest.getPetType()))
                 .dogSpecies(DogEnum.valueOf(petSaveRequest.getSpecies()))
                 .caution(petSaveRequest.getCaution())
                 .dogSpecies(DogEnum.valueOf(petSaveRequest.getSpecies()))
@@ -489,7 +584,7 @@ public class PetService {
                 .birthdate(petSaveRequest.getBirthdate())
                 .weight(petSaveRequest.getWeight())
                 .neuteredStatus(petSaveRequest.isNeuteredStatus())
-                .petType(petSaveRequest.getPetType())
+                .petType(PetTypeEnum.valueOf(petSaveRequest.getPetType()))
                 .rabbitSpecies(RabbitEnum.valueOf(petSaveRequest.getSpecies()))
                 .caution(petSaveRequest.getCaution())
                 .rabbitSpecies(RabbitEnum.valueOf(petSaveRequest.getSpecies()))
