@@ -65,8 +65,7 @@ public class MedicationService {
         findPetOrElseThrow(petId);
 
         List<MedicationHistory> mHistory = medicationRepository.findByPet_IdOrderByMedicationStartDateAsc(petId);
-        if (mHistory.isEmpty()) throw new CustomApiException("복용약 기록이 존재하지 않습니다.");
-
+        if (mHistory.isEmpty()) return null;
         return mHistory.stream()
                 .map(m -> new MedicationResponse(m.getId(), m.getMedicationName(), m.getMedicationStartDate(), m.getMedicationEndDate()))
                 .collect(Collectors.toList());
@@ -77,8 +76,7 @@ public class MedicationService {
      * @param request
      */
     @Transactional
-    public void updateMedication(MedicationUpdateRequest request) {
-        Long petId = request.getPetId();
+    public void updateMedication(Long petId, MedicationUpdateRequest request) {
         findPetOrElseThrow(petId);
 
         Long medicationId = request.getMedicationId();
