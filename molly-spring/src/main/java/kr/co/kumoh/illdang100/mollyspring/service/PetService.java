@@ -354,6 +354,55 @@ public class PetService {
         return findPet;
     }
 
+
+    /**
+     * 홈화면 정보
+     * 예방접종 과거, 미래 이력 포함
+     * @param accountId
+     * @return
+     */
+    public PetHomeResponse getHome(Long accountId) {
+        List<Pet> petListByAccount = petRepository.findByAccount_Id(accountId);
+
+        if (petListByAccount.isEmpty()) return new PetHomeResponse();
+        List<PetHomeDetailResponse> resultList = new ArrayList<>();
+        for (Pet pet : petListByAccount) {
+            List<VaccinationResponse> preVaccineList = vaccinationService.viewVaccinationList(pet.getId());
+
+            List<VaccineInfoResponse> postVaccineList = new ArrayList<>();
+            PetTypeEnum petType = pet.getPetType();
+            LocalDate birthdate = pet.getBirthdate();
+
+            if (!preVaccineList.isEmpty()) {
+                List<VaccinationRequest> vaccineRequestList = preVaccineList.stream()
+                        .map(v -> new VaccinationRequest(v.getVaccinationName(), v.getVaccinationDate()))
+                        .collect(Collectors.toList());
+
+                if (petType.equals(DOG)) {
+                    postVaccineList.addAll(vaccinationService.predictDog(birthdate, vaccineRequestList));
+                } else if (petType.equals(CAT)) {
+                    postVaccineList.addAll(vaccinationService.predictCat(birthdate, vaccineRequestList));
+                } else if (petType.equals(RABBIT)) {
+                    postVaccineList.addAll(vaccinationService.predictRabbit(birthdate, vaccineRequestList));
+                }
+                resultList.add(new PetHomeDetailResponse(pet.getId(), pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
+            }
+
+            else {
+                if (petType.equals(DOG)) {
+                    postVaccineList.addAll(vaccinationService.predictDog_anyRecord(birthdate));
+                } else if (petType.equals(CAT)) {
+                    postVaccineList.addAll(vaccinationService.predictCat_anyRecord(birthdate));
+                } else if (petType.equals(RABBIT)) {
+                    postVaccineList.addAll(vaccinationService.predictRabbit_anyRecord(birthdate));
+                }
+                resultList.add(new PetHomeDetailResponse(pet.getId(), pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
+            }
+        }
+        return  new PetHomeResponse(resultList);
+    }
+
+
     public List<PetSpeciesResponse> getDogSpecies() {
         List<DogEnum> dogSpecies = Arrays.asList(DogEnum.values());
         return dogSpecies.stream()
