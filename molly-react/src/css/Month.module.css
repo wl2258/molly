@@ -79,6 +79,10 @@
   margin-bottom: 3px;
 }
 
+.vaccine:hover + .vaccineInfo {
+  display: block;
+}
+
 .vaccineInfo {
   background-color: #939393d4;
   color: white;
