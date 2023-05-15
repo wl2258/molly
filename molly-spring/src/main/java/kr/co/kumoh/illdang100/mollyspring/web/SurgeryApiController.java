@@ -1,8 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
-import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto.SurgerySaveRequest;
-import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto.SurgerySaveResponse;
+import kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto;
 import kr.co.kumoh.illdang100.mollyspring.service.SurgeryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryReqDto.*;
@@ -25,35 +25,37 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.surgery.SurgeryRespDto.*;
 public class SurgeryApiController {
 
     private final SurgeryService surgeryService;
+
     @PostMapping
-    public ResponseEntity<?> saveSurgery(@RequestBody @Valid SurgerySaveRequest request, BindingResult bindingResult) {
+    public ResponseEntity<?> saveSurgery(@RequestBody @Valid SurgerySaveRequest surgerySaveRequest, BindingResult bindingResult) {
 
-        Long surgeryId = surgeryService.saveSurgery(request);
+        surgeryService.saveSurgery(surgerySaveRequest);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "수술 이력 등록 성공", new SurgerySaveResponse(surgeryId)), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1, "복용 약 이력 저장 성공", null), HttpStatus.CREATED);
     }
 
-    @GetMapping("{petId}")
-    public ResponseEntity<?> viewSurgeryList(@PathVariable @NotNull Long petId) {
+    @PostMapping("{petId}")
+    public ResponseEntity<?> updateSurgery(@PathVariable Long petId, @RequestBody @Valid SurgeryUpdateRequest surgeryUpdateRequest, BindingResult bindingResult) {
 
-        List<SurgeryResponse> surgeryList = surgeryService.viewSurgeryList(petId);
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "수술 이력 조회 성공", new SurgeryListResponse(surgeryList)), HttpStatus.OK);
-    }
-
-    @PutMapping
-    public ResponseEntity<?> updateSurgery(@RequestBody @Valid SurgeryUpdateRequest request, BindingResult bindingResult) {
-
-        surgeryService.updateSurgery(request);
+        surgeryService.updateSurgery(petId, surgeryUpdateRequest);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "수술 이력 수정 성공", null), HttpStatus.OK);
 
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteSurgery(@RequestBody @Valid SurgeryDeleteRequest request, BindingResult bindingResult) {
+    @GetMapping("{petId}")
+    public ResponseEntity<?> viewSurgery(@PathVariable @NotNull Long petId) {
 
-        surgeryService.deleteSurgery(request);
+        List<SurgeryResponse> surgeryResponses = surgeryService.viewSurgeryList(petId);
+
+        return  new ResponseEntity<>(new ResponseDto<>(1, "수술 이력 조회 성공", surgeryResponses), HttpStatus.OK);
+
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteSurgery(@RequestBody @Valid SurgeryDeleteRequest surgeryDeleteRequest, BindingResult bindingResult) {
+
+        surgeryService.deleteSurgery(surgeryDeleteRequest);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "수술 이력 삭제 성공", null), HttpStatus.OK);
     }
