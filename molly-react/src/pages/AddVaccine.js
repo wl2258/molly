@@ -107,7 +107,8 @@ const AddVaccine = (props) => {
       "vaccinationName": props.vaccineName,
 	    "vaccinationDate": `${form.year}-${form.month}-${form.date}`
     }
-    props.onClick();
+    // props.onClick();
+    // window.location.reload();
       
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(`/api/auth/pet/vaccination`, data, config);
@@ -116,6 +117,7 @@ const AddVaccine = (props) => {
         console.log(response.data)
         console.log("백신 이력 추가 완료")
         props.onClick();
+        window.location.reload();
       } 
       else {
         console.log("백신 이력 추가 실패")
