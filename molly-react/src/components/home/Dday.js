@@ -12,6 +12,9 @@ const Dday = (props) => {
       {props.pet.map((item, index) => {
         return (
           <DdayList
+            save = {props.save}
+            setSave = {props.setSave}
+            petId={item.petId}
             icon={item.petType === "DOG" ? "🐶" : "CAT" ? "🐱" : "🐰"}
             name={item.petName}
             vaccine={item.vaccinePredict.map((item) => {
@@ -32,6 +35,7 @@ const Dday = (props) => {
 
 const DdayList = (props) => {
   const [modal, setModal] = useState(false);
+  const [vaccineName, setVaccineName] = useState("");
 
   const handleClick = () => {
     setModal(!modal);
@@ -45,7 +49,10 @@ const DdayList = (props) => {
       {props.vaccine.map((item, index) => {
         return (
           index < 2 ? 
-          <div onClick={() => { handleClick() }} className={styles.list} style={{ backgroundColor: props.color }}>
+          <div onClick={() => { 
+              handleClick();
+              setVaccineName(props.vaccine[index]);
+            }} className={styles.list} style={{ backgroundColor: props.color }}>
             <span className={styles.vaccine} style={{ color: props.textColor }}>{props.vaccine[index]}</span>
             <span className={styles.day}>
               D{props.day[index] >= 0 ? '-' : '+'}
@@ -54,7 +61,7 @@ const DdayList = (props) => {
           </div> : null
         )
       })}
-      {modal && <AddVaccine onClick={handleClick} />}
+      {modal && <AddVaccine onClick={handleClick} vaccineName={vaccineName} petId={props.petId} save={props.save} setSave={props.setSave}/>}
     </div>
   )
 }
