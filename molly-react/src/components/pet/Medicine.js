@@ -15,7 +15,7 @@ const Medicine = (props) => {
     const [medicine, setMedicine] = useState([]);
     //const [medicineNo, setMedicineNo] = useState(props.text.medication[props.text.medication.length-1].medicationId + 1);
     const [loading, setLoading] = useState(false);
-    const medicineNo = useRef(props.text.medication.length === 0 ? 1 : props.text.medication[props.text.medication.length-1].medicationId + 1);
+    const medicineNo = useRef(props.text.medication === null || props.text.medication.length === 0? 1 : props.text.medication[props.text.medication.length-1].medicationId + 1);
     // const [edit, setEdit] = useState(false);
     // const [editMedicineName, setEditMedicineName] = useState("");
     // const [editStartDate, setEditStartDate] = useState(new Date());
@@ -59,13 +59,13 @@ const Medicine = (props) => {
     //     setLoading(true);
 
     //     setMedicine([
-    //         {
-    //             "medicationId": 1432,
-    //             "medicationName": "넥스가드",
-    //             "medicationStartDate": "2023-02-01",
-    //             "medicationEndDate": "2023-02-15"
-    //         }
-    //     ])
+	// 		{
+	// 			"medicationId": 1432,
+	// 			"medicationName": "넥스가드",
+	// 			"medicationStartDate": "2023-02-01",
+	// 			"medicationEndDate": "2023-02-15"
+	// 		}
+	// 	])
     //     setLoading(false)
     // }, [])
 
@@ -187,10 +187,10 @@ const Medicine = (props) => {
         )
     }
 
-    if (medicine === null) {
-        console.log("medicine이 null 입니다.")
-        return null
-    }
+    // if (medicine === null || props.text.medication === null) {
+    //     console.log("medicine이 null 입니다.")
+    //     return null
+    // }
 
     return (
         <div className={styles.medicineContainer}>
@@ -224,20 +224,28 @@ const Medicine = (props) => {
                         />
                     </div>
                     <span className={styles.plus} onClick={() => {
-                        if (medicineName !== "")
+                        if (medicine !== null && medicineName !== "")
                             setMedicine([...medicine, {
                                 medicationId: medicineNo.current++,
                                 medicationStartDate: props.dateFormat(startDate),
                                 medicationEndDate: props.dateFormat(endDate),
                                 medicationName: medicineName
+                        }]) 
+                        else if (medicineName !== "" && medicine === null) {
+                            setMedicine([{
+                                medicationId: medicineNo.current++,
+                                medicationStartDate: props.dateFormat(startDate),
+                                medicationEndDate: props.dateFormat(endDate),
+                                medicationName: medicineName
                             }])
+                        }
                         //setMedicineNo(medicine[medicine.length - 1].medicationId + 2);
                         setMedicineName("");
                         console.log(medicine)
                         registerMedicine();
                     }}><FiPlus color="#AFA79F" size="18px" /></span>
                 </div>
-                {medicine.map((data) => {
+                {medicine !== null || props.text.medication !== null ? medicine.map((data) => {
                     return (
                         <MedicineHistory 
                             key={data.medicationId}
@@ -247,7 +255,7 @@ const Medicine = (props) => {
                             dateFormat={props.dateFormat}
                         />
                     )
-                })}
+                }) : null}
             </div>
         </div>
     );

@@ -18,7 +18,7 @@ const Dday = (props) => {
               return (item.vaccinationName);
             })}
             day={item.vaccinePredict.map((item) => {
-              const dday = new Date(item.vaccinationDate);
+              const dday = new Date(`${item.vaccinationDate} 00:00:00`);
               const gapNum = dday - today;
               const day = Math.ceil(Math.ceil(gapNum / (1000 * 60 * 60 * 24)));
               return (day)
