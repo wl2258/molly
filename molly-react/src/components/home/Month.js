@@ -37,8 +37,38 @@ const Month = (props) => {
               if (moment().format('YYYYMMDD') === days.format('YYYYMMDD')) {
                 return (
                   <td key={index} className={styles.todaycontainer}>
-                    <p className={styles.today}> </p>
-                    <span>{days.format('D')}</span>
+                    <span className={styles.today}>{days.format('D')}</span>
+                    <div style={{ marginTop: "5px" }}></div>
+                    {petVaccine.map((item, index) => {
+                      return (
+                        item.vaccine.map((date) => {
+                          return (
+                            date.vaccinationDate === days.format('YYYY-MM-DD') ?
+                              <>
+                                <div
+                                  style={{ backgroundColor: color[index] }}
+                                  className={styles.vaccine}></div>
+                                <div className={styles.vaccineInfo}>
+                                  {petVaccine.map((item) => {
+                                    return (
+                                      item.vaccine.map((vaccine, index) => {
+                                        return (
+                                          vaccine.vaccinationDate === days.format('YYYY-MM-DD') ?
+                                            <div className={styles.vaccineBox}>
+                                              <span className={styles.petName}>{item.petName}</span>
+                                              <span>{vaccine.vaccinationName}</span>
+                                              <br />
+                                            </div> : null
+                                        )
+                                      })
+                                    )
+                                  })}
+                                </div>
+                              </> : null
+                          )
+                        })
+                      )
+                    })}
                   </td>
                 );
               } else if (days.format('MM') !== today.format('MM')) {

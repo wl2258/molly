@@ -70,7 +70,7 @@ const Home = () => {
 	// 			"vaccinePredict": [
 	// 				{
 	// 					"vaccinationName": "종합백신2차",
-	// 					"vaccinationDate": "2023-05-13"
+	// 					"vaccinationDate": "2023-05-16"
 	// 				},
   //         {
 	// 					"vaccinationName": "종합백신3차",
@@ -92,7 +92,7 @@ const Home = () => {
 	// 			"vaccinePredict": [
 	// 				{
 	// 					"vaccinationName": "종합백신2차",
-	// 					"vaccinationDate": "2023-05-13"
+	// 					"vaccinationDate": "2023-05-16"
 	// 				},
 	// 			],
 	// 		}
