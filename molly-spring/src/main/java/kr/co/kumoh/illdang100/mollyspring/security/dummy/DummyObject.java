@@ -2,11 +2,15 @@ package kr.co.kumoh.illdang100.mollyspring.security.dummy;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
-import kr.co.kumoh.illdang100.mollyspring.domain.image.PetImage;
+import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
+import kr.co.kumoh.illdang100.mollyspring.domain.board.BoardEnum;
+import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
+import kr.co.kumoh.illdang100.mollyspring.domain.liky.Liky;
 import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import kr.co.kumoh.illdang100.mollyspring.domain.surgery.SurgeryHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.vaccinations.VaccinationHistory;
+import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -40,6 +44,48 @@ public class DummyObject {
                 .nickname(nickname)
                 .role(accountEnum)
                 .build();
+    }
+
+    protected Board newBoard(Account account, String title, String content,
+                             BoardEnum category, PetTypeEnum petType, boolean isNotice) {
+
+        return Board.builder()
+                .account(account)
+                .boardTitle(title)
+                .boardContent(content)
+                .category(category)
+                .petType(petType)
+                .views(0L)
+                .likyCnt(0L)
+                .commentCnt(0L)
+                .hasImage(false)
+                .isNotice(isNotice)
+                .build();
+    }
+
+    protected Liky newLiky(Board board, Long accountId, BoardRepository boardRepository) {
+
+        board.increaseViews();
+        board.increaseLikyCnt();
+
+        if (boardRepository != null) {
+            boardRepository.save(board);
+        }
+
+        return new Liky(board, accountId);
+    }
+
+    protected Comment newComment(Board board, String commentContent,
+                                 Long accountId, BoardRepository boardRepository) {
+
+        board.increaseViews();
+        board.increaseCommentCnt();
+
+        if (boardRepository != null) {
+            boardRepository.save(board);
+        }
+
+        return new Comment(board, commentContent, accountId);
     }
 
     protected Pet newPet(Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, String caution, DogEnum species) {
