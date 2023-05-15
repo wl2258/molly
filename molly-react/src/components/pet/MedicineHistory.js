@@ -82,7 +82,6 @@ const MedicineHistory = (props) => {
         }
     );
 
-
     const UpdateMedicine = (medicationId) => {
         const config = {
             headers: {
@@ -159,6 +158,7 @@ const MedicineHistory = (props) => {
                         if (editMedicineName !== "") {
                             const newMedicine = props.medicine.map((item) => {
                                 if (item.medicationId === props.data.medicationId) {
+                                    console.log(item.medicationId)
                                     return (
                                         {
                                             medicationId: props.data.medicationId,
@@ -179,6 +179,7 @@ const MedicineHistory = (props) => {
                             //     medicationName: editMedicineName
                             // })
                             // props.setMedicine(updateMedicine)
+                            console.log(props.data.medicationId)
                             UpdateMedicine(props.data.medicationId)
                             setEdit(!edit)
                         }

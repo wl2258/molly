@@ -59,12 +59,12 @@ const Medicine = (props) => {
     //     setLoading(true);
 
     //     setMedicine([
-	// 		{
-	// 			"medicationId": 1432,
-	// 			"medicationName": "넥스가드",
-	// 			"medicationStartDate": "2023-02-01",
-	// 			"medicationEndDate": "2023-02-15"
-	// 		}
+	// 		// {
+	// 		// 	"medicationId": 1432,
+	// 		// 	"medicationName": "넥스가드",
+	// 		// 	"medicationStartDate": "2023-02-01",
+	// 		// 	"medicationEndDate": "2023-02-15"
+	// 		// }
 	// 	])
     //     setLoading(false)
     // }, [])
@@ -165,13 +165,18 @@ const Medicine = (props) => {
                     medicationName: medicineName
                 })
                 setMedicine(updateMedicine)
+                // setMedicine([...medicine, {
+                //     medicationId: response.data.data.medicationId,
+                //     medicationStartDate: props.dateFormat(startDate),
+                //     medicationEndDate: props.dateFormat(endDate),
+                //     medicationName: medicineName
+                // }])
                 console.log("복용약 추가 완료");
             }
             else {
                 console.log("복용약 추가 실패");
             }
         }
-
         fetchData();
     }
 
@@ -227,13 +232,13 @@ const Medicine = (props) => {
                         />
                     </div>
                     <span className={styles.plus} onClick={() => {
-                        if (medicine !== null && medicineName !== "")
+                        if (medicine !== null && medicineName !== "") {
                             setMedicine([...medicine, {
                                 medicationId: medicineNo.current++,
                                 medicationStartDate: props.dateFormat(startDate),
                                 medicationEndDate: props.dateFormat(endDate),
                                 medicationName: medicineName
-                        }]) 
+                            }])}
                         else if (medicineName !== "" && medicine === null) {
                             setMedicine([{
                                 medicationId: medicineNo.current++,
@@ -242,10 +247,10 @@ const Medicine = (props) => {
                                 medicationName: medicineName
                             }])
                         }
+                        registerMedicine();
                         //setMedicineNo(medicine[medicine.length - 1].medicationId + 2);
                         setMedicineName("");
                         console.log(medicine)
-                        registerMedicine();
                     }}><FiPlus color="#AFA79F" size="18px" /></span>
                 </div>
                 {medicine !== null || props.text.medication !== null ? medicine.map((data) => {
@@ -256,6 +261,7 @@ const Medicine = (props) => {
                             medicine={medicine}
                             setMedicine={setMedicine}
                             dateFormat={props.dateFormat}
+                            petId={props.petId}
                         />
                     )
                 }) : null}

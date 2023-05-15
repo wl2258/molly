@@ -36,55 +36,55 @@ const UpdatePet = () => {
 
   const imgRef = useRef();
 
-  useEffect(() => {
-    setLoading(true);
-
-    const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
-      }
-    }
-
-    axiosInstance.get(`/api/auth/pet/${id}`, config)
-      .then((response) => {
-        console.log(response.data.data);
-        setText(response.data.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-  }, [])
-  
   // useEffect(() => {
-  //   setText({
-	// 		"userId": 32492,
-	// 		"petId": 1234,
-	// 		"petType": "DOG",
-	// 		"petName": "molly",
-	// 		"species": "MALTESE",
-	// 		"profileImage": "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
-	// 		"birthDate": "2013-08-07",
-	// 		"gender": "FEMALE",
-	// 		"neuteredStatus" : false,
-	// 		"weight" : 3.4,
-	// 		"caution" : "분리불안 심함",
-	// 		"surgery": [
-	// 			{
-  //         "surgeryId": 1,
-	// 				"surgeryName": "수직이도성형술",
-	// 				"surgeryDate": "2023-01-01"
-	// 			},
-	// 		],
-	// 		"medication": null,
-	// 		"vaccination": [
-	// 			{
-  //         "vaccinationId": 1,
-	// 				"vaccinationName": "종합백신1차",
-	// 				"vaccinationDate": "2018-01-01"
-	// 			},
-	// 		]
-	//   })
+  //   setLoading(true);
+
+  //   const config = {
+  //     headers : {
+  //       Authorization : localStorage.getItem("accessToken")
+  //     }
+  //   }
+
+  //   axiosInstance.get(`/api/auth/pet/${id}`, config)
+  //     .then((response) => {
+  //       console.log(response.data.data);
+  //       setText(response.data.data);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     })
   // }, [])
+  
+  useEffect(() => {
+    setText({
+			"userId": 32492,
+			"petId": 1234,
+			"petType": "DOG",
+			"petName": "molly",
+			"species": "MALTESE",
+			"profileImage": "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
+			"birthDate": "2013-08-07",
+			"gender": "FEMALE",
+			"neuteredStatus" : false,
+			"weight" : 3.4,
+			"caution" : "분리불안 심함",
+			"surgery": [
+				{
+          "surgeryId": 1,
+					"surgeryName": "수직이도성형술",
+					"surgeryDate": "2023-01-01"
+				},
+			],
+			"medication": null,
+			"vaccination": [
+				{
+          "vaccinationId": 1,
+					"vaccinationName": "종합백신1차",
+					"vaccinationDate": "2018-01-01"
+				},
+			]
+	  })
+  }, [])
 
   useEffect(() => {
     setPetType(text.petType);
