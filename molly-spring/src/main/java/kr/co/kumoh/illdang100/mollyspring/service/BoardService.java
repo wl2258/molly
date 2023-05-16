@@ -158,10 +158,16 @@ public class BoardService {
 
     }
 
-    // TODO: 게시글 수정
     @Transactional
-    public void updatePost() {
+    public void updatePost(Long boardId, Long accountId, UpdatePostRequest updatePostRequest) {
 
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+
+        if (!isAuthorizedToDeleteBoard(findBoard, accountId)) {
+            throw new CustomApiException("해당 게시글을 삭제할 권한이 없습니다");
+        }
+
+        findBoard.update(updatePostRequest);
     }
 
     @Transactional

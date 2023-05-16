@@ -42,11 +42,15 @@ public class BoardApiController {
 
         CreatePostResponse createPostResponse = boardService.createPost(principalDetails.getAccount().getId(), createPostRequest);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성에 성공했습니다", createPostResponse), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성에 성공했습니다", createPostResponse), HttpStatus.CREATED);
     }
 
-    @PutMapping("/auth/board/{boardId}")
-    public ResponseEntity<?> editPost(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @PostMapping("/auth/board/{boardId}")
+    public ResponseEntity<?> editPost(@PathVariable("boardId") Long boardId,
+                                      @RequestBody UpdatePostRequest updatePostRequest,
+                                      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        boardService.updatePost(boardId, principalDetails.getAccount().getId(), updatePostRequest);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정에 성공했습니다", null), HttpStatus.OK);
     }
@@ -67,6 +71,13 @@ public class BoardApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 리스트 조회에 성공했습니다", postList), HttpStatus.OK);
     }
 
+    /**
+     * 게시글 상세 조회
+     *
+     * @param boardId   게시글 PK
+     * @param accountId 사용자 PK
+     * @return 게시글 상세 정보(게시글, 게시글 이미지, 댓글, 좋아요)
+     */
     @GetMapping("/board/{boardId}")
     public ResponseEntity<?> retrievePostDetail(@PathVariable("boardId") Long boardId,
                                                 @RequestHeader(value = "AccountId", required = false) Long accountId) {
@@ -75,11 +86,39 @@ public class BoardApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세 조회에 성공했습니다", postDetailResponse), HttpStatus.OK);
     }
 
+    /**
+     * 게시글 삭제
+     *
+     * @param boardId          삭제하고자 하는 게시글 PK
+     * @param principalDetails 인증된 사용자 정보
+     */
     @DeleteMapping("/auth/board/{boardId}")
     public ResponseEntity<?> deletePost(@PathVariable("boardId") Long boardId,
                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         boardService.deletePost(boardId, principalDetails.getAccount().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.NO_CONTENT);
+    }
+
+    // 게시글 이미지 삭제, 추가
+    // TODO: 게시글 이미지 삭제
+    @PostMapping()
+    public ResponseEntity<?> addBoardImage() {
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.CREATED);
+    }
+
+    // TODO: 게시글 이미지 추가
+    @DeleteMapping()
+    public ResponseEntity<?> deleteBoardImage() {
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.NO_CONTENT);
+    }
+
+//    /*// TODO: 좋아요 기능
+    @PostMapping("/auth/liky")
+    public ResponseEntity<?> toggleLikePost() {
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.NO_CONTENT);
     }
 }
