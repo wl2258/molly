@@ -12,10 +12,10 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageFile  {
 
-    @Column(length = 75)
+    @Column(length = 100)
     private String uploadFileName;
 
-    @Column(length = 75)
+    @Column(length = 100)
     private String storeFileName;
 
     @Column(length = 200)
