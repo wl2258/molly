@@ -20,10 +20,27 @@ public class BoardReqDto {
         @Size(max = 60, message = "제목은 60자 이하로 작성해주세요")
         private String title;
         @NotBlank
-        @Size(max = 1000, message = "내용은 1,000자 이하로 작성해주세요")
+        @Size(max = 2000, message = "내용은 2,000자 이하로 작성해주세요")
         private String content;
         @Size(max = 5, message = "이미지는 최대 5장까지 업로드 가능합니다")
         private List<MultipartFile> boardImages;
+        @NotBlank
+        @Pattern(regexp = "(MEDICAL|FREE)$")
+        private String category;
+        @NotBlank
+        @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
+        private String petType;
+    }
+
+    @Getter @Setter
+    public static class UpdatePostRequest {
+
+        @NotBlank
+        @Size(max = 60, message = "제목은 60자 이하로 작성해주세요")
+        private String title;
+        @NotBlank
+        @Size(max = 2000, message = "내용은 2,000자 이하로 작성해주세요")
+        private String content;
         @NotBlank
         @Pattern(regexp = "(MEDICAL|FREE)$")
         private String category;
