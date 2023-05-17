@@ -152,10 +152,25 @@ public class BoardService {
         return board.getAccount().getAccountProfileImage() != null;
     }
 
-    // TODO: 좋아요
     @Transactional
-    public void toggleLikePost() {
+    public LikyBoardResponse toggleLikePost(Long accountId, Long boardId) {
 
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+        boolean thumbsUp;
+        String message;
+        if (likyRepository.existsByAccountIdAndBoard_Id(accountId, boardId)) {
+            likyRepository.deleteByAccountIdAndBoard_Id(accountId, boardId);
+            findBoard.decreaseLikyCnt();
+            message = "게시글 좋아요 삭제";
+            thumbsUp = false;
+        } else {
+            likyRepository.save(new Liky(findBoard, accountId));
+            findBoard.increaseLikyCnt();
+            message = "게시글 좋아요";
+            thumbsUp = true;
+        }
+
+        return new LikyBoardResponse(findBoard.getLikyCnt(), thumbsUp, message);
     }
 
     @Transactional

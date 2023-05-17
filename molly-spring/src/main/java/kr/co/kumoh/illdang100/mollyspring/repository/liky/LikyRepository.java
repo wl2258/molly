@@ -9,5 +9,7 @@ public interface LikyRepository extends JpaRepository<Liky, Long> {
 
     boolean existsByAccountIdAndBoard_Id(Long accountId, Long boardId);
 
+    void deleteByAccountIdAndBoard_Id(Long accountId, Long boardId);
+
     List<Liky> findByBoard_Id(Long boardId);
 }

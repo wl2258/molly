@@ -97,7 +97,7 @@ public class BoardApiController {
                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         boardService.deletePost(boardId, principalDetails.getAccount().getId());
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.OK);
     }
 
     // 게시글 이미지 삭제, 추가
@@ -112,13 +112,20 @@ public class BoardApiController {
     @DeleteMapping()
     public ResponseEntity<?> deleteBoardImage() {
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.OK);
     }
 
-//    /*// TODO: 좋아요 기능
-    @PostMapping("/auth/liky")
-    public ResponseEntity<?> toggleLikePost() {
+    /**
+     * 게시글 좋아요 버튼 클릭
+     * @param boardId 게시글PK
+     * @param principalDetails 인증된 사용자 정보
+     * @return 게시글 좋아요 정보
+     */
+    @PostMapping("/auth/board/{boardId}/liky")
+    public ResponseEntity<?> toggleLikePost(@PathVariable("boardId") Long boardId,
+                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.NO_CONTENT);
+        LikyBoardResponse result = boardService.toggleLikePost(principalDetails.getAccount().getId(), boardId);
+        return new ResponseEntity<>(new ResponseDto<>(1, result.getMessage(), result), HttpStatus.OK);
     }
 }

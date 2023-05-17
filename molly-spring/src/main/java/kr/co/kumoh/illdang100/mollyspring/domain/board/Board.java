@@ -79,6 +79,10 @@ public class Board extends BaseTimeEntity {
         likyCnt = likyCnt + 1;
     }
 
+    public void decreaseLikyCnt() {
+        likyCnt = likyCnt - 1;
+    }
+
     public void increaseCommentCnt() {
         commentCnt = commentCnt + 1;
     }
