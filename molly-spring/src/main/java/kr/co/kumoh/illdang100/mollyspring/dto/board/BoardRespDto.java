@@ -1,6 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -56,5 +57,14 @@ public class BoardRespDto {
         private LocalDateTime commentCreatedAt;
         private String content;
         private String commentProfileImage;
+    }
+
+    @AllArgsConstructor
+    @Getter @Setter
+    public static class LikyBoardResponse {
+        private long likyCount;
+        private boolean thumbsUp;
+        @JsonIgnore
+        private String message;
     }
 }
