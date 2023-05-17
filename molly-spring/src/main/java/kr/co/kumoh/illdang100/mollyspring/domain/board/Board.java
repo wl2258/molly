@@ -87,6 +87,10 @@ public class Board extends BaseTimeEntity {
         commentCnt = commentCnt + 1;
     }
 
+    public void decreaseCommentCnt() {
+        commentCnt = commentCnt - 1;
+    }
+
     public void update(UpdatePostRequest updatePostRequest) {
         this.boardTitle = updatePostRequest.getTitle();
         this.boardContent = updatePostRequest.getContent();
