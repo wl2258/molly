@@ -3,6 +3,7 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.service.BoardService;
+import kr.co.kumoh.illdang100.mollyspring.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ import javax.validation.Valid;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentReqDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentRespDto.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 public class BoardApiController {
 
     private final BoardService boardService;
+    private final CommentService commentService;
 
     /**
      * 게시글 작성
@@ -45,6 +49,13 @@ public class BoardApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성에 성공했습니다", createPostResponse), HttpStatus.CREATED);
     }
 
+    /**
+     * 게시글 수정
+     *
+     * @param boardId           게시글PK
+     * @param updatePostRequest 수정한 게시글 정보
+     * @param principalDetails  인증된 사용자 정보
+     */
     @PostMapping("/auth/board/{boardId}")
     public ResponseEntity<?> editPost(@PathVariable("boardId") Long boardId,
                                       @RequestBody UpdatePostRequest updatePostRequest,
@@ -100,7 +111,6 @@ public class BoardApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.OK);
     }
 
-    // 게시글 이미지 삭제, 추가
     // TODO: 게시글 이미지 삭제
     @PostMapping()
     public ResponseEntity<?> addBoardImage() {
@@ -116,8 +126,43 @@ public class BoardApiController {
     }
 
     /**
+     * 새로운 댓글 작성
+     *
+     * @param boardId              게시글PK
+     * @param createCommentRequest 댓글 내용
+     * @param principalDetails     인증된 사용자 정보
+     * @return 생성된 댓글PK
+     */
+    @PostMapping("/auth/board/{boardId}/comment")
+    public ResponseEntity<?> createNewComment(@PathVariable("boardId") Long boardId,
+                                              @RequestBody CreateCommentRequest createCommentRequest,
+                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        CreateCommentResponse result =
+                commentService.createComment(createCommentRequest, principalDetails.getAccount().getId(), boardId);
+        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성이 완료되었습니다", result), HttpStatus.CREATED);
+    }
+
+    /**
+     * 댓글 삭제
+     *
+     * @param boardId          게시판PK
+     * @param commentId        댓글PK
+     * @param principalDetails 인증된 사용자 정보
+     */
+    @DeleteMapping("/auth/board/{boardId}/comment/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable("boardId") Long boardId,
+                                           @PathVariable("commentId") Long commentId,
+                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        commentService.deleteComment(principalDetails.getAccount().getId(), boardId, commentId);
+        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성이 완료되었습니다", null), HttpStatus.CREATED);
+    }
+
+    /**
      * 게시글 좋아요 버튼 클릭
-     * @param boardId 게시글PK
+     *
+     * @param boardId          게시글PK
      * @param principalDetails 인증된 사용자 정보
      * @return 게시글 좋아요 정보
      */
