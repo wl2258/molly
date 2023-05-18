@@ -167,14 +167,14 @@ public class VaccinationService {
     /**
      * 강아지 예방접종 날짜 예측 (예방정종 기록 없는 경우)
      */
-    public List<VaccineInfoResponse> predictDog_anyRecord(LocalDate birthDate) {
+    public List<VaccineInfoResponse> predictDog_anyRecord(LocalDate birthdate) {
         List<VaccineInfoResponse> resultList = new ArrayList<>();
-        resultList.addAll(predictDogDHPPL_noRecord(birthDate));
-        resultList.addAll(predictDogCORONA_noRecord(birthDate));
-        resultList.addAll(predictDogKENNEL_noRecord(birthDate));
-        resultList.addAll(predictDogFLU_noRecord(birthDate));
-        resultList.add(predictDogRABIES_noRecord(birthDate));
-        resultList.add(predictDogANTIBODY_noRecord(birthDate));
+        resultList.addAll(predictDogDHPPL_noRecord(birthdate));
+        resultList.addAll(predictDogCORONA_noRecord(birthdate));
+        resultList.addAll(predictDogKENNEL_noRecord(birthdate));
+        resultList.addAll(predictDogFLU_noRecord(birthdate));
+        resultList.add(predictDogRABIES_noRecord(birthdate));
+        resultList.add(predictDogANTIBODY_noRecord(birthdate));
 
         return resultList;
     }
@@ -183,23 +183,22 @@ public class VaccinationService {
         LocalDate vaccineBaseDate = birthdate.plusWeeks(6);
         LocalDate now = LocalDate.now();
 
-        LocalDate vaccineNextDate = null;
+        LocalDate vaccineNextDate = vaccineBaseDate.plusWeeks(2);
         if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(2);
-        else vaccineNextDate = vaccineBaseDate.plusWeeks(2);
 
         VaccineInfoResponse firstVaccine = new VaccineInfoResponse(DHPPL.getValue() + " 1차", vaccineBaseDate);
         VaccineInfoResponse secondVaccine = new VaccineInfoResponse(DHPPL.getValue() + " 2차", vaccineNextDate);
         VaccineInfoResponse thirdVaccine = new VaccineInfoResponse(DHPPL.getValue() + " 3차", vaccineNextDate.plusWeeks(2));
         VaccineInfoResponse forthVaccine = new VaccineInfoResponse(DHPPL.getValue() + " 4차", vaccineNextDate.plusWeeks(4));
-        VaccineInfoResponse fifthVaccine = new VaccineInfoResponse(DHPPL.getValue() + " 5차", vaccineBaseDate.plusWeeks(6));
+        VaccineInfoResponse fifthVaccine = new VaccineInfoResponse(DHPPL.getValue() + " 5차", vaccineNextDate.plusWeeks(6));
 
         return List.of(firstVaccine, secondVaccine, thirdVaccine, forthVaccine, fifthVaccine);
     }
 
     public List<VaccineInfoResponse> predictDogCORONA_noRecord(LocalDate birthdate) {
         LocalDate vaccineBaseDate = birthdate.plusWeeks(6);
-        LocalDate now = LocalDate.now();
 
+        LocalDate now = LocalDate.now();
         LocalDate vaccineNextDate = vaccineBaseDate.plusWeeks(2);
         if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(2);
 
@@ -214,7 +213,7 @@ public class VaccinationService {
         LocalDate now = LocalDate.now();
 
         LocalDate vaccineNextDate = vaccineBaseDate.plusWeeks(2);
-        if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(2);
+        if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(6);
 
         VaccineInfoResponse firstVaccine = new VaccineInfoResponse(KENNEL_COUGH.getValue() + " 1차", vaccineBaseDate);
         VaccineInfoResponse secondVaccine = new VaccineInfoResponse(KENNEL_COUGH.getValue() + " 2차", vaccineNextDate);
@@ -228,7 +227,7 @@ public class VaccinationService {
         LocalDate now = LocalDate.now();
 
         LocalDate vaccineNextDate =  vaccineBaseDate.plusWeeks(2);
-        if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(2);
+        if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(10);
 
         VaccineInfoResponse firstVaccine = new VaccineInfoResponse(INFLUENZA.getValue() + " 1차", vaccineBaseDate);
         VaccineInfoResponse secondVaccine = new VaccineInfoResponse(INFLUENZA.getValue() + " 2차", vaccineNextDate);
@@ -239,8 +238,7 @@ public class VaccinationService {
     public VaccineInfoResponse predictDogRABIES_noRecord(LocalDate birthdate) {
         LocalDate vaccineBaseDate = birthdate.plusWeeks(16);
         LocalDate now = LocalDate.now();
-
-//        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(16);
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(16);
 
         return new VaccineInfoResponse(DOG_RABIES.getValue(), vaccineBaseDate);
     }
@@ -248,8 +246,7 @@ public class VaccinationService {
     public VaccineInfoResponse predictDogANTIBODY_noRecord(LocalDate birthdate) {
         LocalDate vaccineBaseDate = birthdate.plusWeeks(16);
         LocalDate now = LocalDate.now();
-
-//        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(16);
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(16);
 
         return new VaccineInfoResponse(D0G_ANTIBODY_TITER_TEST.getValue(), vaccineBaseDate);
     }
@@ -270,6 +267,7 @@ public class VaccinationService {
     public List<VaccineInfoResponse> predictCatCVRP_noRecord(LocalDate birthdate) {
         LocalDate vaccineBaseDate = birthdate.plusWeeks(6);
         LocalDate now = LocalDate.now();
+//        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(6);
 
         LocalDate vaccineNextDate = vaccineBaseDate.plusWeeks(2);
         if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(2);
@@ -281,22 +279,28 @@ public class VaccinationService {
         return List.of(firstVaccine, secondVaccine, thirdVaccine);
     }
 
-    private static VaccineInfoResponse predictCatANTIBODY_noRecord(LocalDate birthdate) {
-        LocalDate vaccineBaseDate = birthdate.plusWeeks(14);
+    private static VaccineInfoResponse predictCatRABIES_noRecord(LocalDate birthdate) {
+        LocalDate vaccineBaseDate = birthdate.plusWeeks(10);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(10);
 
-        return new VaccineInfoResponse(CAT_ANTIBODY_TITER_TEST.getValue(), vaccineBaseDate.plusWeeks(14));
+        return new VaccineInfoResponse(CAT_RABIES.getValue(), vaccineBaseDate);
     }
 
     private static VaccineInfoResponse predictCatFIP_noRecord(LocalDate birthdate) {
         LocalDate vaccineBaseDate = birthdate.plusWeeks(12);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(12);
 
         return new VaccineInfoResponse(FIP.getValue(), vaccineBaseDate);
     }
 
-    private static VaccineInfoResponse predictCatRABIES_noRecord(LocalDate birthdate) {
-        LocalDate vaccineBaseDate = birthdate.plusWeeks(10);
+    private static VaccineInfoResponse predictCatANTIBODY_noRecord(LocalDate birthdate) {
+        LocalDate vaccineBaseDate = birthdate.plusWeeks(14);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(14);
 
-        return new VaccineInfoResponse(CAT_RABIES.getValue(), vaccineBaseDate);
+        return new VaccineInfoResponse(CAT_ANTIBODY_TITER_TEST.getValue(), vaccineBaseDate);
     }
 
     /**
@@ -314,9 +318,9 @@ public class VaccinationService {
     public List<VaccineInfoResponse> predictRabbitRVH_noRecord(LocalDate birthdate) {
         LocalDate now = LocalDate.now();
         LocalDate vaccineBaseDate = birthdate.plusWeeks(3);
-        LocalDate vaccineNextDate = vaccineBaseDate.plusMonths(1);
 
-     if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(1);
+        LocalDate vaccineNextDate = vaccineBaseDate.plusMonths(1);
+     if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusMonths(1);
 
         VaccineInfoResponse firstVaccine1 = new VaccineInfoResponse(RVH.getValue() + " 1차", vaccineBaseDate);
         VaccineInfoResponse secondVaccine = new VaccineInfoResponse(RVH.getValue() + " 2차", vaccineNextDate);
@@ -326,6 +330,8 @@ public class VaccinationService {
 
     private static VaccineInfoResponse predictRabbitRABIES_noRecord(LocalDate birthdate) {
         LocalDate vaccineBaseDate = birthdate.plusMonths(3);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(3);
 
         return new VaccineInfoResponse(RABBIT_RABIES.getValue(), vaccineBaseDate);
     }
@@ -336,6 +342,8 @@ public class VaccinationService {
      */
     public VaccineInfoResponse predictRabbitRVH_existRecord(LocalDate vaccinationDate) {
         LocalDate vaccineBaseDate = vaccinationDate.plusMonths(1);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(1);
 
         return new VaccineInfoResponse(RVH.getValue() + " 2차", vaccineBaseDate);
     }
@@ -346,11 +354,16 @@ public class VaccinationService {
      */
     private List<VaccineInfoResponse> predictCatCVRP_existRecord(LocalDate vaccinationDate, int start) {
         List<VaccineInfoResponse> responseList = new ArrayList<>();
+        LocalDate vaccineBaseDate = vaccinationDate.plusWeeks(2);
+        responseList.add(new VaccineInfoResponse(CVRP.getValue() +  " " + start + "차", vaccineBaseDate));
 
-        int weeks = 2;
-        for (int i = start; i <= 3; i++) {
-            responseList.add(new VaccineInfoResponse(CVRP.getValue() +  " " + i + "차", vaccinationDate.plusWeeks(weeks)));
-            weeks += 2;
+        LocalDate now = LocalDate.now();
+        LocalDate vaccineNextDate = vaccineBaseDate.plusWeeks(2);
+        if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(2);
+
+        for (int i = start+1; i <= 3; i++) {
+            responseList.add(new VaccineInfoResponse(CVRP.getValue() +  " " + i + "차", vaccineNextDate));
+            vaccineNextDate = vaccineNextDate.plusWeeks(2);
         }
         return responseList;
     }
@@ -362,25 +375,38 @@ public class VaccinationService {
     private List<VaccineInfoResponse> predictDogDHPPL_existRecord(LocalDate vaccinationDate, int start) {
         List<VaccineInfoResponse> responseList = new ArrayList<>();
 
-        int weeks = 2;
-        for (int i = start; i <= 5; i++) {
-            responseList.add(new VaccineInfoResponse(DHPPL.getValue() + " " + i + "차", vaccinationDate.plusWeeks(weeks)));
-            weeks += 2;
+        LocalDate vaccineBaseDate = vaccinationDate.plusWeeks(2);
+        responseList.add(new VaccineInfoResponse(DHPPL.getValue() + " " + start + "차", vaccineBaseDate));
+
+        LocalDate now = LocalDate.now();
+        LocalDate vaccineNextDate = vaccineBaseDate.plusWeeks(2);
+        if (vaccineBaseDate.isBefore(now)) vaccineNextDate = now.plusWeeks(2);
+
+        for (int i = start+1; i <= 5; i++) {
+            responseList.add(new VaccineInfoResponse(DHPPL.getValue() + " " + i + "차", vaccineNextDate));
+            vaccineNextDate = vaccineNextDate.plusWeeks(2);
         }
         return responseList;
     }
+
     private VaccineInfoResponse predictDogCORONA_existRecord(LocalDate vaccinationDate) {
         LocalDate vaccineBaseDate = vaccinationDate.plusWeeks(2);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(2);
 
         return new VaccineInfoResponse(CORONAVIRUS.getValue() + " 2차", vaccineBaseDate);
     }
     private VaccineInfoResponse predictDogKENNEL_existRecord(LocalDate vaccinationDate) {
         LocalDate vaccineBaseDate = vaccinationDate.plusWeeks(2);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(2);
 
         return new VaccineInfoResponse(KENNEL_COUGH.getValue() + " 2차", vaccineBaseDate);
     }
     private VaccineInfoResponse predictDogFLU_existRecord(LocalDate vaccinationDate) {
         LocalDate vaccineBaseDate = vaccinationDate.plusWeeks(2);
+        LocalDate now = LocalDate.now();
+        if (vaccineBaseDate.isBefore(now)) vaccineBaseDate = now.plusWeeks(2);
 
         return new VaccineInfoResponse(INFLUENZA.getValue() + " 2차", vaccineBaseDate);
     }
@@ -473,9 +499,15 @@ public class VaccinationService {
                 cvrpList.add(request);
                 cvrp_check = true;
             }
-            if (vaccinationName == CAT_RABIES.getValue()) rabies_check = true;
-            if (vaccinationName == FIP.getValue()) fip_check = true;
-            if (vaccinationName == CAT_ANTIBODY_TITER_TEST.getValue()) antibody_check = true;
+            if (vaccinationName == CAT_RABIES.getValue()) {
+                rabies_check = true;
+            }
+            if (vaccinationName == FIP.getValue()) {
+                fip_check = true;
+            }
+            if (vaccinationName == CAT_ANTIBODY_TITER_TEST.getValue()) {
+                antibody_check = true;
+            }
         }
 
         if (!cvrp_check) resultList.addAll(predictCatCVRP_noRecord(birthdate));
@@ -549,7 +581,9 @@ public class VaccinationService {
         List<VaccineInfoResponse> resultList = new ArrayList<>();
 
         if (deletedVaccineName.contains(DHPPL.getValue())) {
-            int vaccine_Nth = deletedVaccineName.indexOf(DHPPL.getValue());
+            int n_idx = deletedVaccineName.indexOf(" ");
+            int vaccine_Nth = deletedVaccineName.charAt(n_idx + 1) - '0';
+
             Optional<VaccinationHistory> preVaccineOpt = vaccinationRepository.findByVaccinationName(DHPPL.getValue() + " " + String.valueOf(vaccine_Nth - 1));
             if (!preVaccineOpt.isPresent()) {
                 resultList.addAll(predictDogDHPPL_noRecord(birthdate));
@@ -562,9 +596,11 @@ public class VaccinationService {
         }
 
         if (deletedVaccineName.contains(CORONAVIRUS.getValue())) {
-            int vaccine_Nth = deletedVaccineName.indexOf(CORONAVIRUS.getValue());
+            int n_idx = deletedVaccineName.indexOf(" ");
+            int vaccine_Nth = deletedVaccineName.charAt(n_idx + 1) - '0';
+
             Optional<VaccinationHistory> preVaccineOpt = vaccinationRepository.findByVaccinationName(CORONAVIRUS.getValue() + " " + String.valueOf(vaccine_Nth - 1));
-            if (vaccine_Nth == 1 || !preVaccineOpt.isPresent()) {
+            if (vaccine_Nth == 1 && !preVaccineOpt.isPresent()) {
                 resultList.addAll(predictDogCORONA_noRecord(birthdate));
             }
             else {
@@ -575,9 +611,11 @@ public class VaccinationService {
         }
 
         if (deletedVaccineName.contains(KENNEL_COUGH.getValue())) {
-            int vaccine_Nth = deletedVaccineName.indexOf(KENNEL_COUGH.getValue());
+            int n_idx = deletedVaccineName.indexOf(" ");
+            int vaccine_Nth = deletedVaccineName.charAt(n_idx + 1) - '0';
+
             Optional<VaccinationHistory> preVaccineOpt = vaccinationRepository.findByVaccinationName(KENNEL_COUGH.getValue() + " " + String.valueOf(vaccine_Nth - 1));
-            if (vaccine_Nth == 1 || !preVaccineOpt.isPresent()) {
+            if (vaccine_Nth == 1 && !preVaccineOpt.isPresent()) {
                 resultList.addAll(predictDogKENNEL_noRecord(birthdate));
             }
             else {
@@ -588,9 +626,11 @@ public class VaccinationService {
         }
 
         if (deletedVaccineName.contains(INFLUENZA.getValue())) {
-            int vaccine_Nth = deletedVaccineName.indexOf(INFLUENZA.getValue());
+            int n_idx = deletedVaccineName.indexOf(" ");
+            int vaccine_Nth = deletedVaccineName.charAt(n_idx + 1) - '0';
+
             Optional<VaccinationHistory> preVaccineOpt = vaccinationRepository.findByVaccinationName(INFLUENZA.getValue() + " " + String.valueOf(vaccine_Nth - 1));
-            if (vaccine_Nth == 1 || !preVaccineOpt.isPresent()) {
+            if (vaccine_Nth == 1 && !preVaccineOpt.isPresent()) {
                 resultList.addAll(predictDogFLU_noRecord(birthdate));
             }
             else {
@@ -615,7 +655,9 @@ public class VaccinationService {
         List<VaccineInfoResponse> resultList = new ArrayList<>();
 
         if (deletedVaccineName.contains(CVRP.getValue())) {
-            int vaccine_Nth = deletedVaccineName.indexOf(CVRP.getValue());
+            int n_idx = deletedVaccineName.indexOf(" ");
+            int vaccine_Nth = deletedVaccineName.charAt(n_idx + 1) - '0';
+
             Optional<VaccinationHistory> preVaccineOpt = vaccinationRepository.findByVaccinationName(CVRP.getValue() + " " + String.valueOf(vaccine_Nth - 1));
             if (!preVaccineOpt.isPresent()) {
                 resultList.addAll(predictCatCVRP_noRecord(birthdate));
@@ -646,7 +688,9 @@ public class VaccinationService {
         List<VaccineInfoResponse> resultList = new ArrayList<>();
 
         if (deletedVaccineName.contains(RVH.getValue())) {
-            int vaccine_Nth = deletedVaccineName.indexOf(RVH.getValue());
+            int n_idx = deletedVaccineName.indexOf(" ");
+            int vaccine_Nth = deletedVaccineName.charAt(n_idx + 1) - '0';
+
             Optional<VaccinationHistory> preVaccineOpt = vaccinationRepository.findByVaccinationName(RVH.getValue() + " " + String.valueOf(vaccine_Nth - 1));
             if (!preVaccineOpt.isPresent()) {
                 resultList.addAll(predictRabbitRVH_noRecord(birthdate));
