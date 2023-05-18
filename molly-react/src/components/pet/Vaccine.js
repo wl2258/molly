@@ -52,7 +52,11 @@ const Vaccine = (props) => {
   // useState(() => {
   //   setLoading(true);
 
-  //   setVaccineHistory([])
+  //   setVaccineHistory([{
+  //     "vaccinationId": 1,
+  //     "vaccinationName": "종합백신1차",
+  //     "vaccinationDate": "2018-01-01"
+  //   }])
   //   setLoading(false)
   // }, [])
 

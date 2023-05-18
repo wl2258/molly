@@ -69,7 +69,12 @@ const UpdatePet = () => {
 	// 		"weight" : 3.4,
 	// 		"caution" : "분리불안 심함",
 	// 		"surgery": [],
-	// 		"medication": null,
+	// 		"medication": [{
+	// 			"medicationId": 1432,
+	// 			"medicationName": "넥스가드",
+	// 			"medicationStart": "2023-02-01",
+	// 			"medicationEnd": "2023-02-15"
+	// 		}],
 	// 		"vaccination": [
 	// 			{
   //         "vaccinationId": 1,

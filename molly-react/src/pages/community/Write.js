@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import styles from '../../css/Write.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 import { Button } from '../../components/Button';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 let CustomBody = styled.div`
   margin-top: 290px;
@@ -28,19 +30,21 @@ const Write = () => {
             <ul onClick={() => {setBoardView(!boardView)}}>
               <div className={styles.sort}>
                 <span className={styles.default}>{boardValue}</span>
-                {boardView ? <MdExpandLess size="25px" color="#AFA79F"/> : <MdExpandMore size="25px" color="#AFA79F"/>}
+                {boardView ? <span className={styles.boardCategory}><MdExpandLess size="25px" color="#AFA79F"/></span> : 
+                  <span className={styles.boardCategory}><MdExpandMore size="25px" color="#AFA79F"/></span>}
                 {boardView && <BoardDropdown setValue={setBoardValue}/>}
               </div>
             </ul>
             <ul onClick={() => {setPetView(!petView)}}>
               <div className={styles.sort}>
                 <span className={styles.petdefault}>{petValue}</span>
-                {petView ? <MdExpandLess size="25px" color="#AFA79F"/> : <MdExpandMore size="25px" color="#AFA79F"/>}
+                {petView ? <span className={styles.boardCategory}><MdExpandLess size="25px" color="#AFA79F"/></span> : 
+                  <span className={styles.boardCategory}><MdExpandMore size="25px" color="#AFA79F"/></span>}
                 {petView && <PetDropdown setValue={setPetValue}/>}
               </div>
             </ul>
           </div>
-          <div className={styles.title}>
+          {/* <div className={styles.title}>
             <input placeholder="제목을 입력하세요."></input>
           </div>
           <div className={styles.board}>
@@ -48,6 +52,27 @@ const Write = () => {
           </div>
           <div className={styles.footer}>
             <span><Button name={"등록"}/></span>
+          </div> */}
+          <div>
+            <CKEditor 
+              editor={ ClassicEditor }
+              config={{
+                placeholder: "내용을 입력하세요.",
+              }}
+              onReady={ editor => {
+                  //console.log( 'Editor is ready to use!', editor );
+              } }
+              onChange={ ( event, editor ) => {
+                  const data = editor.getData();
+                  //console.log( { event, editor, data } );
+              } }
+              onBlur={ ( event, editor ) => {
+                  //console.log( 'Blur.', editor );
+              } }
+              onFocus={ ( event, editor ) => {
+                  //console.log( 'Focus.', editor );
+              } }
+            />
           </div>
         </div>
       </CustomBody>
