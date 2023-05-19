@@ -52,14 +52,12 @@ const Medicine = (props) => {
     //     console.log("render")
     //     setLoading(true);
 
-    //     setMedicine([
-	// 		// {
-	// 		// 	"medicationId": 1432,
-	// 		// 	"medicationName": "넥스가드",
-	// 		// 	"medicationStartDate": "2023-02-01",
-	// 		// 	"medicationEndDate": "2023-02-15"
-	// 		// }
-	// 	])
+    //     setMedicine([{
+    //         "medicationId": 1432,
+    //         "medicationName": "넥스가드",
+    //         "medicationStartDate": "2023-02-01",
+    //         "medicationEndDate": "2023-02-15"
+    //     },])
     //     setLoading(false)
     // }, [])
 
