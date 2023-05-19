@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styles from '../../css/Surgery.module.css';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
