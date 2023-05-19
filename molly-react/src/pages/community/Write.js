@@ -19,6 +19,7 @@ const Write = () => {
   const [boardValue, setBoardValue] = useState('전체게시판');
   const [petView, setPetView] = useState(false);
   const [petValue, setPetValue] = useState('선택 안함');
+  const [title, setTitle] = useState("");
 
   return (
     <div>
@@ -56,6 +57,7 @@ const Write = () => {
           <div>
             <CKEditor 
               editor={ ClassicEditor }
+              data=""
               config={{
                 placeholder: "내용을 입력하세요.",
               }}

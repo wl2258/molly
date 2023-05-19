@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import styles from '../../css/Medicine.module.css';
 import { FiPlus } from 'react-icons/fi';
 import { TiDeleteOutline } from 'react-icons/ti';
@@ -13,7 +13,7 @@ const Medicine = (props) => {
     const [endDate, setEndDate] = useState(new Date());
     const [medicine, setMedicine] = useState([]);
     const [loading, setLoading] = useState(false);
-    const medicineNo = useRef(props.text.medication === null || props.text.medication.length === 0? 1 : props.text.medication[props.text.medication.length-1].medicationId + 1);
+    //const medicineNo = useRef(props.text.medication === null || props.text.medication.length === 0? 1 : props.text.medication[props.text.medication.length-1].medicationId + 1);
 
     useEffect(() => {
         document.body.style.cssText = `
@@ -52,12 +52,7 @@ const Medicine = (props) => {
     //     console.log("render")
     //     setLoading(true);
 
-    //     setMedicine([{
-    //         "medicationId": 1432,
-    //         "medicationName": "넥스가드",
-    //         "medicationStartDate": "2023-02-01",
-    //         "medicationEndDate": "2023-02-15"
-    //     },])
+    //     setMedicine([])
     //     setLoading(false)
     // }, [])
 
@@ -124,6 +119,7 @@ const Medicine = (props) => {
     );
 
     const registerMedicine = () => {
+        console.log("register")
         const config = {
             headers: {
                 Authorization: localStorage.getItem("accessToken"),
@@ -142,14 +138,21 @@ const Medicine = (props) => {
             const response = await axiosInstance.post(`/api/auth/pet/medication`, data, config)
             console.log(response);
             if (response.data.code === 1) {
-                let updateMedicine = medicine;
-                updateMedicine.splice(medicine.length - 1, 1, {
-                    medicationId: response.data.data.medicationId,
-                    medicationStartDate: props.dateFormat(startDate),
-                    medicationEndDate: props.dateFormat(endDate),
-                    medicationName: medicineName
-                })
-                setMedicine(updateMedicine)
+                if (medicine !== null && medicineName !== "") {
+                    setMedicine([...medicine, {
+                        medicationId: response.data.data.medicationId,
+                        medicationStartDate: props.dateFormat(startDate),
+                        medicationEndDate: props.dateFormat(endDate),
+                        medicationName: medicineName
+                    }])}
+                else if (medicineName !== "" && medicine === null) {
+                    setMedicine([{
+                        medicationId: response.data.data.medicationId,
+                        medicationStartDate: props.dateFormat(startDate),
+                        medicationEndDate: props.dateFormat(endDate),
+                        medicationName: medicineName
+                    }])
+                }
                 console.log("복용약 추가 완료");
             }
             else {
@@ -206,21 +209,6 @@ const Medicine = (props) => {
                         />
                     </div>
                     <span className={styles.plus} onClick={() => {
-                        if (medicine !== null && medicineName !== "") {
-                            setMedicine([...medicine, {
-                                medicationId: medicineNo.current++,
-                                medicationStartDate: props.dateFormat(startDate),
-                                medicationEndDate: props.dateFormat(endDate),
-                                medicationName: medicineName
-                            }])}
-                        else if (medicineName !== "" && medicine === null) {
-                            setMedicine([{
-                                medicationId: medicineNo.current++,
-                                medicationStartDate: props.dateFormat(startDate),
-                                medicationEndDate: props.dateFormat(endDate),
-                                medicationName: medicineName
-                            }])
-                        }
                         registerMedicine();
                         setMedicineName("");
                         console.log(medicine)
