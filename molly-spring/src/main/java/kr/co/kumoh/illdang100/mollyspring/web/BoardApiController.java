@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -111,15 +112,17 @@ public class BoardApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.OK);
     }
 
-    // TODO: 게시글 이미지 삭제
-    @PostMapping()
-    public ResponseEntity<?> addBoardImage() {
+    @PostMapping("/auth/board/{boardId}/image")
+    public ResponseEntity<?> addBoardImage(@PathVariable("boardId") Long boardId,
+                                           @RequestParam("boardImage") MultipartFile boardImage,
+                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.CREATED);
+        AddBoardImageResponse result = boardService.addBoardImage(boardId, principalDetails.getAccount().getId(), boardImage);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", result), HttpStatus.CREATED);
     }
 
-    // TODO: 게시글 이미지 추가
-    @DeleteMapping()
+    // TODO: 게시글 이미지 삭제
+    @DeleteMapping("/auth/board/{boardId}/image/{imageId}w")
     public ResponseEntity<?> deleteBoardImage() {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.OK);

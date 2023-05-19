@@ -67,4 +67,10 @@ public class BoardRespDto {
         @JsonIgnore
         private String message;
     }
+
+    @Getter @Setter
+    public static class AddBoardImageResponse {
+        private Long boardImageId;
+        private String storedBoardImageUrl;
+    }
 }
