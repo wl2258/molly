@@ -45,7 +45,7 @@
   border-top: 1px solid #ECE5E0;
   border-bottom: 1px solid #ECE5E0;
   background-color: #FAF5F1;
-  padding: 20px 14%;
+  padding: 0px 14%;
   margin-top: -10px;
 }
 
@@ -56,6 +56,7 @@
 
 .navigation > div {
   margin: 0 auto;
+  padding: 20px 0;
 }
 
 .changeheader {
@@ -69,7 +70,7 @@
 }
 
 .changenavcontainer {
-  padding: 18px 10% 0 0;
+  padding: 0px 10%;
   width: 60%;
 }
 
@@ -80,6 +81,10 @@
 .changenavigation {
   display: flex;
   justify-content: space-around;
+}
+
+.changenavigation > div {
+  padding: 20px;
 }
 
 .changelogo {
@@ -215,4 +220,26 @@
 .alarmdropdown > li > p:nth-child(2) {
   font-size: 12px;
   padding: 0 10px;
+}
+
+.category {
+  width: 100px;
+  z-index: 5;
+  background-color: #F2EAE3;
+  position: absolute;
+  top: 50px;
+  left: -10px;
+}
+
+.categoryDropdown > li {
+  list-style: none;
+  text-align: center;
+  padding: 10px 0;
+  color: #827870;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.categoryDropdown > li:hover {
+  background-color: #EADFD5;
 }
