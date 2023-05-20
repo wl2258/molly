@@ -7,6 +7,7 @@ import Hospital from './pages/Hospital';
 import About from './pages/About';
 import Detail from './pages/community/Detail';
 import Write from './pages/community/Write';
+import WriteCkEditor from './pages/community/WriteCkEditor';
 import RegisterPet from './pages/pet/RegisterPet';
 import LogIn from './pages/LogIn';
 import First from './pages/First';
@@ -29,7 +30,7 @@ function App() {
         <Route path="/hospital" element={<Hospital />}/>
         <Route path="/about" element={<About />}/>
         <Route path="/list/:id" element={<Detail />}/>
-        <Route path="/list/write" element={<Write />}/>
+        <Route path="/list/write" element={<WriteCkEditor />}/>
         <Route path="/userinfo" element={<UserInfo/>} />
         <Route path="/registerpet" element={<RegisterPet />}/>
         <Route path="/detailpet/:id" element={<DetailPet />}/>
