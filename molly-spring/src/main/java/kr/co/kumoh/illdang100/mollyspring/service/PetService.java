@@ -70,7 +70,7 @@ public class PetService {
 
         String petType = petSaveRequest.getPetType();
 
-        Optional<Pet> findPetOpt = petRepository.findByAccount_IdAndPetName(findUser.getId(), petSaveRequest.getPetName());
+        Optional<Pet> findPetOpt = petRepository.findByAccount_IdAndPetName(accountId, petSaveRequest.getPetName());
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
         LocalDate birthdate = petSaveRequest.getBirthdate();
