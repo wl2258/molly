@@ -111,6 +111,17 @@ public class AccountApiController {
     }
 
     /**
+     * 회원 탈퇴
+     * @param principalDetails 인증된 사용자 정보
+     */
+    @DeleteMapping("/auth/account")
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        accountService.deleteAccount(principalDetails.getAccount().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "회원 탈퇴 완료", null), HttpStatus.OK);
+    }
+
+    /**
      * 사용자 프로필 이미지를 기본 이미지로 변경
      * @param principalDetails 인증된 사용자 정보
      */
