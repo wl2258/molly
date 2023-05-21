@@ -265,8 +265,7 @@ public class PetService {
 
         List<SurgeryHistory> sHistory = surgeryRepository.findByPet_Id(petId);
         if (!sHistory.isEmpty()) {
-            for (SurgeryHistory s : sHistory)
-                surgeryRepository.delete(s);
+            surgeryRepository.deleteAll(sHistory);
         }
     }
 
@@ -274,8 +273,7 @@ public class PetService {
 
         List<MedicationHistory> mHistory = medicationRepository.findByPet_Id(petId);
         if (!mHistory.isEmpty()) {
-            for (MedicationHistory m : mHistory)
-                medicationRepository.delete(m);
+            medicationRepository.deleteAll(mHistory);
         }
     }
 
@@ -283,8 +281,7 @@ public class PetService {
 
         List<VaccinationHistory> vHistory = vaccinationRepository.findByPet_Id(petId);
         if (!vHistory.isEmpty()) {
-            for (VaccinationHistory v : vHistory)
-                vaccinationRepository.delete(v);
+            vaccinationRepository.deleteAll(vHistory);
         }
     }
 
