@@ -31,7 +31,7 @@ public class SurgeryApiController {
 
         surgeryService.saveSurgery(surgerySaveRequest);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "복용 약 이력 저장 성공", null), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1, "수술 이력 저장 성공", null), HttpStatus.CREATED);
     }
 
     @PostMapping("{petId}")
@@ -40,7 +40,6 @@ public class SurgeryApiController {
         surgeryService.updateSurgery(petId, surgeryUpdateRequest);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "수술 이력 수정 성공", null), HttpStatus.OK);
-
     }
 
     @GetMapping("{petId}")
