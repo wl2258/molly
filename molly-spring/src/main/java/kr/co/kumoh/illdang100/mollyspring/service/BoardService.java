@@ -218,7 +218,13 @@ public class BoardService {
     }
 
     private void deleteBoardImagesByBoardIdInBatch(Long boardId) {
-        boardImageRepository.deleteAllByIdInBatch(boardImageRepository.findByBoard_id(boardId).stream()
+
+        List<BoardImage> boardImages = boardImageRepository.findByBoard_id(boardId);
+        boardImages.forEach(boardImage -> {
+                    s3Service.delete(boardImage.getBoardImageFile().getStoreFileName());
+                });
+
+        boardImageRepository.deleteAllByIdInBatch(boardImages.stream()
                 .map(BoardImage::getId)
                 .collect(Collectors.toList()));
     }
