@@ -209,6 +209,7 @@ public class PetService {
         findAccountOrElseThrow(accountId);
 
         Pet findPet = findPetOrElseThrow(petId);
+        if (findPet.getAccount().getId().longValue() != accountId.longValue()) throw new CustomApiException("해당 사용자의 반려동물이 아닙니다.");
 
         findPet.updatePet(petUpdateRequest);
         updatePetSpecies(petUpdateRequest.getSpecies(), findPet);
@@ -252,6 +253,7 @@ public class PetService {
     public void deletePet(Long petId, Long accountId) {
 
         Pet findPet = findPetOrElseThrow(petId);
+        if (findPet.getAccount().getId().longValue() != accountId.longValue()) throw new CustomApiException("해당 사용자의 반려동물이 아닙니다.");
 
         deleteSurgeryHistory(petId);
         deleteMedicationHistory(petId);

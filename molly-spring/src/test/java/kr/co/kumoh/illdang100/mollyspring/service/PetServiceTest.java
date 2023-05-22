@@ -212,7 +212,7 @@ public class PetServiceTest extends DummyObject {
         when(surgeryRepository.findByPet_Id(pet.getId())).thenReturn(List.of(surgery));
 
         //when
-        petService.deletePet(pet.getId());
+        petService.deletePet(pet.getId(), account.getId());
 
         //then
     }
@@ -230,7 +230,7 @@ public class PetServiceTest extends DummyObject {
         when(petRepository.findById(any())).thenReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> petService.deletePet(pet.getId()))
+    assertThatThrownBy(() -> petService.deletePet(pet.getId(), account.getId()))
                 .isInstanceOf(CustomApiException.class);
     }
 
