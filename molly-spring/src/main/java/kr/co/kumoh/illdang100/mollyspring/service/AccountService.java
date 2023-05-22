@@ -1,9 +1,13 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
+import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.domain.pet.Pet;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.pet.PetRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshToken;
 import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
@@ -26,6 +31,10 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final S3Service s3Service;
+    private final PetService petService;
+    private final PetRepository petRepository;
+    private final BoardService boardService;
+    private final BoardRepository boardRepository;
 
     /**
      * 닉네임 중복 검사
@@ -77,6 +86,7 @@ public class AccountService {
 
     /**
      * 사용자 정보 조회
+     *
      * @param accountId 사용자 pk
      * @return 사용자 프로필 이미지, 닉네임, 이메일, 회원가입 경로
      */
@@ -92,7 +102,6 @@ public class AccountService {
 
         return accountProfileResponse;
     }
-
 
     @Transactional
     public void updateAccountNickname(Long accountId, String nickname) {
@@ -148,7 +157,50 @@ public class AccountService {
     }
 
     /**
+     * 회원 탈퇴
+     *
+     * @param accountId
+     */
+    @Transactional
+    public void deleteAccount(Long accountId) {
+
+        Account findAccount = findAccountByIdOrThrowException(accountId);
+
+        // s3 프로필 이미지 삭제
+        deleteAccountProfileImage(findAccount);
+
+        // pet 삭제
+        deletePetByAccountId(accountId);
+
+        // board 삭제
+        deleteBoardByAccountId(accountId);
+
+        accountRepository.delete(findAccount);
+    }
+
+    private void deleteBoardByAccountId(Long accountId) {
+        List<Board> findBoards = boardRepository.findByAccount_Id(accountId);
+        findBoards.forEach(board -> {
+            boardService.deletePost(board.getId(), accountId);
+        });
+    }
+
+    private void deletePetByAccountId(Long accountId) {
+        List<Pet> findPets = petRepository.findByAccount_Id(accountId);
+        findPets.forEach(pet -> {
+            petService.deletePet(pet.getId());
+        });
+    }
+
+    private void deleteAccountProfileImage(Account findAccount) {
+        if (hasAccountProfileImage(findAccount)) {
+            s3Service.delete(findAccount.getAccountProfileImage().getStoreFileName());
+        }
+    }
+
+    /**
      * 사용자 프로필 이미지 삭제 (기본 이미지 변경)
+     *
      * @param accountId 사용자 pk
      */
     @Transactional
