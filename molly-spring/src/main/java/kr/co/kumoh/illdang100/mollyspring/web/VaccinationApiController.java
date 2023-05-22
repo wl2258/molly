@@ -32,7 +32,7 @@ public class VaccinationApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "예방접종 기록 저장 성공", vaccinationSaveResponse), HttpStatus.CREATED);
     }
 
-    @PostMapping("{ptId}")
+    @PostMapping("{petId}")
     public ResponseEntity<?> updateVaccination(@PathVariable Long petId, @RequestBody @Valid VaccinationUpdateRequest request) {
 
         VaccinationUpdateResponse vaccinationUpdateResponse = vaccinationService.updateVaccination(petId, request);

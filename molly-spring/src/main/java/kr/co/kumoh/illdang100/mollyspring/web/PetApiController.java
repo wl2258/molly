@@ -54,9 +54,10 @@ public class PetApiController {
     }
 
     @DeleteMapping("{petId}")
-    public ResponseEntity<?> deletePet(@PathVariable @NotNull Long petId) {
+    public ResponseEntity<?> deletePet(@PathVariable @NotNull Long petId,
+                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        petService.deletePet(petId);
+        petService.deletePet(petId, principalDetails.getAccount().getId());
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 삭제를 성공했습니다.", null), HttpStatus.OK);
     }

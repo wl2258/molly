@@ -70,7 +70,7 @@ public class PetService {
 
         String petType = petSaveRequest.getPetType();
 
-        Optional<Pet> findPetOpt = petRepository.findByAccount_IdAndPetName(findUser.getId(), petSaveRequest.getPetName());
+        Optional<Pet> findPetOpt = petRepository.findByAccount_IdAndPetName(accountId, petSaveRequest.getPetName());
         if (findPetOpt.isPresent()) throw new CustomApiException("이미 등록된 반려동물입니다.");
 
         LocalDate birthdate = petSaveRequest.getBirthdate();
@@ -209,6 +209,7 @@ public class PetService {
         findAccountOrElseThrow(accountId);
 
         Pet findPet = findPetOrElseThrow(petId);
+        if (findPet.getAccount().getId().longValue() != accountId.longValue()) throw new CustomApiException("해당 사용자의 반려동물이 아닙니다.");
 
         findPet.updatePet(petUpdateRequest);
         updatePetSpecies(petUpdateRequest.getSpecies(), findPet);
@@ -249,9 +250,10 @@ public class PetService {
      * @param petId
      */
     @Transactional
-    public void deletePet(Long petId) {
+    public void deletePet(Long petId, Long accountId) {
 
         Pet findPet = findPetOrElseThrow(petId);
+        if (findPet.getAccount().getId().longValue() != accountId.longValue()) throw new CustomApiException("해당 사용자의 반려동물이 아닙니다.");
 
         deleteSurgeryHistory(petId);
         deleteMedicationHistory(petId);
@@ -265,8 +267,9 @@ public class PetService {
 
         List<SurgeryHistory> sHistory = surgeryRepository.findByPet_Id(petId);
         if (!sHistory.isEmpty()) {
-            for (SurgeryHistory s : sHistory)
-                surgeryRepository.delete(s);
+            surgeryRepository.deleteAllByIdInBatch(sHistory.stream()
+                    .map(SurgeryHistory::getId)
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -274,8 +277,9 @@ public class PetService {
 
         List<MedicationHistory> mHistory = medicationRepository.findByPet_Id(petId);
         if (!mHistory.isEmpty()) {
-            for (MedicationHistory m : mHistory)
-                medicationRepository.delete(m);
+            medicationRepository.deleteAllByIdInBatch(mHistory.stream()
+                    .map(MedicationHistory::getId)
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -283,8 +287,9 @@ public class PetService {
 
         List<VaccinationHistory> vHistory = vaccinationRepository.findByPet_Id(petId);
         if (!vHistory.isEmpty()) {
-            for (VaccinationHistory v : vHistory)
-                vaccinationRepository.delete(v);
+            vaccinationRepository.deleteAllByIdInBatch(vHistory.stream()
+                    .map(VaccinationHistory::getId)
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -480,7 +485,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveCat(PetSaveRequest petSaveRequest, Account findUser) {
+    public Pet saveCat(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
 
@@ -501,7 +506,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveDog(PetSaveRequest petSaveRequest,  Account findUser) {
+    public Pet saveDog(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
@@ -522,7 +527,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveRabbit(PetSaveRequest petSaveRequest, Account findUser) {
+    public Pet saveRabbit(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();

@@ -28,13 +28,13 @@ public class MedicationApiController {
     @PostMapping
     public ResponseEntity<?> saveMedication(@RequestBody @Valid MedicationSaveRequest request, BindingResult bindingResult) {
 
-        Long petId = medicationService.saveMedication(request);
+        Long medicationId = medicationService.saveMedication(request);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "복용 약 이력 저장 성공", new MedicationSaveResponse(petId)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "복용 약 이력 저장 성공", new MedicationSaveResponse(medicationId)), HttpStatus.OK);
     }
 
     @PostMapping("{petId}")
-    public ResponseEntity<?> updateMedication(@PathVariable Long petId, @RequestBody @Valid MedicationUpdateRequest request,    BindingResult bindingResult) {
+    public ResponseEntity<?> updateMedication(@PathVariable @NotNull Long petId, @RequestBody @Valid MedicationUpdateRequest request, BindingResult bindingResult) {
 
         medicationService.updateMedication(petId, request);
 

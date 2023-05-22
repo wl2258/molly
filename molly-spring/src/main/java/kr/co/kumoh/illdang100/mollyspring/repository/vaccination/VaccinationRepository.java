@@ -12,5 +12,5 @@ public interface VaccinationRepository extends JpaRepository<VaccinationHistory,
 
     List<VaccinationHistory> findByPet_IdOrderByVaccinationDateAsc(Long petId);
     
-    Optional<VaccinationHistory> findByVaccinationName(String vaccinationName);
+    Optional<VaccinationHistory> findByVaccinationNameAndPet_Id(String vaccinationName, Long petId);
 }
