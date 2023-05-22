@@ -249,7 +249,7 @@ public class PetService {
      * @param petId
      */
     @Transactional
-    public void deletePet(Long petId) {
+    public void deletePet(Long petId, Long accountId) {
 
         Pet findPet = findPetOrElseThrow(petId);
 
@@ -265,7 +265,9 @@ public class PetService {
 
         List<SurgeryHistory> sHistory = surgeryRepository.findByPet_Id(petId);
         if (!sHistory.isEmpty()) {
-            surgeryRepository.deleteAll(sHistory);
+            surgeryRepository.deleteAllByIdInBatch(sHistory.stream()
+                    .map(SurgeryHistory::getId)
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -273,7 +275,9 @@ public class PetService {
 
         List<MedicationHistory> mHistory = medicationRepository.findByPet_Id(petId);
         if (!mHistory.isEmpty()) {
-            medicationRepository.deleteAll(mHistory);
+            medicationRepository.deleteAllByIdInBatch(mHistory.stream()
+                    .map(MedicationHistory::getId)
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -281,7 +285,9 @@ public class PetService {
 
         List<VaccinationHistory> vHistory = vaccinationRepository.findByPet_Id(petId);
         if (!vHistory.isEmpty()) {
-            vaccinationRepository.deleteAll(vHistory);
+            vaccinationRepository.deleteAllByIdInBatch(vHistory.stream()
+                    .map(VaccinationHistory::getId)
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -477,7 +483,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveCat(PetSaveRequest petSaveRequest, Account findUser) {
+    public Pet saveCat(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
 
@@ -498,7 +504,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveDog(PetSaveRequest petSaveRequest,  Account findUser) {
+    public Pet saveDog(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
@@ -519,7 +525,7 @@ public class PetService {
     }
 
     @Transactional
-    private Pet saveRabbit(PetSaveRequest petSaveRequest, Account findUser) {
+    public Pet saveRabbit(PetSaveRequest petSaveRequest, Account findUser) {
 
         ImageFile petProfileImage = null;
         MultipartFile multipartFile = petSaveRequest.getPetProfileImage();
