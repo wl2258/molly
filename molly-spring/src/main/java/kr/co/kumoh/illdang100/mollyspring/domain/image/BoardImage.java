@@ -24,12 +24,10 @@ public class BoardImage{
 
     @Embedded
     @Column(nullable = false)
-    private ImageFile accountProfileImage;
+    private ImageFile boardImageFile;
 
-    @Builder
-    public BoardImage(Long id, Board board, ImageFile accountProfileImage) {
-        this.id = id;
+    public BoardImage(Board board, ImageFile boardImageFile) {
         this.board = board;
-        this.accountProfileImage = accountProfileImage;
+        this.boardImageFile = boardImageFile;
     }
 }

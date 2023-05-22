@@ -18,6 +18,7 @@ public class BoardRespDto {
     @AllArgsConstructor
     @Getter @Setter
     public static class RetrievePostListDto {
+        private Long boardId;
         private String title;
         private String writerNick;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -66,5 +67,11 @@ public class BoardRespDto {
         private boolean thumbsUp;
         @JsonIgnore
         private String message;
+    }
+
+    @Getter @Setter
+    public static class AddBoardImageResponse {
+        private Long boardImageId;
+        private String storedBoardImageUrl;
     }
 }

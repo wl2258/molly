@@ -36,6 +36,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
         JPAQuery<RetrievePostListDto> query = queryFactory
                 .select(Projections.constructor(RetrievePostListDto.class,
+                        board.id,
                         board.boardTitle,
                         account.nickname,
                         board.createdDate,

@@ -26,19 +26,23 @@
 
 .all {
   border-radius: 20px 0 0 0;
+  cursor: pointer;
 }
 
 .dog {
   left: 90px;
+  cursor: pointer;
 }
 
 .cat {
   left: 180px;
+  cursor: pointer;
 }
 
 .rabbit {
   left: 270px;
   border-radius: 0 20px 0 0;
+  cursor: pointer;
 }
 
 .container {

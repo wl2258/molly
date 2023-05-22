@@ -63,6 +63,24 @@ public class DummyObject {
                 .build();
     }
 
+    protected Board newMockBoard(Long id, Account account, String title, String content,
+                             BoardEnum category, PetTypeEnum petType, boolean isNotice) {
+
+        return Board.builder()
+                .id(id)
+                .account(account)
+                .boardTitle(title)
+                .boardContent(content)
+                .category(category)
+                .petType(petType)
+                .views(10L)
+                .likyCnt(10L)
+                .commentCnt(10L)
+                .hasImage(false)
+                .isNotice(isNotice)
+                .build();
+    }
+
     protected Liky newLiky(Board board, Long accountId, BoardRepository boardRepository) {
 
         board.increaseViews();
@@ -73,6 +91,22 @@ public class DummyObject {
         }
 
         return new Liky(board, accountId);
+    }
+
+    protected Liky newMockLiky(Long id, Board board, Long accountId, BoardRepository boardRepository) {
+
+        board.increaseViews();
+        board.increaseLikyCnt();
+
+        if (boardRepository != null) {
+            boardRepository.save(board);
+        }
+
+        return Liky.builder()
+                .id(id)
+                .board(board)
+                .accountId(accountId)
+                .build();
     }
 
     protected Comment newComment(Board board, String commentContent,

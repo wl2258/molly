@@ -64,6 +64,27 @@ public class BoardService {
         return new CreatePostResponse(board.getId());
     }
 
+    @Transactional
+    public AddBoardImageResponse addBoardImage(Long boardId, Long accountId, MultipartFile boardImage) {
+
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+        checkBoardAccessAuthorization(accountId, findBoard);
+
+        AddBoardImageResponse addBoardImageResponse = new AddBoardImageResponse();
+        if (boardImage != null) {
+            try {
+                BoardImage storedBoardImage = saveBoardImage(findBoard, boardImage);
+                addBoardImageResponse.setBoardImageId(storedBoardImage.getId());
+                addBoardImageResponse.setStoredBoardImageUrl(storedBoardImage.getBoardImageFile().getStoreFileUrl());
+                findBoard.changeHasImage(true);
+            } catch (Exception e) {
+                throw new CustomApiException(e.getMessage());
+            }
+        }
+
+        return addBoardImageResponse;
+    }
+
     public Page<RetrievePostListDto> getPostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
 
         return boardRepository.findPagePostList(retrievePostListCondition, pageable);
@@ -83,7 +104,7 @@ public class BoardService {
 
         if (accountId != null) {
             thumbsUp = likyRepository.existsByAccountIdAndBoard_Id(accountId, boardId);
-            isOwner = isAuthorizedToDeleteBoard(findBoard, accountId);
+            isOwner = isAuthorizedToAccessBoard(findBoard, accountId);
         }
 
         List<BoardCommentDto> commentDtoList = getBoardCommentDtoList(boardId);
@@ -132,11 +153,11 @@ public class BoardService {
     private List<String> getBoardImages(Long boardId) {
         return boardImageRepository.findByBoard_id(boardId)
                 .stream()
-                .map(boardImage -> boardImage.getAccountProfileImage().getStoreFileUrl())
+                .map(boardImage -> boardImage.getBoardImageFile().getStoreFileUrl())
                 .collect(Collectors.toList());
     }
 
-    private boolean isAuthorizedToDeleteBoard(Board board, Long accountId) {
+    private boolean isAuthorizedToAccessBoard(Board board, Long accountId) {
         return board.getAccount().getId().equals(accountId);
     }
 
@@ -178,9 +199,7 @@ public class BoardService {
 
         Board findBoard = findBoardByIdOrThrowException(boardId);
 
-        if (!isAuthorizedToDeleteBoard(findBoard, accountId)) {
-            throw new CustomApiException("해당 게시글을 삭제할 권한이 없습니다");
-        }
+        checkBoardAccessAuthorization(accountId, findBoard);
 
         findBoard.update(updatePostRequest);
     }
@@ -190,9 +209,7 @@ public class BoardService {
 
         Board findBoard = findBoardByIdOrThrowException(boardId);
 
-        if (!isAuthorizedToDeleteBoard(findBoard, accountId)) {
-                    throw new CustomApiException("해당 게시글을 삭제할 권한이 없습니다");
-        }
+        checkBoardAccessAuthorization(accountId, findBoard);
 
         deleteCommentsByBoardIdInBatch(boardId);
         deleteLikiesByBoardIdInBatch(boardId);
@@ -218,14 +235,11 @@ public class BoardService {
                 .collect(Collectors.toList()));
     }
 
-    private void saveBoardImage(Board board, MultipartFile boardImage) throws IOException {
+    private BoardImage saveBoardImage(Board board, MultipartFile boardImage) throws IOException {
         ImageFile boardImageFile =
                 s3Service.upload(boardImage, FileRootPathVO.BOARD_PATH);
 
-        boardImageRepository.save(BoardImage.builder()
-                .board(board)
-                .accountProfileImage(boardImageFile)
-                .build());
+        return boardImageRepository.save(new BoardImage(board, boardImageFile));
     }
 
     private Account findAccountByIdOrThrowException(Long accountId) {
@@ -237,5 +251,11 @@ public class BoardService {
     private Board findBoardByIdOrThrowException(Long boardId) {
         return boardRepository.findWithAccountById(boardId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 게시글입니다"));
+    }
+
+    private void checkBoardAccessAuthorization(Long accountId, Board findBoard) {
+        if (!isAuthorizedToAccessBoard(findBoard, accountId)) {
+            throw new CustomApiException("해당 게시글에 접근할 권한이 없습니다");
+        }
     }
 }

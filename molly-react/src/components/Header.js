@@ -29,6 +29,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [pet, setPet] = useState(null);
+  const [categoryView, setCategoryView] = useState(false);
 
   const updateScroll = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
@@ -238,12 +239,17 @@ const Header = () => {
                   Calendar
                 </CustomNavLink>
               </div>
-              <div>
+              <div 
+                style={{position: "relative"}} 
+                onMouseOver={() => {setCategoryView(true)}}
+                onMouseOut={() => {setCategoryView(false)}}
+                >
                 <CustomNavLink
                   style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/list">
+                  to="/list/ALL/ALL">
                   Community
                 </CustomNavLink>
+                {categoryView && <div className={styles.category}><CategoryDropdown /></div>}
               </div>
               <div>
                 <CustomNavLink
@@ -283,12 +289,16 @@ const Header = () => {
                     Calendar
                   </CustomNavLink>
                 </div>
-                <div>
+                <div
+                  style={{position: "relative"}} 
+                  onMouseOver={() => {setCategoryView(true)}}
+                  onMouseOut={() => {setCategoryView(false)}}>
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
-                    to="/list">
+                    to="/list/ALL/ALL">
                     Community
                   </CustomNavLink>
+                  {categoryView && <div className={styles.category} style={{left: "8px"}}><CategoryDropdown /></div>}
                 </div>
                 <div>
                   <CustomNavLink
@@ -311,6 +321,18 @@ const Header = () => {
     </div>
   );
 };
+
+const CategoryDropdown = () => {
+  let navigate = useNavigate();
+
+  return (
+    <div className={styles.categoryDropdown}>
+      <li onClick={() => { navigate('/list/ALL/ALL') }}>전체게시판</li>
+      <li onClick={() => { navigate('/list/MEDICAL/ALL') }}>의료게시판</li>
+      <li onClick={() => { navigate('/list/FREE/ALL') }}>자유게시판</li>
+    </div>
+  )
+}
 
 const UserDropdown = () => {
   let navigate = useNavigate();
