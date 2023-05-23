@@ -246,7 +246,7 @@ const Header = () => {
                 >
                 <CustomNavLink
                   style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/list/ALL/ALL">
+                  to="/list/ALL/NOT_SELECTED">
                   Community
                 </CustomNavLink>
                 {categoryView && <div className={styles.category}><CategoryDropdown /></div>}
@@ -295,7 +295,7 @@ const Header = () => {
                   onMouseOut={() => {setCategoryView(false)}}>
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
-                    to="/list/ALL/ALL">
+                    to="/list/ALL/NOT_SELECTED">
                     Community
                   </CustomNavLink>
                   {categoryView && <div className={styles.category} style={{left: "8px"}}><CategoryDropdown /></div>}
@@ -327,9 +327,9 @@ const CategoryDropdown = () => {
 
   return (
     <div className={styles.categoryDropdown}>
-      <li onClick={() => { navigate('/list/ALL/ALL') }}>전체게시판</li>
-      <li onClick={() => { navigate('/list/MEDICAL/ALL') }}>의료게시판</li>
-      <li onClick={() => { navigate('/list/FREE/ALL') }}>자유게시판</li>
+      <li onClick={() => { navigate('/list/ALL/NOT_SELECTED') }}>전체게시판</li>
+      <li onClick={() => { navigate('/list/MEDICAL/NOT_SELECTED') }}>의료게시판</li>
+      <li onClick={() => { navigate('/list/FREE/NOT_SELECTED') }}>자유게시판</li>
     </div>
   )
 }

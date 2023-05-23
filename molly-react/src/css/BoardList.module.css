@@ -71,6 +71,9 @@
   margin: auto;
   border-radius: 0 0 20px 20px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sort {
@@ -100,4 +103,22 @@
 
 .dropdown > li:hover {
   background-color: #e3dede;
+}
+
+.footer > div > button {
+  border: none;
+  color: #d4cbbb;
+  padding: 0 10px;
+  font-size: 15px;
+  background-color: #F9F9F9;
+}
+
+.footer > div > button:hover {
+  cursor: pointer;
+}
+
+.footer > div > button[aria-current] {
+  font-weight: bold;
+  color: #B27910;
+  cursor: pointer;
 }

@@ -17,9 +17,9 @@ let CustomBody = styled.div`
 
 const WriteCkEditor = () => {
     const [boardView, setBoardView] = useState(false);
-    const [boardValue, setBoardValue] = useState('ALL');
+    const [boardValue, setBoardValue] = useState('MEDICAL');
     const [petView, setPetView] = useState(false);
-    const [petValue, setPetValue] = useState('ALL');
+    const [petValue, setPetValue] = useState('NOT_SELECTED');
 
     const navigate = useNavigate();
 
@@ -160,7 +160,7 @@ const WriteCkEditor = () => {
                         <ul onClick={() => { setBoardView(!boardView) }}>
                             <div className={styles.sort}>
                                 <span className={styles.default}>
-                                    {boardValue === "ALL" ? "전체게시판" : boardValue === "MEDICAL" ? "의료게시판" : "자유게시판"}
+                                    {boardValue === "MEDICAL" ? "의료게시판" : "자유게시판"}
                                 </span>
                                 {boardView ? <span className={styles.boardCategory}><MdExpandLess size="25px" color="#AFA79F" /></span> :
                                     <span className={styles.boardCategory}><MdExpandMore size="25px" color="#AFA79F" /></span>}
@@ -229,7 +229,6 @@ const WriteCkEditor = () => {
 const BoardDropdown = (props) => {
     return (
         <div className={styles.dropdown}>
-            <li onClick={() => { props.setValue('ALL') }}>전체게시판</li>
             <li onClick={() => { props.setValue('MEDICAL') }}>의료게시판</li>
             <li onClick={() => { props.setValue('FREE') }}>자유게시판</li>
         </div>
@@ -239,7 +238,7 @@ const BoardDropdown = (props) => {
 const PetDropdown = (props) => {
     return (
         <div className={styles.petdropdown}>
-            <li onClick={() => { props.setValue('ALL') }}>선택 안함</li>
+            <li onClick={() => { props.setValue('NOT_SELECTED') }}>선택 안함</li>
             <li onClick={() => { props.setValue('DOG') }}>강아지</li>
             <li onClick={() => { props.setValue('CAT') }}>고양이</li>
             <li onClick={() => { props.setValue('RABBIT') }}>토끼</li>

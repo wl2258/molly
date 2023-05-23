@@ -79,7 +79,7 @@ const First = () => {
               <div>
                 <CustomNavLink
                   style={({ isActive }) => (isActive ? "active" : "")} 
-                  to="/list/ALL/ALL">
+                  to="/list/ALL/NOT_SELECTED">
                     Community
                 </CustomNavLink>
               </div>
