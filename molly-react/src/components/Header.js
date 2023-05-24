@@ -6,6 +6,8 @@ import { RiAccountCircleLine } from 'react-icons/ri';
 import { TbDog, TbBell } from 'react-icons/tb';
 //import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { deleteId } from '../pages/store/user.js';
 
 let CustomNavLink = styled(NavLink)`
   color: #AFA79F;
@@ -30,6 +32,7 @@ const Header = () => {
   const [loading, setLoading] = useState(false);
   const [pet, setPet] = useState(null);
   const [categoryView, setCategoryView] = useState(false);
+  const dispatch = useDispatch();
 
   const updateScroll = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
@@ -150,47 +153,47 @@ const Header = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setPet([
-	// 		{
-	// 			"petId": 13,
-	// 			"petName": "몰리",
-	// 			"petType": "DOG",
-	// 			"birthdate": "2013-08-07",
-	// 			"vaccination": [
-	// 				{
-	// 					"vaccinationName": "종합백신1차",
-	// 					"vaccinationDate": "2023-03-14"
-	// 				},
-	// 			],
-	// 			"vaccinePredict": [
-	// 				{
-	// 					"vaccinationName": "종합백신2차",
-	// 					"vaccinationDate": "2023-05-13"
-	// 				},
+  // 		{
+  // 			"petId": 13,
+  // 			"petName": "몰리",
+  // 			"petType": "DOG",
+  // 			"birthdate": "2013-08-07",
+  // 			"vaccination": [
+  // 				{
+  // 					"vaccinationName": "종합백신1차",
+  // 					"vaccinationDate": "2023-03-14"
+  // 				},
+  // 			],
+  // 			"vaccinePredict": [
+  // 				{
+  // 					"vaccinationName": "종합백신2차",
+  // 					"vaccinationDate": "2023-05-13"
+  // 				},
   //         {
-	// 					"vaccinationName": "종합백신3차",
-	// 					"vaccinationDate": "2023-05-30"
-	// 				}
-	// 			],
-	// 		},
+  // 					"vaccinationName": "종합백신3차",
+  // 					"vaccinationDate": "2023-05-30"
+  // 				}
+  // 			],
+  // 		},
   //     {
-	// 			"petId": 14,
-	// 			"petName": "보리",
-	// 			"petType": "CAT",
-	// 			"birthdate": "2019-01-10",
-	// 			"vaccination": [
-	// 				{
-	// 					"vaccinationName": "종합백신1차",
-	// 					"vaccinationDate": "2020-08-30"
-	// 				},
-	// 			],
-	// 			"vaccinePredict": [
-	// 				{
-	// 					"vaccinationName": "종합백신2차",
-	// 					"vaccinationDate": "2023-09-30"
-	// 				},
-	// 			],
-	// 		}
-	// 	])
+  // 			"petId": 14,
+  // 			"petName": "보리",
+  // 			"petType": "CAT",
+  // 			"birthdate": "2019-01-10",
+  // 			"vaccination": [
+  // 				{
+  // 					"vaccinationName": "종합백신1차",
+  // 					"vaccinationDate": "2020-08-30"
+  // 				},
+  // 			],
+  // 			"vaccinePredict": [
+  // 				{
+  // 					"vaccinationName": "종합백신2차",
+  // 					"vaccinationDate": "2023-09-30"
+  // 				},
+  // 			],
+  // 		}
+  // 	])
   //   setLoading(false)
   // }, [])
 
@@ -209,12 +212,12 @@ const Header = () => {
               <div ref={userDropdownRef} onClick={() => { setUserView(!userView) }}>
                 <span><RiAccountCircleLine color="#AFA79F" size="29px" /></span>
                 {userView && <div className={styles.userinfo}>
-                  <UserDropdown /></div>}
+                  <UserDropdown dispatch={dispatch} /></div>}
               </div>
               <div ref={petDropdownRef} onClick={() => { setPetView(!petView) }}>
                 <span><TbDog color="#AFA79F" size="29px" /></span>
                 {petView && <div className={styles.petinfo}>
-                  <PetDropdown pet={pet} loading={loading}/></div>}
+                  <PetDropdown pet={pet} loading={loading} /></div>}
               </div>
               <div ref={alarmRef} onClick={() => { setAlarmView(!alarmView) }}>
                 <span><TbBell color="#AFA79F" size="29px" /></span>
@@ -239,11 +242,11 @@ const Header = () => {
                   Calendar
                 </CustomNavLink>
               </div>
-              <div 
-                style={{position: "relative"}} 
-                onMouseOver={() => {setCategoryView(true)}}
-                onMouseOut={() => {setCategoryView(false)}}
-                >
+              <div
+                style={{ position: "relative" }}
+                onMouseOver={() => { setCategoryView(true) }}
+                onMouseOut={() => { setCategoryView(false) }}
+              >
                 <CustomNavLink
                   style={({ isActive }) => (isActive ? "active" : "")}
                   to="/list/ALL/ALL">
@@ -290,15 +293,15 @@ const Header = () => {
                   </CustomNavLink>
                 </div>
                 <div
-                  style={{position: "relative"}} 
-                  onMouseOver={() => {setCategoryView(true)}}
-                  onMouseOut={() => {setCategoryView(false)}}>
+                  style={{ position: "relative" }}
+                  onMouseOver={() => { setCategoryView(true) }}
+                  onMouseOut={() => { setCategoryView(false) }}>
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
                     to="/list/ALL/ALL">
                     Community
                   </CustomNavLink>
-                  {categoryView && <div className={styles.category} style={{left: "8px"}}><CategoryDropdown /></div>}
+                  {categoryView && <div className={styles.category} style={{ left: "8px" }}><CategoryDropdown /></div>}
                 </div>
                 <div>
                   <CustomNavLink
@@ -334,13 +337,24 @@ const CategoryDropdown = () => {
   )
 }
 
-const UserDropdown = () => {
+const UserDropdown = (props) => {
   let navigate = useNavigate();
 
   return (
     <div className={styles.userdropdown}>
       <li onClick={() => { navigate('/userinfo') }}>사용자 정보</li>
-      <li onClick={() => { }}>로그아웃</li>
+      <li onClick={() => {
+        axios.delete(`http://localhost:8080/api/account/logout`, {
+          headers: {
+            "Refresh-Token": localStorage.getItem("refreshToken"),
+          }
+        }).then((response) => {
+          console.log(response)
+          localStorage.clear();
+          props.dispatch(deleteId());
+          window.location.replace("/");
+        })
+      }}>로그아웃</li>
     </div>
   )
 }
@@ -349,7 +363,7 @@ const PetDropdown = (props) => {
   let navigate = useNavigate();
   // let state = useSelector((state) => state);
   // const [pet] = useState(state.pet);
-  if(props.loading) {
+  if (props.loading) {
     return (
       <div className={styles.petdropdown}>
         <li style={{ borderRadius: "10px" }}>loading</li>
@@ -361,17 +375,17 @@ const PetDropdown = (props) => {
     <div className={styles.petdropdown}>
       {props.pet === null ? <li style={{ borderRadius: "10px" }} onClick={() => { navigate('/registerpet') }}>추가하기</li> :
         props.pet.length === 0 ? <li style={{ borderRadius: "10px" }} onClick={() => { navigate('/registerpet') }}>추가하기</li> :
-        <>
-          {props.pet.map((item, index) => {
-            return (
-              item.petName !== '' &&
-              <li onClick={() => { navigate(`/detailpet/${item.petId}`) }}>
-                <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${item.petType}-logo.png`} alt="puppy" width="36px" />{item.petName}
-              </li>
-            )
-          })}
-          <li onClick={() => { navigate('/registerpet') }}>추가하기</li>
-        </>
+          <>
+            {props.pet.map((item, index) => {
+              return (
+                item.petName !== '' &&
+                <li onClick={() => { navigate(`/detailpet/${item.petId}`) }}>
+                  <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${item.petType}-logo.png`} alt="puppy" width="36px" />{item.petName}
+                </li>
+              )
+            })}
+            <li onClick={() => { navigate('/registerpet') }}>추가하기</li>
+          </>
       }
     </div>
   )

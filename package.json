@@ -1,6 +1,9 @@
 {
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
     "buffer": "^6.0.3",
-    "react-html-parser": "^2.0.2"
+    "react-html-parser": "^2.0.2",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1"
   }
 }
