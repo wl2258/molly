@@ -188,7 +188,7 @@ public class AccountService {
     private void deletePetByAccountId(Long accountId) {
         List<Pet> findPets = petRepository.findByAccount_Id(accountId);
         findPets.forEach(pet -> {
-            petService.deletePet(pet.getId());
+            petService.deletePet(pet.getId(), accountId);
         });
     }
 
