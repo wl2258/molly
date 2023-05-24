@@ -4,11 +4,12 @@ import { Button } from '../Button';
 import { MdSearch } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const Board = () => {
+const Board = (props) => {
   const {pet} = useParams();
   const [tap, setTap] = useState(pet);
   let navigate = useNavigate();
   let { category } = useParams();
+  const [searchWord, setSearchWord] = useState("");
 
   useEffect(() => {
     setTap(pet)
@@ -23,8 +24,18 @@ const Board = () => {
       
       <div className={styles.container}>
         <div>
-          <input className={styles.search} placeholder="글을 검색해보세요"></input>
-          <span style={{position:"absolute", right: "-5px", top:"8px"}}><MdSearch color="#AFA79F" /></span>
+          <input 
+            className={styles.search} 
+            placeholder="글을 검색해보세요"
+            value={searchWord}
+            onChange={(e) => {setSearchWord(e.target.value)}}
+          ></input>
+          <span 
+            style={{position:"absolute", right: "10px", top:"8px", cursor: "pointer"}}
+            onClick={() => {props.setSearch(searchWord)}}
+          >
+            <MdSearch color="#AFA79F" />
+          </span>
         </div>
         <Button onClick={() => navigate(`/list/${category}/write`)} name={"글쓰기"}/>
       </div>

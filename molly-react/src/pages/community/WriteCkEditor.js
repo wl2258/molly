@@ -95,18 +95,26 @@ const WriteCkEditor = () => {
         return {
             upload() {
                 return new Promise((resolve, reject) => {
-                    const formData = new FormData();
+                    //const formData = new FormData();
                     loader.file.then((file) => {
-                        formData.append("file", file);
+                        //formData.append("file", file);
 
-                        axios
-                            .post("http://localhost:8080/api/v0/file/upload", formData)
-                            .then((res) => {
-                                resolve({
-                                    default: res.data.data.uri,
-                                });
-                            })
-                            .catch((err) => reject(err));
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = () => {
+                            resolve({
+                                default: reader.result
+                            });
+                        }
+
+                        // axios
+                        //     .post("http://localhost:8080/api/v0/file/upload", formData)
+                        //     .then((res) => {
+                        //         resolve({
+                        //             default: res.data.data.uri,
+                        //         });
+                        //     })
+                        //     .catch((err) => reject(err));
                     });
                 });
             },
@@ -118,6 +126,8 @@ const WriteCkEditor = () => {
             return customUploadAdapter(loader);
         };
     }
+
+    console.log(content)
 
     const handleSubmit = () => {
         if (title.length < 1) {
@@ -134,7 +144,7 @@ const WriteCkEditor = () => {
 
         const data = {
             "title": title,
-            "content" : content,
+            "content": content,
             "category": boardValue,
             "petType": petValue,
         }
@@ -143,7 +153,8 @@ const WriteCkEditor = () => {
 
         axiosInstance.post(`/api/auth/board`, data, config)
             .then((response) => {
-                if(response.data.code === 1) {
+                if (response.data.code === 1) {
+
                     navigate("/", { replace: true });
                     return;
                 }

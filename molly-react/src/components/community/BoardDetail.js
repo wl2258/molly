@@ -1,103 +1,240 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Board from './Board';
 import styles from '../../css/BoardDetail.module.css';
 import { useParams } from 'react-router-dom';
-import {IoMdThumbsUp} from 'react-icons/io';
-import {FaComment} from 'react-icons/fa';
-import {CgProfile} from 'react-icons/cg';
+import { IoMdThumbsUp } from 'react-icons/io';
+import { MdOutlineThumbUpAlt } from 'react-icons/md';
+import { FaComment } from 'react-icons/fa';
 import { Button } from '../Button';
 import Accuse from './Accuse';
+import ReactHtmlParser from "react-html-parser";
+import axios from 'axios';
 
 const BoardDetail = (props) => {
-  let {id} = useParams();
+  let { id } = useParams();
   const [modal, setModal] = useState(false);
-  const [text] = useState([
-    {
-      id: 1,
-      title: '강아지 자랑',
-      detail: '제 강아지 귀엽죠?',
-      time: '7분전',
-      writer: 'hollymolly',
-      views: 52,
-      good: 3,
-      comment: 4,
-      commentwriter: 'dangdang',
-      commenttime: '2분전',
-      commenttext: 'ㄱㅇㅇ'
-    }, 
-    {
-      id: 2,
-      title: '나만 고양이 없어',
-      detail: '😞😞',
-      time: '20분전',
-      writer: '랜선집사',
-      views: 28,
-      good: 2,
-      comment: 8,
-      commentwriter: 'dangdang',
-      commenttime: '2분전',
-      commenttext: 'ㄱㅇㅇ'
-    }, 
-    {
-      id: 3,
-      title: '종강',
-      detail: 'd-104',
-      time: '26분전',
-      writer: 'illdang100',
-      views: 30,
-      good: 0,
-      comment: 2,
-      commentwriter: 'dangdang',
-      commenttime: '2분전',
-      commenttext: 'ㄱㅇㅇ'
-    }
-  ]);
+  const [loading, setLoading] = useState(false);
+  const [text, setText] = useState({})
 
-  let post = text.filter((item) => item.id === parseInt(id));
+  // useEffect(() => {
+  //   setLoading(true);
+
+  //   const config = {
+  //     headers: {
+  //       Authorization: localStorage.getItem("accessToken")
+  //     }
+  //   }
+
+  //   axiosInstance.post(`/api/auth/board/${id}`, null, config)
+  //     .then((response) => {
+  //       console.log(response.data.data)
+  //       setText(response.data.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     })
+  // }, [])
+
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8080",
+  });
+
+  axiosInstance.interceptors.response.use(
+    (res) => {
+      return res;
+    },
+    async (error) => {
+      try {
+        const errResponseStatus = error.response.status;
+        const prevRequest = error.config;
+        const errMsg = error.response.data.msg;
+
+        if (errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
+          const preRefreshToken = localStorage.getItem("refreshToken");
+          if (preRefreshToken) {
+            async function issuedToken() {
+              const config = {
+                headers: {
+                  "Refresh-Token": preRefreshToken
+                }
+              }
+              return await axios
+                .post(`http://localhost:8080/api/token/refresh`, null, config)
+                .then(async (res) => {
+                  localStorage.clear();
+                  const reAccessToken = res.headers.get("Authorization");
+                  const reRefreshToken = res.headers.get("Refresh-token");
+                  localStorage.setItem("accessToken", reAccessToken);
+                  localStorage.setItem("refreshToken", reRefreshToken);
+
+                  prevRequest.headers.Authorization = reAccessToken;
+
+                  return await axios(prevRequest);
+                })
+                .catch((e) => {
+                  console.log("토큰 재발급 실패");
+                  return new Error(e);
+                });
+            }
+            return await issuedToken();
+          } else {
+            throw new Error("There is no refresh token");
+          }
+        }
+        else if (errResponseStatus === 400) {
+          console.log(error.response.data)
+        }
+        else if (errResponseStatus === 401) {
+          console.log("인증 실패");
+          window.location.replace("/login");
+        }
+        else if (errResponseStatus === 403) {
+          alert("권한이 없습니다.");
+        }
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+  );
+
+  useEffect(() => {
+    setLoading(true);
+    setText({
+      "isOwner": true,
+      "title": "강아지 자랑",
+      "content": "<p>제 강아지 예쁘죠?</p>",
+      "writerNick": "홀리몰리",
+      "createdAt": "2023-03-01 11:00:34",
+      "views": 392,
+      "writerProfileImage": "",
+      "comments": [
+        {
+          "commentUserId": 2343,
+          "commentWriteNick": "일당백",
+          "commentCreatedAt": "2023-03-02 12:39:11",
+          "content": "예쁘네요",
+          "commentProfileImage": ""
+        },
+        {
+          "commentUserId": 2343,
+          "commentWriteNick": "일당백",
+          "commentCreatedAt": "2023-03-02 12:39:11",
+          "content": "예쁘네요",
+          "commentProfileImage": ""
+        },
+        {
+          "commentUserId": 2343,
+          "commentWriteNick": "일당백",
+          "commentCreatedAt": "2023-03-02 12:39:11",
+          "content": "예쁘네요",
+          "commentProfileImage": ""
+        },
+      ],
+      "liky": {
+        "thumbsUp": false,
+        "likyCnt": 100
+      }
+    })
+    setLoading(false);
+  }, [])
 
   const handleClick = () => {
     setModal(!modal);
   }
 
+  const deleteBoard = () => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken")
+      }
+    }
+
+    axiosInstance.delete(`/api/auth/board/${id}`, config)
+      .then((response) => {
+        console.log(response);
+        console.log("삭제 완료");
+        window.location.replace("/list/ALL/NOT_SELECTED");
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
+  if (loading) {
+    return (
+      <div style={{ position: "relative", width: "75%", margin: "auto" }}>
+        <div>
+          loading
+        </div>
+      </div>
+    )
+  }
+
+  if (Object.keys(text).length === 0) {
+    return null;
+  }
+
   return (
-    <div style={{position:"relative", width:"75%", margin:"auto"}}>
+    <div style={{ position: "relative", width: "75%", margin: "auto" }}>
       <Board />
       <div className={styles.board}>
         <div className={styles.top}>
-          <h2>{post[0].title}</h2>
-          <span><CgProfile /></span>
-          <span>{post[0].writer}</span>
-          <span>{post[0].time}</span>
-          <span onClick={() => {handleClick()}}>신고</span>
-          <span>조회수 {post[0].views}</span>
+          <h2>{text.title}</h2>
+          <span>
+            <img
+              src={text.writerProfileImage ? text.writerProfileImage :
+                text.writerProfileImage === "" ? process.env.PUBLIC_URL + '/img/profile.png' : process.env.PUBLIC_URL + '/img/profile.png'}
+              alt="프로필 이미지"
+            />
+          </span>
+          <span>{text.writerNick}</span>
+          <span>{text.createdAt}</span>
+          <span onClick={() => { handleClick() }}>신고</span>
+          <span>조회수 {text.views}</span>
         </div>
         <div className={styles.middle}>
-          <p>{post[0].detail}</p>
-          {post[0].id === 1 ? <img src={process.env.PUBLIC_URL + '/img/puppy.jpg'} alt="puppy"/> : null}
+          {ReactHtmlParser(text.content)}
         </div>
         <div className={styles.count}>
-          <span><IoMdThumbsUp color="#B27910" size="18px"/></span>
-          <span>{post[0].good}</span>
-          <span><FaComment color="#B27910" size="13px"/></span>
-          <span>{post[0].comment}</span>
+          {text.liky.thumbsUp === true ? <span><IoMdThumbsUp color="#B27910" size="18px" /></span> :
+            <span><MdOutlineThumbUpAlt color="#B27910" size="18px"/></span>}
+          <span>{text.liky.likyCnt}</span>
+          <span><FaComment color="#B27910" size="13px" /></span>
+          <span>{text.comments.length}</span>
+          {text.isOwner && 
+            <>
+              <span>수정</span>
+              <span onClick={deleteBoard}>삭제</span>
+            </>}
         </div>
       </div>
-      <div className={styles.comment}>
-        <div className={styles.commentinfo}>
-          <span><CgProfile color="#87827F"/></span>
-          <span>{post[0].commentwriter}</span>
-          <span>{post[0].commenttime}</span>
-          <span onClick={() => {handleClick()}}>신고</span>
-          <div>
-            <p>{post[0].commenttext}</p>
+      {text.comments.map((item) => {
+        return (
+          <div className={styles.comment}>
+            <div className={styles.commentinfo}>
+              <span>
+                <img
+                  src={item.commentProfileImage ? item.commentProfileImage :
+                    item.commentProfileImage === "" ? process.env.PUBLIC_URL + '/img/profile.png' : process.env.PUBLIC_URL + '/img/profile.png'}
+                  alt="프로필 이미지"
+                />
+              </span>
+              <span>{item.commentWriteNick}</span>
+              <span>{item.commentCreatedAt}</span>
+              <span onClick={() => { handleClick() }}>신고</span>
+              <div>
+                <p>{item.content}</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        )
+      })}
       <div className={styles.footer}>
         <input></input>
         <Button name={"등록"} />
       </div>
-      {modal && <Accuse onClick={handleClick}/>}
+      {modal && <Accuse onClick={handleClick} />}
     </div>
   );
 };
