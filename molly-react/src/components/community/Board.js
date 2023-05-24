@@ -17,10 +17,10 @@ const Board = (props) => {
   
   return (
     <div>
-      <Tap setTap={setTap} name={"ALL"} tap={tap === 'ALL' ? styles.click : styles.tap} style={styles.all}/>
-      <Tap setTap={setTap} name={"DOG"} tap={tap === 'DOG'? styles.click : styles.tap} style={styles.dog}/>
-      <Tap setTap={setTap} name={"CAT"} tap={tap === 'CAT'? styles.click : styles.tap} style={styles.cat}/>
-      <Tap setTap={setTap} name={"RABBIT"} tap={tap === 'RABBIT'? styles.click : styles.tap} style={styles.rabbit}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"ALL"} tap={tap === 'ALL' ? styles.click : styles.tap} style={styles.all}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"DOG"} tap={tap === 'DOG'? styles.click : styles.tap} style={styles.dog}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"CAT"} tap={tap === 'CAT'? styles.click : styles.tap} style={styles.cat}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"RABBIT"} tap={tap === 'RABBIT'? styles.click : styles.tap} style={styles.rabbit}/>
       
       <div className={styles.container}>
         <div>
@@ -31,13 +31,13 @@ const Board = (props) => {
             onChange={(e) => {setSearchWord(e.target.value)}}
           ></input>
           <span 
-            style={{position:"absolute", right: "10px", top:"8px", cursor: "pointer"}}
+            style={{position:"absolute", right: "12px", top:"20px", cursor: "pointer"}}
             onClick={() => {props.setSearch(searchWord)}}
           >
             <MdSearch color="#AFA79F" />
           </span>
         </div>
-        <Button onClick={() => navigate(`/list/${category}/write`)} name={"글쓰기"}/>
+        <span><Button onClick={() => navigate(`/list/${category}/write`)} name={"글쓰기"}/></span>
       </div>
     </div>
   );
@@ -56,6 +56,7 @@ const Tap = (props) => {
       onClick={() => {
         props.setTap(props.name)
         navigate(`/list/${category}/${petType}`)
+        props.setSearch("");
       }}>
       { props.name === "ALL" ? "전체" :
       props.name === "DOG" ? "강아지" : 

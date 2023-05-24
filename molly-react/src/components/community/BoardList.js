@@ -17,43 +17,43 @@ const BoardList = () => {
   const [value, setValue] = useState('createdDate');
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    setLoading(true);
+  // useEffect(() => {
+  //   setLoading(true);
     
-    let params;
-    const pageNum = page-1
+  //   let params;
+  //   const pageNum = page-1
 
-    search === "" ? 
-      params = {
-        category : category === "undefined" ? "ALL" : category,
-        petType:  pet,
-        sort: `${value},desc`,
-        page: pageNum,
-        size: 5
-      } : params = {
-        category: category === "undefined" ? "ALL" : category,
-        petType: pet,
-        searchWord: search,
-        sort: `${value},desc`,
-        page: pageNum,
-        size: 5
-      }
+  //   search === "" ? 
+  //     params = {
+  //       category : category === "undefined" ? "ALL" : category,
+  //       petType:  pet,
+  //       sort: `${value},desc`,
+  //       page: pageNum,
+  //       size: 5
+  //     } : params = {
+  //       category: category === "undefined" ? "ALL" : category,
+  //       petType: pet,
+  //       searchWord: search,
+  //       sort: `${value},desc`,
+  //       page: pageNum,
+  //       size: 5
+  //     }
 
-    const config = {
-      params: params
-    }
+  //   const config = {
+  //     params: params
+  //   }
 
-    axiosInstance.get(`/api/board/list`, config)
-      .then((response) => {
-        console.log(response.data.data)
-        setList(response.data.data);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+  //   axiosInstance.get(`/api/board/list`, config)
+  //     .then((response) => {
+  //       console.log(response.data.data)
+  //       setList(response.data.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     })
 
-  }, [category, pet, page, value, search])
+  // }, [category, pet, page, value, search])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -76,102 +76,103 @@ const BoardList = () => {
     }
   );
 
-  // useEffect(() => {
-  //   console.log("render")
-  //   setLoading(true);
+  useEffect(() => {
+    
+    console.log("render")
+    setLoading(true);
 
-  //   setList({
-  //     "content": [
-  //       {
-  //         "boardId": 1,
-  //         "title": "notice board1",
-  //         "writerNick": "관리자",
-  //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "notice content1",
-  //         "views": 43,
-  //         "commentCount": 43,
-  //         "likyCount": 43,
-  //         "hasImage": false,
-  //         "notice": true
-  //       },
-  //       {
-  //         "boardId": 2,
-  //         "title": "notice board3",
-  //         "writerNick": "관리자",
-  //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "notice content3",
-  //         "views": 31,
-  //         "commentCount": 31,
-  //         "likyCount": 31,
-  //         "hasImage": false,
-  //         "notice": true
-  //       },
-  //       {
-  //         "boardId": 17,
-  //         "title": "notice board2",
-  //         "writerNick": "관리자",
-  //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "notice content2",
-  //         "views": 4,
-  //         "commentCount": 4,
-  //         "likyCount": 4,
-  //         "hasImage": false,
-  //         "notice": true
-  //       },
-  //       {
-  //         "boardId": 62,
-  //         "title": "test board34",
-  //         "writerNick": "일당백1",
-  //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "test content34",
-  //         "views": 98,
-  //         "commentCount": 98,
-  //         "likyCount": 98,
-  //         "hasImage": false,
-  //         "notice": false
-  //       },
-  //       {
-  //         "boardId": 11,
-  //         "title": "test board6",
-  //         "writerNick": "일당백1",
-  //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "test content6",
-  //         "views": 96,
-  //         "commentCount": 96,
-  //         "likyCount": 96,
-  //         "hasImage": false,
-  //         "notice": false
-  //       }
-  //     ],
-  //     "pageable": {
-  //       "sort": {
-  //         "unsorted": false,
-  //         "sorted": true,
-  //         "empty": false
-  //       },
-  //       "pageSize": 5,
-  //       "pageNumber": 0,
-  //       "offset": 0,
-  //       "paged": true,
-  //       "unpaged": false
-  //     },
-  //     "last": false,
-  //     "totalPages": 21,
-  //     "totalElements": 103,
-  //     "first": true,
-  //     "numberOfElements": 5,
-  //     "size": 5,
-  //     "number": 0,
-  //     "sort": {
-  //       "unsorted": false,
-  //       "sorted": true,
-  //       "empty": false
-  //     },
-  //     "empty": false
-  //   })
+    setList({
+      "content": [
+        {
+          "boardId": 1,
+          "title": "notice board1",
+          "writerNick": "관리자",
+          "createdAt": "2023-05-10 19:59:54",
+          "content": "notice content1",
+          "views": 43,
+          "commentCount": 43,
+          "likyCount": 43,
+          "hasImage": false,
+          "notice": true
+        },
+        {
+          "boardId": 2,
+          "title": "notice board3",
+          "writerNick": "dd",
+          "createdAt": "2023-05-10 19:59:54",
+          "content": "notice content3",
+          "views": 31,
+          "commentCount": 31,
+          "likyCount": 31,
+          "hasImage": false,
+          "notice": true
+        },
+        {
+          "boardId": 17,
+          "title": "notice board2",
+          "writerNick": "관리자",
+          "createdAt": "2023-05-10 19:59:54",
+          "content": "notice content2",
+          "views": 4,
+          "commentCount": 4,
+          "likyCount": 4,
+          "hasImage": false,
+          "notice": false
+        },
+        {
+          "boardId": 62,
+          "title": "test board34",
+          "writerNick": "일당백1",
+          "createdAt": "2023-05-10 19:59:54",
+          "content": "test content34",
+          "views": 98,
+          "commentCount": 98,
+          "likyCount": 98,
+          "hasImage": false,
+          "notice": false
+        },
+        {
+          "boardId": 11,
+          "title": "test board6",
+          "writerNick": "일당백1",
+          "createdAt": "2023-05-10 19:59:54",
+          "content": "test content6",
+          "views": 96,
+          "commentCount": 100,
+          "likyCount": 100,
+          "hasImage": false,
+          "notice": false
+        }
+      ],
+      "pageable": {
+        "sort": {
+          "unsorted": false,
+          "sorted": true,
+          "empty": false
+        },
+        "pageSize": 5,
+        "pageNumber": 0,
+        "offset": 0,
+        "paged": true,
+        "unpaged": false
+      },
+      "last": false,
+      "totalPages": 21,
+      "totalElements": 103,
+      "first": true,
+      "numberOfElements": 5,
+      "size": 5,
+      "number": 0,
+      "sort": {
+        "unsorted": false,
+        "sorted": true,
+        "empty": false
+      },
+      "empty": false
+    })
 
-  //   setLoading(false)
-  // }, [category, pet, page, value, search])
+    setLoading(false)
+  }, [category, pet, page, value, search])
 
   let firstNum = currPage - (currPage % 5) + 1;
   let lastNum = currPage - (currPage % 5) + 5;
@@ -218,6 +219,7 @@ const BoardList = () => {
               writer={item.writerNick}
               good={item.likyCount}
               comment={item.commentCount}
+              notice={item.notice}
             />
           )
         }) : [
@@ -243,6 +245,7 @@ const BoardList = () => {
                 writer={item.writerNick}
                 good={item.likyCount}
                 comment={item.commentCount}
+                notice={item.notice}
               />
             )
           })}
@@ -312,22 +315,24 @@ const Dropdown = (props) => {
 const List = (props) => {
   let navigate = useNavigate();
 
-  if (props.writer === "관리자") {
+  if (props.notice === true) {
     return (
       <div
         onClick={() => {
           navigate(`/board/${props.id}`);
         }}
         className={styles.listManager}>
-        <span>📍</span>
+        <span>공지</span>
         <h3 style={{ cursor: "pointer" }}>{props.title}</h3>
         <p>{props.detail}</p>
         <span>{props.time}</span>
         <span>{props.writer}</span>
-        <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
-        <span>{props.good}</span>
-        <span><FaComment color="#B27910" size="13px" /></span>
-        <span>{props.comment}</span>
+        <div>
+          <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
+          <span>{props.good}</span>
+          <span><FaComment color="#B27910" size="13px" /></span>
+          <span>{props.comment}</span>
+        </div>
       </div>
     )
   } else {
@@ -341,10 +346,12 @@ const List = (props) => {
         <p>{props.detail}</p>
         <span>{props.time}</span>
         <span>{props.writer}</span>
-        <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
-        <span>{props.good}</span>
-        <span><FaComment color="#B27910" size="13px" /></span>
-        <span>{props.comment}</span>
+        <div>
+          <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
+          <span>{props.good}</span>
+          <span><FaComment color="#B27910" size="13px" /></span>
+          <span>{props.comment}</span>
+        </div>
       </div>
     );
   }
