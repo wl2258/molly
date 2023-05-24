@@ -46,12 +46,14 @@ const UserInfo = () => {
   }, [])
 
   // useEffect(() => {
+  //   setLoading(true)
   //   setUser({
   //     "profileImage": "이미지 URL",
   //     "nickname": "사용자 닉네임",
   //     "provider": "kakao",
   //     "email": "ddd@naver.com"
   //   })
+  //   setLoading(false)
   // }, [])
 
   useEffect(() => {
@@ -280,6 +282,24 @@ const UserInfo = () => {
     fetchData();
   }
 
+  const handleLeave = () => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken")
+      }
+    }
+
+    axiosInstance.delete(`/api/auth/account`, config)
+      .then((response) => {
+        console.log(response);
+        console.log("탈퇴 완료");
+        window.location.replace("/");
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
   if (loading) {
     return(
       <div>
@@ -367,7 +387,7 @@ const UserInfo = () => {
             </div>
             <div>
               <h1>탈퇴하기</h1>
-              <button>탈퇴하기</button>
+              <button onClick={handleLeave}>탈퇴하기</button>
             </div>
             <p>탈퇴 시 작성하신 포스트 및 댓글과 반려동물 등록 정보가 모두 삭제되며 복구되지 않습니다.</p>
           </div>

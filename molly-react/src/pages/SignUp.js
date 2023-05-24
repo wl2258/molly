@@ -3,6 +3,8 @@ import styles from '../css/SignUp.module.css';
 import {Button} from '../components/Button';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { storeId } from './store/user';
 
 const SignUp = () => {
   useEffect(() => {
@@ -24,6 +26,7 @@ const SignUp = () => {
   const [duplicate, setDuplicate] = useState(0);
   const [effective, setEffective] = useState(false);
   const [effectiveColor, setEffectiveColor] = useState("");
+  const dispatch = useDispatch();
 
   const imgRef = useRef();
   const location = useLocation();
@@ -34,6 +37,12 @@ const SignUp = () => {
   useEffect(() => {
     const accessToken = params.get('accessToken');
     const refreshToken = params.get('refreshToken');
+    const accountId = params.get('accountId');
+
+    if(accountId !== null && accountId !== "") {
+      dispatch(storeId({accountId : accountId}))
+    } else console.log("accountId가 없음")
+
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
   }, []);

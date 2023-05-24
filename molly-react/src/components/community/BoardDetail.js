@@ -9,32 +9,46 @@ import { Button } from '../Button';
 import Accuse from './Accuse';
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
-const BoardDetail = (props) => {
+const BoardDetail = () => {
   let { id } = useParams();
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({})
+  const userId = useSelector((state) => state.user.accountId);
 
-  // useEffect(() => {
-  //   setLoading(true);
+  useEffect(() => {
+    setLoading(true);
 
-  //   const config = {
-  //     headers: {
-  //       Authorization: localStorage.getItem("accessToken")
-  //     }
-  //   }
+    if(localStorage.getItem("accessToken") !== null || localStorage.getItem("accessToken") !== "") {
+      const config = {
+        headers: {
+          "AccountId" : userId
+        }
+      }
 
-  //   axiosInstance.post(`/api/auth/board/${id}`, null, config)
-  //     .then((response) => {
-  //       console.log(response.data.data)
-  //       setText(response.data.data);
-  //       setLoading(false);
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     })
-  // }, [])
+      axiosInstance.get(`/api/board/${id}`, config)
+      .then((response) => {
+        console.log(response.data.data)
+        setText(response.data.data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+    } else {
+      axiosInstance.get(`/api/board/${id}`)
+        .then((response) => {
+          console.log(response.data.data)
+          setText(response.data.data);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+    }
+  }, [])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -98,46 +112,46 @@ const BoardDetail = (props) => {
     }
   );
 
-  useEffect(() => {
-    setLoading(true);
-    setText({
-      "isOwner": true,
-      "title": "강아지 자랑",
-      "content": "<p>제 강아지 예쁘죠?</p>",
-      "writerNick": "홀리몰리",
-      "createdAt": "2023-03-01 11:00:34",
-      "views": 392,
-      "writerProfileImage": "",
-      "comments": [
-        {
-          "commentUserId": 2343,
-          "commentWriteNick": "일당백",
-          "commentCreatedAt": "2023-03-02 12:39:11",
-          "content": "예쁘네요",
-          "commentProfileImage": ""
-        },
-        {
-          "commentUserId": 2343,
-          "commentWriteNick": "일당백",
-          "commentCreatedAt": "2023-03-02 12:39:11",
-          "content": "예쁘네요",
-          "commentProfileImage": ""
-        },
-        {
-          "commentUserId": 2343,
-          "commentWriteNick": "일당백",
-          "commentCreatedAt": "2023-03-02 12:39:11",
-          "content": "예쁘네요",
-          "commentProfileImage": ""
-        },
-      ],
-      "liky": {
-        "thumbsUp": false,
-        "likyCnt": 100
-      }
-    })
-    setLoading(false);
-  }, [])
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setText({
+  //     "isOwner": true,
+  //     "title": "강아지 자랑",
+  //     "content": "<p>제 강아지 예쁘죠?</p>",
+  //     "writerNick": "홀리몰리",
+  //     "createdAt": "2023-03-01 11:00:34",
+  //     "views": 392,
+  //     "writerProfileImage": "",
+  //     "comments": [
+  //       {
+  //         "commentUserId": 2343,
+  //         "commentWriteNick": "일당백",
+  //         "commentCreatedAt": "2023-03-02 12:39:11",
+  //         "content": "예쁘네요",
+  //         "commentProfileImage": ""
+  //       },
+  //       {
+  //         "commentUserId": 2343,
+  //         "commentWriteNick": "일당백",
+  //         "commentCreatedAt": "2023-03-02 12:39:11",
+  //         "content": "예쁘네요",
+  //         "commentProfileImage": ""
+  //       },
+  //       {
+  //         "commentUserId": 2343,
+  //         "commentWriteNick": "일당백",
+  //         "commentCreatedAt": "2023-03-02 12:39:11",
+  //         "content": "예쁘네요",
+  //         "commentProfileImage": ""
+  //       },
+  //     ],
+  //     "liky": {
+  //       "thumbsUp": false,
+  //       "likyCnt": 100
+  //     }
+  //   })
+  //   setLoading(false);
+  // }, [])
 
   const handleClick = () => {
     setModal(!modal);
@@ -154,7 +168,7 @@ const BoardDetail = (props) => {
       .then((response) => {
         console.log(response);
         console.log("삭제 완료");
-        window.location.replace("/list/ALL/NOT_SELECTED");
+        window.location.replace("/list/ALL/ALL");
       })
       .catch((e) => {
         console.log(e);
