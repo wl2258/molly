@@ -15,26 +15,37 @@ const BoardList = () => {
   const [currPage, setCurrPage] = useState(page);
   const [view, setView] = useState(false);
   const [value, setValue] = useState('createdDate');
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     setLoading(true);
+    
+    let params;
+
+    search === "" ? 
+      params = {
+        category : category === "undefined" ? "ALL" : category,
+        petType:  pet,
+        sort: `${value},desc`,
+        page: page,
+        size: 5
+      } : params = {
+        category: category === "undefined" ? "ALL" : category,
+        petType: pet,
+        searchWord: "",
+        sort: `${value},desc`,
+        page: page,
+        size: 5
+      }
 
     const config = {
       headers: {
         Authorization: localStorage.getItem("accessToken")
-      }
+      },
+      params: params
     }
 
-    const data = {
-      "category": category,
-      "petType": pet,
-      "searchWord": "",
-      "sort": `${value},desc`,
-      "page": page,
-      "size": 5
-    }
-
-    axiosInstance.post(`/api/auth/board/list`, data, config)
+    axiosInstance.get(`/api/auth/board/list`, config)
       .then((response) => {
         console.log(response.data.data)
         setList(response.data.data);
@@ -43,7 +54,7 @@ const BoardList = () => {
       .catch((e) => {
         console.log(e);
       })
-  }, [category, pet, page, value])
+  }, [category, pet, page, value, search])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -202,7 +213,7 @@ const BoardList = () => {
   //   })
 
   //   setLoading(false)
-  // }, [category, pet, page, value])
+  // }, [category, pet, page, value, search])
 
   let firstNum = currPage - (currPage % 5) + 1;
   let lastNum = currPage - (currPage % 5) + 5;
@@ -223,7 +234,7 @@ const BoardList = () => {
 
   return (
     <div style={{ position: "relative", width: "75%", margin: "auto" }}>
-      <Board pet={pet} />
+      <Board pet={pet} setSearch={setSearch}/>
       <div className={styles.header}>
         <ul onClick={() => { setView(!view) }}>
           <div className={styles.sort}>

@@ -126,6 +126,7 @@ const RegisterPet = () => {
 
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
+    
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {

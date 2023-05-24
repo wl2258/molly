@@ -20,17 +20,21 @@
   color: #A19C97;
 }
 
+.top > span:nth-child(2) > img {
+  width: 30px;
+}
+
 .top > span:nth-child(3){
   position: absolute;
-  left: 85px;
-  top: 82px;
+  left: 105px;
+  top: 91px;
   color: #A19C97;
 }
 
 .top > span:nth-child(4){
   position: absolute;
-  left: 176px;
-  top: 83px;
+  left: 180px;
+  top: 91px;
   color: #A19C97;
 }
 
@@ -71,27 +75,48 @@
   position: absolute;
   left: 60px;
   bottom: 16px;
+  cursor: pointer;
 }
 
 .count > span:nth-child(2) {
   color: #B27910;
   position: absolute;
-  left: 80px;
+  left: 85px;
   bottom: 19px;
 }
 
 .count > span:nth-child(3) {
   color: #B27910;
   position: absolute;
-  left: 100px;
+  left: 120px;
   bottom: 18px;
 }
 
 .count > span:nth-child(4) {
   color: #B27910;
   position: absolute;
-  left: 117px;
+  left: 140px;
   bottom: 19px;
+}
+
+.count > span:nth-child(5) {
+  font-size: 14px;
+  font-weight: 700;
+  color: #B27910;
+  position: absolute;
+  right: 110px;
+  bottom: 22px;
+  cursor: pointer;
+}
+
+.count > span:nth-child(6) {
+  font-size: 14px;
+  font-weight: 700;
+  color: #B27910;
+  position: absolute;
+  right: 70px;
+  bottom: 22px;
+  cursor: pointer;
 }
 
 .comment {
@@ -117,12 +142,17 @@
   top: 20px;
 }
 
+.commentinfo > span:nth-child(1) > img {
+  width: 25px;
+}
+
+
 .commentinfo > span:nth-child(2) {
   color: #87827F;
   font-weight: 700;
   position: absolute;
-  left: 80px;
-  top: 17px;
+  left: 95px;
+  top: 22px;
 }
 
 .commentinfo > span:nth-child(3) {
@@ -130,7 +160,7 @@
   position: absolute;
   font-size: small;
   left: 170px;
-  top: 20px;
+  top: 22px;
 }
 
 .commentinfo > span:nth-child(4) {
@@ -152,12 +182,14 @@
   font-size: small;
   box-sizing: border-box;
   word-break: break-all;
+  margin-top: 25px;
 }
 
 .footer {
   background-color: #F9F9F9;
   padding: 20px 60px;
   border-top: 1px solid #e6e6e6;
+  margin-bottom: 50px;
 }
 
 .footer > input {
