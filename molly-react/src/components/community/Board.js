@@ -17,7 +17,7 @@ const Board = (props) => {
   
   return (
     <div>
-      <Tap setTap={setTap} name={"NOT_SELECTED"} tap={tap === 'NOT_SELECTED' ? styles.click : styles.tap} style={styles.all}/>
+      <Tap setTap={setTap} name={"ALL"} tap={tap === 'ALL' ? styles.click : styles.tap} style={styles.all}/>
       <Tap setTap={setTap} name={"DOG"} tap={tap === 'DOG'? styles.click : styles.tap} style={styles.dog}/>
       <Tap setTap={setTap} name={"CAT"} tap={tap === 'CAT'? styles.click : styles.tap} style={styles.cat}/>
       <Tap setTap={setTap} name={"RABBIT"} tap={tap === 'RABBIT'? styles.click : styles.tap} style={styles.rabbit}/>
@@ -46,7 +46,7 @@ const Board = (props) => {
 const Tap = (props) => {
   let navigate = useNavigate();
   let { category } = useParams();
-  let petType = props.name === "NOT_SELECTED" ? "NOT_SELECTED" : 
+  let petType = props.name === "ALL" ? "ALL" : 
     props.name === "DOG" ? "DOG" : 
     props.name === "CAT" ? "CAT" : "RABBIT"
 
@@ -57,7 +57,7 @@ const Tap = (props) => {
         props.setTap(props.name)
         navigate(`/list/${category}/${petType}`)
       }}>
-      { props.name === "NOT_SELECTED" ? "전체" :
+      { props.name === "ALL" ? "전체" :
       props.name === "DOG" ? "강아지" : 
       props.name === "CAT" ? "고양이" : "토끼"}
     </div>
