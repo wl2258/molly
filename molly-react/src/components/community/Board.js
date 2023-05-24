@@ -31,13 +31,13 @@ const Board = (props) => {
             onChange={(e) => {setSearchWord(e.target.value)}}
           ></input>
           <span 
-            style={{position:"absolute", right: "10px", top:"8px", cursor: "pointer"}}
+            style={{position:"absolute", right: "12px", top:"20px", cursor: "pointer"}}
             onClick={() => {props.setSearch(searchWord)}}
           >
             <MdSearch color="#AFA79F" />
           </span>
         </div>
-        <Button onClick={() => navigate(`/list/${category}/write`)} name={"글쓰기"}/>
+        <span><Button onClick={() => navigate(`/list/${category}/write`)} name={"글쓰기"}/></span>
       </div>
     </div>
   );
