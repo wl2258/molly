@@ -27,42 +27,55 @@
   color: #A19C97;
 }
 
+.listManager > h3 {
+  margin-left: 47px;
+  font-size: 16px;
+}
+
+.list > h3 {
+  font-size: 16px;
+}
+
 .listManager > span:nth-child(1) {
   position: absolute;
-  left: 35px;
-  top: 15px;
+  left: 54px;
+  top: 23px;
+  background-color: tomato;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 10px;
 }
 
 .list > span:nth-child(3), .listManager > span:nth-child(4) {
   padding-right: 15px;
 }
 
-.list > span:nth-child(5), .listManager > span:nth-child(6) {
-  color: #B27910;
-  position: absolute;
-  right: 90px;
-  bottom: 15px;
-}
-
-.list > span:nth-child(6), .listManager > span:nth-child(7) {
-  color: #B27910;
-  position: absolute;
-  right: 75px;
-  bottom: 19px;
-}
-
-.list > span:nth-child(7), .listManager > span:nth-child(8) {
-  color: #B27910;
+.list > div, .listManager > div {
   position: absolute;
   right: 50px;
-  bottom: 18px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
 }
 
-.list > span:nth-child(8), .listManager > span:nth-child(9){
+.list > div > span:nth-child(1), .listManager > div > span:nth-child(1) {
   color: #B27910;
-  position: absolute;
-  right: 33px;
-  bottom: 19px;
+  margin-right: 5px;
+}
+
+.list > div > span:nth-child(2), .listManager > div > span:nth-child(2) {
+  color: #B27910;
+  margin-right: 15px;
+}
+
+.list > div > span:nth-child(3), .listManager > div > span:nth-child(3) {
+  color: #B27910;
+  margin-right: 5px;
+}
+
+.list > div > span:nth-child(4), .listManager > div > span:nth-child(4){
+  color: #B27910;
 }
 
 .footer {

@@ -77,6 +77,7 @@ const BoardList = () => {
   );
 
   // useEffect(() => {
+    
   //   console.log("render")
   //   setLoading(true);
 
@@ -97,7 +98,7 @@ const BoardList = () => {
   //       {
   //         "boardId": 2,
   //         "title": "notice board3",
-  //         "writerNick": "관리자",
+  //         "writerNick": "dd",
   //         "createdAt": "2023-05-10 19:59:54",
   //         "content": "notice content3",
   //         "views": 31,
@@ -116,7 +117,7 @@ const BoardList = () => {
   //         "commentCount": 4,
   //         "likyCount": 4,
   //         "hasImage": false,
-  //         "notice": true
+  //         "notice": false
   //       },
   //       {
   //         "boardId": 62,
@@ -137,8 +138,8 @@ const BoardList = () => {
   //         "createdAt": "2023-05-10 19:59:54",
   //         "content": "test content6",
   //         "views": 96,
-  //         "commentCount": 96,
-  //         "likyCount": 96,
+  //         "commentCount": 100,
+  //         "likyCount": 100,
   //         "hasImage": false,
   //         "notice": false
   //       }
@@ -218,6 +219,7 @@ const BoardList = () => {
               writer={item.writerNick}
               good={item.likyCount}
               comment={item.commentCount}
+              notice={item.notice}
             />
           )
         }) : [
@@ -243,6 +245,7 @@ const BoardList = () => {
                 writer={item.writerNick}
                 good={item.likyCount}
                 comment={item.commentCount}
+                notice={item.notice}
               />
             )
           })}
@@ -312,22 +315,24 @@ const Dropdown = (props) => {
 const List = (props) => {
   let navigate = useNavigate();
 
-  if (props.writer === "관리자") {
+  if (props.notice === true) {
     return (
       <div
         onClick={() => {
           navigate(`/board/${props.id}`);
         }}
         className={styles.listManager}>
-        <span>📍</span>
+        <span>공지</span>
         <h3 style={{ cursor: "pointer" }}>{props.title}</h3>
         <p>{props.detail}</p>
         <span>{props.time}</span>
         <span>{props.writer}</span>
-        <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
-        <span>{props.good}</span>
-        <span><FaComment color="#B27910" size="13px" /></span>
-        <span>{props.comment}</span>
+        <div>
+          <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
+          <span>{props.good}</span>
+          <span><FaComment color="#B27910" size="13px" /></span>
+          <span>{props.comment}</span>
+        </div>
       </div>
     )
   } else {
@@ -341,10 +346,12 @@ const List = (props) => {
         <p>{props.detail}</p>
         <span>{props.time}</span>
         <span>{props.writer}</span>
-        <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
-        <span>{props.good}</span>
-        <span><FaComment color="#B27910" size="13px" /></span>
-        <span>{props.comment}</span>
+        <div>
+          <span><IoMdThumbsUp color="#B27910" size="18px" /></span>
+          <span>{props.good}</span>
+          <span><FaComment color="#B27910" size="13px" /></span>
+          <span>{props.comment}</span>
+        </div>
       </div>
     );
   }

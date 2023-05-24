@@ -17,10 +17,10 @@ const Board = (props) => {
   
   return (
     <div>
-      <Tap setTap={setTap} name={"ALL"} tap={tap === 'ALL' ? styles.click : styles.tap} style={styles.all}/>
-      <Tap setTap={setTap} name={"DOG"} tap={tap === 'DOG'? styles.click : styles.tap} style={styles.dog}/>
-      <Tap setTap={setTap} name={"CAT"} tap={tap === 'CAT'? styles.click : styles.tap} style={styles.cat}/>
-      <Tap setTap={setTap} name={"RABBIT"} tap={tap === 'RABBIT'? styles.click : styles.tap} style={styles.rabbit}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"ALL"} tap={tap === 'ALL' ? styles.click : styles.tap} style={styles.all}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"DOG"} tap={tap === 'DOG'? styles.click : styles.tap} style={styles.dog}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"CAT"} tap={tap === 'CAT'? styles.click : styles.tap} style={styles.cat}/>
+      <Tap setSearch={props.setSearch} setTap={setTap} name={"RABBIT"} tap={tap === 'RABBIT'? styles.click : styles.tap} style={styles.rabbit}/>
       
       <div className={styles.container}>
         <div>
@@ -56,6 +56,7 @@ const Tap = (props) => {
       onClick={() => {
         props.setTap(props.name)
         navigate(`/list/${category}/${petType}`)
+        props.setSearch("");
       }}>
       { props.name === "ALL" ? "전체" :
       props.name === "DOG" ? "강아지" : 
