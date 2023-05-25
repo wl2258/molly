@@ -15,18 +15,8 @@ import ManagerLogin from './pages/ManagerLogin';
 import UserInfo from './pages/UserInfo';
 import UpdatePet from './pages/pet/UpdatePet';
 import ManagerHome from './pages/ManagerHome';
-import axios from 'axios';
-import { useEffect } from 'react';
 
 function App() {
-
-  // const callApi = async()=>{
-  //   axios.get("/api").then((res)=>{console.log(res.data.test)});
-  // };
-
-  // useEffect(()=>{
-  //   callApi();
-  // }, []);
 
   return (
     <div>
