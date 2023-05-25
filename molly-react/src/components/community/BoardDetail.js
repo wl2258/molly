@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Board from './Board';
+//import Board from './Board';
 import styles from '../../css/BoardDetail.module.css';
 import { useParams } from 'react-router-dom';
 import { IoMdThumbsUp } from 'react-icons/io';
@@ -12,7 +12,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 const BoardDetail = () => {
-  let { id } = useParams();
+  let { id, category, pet } = useParams();
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({})
@@ -112,46 +112,45 @@ const BoardDetail = () => {
     }
   );
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setText({
-  //     "isOwner": true,
-  //     "title": "강아지 자랑",
-  //     "content": "<p>제 강아지 예쁘죠?</p>",
-  //     "writerNick": "홀리몰리",
-  //     "createdAt": "2023-03-01 11:00:34",
-  //     "views": 392,
-  //     "writerProfileImage": "",
-  //     "comments": [
-  //       {
-  //         "commentUserId": 2343,
-  //         "commentWriteNick": "일당백",
-  //         "commentCreatedAt": "2023-03-02 12:39:11",
-  //         "content": "예쁘네요",
-  //         "commentProfileImage": ""
-  //       },
-  //       {
-  //         "commentUserId": 2343,
-  //         "commentWriteNick": "일당백",
-  //         "commentCreatedAt": "2023-03-02 12:39:11",
-  //         "content": "예쁘네요",
-  //         "commentProfileImage": ""
-  //       },
-  //       {
-  //         "commentUserId": 2343,
-  //         "commentWriteNick": "일당백",
-  //         "commentCreatedAt": "2023-03-02 12:39:11",
-  //         "content": "예쁘네요",
-  //         "commentProfileImage": ""
-  //       },
-  //     ],
-  //     "liky": {
-  //       "thumbsUp": false,
-  //       "likyCnt": 100
-  //     }
-  //   })
-  //   setLoading(false);
-  // }, [])
+  useEffect(() => {
+    setLoading(true);
+    setText({
+      "isOwner": true,
+      "title": "강아지 자랑",
+      "content": "<p>제 강아지 예쁘죠?</p>",
+      "writerNick": "홀리몰리",
+      "createdAt": "2023-03-01 11:00:34",
+      "views": 392,
+      "writerProfileImage": "",
+      "boardImages" :[],
+      "comments": [
+        {
+          "commentUserId": 2343,
+          "commentWriteNick": "일당백",
+          "commentCreatedAt": "2023-03-02 12:39:11",
+          "content": "예쁘네요",
+          "commentProfileImage": ""
+        },
+        {
+          "commentUserId": 2343,
+          "commentWriteNick": "일당백",
+          "commentCreatedAt": "2023-03-02 12:39:11",
+          "content": "예쁘네요",
+          "commentProfileImage": ""
+        },
+        {
+          "commentUserId": 2343,
+          "commentWriteNick": "일당백",
+          "commentCreatedAt": "2023-03-02 12:39:11",
+          "content": "예쁘네요",
+          "commentProfileImage": ""
+        },
+      ],
+      "thumbsUp": false,
+      "likyCnt": 100
+    })
+    setLoading(false);
+  }, [])
 
   const handleClick = () => {
     setModal(!modal);
@@ -191,7 +190,15 @@ const BoardDetail = () => {
 
   return (
     <div style={{ position: "relative", width: "75%", margin: "auto" }}>
-      <Board />
+      <div className={styles.boardTop}>
+        <div>
+          <h4>{category === "FREE" ? "자유게시판" : 
+            category === "MEDICAL" ? "의료게시판" : "전체게시판"}</h4>
+          <h4>{`>`}</h4>
+          <h4>{pet === "DOG" ? "강아지" : 
+            pet === "CAT" ? "고양이" : "토끼"}</h4>
+        </div>
+      </div>
       <div className={styles.board}>
         <div className={styles.top}>
           <h2>{text.title}</h2>
@@ -211,9 +218,9 @@ const BoardDetail = () => {
           {ReactHtmlParser(text.content)}
         </div>
         <div className={styles.count}>
-          {text.liky.thumbsUp === true ? <span><IoMdThumbsUp color="#B27910" size="18px" /></span> :
+          {text.thumbsUp === true ? <span><IoMdThumbsUp color="#B27910" size="18px" /></span> :
             <span><MdOutlineThumbUpAlt color="#B27910" size="18px"/></span>}
-          <span>{text.liky.likyCnt}</span>
+          <span>{text.likyCnt}</span>
           <span><FaComment color="#B27910" size="13px" /></span>
           <span>{text.comments.length}</span>
           {text.isOwner && 

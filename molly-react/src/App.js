@@ -15,8 +15,19 @@ import ManagerLogin from './pages/ManagerLogin';
 import UserInfo from './pages/UserInfo';
 import UpdatePet from './pages/pet/UpdatePet';
 import ManagerHome from './pages/ManagerHome';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 function App() {
+
+  // const callApi = async()=>{
+  //   axios.get("/api").then((res)=>{console.log(res.data.test)});
+  // };
+
+  // useEffect(()=>{
+  //   callApi();
+  // }, []);
+
   return (
     <div>
       <Routes>
@@ -28,7 +39,7 @@ function App() {
         <Route path="/list/:category/:pet" element={<List />}/>
         <Route path="/hospital" element={<Hospital />}/>
         <Route path="/about" element={<About />}/>
-        <Route path="/board/:id" element={<Detail />}/>
+        <Route path="/board/:id/:category/:pet" element={<Detail />}/>
         <Route path="/list/:category/write" element={<WriteCkEditor />}/>
         <Route path="/userinfo" element={<UserInfo/>} />
         <Route path="/registerpet" element={<RegisterPet />}/>

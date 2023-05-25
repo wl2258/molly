@@ -10,6 +10,9 @@ import Board from "../../components/community/Board";
 import styles from '../../css/Write.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
+const API_URL = "http://localhost:4000";
+const UPLOAD_ENDPOINT = "upload_files";
+
 let CustomBody = styled.div`
   margin-top: 290px;
   padding: 0 5%;
@@ -27,6 +30,8 @@ const WriteCkEditor = () => {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [flag, setFlag] = useState(false);
+    const imgLink = "http://localhost:4000/images/"
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
@@ -94,18 +99,45 @@ const WriteCkEditor = () => {
     const customUploadAdapter = (loader) => {
         return {
             upload() {
-                return new Promise((resolve, reject) => {
-                    //const formData = new FormData();
+                return new Promise ((resolve, reject) => {
+                    const formData = new FormData();
                     loader.file.then((file) => {
-                        //formData.append("file", file);
+                        formData.append("files", file);
+                        axios.post('/api/upload', formData)
+                            .then((res) => {
+                                if(!flag) {
+                                    setFlag(true);
+                                    console.log(res.data.filename)
+                                } 
+                                resolve({
+                                    default: `${imgLink}/${res.data.filename}`
+                                })
+                            })
+                            .catch((err) => reject(err));
+                        // fetch(`${API_URL}/${UPLOAD_ENDPOINT}`, {
+                        //     method: "post",
+                        //     body: formData
+                        //   })
+                        //     .then((res) => {
+                        //         console.log(res)
+                        //         return res
+                        //     })
+                        //     .then((res) => {
+                        //       resolve({
+                        //         default: `${API_URL}/${res.filename}`
+                        //       });
+                        //     })
+                        //     .catch((err) => {
+                        //       reject(err);
+                        //     });
 
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onloadend = () => {
-                            resolve({
-                                default: reader.result
-                            });
-                        }
+                            // const reader = new FileReader();
+                        // reader.readAsDataURL(file);
+                        // reader.onloadend = () => {
+                        //     resolve({
+                        //         default: reader.result
+                        //     });
+                        // }
 
                         // axios
                         //     .post("http://localhost:8080/api/v0/file/upload", formData)
@@ -115,11 +147,12 @@ const WriteCkEditor = () => {
                         //         });
                         //     })
                         //     .catch((err) => reject(err));
-                    });
-                });
-            },
-        };
-    };
+                        
+                    })
+                })
+            }
+        }
+    }
 
     function uploadPlugin(editor) {
         editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
