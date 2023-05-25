@@ -370,9 +370,11 @@ public class PetService {
         List<Pet> petListByAccount = petRepository.findByAccount_Id(accountId);
 
         if (petListByAccount.isEmpty()) return new PetHomeResponse();
-        List<PetHomeDetailResponse> resultList = new ArrayList<>();
+        List<PetHomeDetailResponse> homeDetail = new ArrayList<>();
+        List<PetHomeProfileResponse> homeProfile = new ArrayList<>();
         for (Pet pet : petListByAccount) {
-            List<VaccinationResponse> preVaccineList = vaccinationService.viewVaccinationList(pet.getId());
+            Long petId = pet.getId();
+            List<VaccinationResponse> preVaccineList = vaccinationService.viewVaccinationList(petId);
 
             List<VaccineInfoResponse> postVaccineList = new ArrayList<>();
             PetTypeEnum petType = pet.getPetType();
@@ -390,7 +392,7 @@ public class PetService {
                 } else if (petType.equals(RABBIT)) {
                     postVaccineList.addAll(vaccinationService.predictRabbit(birthdate, vaccineRequestList));
                 }
-                resultList.add(new PetHomeDetailResponse(pet.getId(), pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
+                homeDetail.add(new PetHomeDetailResponse(petId, pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
             }
 
             else {
@@ -401,10 +403,16 @@ public class PetService {
                 } else if (petType.equals(RABBIT)) {
                     postVaccineList.addAll(vaccinationService.predictRabbit_anyRecord(birthdate));
                 }
-                resultList.add(new PetHomeDetailResponse(pet.getId(), pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
+                homeDetail.add(new PetHomeDetailResponse(petId, pet.getPetType(), pet.getPetName(), pet.getBirthdate(), preVaccineList, postVaccineList));
+            }
+
+            Optional<PetImage> petImageOpt = petImageRepository.findByPet_Id(petId);
+            if (petImageOpt.isPresent()) {
+                homeProfile.add(new PetHomeProfileResponse(petId, petImageOpt.get().getPetProfileImage().getStoreFileUrl()));
             }
         }
-        return  new PetHomeResponse(resultList);
+
+        return  new PetHomeResponse(homeDetail, homeProfile);
     }
 
 
