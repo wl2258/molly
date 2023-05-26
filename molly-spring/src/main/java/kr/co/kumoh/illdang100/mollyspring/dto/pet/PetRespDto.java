@@ -72,6 +72,7 @@ public class PetRespDto {
     @AllArgsConstructor
     public static class PetHomeResponse {
         private List<PetHomeDetailResponse> pet;
+        private List<PetHomeProfileResponse> petProfile;
     }
 
     @Data
@@ -84,5 +85,12 @@ public class PetRespDto {
         private LocalDate birthdate;
         private List<VaccinationResponse> vaccination;
         private List<VaccineInfoResponse> vaccinePredict;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class PetHomeProfileResponse {
+        private Long petId;
+        private String profileImage;
     }
 }

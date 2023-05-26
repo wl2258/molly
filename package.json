@@ -1,9 +1,35 @@
 {
   "dependencies": {
+    "@ckeditor/ckeditor5-upload": "^38.0.1",
     "@reduxjs/toolkit": "^1.9.5",
     "buffer": "^6.0.3",
+    "concurrently": "^8.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.22",
     "react-html-parser": "^2.0.2",
     "react-redux": "^8.0.5",
-    "redux": "^4.2.1"
-  }
+    "redux": "^4.2.1",
+    "uuid": "^9.0.0"
+  },
+  "name": "molly",
+  "description": "애완동물 예방접종과 동물병원에 대한 정보를 쉽게 접할 수 있고, 애완동물 주인들의 정보 공유를 위한 커뮤니티 기능을 제공하는 웹 사이트",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yunzung/molly.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yunzung/molly/issues"
+  },
+  "homepage": "https://github.com/yunzung/molly#readme"
 }

@@ -1,6 +1,23 @@
+.boardTop {
+  height: 50px;
+  margin-top: -60px;
+  background-color: #F9F9F9;
+  border-radius: 30px 30px 0 0;
+  padding-top: 15px;
+}
+
+.boardTop > div {
+  display: flex;
+  color: #bdbdbd;
+  margin-left: 50px;
+}
+
+.boardTop > div > h4 {
+  margin-right: 10px;
+}
+
 .board {
   background-color: #F9F9F9;
-  margin-top: 200px;
   position: relative;
 }
 
@@ -11,12 +28,13 @@
 .top > h2 {
   color: #645C56;
   display: inline-block;
+  margin-bottom: 40px;
 }
 
 .top > span:nth-child(2) {
   position: absolute;
   left: 63px;
-  top: 85px;
+  top: 90px;
   color: #A19C97;
 }
 
@@ -27,14 +45,14 @@
 .top > span:nth-child(3){
   position: absolute;
   left: 105px;
-  top: 91px;
+  top: 95px;
   color: #A19C97;
 }
 
 .top > span:nth-child(4){
   position: absolute;
   left: 180px;
-  top: 91px;
+  top: 95px;
   color: #A19C97;
 }
 

@@ -212,6 +212,8 @@ const BoardList = () => {
           return (
             <List
               key={item.index}
+              pet={pet}
+              category={category}
               id={item.boardId}
               title={item.title}
               detail={item.content}
@@ -238,6 +240,8 @@ const BoardList = () => {
             return (
               <List
                 key={item.index}
+                pet={pet}
+                category={category}
                 id={item.boardId}
                 title={item.title}
                 detail={item.content}
@@ -319,7 +323,7 @@ const List = (props) => {
     return (
       <div
         onClick={() => {
-          navigate(`/board/${props.id}`);
+          navigate(`/board/${props.id}/${props.category}/${props.pet}`);
         }}
         className={styles.listManager}>
         <span>공지</span>
@@ -339,7 +343,7 @@ const List = (props) => {
     return (
       <div
         onClick={() => {
-          navigate(`/board/${props.id}`);
+          navigate(`/board/${props.id}/${props.category}/${props.pet}`);
         }}
         className={styles.list}>
         <h3 style={{ cursor: "pointer" }}>{props.title}</h3>
