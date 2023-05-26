@@ -30,6 +30,7 @@ const Header = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [iconView, setIconView] = useState(false);
   const [pet, setPet] = useState(null);
   const [categoryView, setCategoryView] = useState(false);
   const dispatch = useDispatch();
@@ -71,21 +72,24 @@ const Header = () => {
   useEffect(() => {
     setLoading(true);
 
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken")
+    if (localStorage.getItem("accessToken") !== null || localStorage.getItem("accessToken") !== "") {
+      const config = {
+        headers: {
+          Authorization: localStorage.getItem("accessToken")
+        }
       }
-    }
 
-    axiosInstance.get(`/api/auth/home`, config)
-      .then((response) => {
-        console.log(response)
-        setPet(response.data.data.pet);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+      axiosInstance.get(`/api/auth/home`, config)
+        .then((response) => {
+          setIconView(true);
+          console.log(response)
+          setPet(response.data.data.pet);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+    }
   }, []);
 
   const axiosInstance = axios.create({
@@ -209,21 +213,21 @@ const Header = () => {
               <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="160px" />
             </div>
             <div className={styles.icon}>
-              <div ref={userDropdownRef} onClick={() => { setUserView(!userView) }}>
+              {iconView && <><div ref={userDropdownRef} onClick={() => { setUserView(!userView) }}>
                 <span><RiAccountCircleLine color="#AFA79F" size="29px" /></span>
                 {userView && <div className={styles.userinfo}>
                   <UserDropdown dispatch={dispatch} /></div>}
               </div>
-              <div ref={petDropdownRef} onClick={() => { setPetView(!petView) }}>
-                <span><TbDog color="#AFA79F" size="29px" /></span>
-                {petView && <div className={styles.petinfo}>
-                  <PetDropdown pet={pet} loading={loading} /></div>}
-              </div>
-              <div ref={alarmRef} onClick={() => { setAlarmView(!alarmView) }}>
-                <span><TbBell color="#AFA79F" size="29px" /></span>
-                {alarmView && <div className={styles.alarm}>
-                  <AlarmDropdown /></div>}
-              </div>
+                <div ref={petDropdownRef} onClick={() => { setPetView(!petView) }}>
+                  <span><TbDog color="#AFA79F" size="29px" /></span>
+                  {petView && <div className={styles.petinfo}>
+                    <PetDropdown pet={pet} loading={loading} /></div>}
+                </div>
+                <div ref={alarmRef} onClick={() => { setAlarmView(!alarmView) }}>
+                  <span><TbBell color="#AFA79F" size="29px" /></span>
+                  {alarmView && <div className={styles.alarm}>
+                    <AlarmDropdown /></div>}
+                </div></>}
             </div>
           </div>
           <div className={styles.navcontainer}>

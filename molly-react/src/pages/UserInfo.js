@@ -293,6 +293,7 @@ const UserInfo = () => {
       .then((response) => {
         console.log(response);
         console.log("탈퇴 완료");
+        localStorage.clear();
         window.location.replace("/");
       })
       .catch((e) => {

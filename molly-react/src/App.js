@@ -17,6 +17,7 @@ import UpdatePet from './pages/pet/UpdatePet';
 import ManagerHome from './pages/ManagerHome';
 
 function App() {
+
   return (
     <div>
       <Routes>
@@ -28,7 +29,7 @@ function App() {
         <Route path="/list/:category/:pet" element={<List />}/>
         <Route path="/hospital" element={<Hospital />}/>
         <Route path="/about" element={<About />}/>
-        <Route path="/board/:id" element={<Detail />}/>
+        <Route path="/board/:id/:category/:pet" element={<Detail />}/>
         <Route path="/list/:category/write" element={<WriteCkEditor />}/>
         <Route path="/userinfo" element={<UserInfo/>} />
         <Route path="/registerpet" element={<RegisterPet />}/>

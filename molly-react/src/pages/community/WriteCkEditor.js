@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
@@ -9,6 +9,7 @@ import Header from "../../components/Header";
 import Board from "../../components/community/Board";
 import styles from '../../css/Write.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
+import { Base64UploadAdapter } from "@ckeditor/ckeditor5-upload";
 
 let CustomBody = styled.div`
   margin-top: 290px;
@@ -91,41 +92,29 @@ const WriteCkEditor = () => {
         }
     );
 
-    const customUploadAdapter = (loader) => {
-        return {
-            upload() {
-                return new Promise((resolve, reject) => {
-                    //const formData = new FormData();
-                    loader.file.then((file) => {
-                        //formData.append("file", file);
+    // const customUploadAdapter = (loader) => {
+    //     return {
+    //         upload() {
+    //             return new Promise((resolve, reject) => {
+    //                 loader.file.then((file) => {
+    //                     const reader = new FileReader();
+    //                     reader.readAsDataURL(file);
+    //                     reader.onloadend = () => {
+    //                         resolve({
+    //                             default: reader.result
+    //                         });
+    //                     }
+    //                 })
+    //             })
+    //         }
+    //     }
+    // }
 
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onloadend = () => {
-                            resolve({
-                                default: reader.result
-                            });
-                        }
-
-                        // axios
-                        //     .post("http://localhost:8080/api/v0/file/upload", formData)
-                        //     .then((res) => {
-                        //         resolve({
-                        //             default: res.data.data.uri,
-                        //         });
-                        //     })
-                        //     .catch((err) => reject(err));
-                    });
-                });
-            },
-        };
-    };
-
-    function uploadPlugin(editor) {
-        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-            return customUploadAdapter(loader);
-        };
-    }
+    // function uploadPlugin(editor) {
+    //     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+    //         return customUploadAdapter(loader);
+    //     };
+    // }
 
     console.log(content)
 
@@ -200,7 +189,7 @@ const WriteCkEditor = () => {
                         <CKEditor
                             editor={ClassicEditor}
                             data=""
-                            config={{ extraPlugins: [uploadPlugin] }}
+                            config={{ extraPlugins: [Base64UploadAdapter] }}
                             onReady={(editor) => {
                                 // You can store the "editor" and use when it is needed.
                                 console.log("Editor is ready to use!", editor);

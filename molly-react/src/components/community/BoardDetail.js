@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Board from './Board';
+//import Board from './Board';
 import styles from '../../css/BoardDetail.module.css';
 import { useParams } from 'react-router-dom';
 import { IoMdThumbsUp } from 'react-icons/io';
@@ -12,11 +12,14 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 const BoardDetail = () => {
-  let { id } = useParams();
+  let { id, category, pet } = useParams();
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({})
   const userId = useSelector((state) => state.user.accountId);
+  const [comment, setComment] = useState("");
+  const [like, setLike] = useState(false);
+  const [likeCnt, setLikeCnt] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -122,9 +125,10 @@ const BoardDetail = () => {
   //     "createdAt": "2023-03-01 11:00:34",
   //     "views": 392,
   //     "writerProfileImage": "",
+  //     "boardImages" :[],
   //     "comments": [
   //       {
-  //         "commentUserId": 2343,
+  //         "commentUserId": "",
   //         "commentWriteNick": "일당백",
   //         "commentCreatedAt": "2023-03-02 12:39:11",
   //         "content": "예쁘네요",
@@ -145,13 +149,16 @@ const BoardDetail = () => {
   //         "commentProfileImage": ""
   //       },
   //     ],
-  //     "liky": {
-  //       "thumbsUp": false,
-  //       "likyCnt": 100
-  //     }
+  //     "thumbsUp": false,
+  //     "likyCnt": 100
   //   })
   //   setLoading(false);
   // }, [])
+
+  useEffect(() => {
+    if(text.thumbsUp === true) setLike(true);
+    setLikeCnt(text.likyCnt);
+  }, [text])
 
   const handleClick = () => {
     setModal(!modal);
@@ -175,6 +182,74 @@ const BoardDetail = () => {
       })
   }
 
+  const handleLike = () => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken"),
+        "Content-Type": "application/json"
+      }
+    }
+
+    const fetchData = async function fetch() {
+      const response = await axiosInstance.post(`/api/auth/board/${id}/liky`, null, config);
+      console.log(response); 
+      if(response.data.code === 1) {
+        setLike(true)
+        setLikeCnt((prev) => prev+1)
+      } 
+      else {
+        console.log("좋아요 실패")
+      }
+    }
+
+    fetchData();
+  }
+
+  const handleComment = () => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken"),
+        "Content-Type": "application/json"
+      }
+    }
+    
+    const data = {
+      "content" : comment
+    }
+
+    if(comment !== "") {
+      const fetchData = async function fetch() {
+        const response = await axiosInstance.post(`/api/auth/board/${id}/comment`, data, config);
+        console.log(response); 
+        if(response.status === 200) {
+          window.location.reload();
+        } 
+        else {
+          console.log("댓글 작성 실패")
+        }
+      }
+  
+      fetchData();
+    }
+  }
+
+  const handleCommentDelete = () => {
+    const config = {
+      headers : {
+        Authorization : localStorage.getItem("accessToken")
+      }
+    }
+
+    axiosInstance.delete(`/api/auth/board/${id}/comment/{commentId}`, config)
+      .then((response) => {
+        console.log(response)
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
   if (loading) {
     return (
       <div style={{ position: "relative", width: "75%", margin: "auto" }}>
@@ -191,7 +266,16 @@ const BoardDetail = () => {
 
   return (
     <div style={{ position: "relative", width: "75%", margin: "auto" }}>
-      <Board />
+      <div className={styles.boardTop}>
+        <div>
+          <h4>{category === "FREE" ? "자유게시판" : 
+            category === "MEDICAL" ? "의료게시판" : "전체게시판"}</h4>
+          <h4>{`>`}</h4>
+          <h4>{pet === "DOG" ? "강아지" : 
+            pet === "CAT" ? "고양이" :
+            pet === "RABBIT" ? "토끼" : "전체"}</h4>
+        </div>
+      </div>
       <div className={styles.board}>
         <div className={styles.top}>
           <h2>{text.title}</h2>
@@ -211,9 +295,9 @@ const BoardDetail = () => {
           {ReactHtmlParser(text.content)}
         </div>
         <div className={styles.count}>
-          {text.liky.thumbsUp === true ? <span><IoMdThumbsUp color="#B27910" size="18px" /></span> :
-            <span><MdOutlineThumbUpAlt color="#B27910" size="18px"/></span>}
-          <span>{text.liky.likyCnt}</span>
+          {like === true ? <span><IoMdThumbsUp color="#B27910" size="18px" /></span> :
+            <span onClick={handleLike}><MdOutlineThumbUpAlt color="#B27910" size="18px"/></span>}
+          <span>{likeCnt}</span>
           <span><FaComment color="#B27910" size="13px" /></span>
           <span>{text.comments.length}</span>
           {text.isOwner && 
@@ -236,7 +320,9 @@ const BoardDetail = () => {
               </span>
               <span>{item.commentWriteNick}</span>
               <span>{item.commentCreatedAt}</span>
-              <span onClick={() => { handleClick() }}>신고</span>
+              {userId === item.commentUserId ? 
+                <span onClick={() => { handleCommentDelete() }} style={{color: "#A19C97", fontWeight: "600"}}>삭제</span> :
+                <span onClick={() => { handleClick() }}>신고</span>}
               <div>
                 <p>{item.content}</p>
               </div>
@@ -245,8 +331,8 @@ const BoardDetail = () => {
         )
       })}
       <div className={styles.footer}>
-        <input></input>
-        <Button name={"등록"} />
+        <input value={comment} onChange={(e) => {setComment(e.target.value)}}></input>
+        <Button onClick={handleComment} name={"등록"} />
       </div>
       {modal && <Accuse onClick={handleClick} />}
     </div>
