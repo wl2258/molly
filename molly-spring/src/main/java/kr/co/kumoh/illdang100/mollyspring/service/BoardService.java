@@ -85,6 +85,12 @@ public class BoardService {
         return addBoardImageResponse;
     }
 
+    @Transactional
+    public void deleteBoardImage(Long boardId, Long accountId, Long boardImageId) {
+
+        // Board 객체의 hasImage 검사하는 로직도 구현해야 함
+    }
+
     public Page<RetrievePostListDto> getPostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
 
         return boardRepository.findPagePostList(retrievePostListCondition, pageable);
@@ -140,6 +146,7 @@ public class BoardService {
                             ? account.getAccountProfileImage().getStoreFileUrl() : null;
 
                     return new BoardCommentDto(
+                            comment.getId(),
                             comment.getAccountId(),
                             nickname,
                             comment.getCreatedDate(),
@@ -206,6 +213,8 @@ public class BoardService {
 
     @Transactional
     public void deletePost(Long boardId, Long accountId) {
+
+        // TODO: 신고 테이블 필드 변경 (boardId -> null)
 
         Board findBoard = findBoardByIdOrThrowException(boardId);
 

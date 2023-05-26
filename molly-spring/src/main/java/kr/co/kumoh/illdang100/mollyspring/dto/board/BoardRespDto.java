@@ -52,6 +52,7 @@ public class BoardRespDto {
     @AllArgsConstructor
     @Getter @Setter
     public static class BoardCommentDto {
+        private Long commentId;
         private long commentUserId;
         private String commentWriteNick;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
