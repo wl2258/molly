@@ -9,7 +9,6 @@ import Header from "../../components/Header";
 import Board from "../../components/community/Board";
 import styles from '../../css/Write.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
-import { Base64UploadAdapter } from "@ckeditor/ckeditor5-upload";
 
 let CustomBody = styled.div`
   margin-top: 290px;
@@ -92,29 +91,29 @@ const WriteCkEditor = () => {
         }
     );
 
-    // const customUploadAdapter = (loader) => {
-    //     return {
-    //         upload() {
-    //             return new Promise((resolve, reject) => {
-    //                 loader.file.then((file) => {
-    //                     const reader = new FileReader();
-    //                     reader.readAsDataURL(file);
-    //                     reader.onloadend = () => {
-    //                         resolve({
-    //                             default: reader.result
-    //                         });
-    //                     }
-    //                 })
-    //             })
-    //         }
-    //     }
-    // }
+    const customUploadAdapter = (loader) => {
+        return {
+            upload() {
+                return new Promise((resolve, reject) => {
+                    loader.file.then((file) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = () => {
+                            resolve({
+                                default: reader.result
+                            });
+                        }
+                    })
+                })
+            }
+        }
+    }
 
-    // function uploadPlugin(editor) {
-    //     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-    //         return customUploadAdapter(loader);
-    //     };
-    // }
+    function uploadPlugin(editor) {
+        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+            return customUploadAdapter(loader);
+        };
+    }
 
     console.log(content)
 
@@ -189,7 +188,7 @@ const WriteCkEditor = () => {
                         <CKEditor
                             editor={ClassicEditor}
                             data=""
-                            config={{ extraPlugins: [Base64UploadAdapter] }}
+                            config={{ extraPlugins: [uploadPlugin] }}
                             onReady={(editor) => {
                                 // You can store the "editor" and use when it is needed.
                                 console.log("Editor is ready to use!", editor);
