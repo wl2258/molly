@@ -3,8 +3,6 @@ import styles from '../css/SignUp.module.css';
 import {Button} from '../components/Button';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { storeId } from './store/user';
 
 const SignUp = () => {
   useEffect(() => {
@@ -26,7 +24,6 @@ const SignUp = () => {
   const [duplicate, setDuplicate] = useState(0);
   const [effective, setEffective] = useState(false);
   const [effectiveColor, setEffectiveColor] = useState("");
-  const dispatch = useDispatch();
 
   const imgRef = useRef();
   const location = useLocation();
@@ -39,12 +36,9 @@ const SignUp = () => {
     const refreshToken = params.get('refreshToken');
     const accountId = params.get('accountId');
 
-    if(accountId !== null && accountId !== "") {
-      dispatch(storeId({accountId : accountId}))
-    } else console.log("accountId가 없음")
-
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("accountId", accountId);
   }, []);
   
 
@@ -99,8 +93,9 @@ const SignUp = () => {
           return error.response;
         }
         else if(errResponseStatus === 401) {
+          console.log(error.response.data.data);
           console.log("인증 실패");
-          window.location.replace("/login");
+          //window.location.replace("/login");
         }
         else if(errResponseStatus === 403) {
           alert("권한이 없습니다.");

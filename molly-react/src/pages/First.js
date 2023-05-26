@@ -4,8 +4,6 @@ import styles from '../css/First.module.css'
 import styled from 'styled-components';
 import { MdArrowForwardIos } from 'react-icons/md';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { storeId, deleteId } from './store/user';
 
 let CustomNavLink = styled(NavLink)`
   color: #AFA79F;
@@ -23,20 +21,16 @@ const First = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const accessToken = params.get('accessToken');
     const refreshToken = params.get('refreshToken');
     const accountId = params.get('accountId');
 
-    if(accountId !== null && accountId !== "") {
-      dispatch(storeId({accountId : accountId}))
-    } else console.log("accountId가 없음")
-
-    if(accessToken !== null && refreshToken !== null) {
+    if(accessToken !== null && refreshToken !== null && accountId !== null) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("accountId", accountId);
       setLogin(true);
     }
     else if(localStorage.getItem("accessToken") !== "null" && localStorage.getItem("refreshToken") !== "null"
@@ -53,7 +47,6 @@ const First = () => {
     })
 
     localStorage.clear();
-    dispatch(deleteId())
     setLogin(false);
   }
 

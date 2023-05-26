@@ -6,6 +6,7 @@ import { FaComment } from 'react-icons/fa';
 import Board from './Board';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { SyncLoader } from 'react-spinners';
 
 const BoardList = () => {
   let { category, pet } = useParams();
@@ -19,14 +20,14 @@ const BoardList = () => {
 
   useEffect(() => {
     setLoading(true);
-    
-    let params;
-    const pageNum = page-1
 
-    search === "" ? 
+    let params;
+    const pageNum = page - 1
+
+    search === "" ?
       params = {
-        category : category === "undefined" ? "ALL" : category,
-        petType:  pet,
+        category: category === "undefined" ? "ALL" : category,
+        petType: pet,
         sort: `${value},desc`,
         page: pageNum,
         size: 5
@@ -77,7 +78,7 @@ const BoardList = () => {
   );
 
   // useEffect(() => {
-    
+
   //   console.log("render")
   //   setLoading(true);
 
@@ -179,9 +180,14 @@ const BoardList = () => {
 
   if (loading) {
     return (
-      <div style={{ position: "relative", width: "75%", margin: "auto" }}>
+      <div style={{ position: "relative", width: "75%", margin: "auto", display: "flex", justifyContent: "center" }}>
         <div>
-          loading
+          <SyncLoader
+            color="#BF7A09"
+            loading
+            margin={5}
+            size={10}
+            speedMultiplier={1} />
         </div>
       </div>
     )
@@ -193,7 +199,7 @@ const BoardList = () => {
 
   return (
     <div style={{ position: "relative", width: "75%", margin: "auto" }}>
-      <Board pet={pet} setSearch={setSearch}/>
+      <Board pet={pet} setSearch={setSearch} />
       <div className={styles.header}>
         <ul onClick={() => { setView(!view) }}>
           <div className={styles.sort}>

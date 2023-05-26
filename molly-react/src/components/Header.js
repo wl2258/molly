@@ -143,7 +143,8 @@ const Header = () => {
         }
         else if (errResponseStatus === 401) {
           console.log("인증 실패");
-          window.location.replace("/login");
+          console.log(error.response.data.data)
+          //window.location.replace("/login");
         }
         else if (errResponseStatus === 403) {
           alert("권한이 없습니다.");

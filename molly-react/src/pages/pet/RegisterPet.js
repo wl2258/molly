@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import Header from '../../components/Header';
 import styles from '../../css/RegisterPet.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
@@ -18,7 +18,8 @@ const RegisterPet = () => {
   const [petType, setPetType] = useState('DOG'); // dog, cat, rabbit
   const [typeView, setTypeView] = useState(false); // 동물 종류 드롭다운 버튼
   const [pet, setPet] = useState(false); // 동물 품종 드롭다운 버튼
-  const [petValue, setPetValue] = useState('BICHON'); // 동물 품종
+  const [petValue, setPetValue] = useState({}); // 동물 품종
+  const [petKind, setPetKind] = useState([]);
   const [gender, setGender] = useState([]); // 성별 라디오 버튼
   const [neutered, setNeutered] = useState([]); // 중성화 라디오 버튼
   const [surgery, setSurgery] = useState([]); // 수술 라디오 버튼
@@ -42,9 +43,170 @@ const RegisterPet = () => {
   const [petNickName, setPetNickName] = useState(""); // 동물 이름 input
   const [weight, setWeight] = useState(""); // 몸무게 input
   const [caution, setCaution] = useState(""); // 주의할 점 input
+  const [loading, setLoading] = useState(false);
 
   const imgRef = useRef();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLoading(true);
+
+    const config = {
+      headers: {
+        Authorization: localStorage.getItem("accessToken")
+      }
+    }
+
+    axiosInstance.get(`/api/auth/pet/dog-species`, config)
+      .then((response) => {
+        console.log(response)
+        setPetKind(response.data.data);
+        setPetValue(response.data.data[0]);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }, [])
+
+  useEffect(() => {
+    setLoading(true)
+    const config = {
+      headers: {
+        Authorization: localStorage.getItem("accessToken")
+      }
+    }
+
+    if(petType === "DOG") {
+      axiosInstance.get(`/api/auth/pet/dog-species`, config)
+      .then((response) => {
+        console.log(response)
+        setPetValue(response.data.data[0]);
+        setPetKind(response.data.data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+    }
+    else if(petType === "CAT") {
+      axiosInstance.get(`/api/auth/pet/cat-species`, config)
+      .then((response) => {
+        console.log(response)
+        setPetValue(response.data.data[0]);
+        setPetKind(response.data.data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+    }
+    else {
+      axiosInstance.get(`/api/auth/pet/rabbit-species`, config)
+      .then((response) => {
+        console.log(response)
+        setPetValue(response.data.data[0]);
+        setPetKind(response.data.data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+    }
+    setLoading(false);
+  }, [petType])
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setPetKind([
+  //     {
+  //         "speciesKo": "말티즈",
+  //         "speciesEn": "MALTESE"
+  //     },
+  //     {
+  //         "speciesKo": "포메라니안",
+  //         "speciesEn": "POMERANIAN"
+  //     },
+  //     {
+  //         "speciesKo": "프렌치 불도그",
+  //         "speciesEn": "FRENCH_BULLDOG"
+  //     },
+  //   ])
+  //   setPetValue({
+  //     "speciesKo": "말티즈",
+  //     "speciesEn": "MALTESE"
+  //   })
+  //   setLoading(false);
+  // }, [])
+
+  // useEffect(() => {
+  //   setLoading(true)
+  //   if(petType === "DOG") {
+  //     setPetValue({
+  //       "speciesKo": "말티즈",
+  //       "speciesEn": "MALTESE"
+  //   },)
+  //     setPetKind([
+  //       {
+  //           "speciesKo": "말티즈",
+  //           "speciesEn": "MALTESE"
+  //       },
+  //       {
+  //           "speciesKo": "포메라니안",
+  //           "speciesEn": "POMERANIAN"
+  //       },
+  //       {
+  //           "speciesKo": "프렌치 불도그",
+  //           "speciesEn": "FRENCH_BULLDOG"
+  //       },
+  //     ])
+  //   }
+  //   else if(petType === "CAT") {
+  //     setPetValue({
+  //       "speciesKo": "노르웨이 숲",
+  //       "speciesEn": "NORWEGIAN_FOREST"
+  //   },)
+  //     setPetKind([
+  //       {
+  //           "speciesKo": "노르웨이 숲",
+  //           "speciesEn": "NORWEGIAN_FOREST"
+  //       },
+  //       {
+  //           "speciesKo": "네벨룽",
+  //           "speciesEn": "NEBELUNG"
+  //       },
+  //       {
+  //           "speciesKo": "네바 마스커레이드",
+  //           "speciesEn": "NEVA_MASQUERADE"
+  //       },
+  //       {
+  //           "speciesKo": "데본렉스",
+  //           "speciesEn": "DEVON_REX"
+  //       },
+	// 	  ])
+  //   }
+  //   else {
+  //     setPetValue({
+  //       "speciesKo": "앙고라 토끼",
+  //       "speciesEn": "ANGORA_RABBIT"
+  //   },)
+  //     setPetKind([
+  //       {
+  //           "speciesKo": "앙고라 토끼",
+  //           "speciesEn": "ANGORA_RABBIT"
+  //       },
+  //       {
+  //           "speciesKo": "롭이어",
+  //           "speciesEn": "ROBYEAR"
+  //       },
+  //       {
+  //           "speciesKo": "렉스",
+  //           "speciesEn": "REX"
+  //       },
+	// 	  ])
+  //   }
+  //   setLoading(false);
+  // }, [petType])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -143,7 +305,7 @@ const RegisterPet = () => {
     const formData = new FormData();
     formData.append("petType", petType);
     formData.append("petName", petNickName);
-    formData.append("species", petValue);
+    formData.append("species", petValue.speciesEn);
     if(imgRef.current.files[0] !== undefined) {
       formData.append("petProfileImage", imgRef.current.files[0]);
     }
@@ -199,6 +361,17 @@ const RegisterPet = () => {
     day = day >= 10 ? day : '0' + day;
 
     return date.getFullYear() + '-' + month + '-' + day;
+  }
+
+  if(loading) {
+    return (
+      <div className={styles.container}>
+        <Header />
+        <div className={styles.board}>
+          loading
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -260,14 +433,17 @@ const RegisterPet = () => {
           <div className={styles.boarddetail}>
             <h4>품종</h4>
             <div onClick={() => {setPet(!pet)}} className={styles.sort} style={{borderRadius: pet? "10px 10px 0 0" : "10px"}}>
-              <span className={styles.default}>{petValue}</span>
+              <span className={styles.default}>
+                {petValue === undefined || petValue === null || Object.keys(petValue).length === 0? "선택하세요" 
+                : petValue.speciesKo}
+              </span>
               {pet ? <span style={{position:"absolute", top:"2px", right:"10px"}}>
                 <MdExpandLess size="25px" color="#AFA79F"/></span> : 
                 <span style={{position:"absolute", top: "2px", right:"10px"}}>
                   <MdExpandMore size="25px" color="#AFA79F"/>
                 </span>
               }
-              {pet && <PetDropdown setValue={setPetValue}/>}
+              {pet && <PetDropdown setValue={setPetValue} petKind={petKind}/>}
             </div>
             <div className={styles.info}>
               <h4>생일</h4>
@@ -431,7 +607,14 @@ const RegisterPet = () => {
               <Button name="등록"/>
             </div>
           </div>
-        {modal && <RegisterVaccine onClick={handleModal} vaccineHistory={vaccineHistory} setVaccineHistory={setVaccineHistory} dateFormat={dateFormat} />}
+        {modal && 
+          <RegisterVaccine 
+            onClick={handleModal} 
+            vaccineHistory={vaccineHistory} 
+            setVaccineHistory={setVaccineHistory} 
+            dateFormat={dateFormat} 
+            petType={petType}
+          />}
         </form>
       </div>  
     </div>
@@ -450,10 +633,13 @@ const TypeDropdown = (props) => {
 const PetDropdown = (props) => {
   return (
     <div className={styles.dropdown}>
-      <li onClick={() => {props.setValue('BICHON')}}>비숑</li>
-      <li onClick={() => {props.setValue('MALTESE')}}>말티즈</li>
-      <li onClick={() => {props.setValue('POODLE')}}>푸들</li>
-      <li onClick={() => {props.setValue('WELSHCORGI')}}>웰시코기</li>
+      {
+        props.petKind.map((item) => {
+          return (
+            <li onClick={() => {props.setValue(item)}}>{item.speciesKo}</li>
+          )
+        })
+      }
     </div>
   )
 }
