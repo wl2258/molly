@@ -448,10 +448,6 @@ public class VaccinationService {
         if (!rabies_check) resultList.add(predictDogRABIES_noRecord(birthdate));
         if (!antibody_check) resultList.add(predictDogANTIBODY_noRecord(birthdate));
 
-        for (VaccineInfoResponse v : resultList) {
-            log.info("vaccination name={} date={}", v.getVaccinationName(), v.getVaccinationDate());
-        }
-
         return resultList;
     }
 
@@ -578,7 +574,6 @@ public class VaccinationService {
 
     public List<VaccineInfoResponse> predictDogAfterSave( LocalDate birthdate, VaccinationHistory savedVaccine) {
         List<VaccineInfoResponse> resultList = new ArrayList<>();
-        log.info("save vaccine = {}", savedVaccine.getVaccinationName());
 
         String savedVaccineName = savedVaccine.getVaccinationName();
         LocalDate savedVaccineDate = savedVaccine.getVaccinationDate();
@@ -682,11 +677,6 @@ public class VaccinationService {
         if (deletedVaccineName.contains(D0G_ANTIBODY_TITER_TEST.getValue())) {
             resultList.add(predictDogANTIBODY_noRecord(birthdate));
         }
-
-        for (VaccineInfoResponse v : resultList) {
-            log.info("delete vaccine name={} date={}", v.getVaccinationName(), v.getVaccinationDate());
-        }
-
         return resultList;
     }
 
