@@ -29,6 +29,7 @@ const Board = (props) => {
             placeholder="글을 검색해보세요"
             value={searchWord}
             onChange={(e) => {setSearchWord(e.target.value)}}
+            onKeyDown={(e) => { if (e.key==="Enter") { props.setSearch(searchWord)}}}
           ></input>
           <span 
             style={{position:"absolute", right: "12px", top:"20px", cursor: "pointer"}}

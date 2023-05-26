@@ -9,14 +9,14 @@ import { Button } from '../Button';
 import Accuse from './Accuse';
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { SyncLoader } from 'react-spinners';
 
 const BoardDetail = () => {
   let { id, category, pet } = useParams();
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({})
-  const userId = useSelector((state) => state.user.accountId);
+  const userId = localStorage.getItem("accountId");
   const [comment, setComment] = useState("");
   const [like, setLike] = useState(false);
   const [likeCnt, setLikeCnt] = useState(0);
@@ -24,22 +24,22 @@ const BoardDetail = () => {
   useEffect(() => {
     setLoading(true);
 
-    if(localStorage.getItem("accessToken") !== null || localStorage.getItem("accessToken") !== "") {
+    if (localStorage.getItem("accessToken") !== null || localStorage.getItem("accessToken") !== "") {
       const config = {
         headers: {
-          "AccountId" : userId
+          "AccountId": userId
         }
       }
 
       axiosInstance.get(`/api/board/${id}`, config)
-      .then((response) => {
-        console.log(response.data.data)
-        setText(response.data.data);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+        .then((response) => {
+          console.log(response.data.data)
+          setText(response.data.data);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        })
     } else {
       axiosInstance.get(`/api/board/${id}`)
         .then((response) => {
@@ -156,7 +156,7 @@ const BoardDetail = () => {
   // }, [])
 
   useEffect(() => {
-    if(text.thumbsUp === true) setLike(true);
+    if (text.thumbsUp === true) setLike(true);
     setLikeCnt(text.likyCnt);
   }, [text])
 
@@ -166,8 +166,8 @@ const BoardDetail = () => {
 
   const deleteBoard = () => {
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
+      headers: {
+        Authorization: localStorage.getItem("accessToken")
       }
     }
 
@@ -184,19 +184,19 @@ const BoardDetail = () => {
 
   const handleLike = () => {
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken"),
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
         "Content-Type": "application/json"
       }
     }
 
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(`/api/auth/board/${id}/liky`, null, config);
-      console.log(response); 
-      if(response.data.code === 1) {
-        setLike(true)
-        setLikeCnt((prev) => prev+1)
-      } 
+      console.log(response);
+      if (response.data.code === 1) {
+        setLike(response.data.data.thumbsUp)
+        setLikeCnt(response.data.data.likyCount)
+      }
       else {
         console.log("좋아요 실패")
       }
@@ -207,40 +207,40 @@ const BoardDetail = () => {
 
   const handleComment = () => {
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken"),
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
         "Content-Type": "application/json"
       }
     }
-    
+
     const data = {
-      "content" : comment
+      "commentContent": comment
     }
 
-    if(comment !== "") {
+    if (comment !== "") {
       const fetchData = async function fetch() {
         const response = await axiosInstance.post(`/api/auth/board/${id}/comment`, data, config);
-        console.log(response); 
-        if(response.status === 200) {
+        console.log(response);
+        if (response.status === 201) {
           window.location.reload();
-        } 
+        }
         else {
           console.log("댓글 작성 실패")
         }
       }
-  
+
       fetchData();
     }
   }
 
-  const handleCommentDelete = () => {
+  const handleCommentDelete = (commentId) => {
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
+      headers: {
+        Authorization: localStorage.getItem("accessToken")
       }
     }
 
-    axiosInstance.delete(`/api/auth/board/${id}/comment/{commentId}`, config)
+    axiosInstance.delete(`/api/auth/board/${id}/comment/${commentId}`, config)
       .then((response) => {
         console.log(response)
         window.location.reload();
@@ -254,7 +254,12 @@ const BoardDetail = () => {
     return (
       <div style={{ position: "relative", width: "75%", margin: "auto" }}>
         <div>
-          loading
+          <SyncLoader
+            color="#BF7A09"
+            loading
+            margin={5}
+            size={10}
+            speedMultiplier={1} />
         </div>
       </div>
     )
@@ -268,12 +273,12 @@ const BoardDetail = () => {
     <div style={{ position: "relative", width: "75%", margin: "auto" }}>
       <div className={styles.boardTop}>
         <div>
-          <h4>{category === "FREE" ? "자유게시판" : 
+          <h4>{category === "FREE" ? "자유게시판" :
             category === "MEDICAL" ? "의료게시판" : "전체게시판"}</h4>
           <h4>{`>`}</h4>
-          <h4>{pet === "DOG" ? "강아지" : 
+          <h4>{pet === "DOG" ? "강아지" :
             pet === "CAT" ? "고양이" :
-            pet === "RABBIT" ? "토끼" : "전체"}</h4>
+              pet === "RABBIT" ? "토끼" : "전체"}</h4>
         </div>
       </div>
       <div className={styles.board}>
@@ -295,12 +300,12 @@ const BoardDetail = () => {
           {ReactHtmlParser(text.content)}
         </div>
         <div className={styles.count}>
-          {like === true ? <span><IoMdThumbsUp color="#B27910" size="18px" /></span> :
-            <span onClick={handleLike}><MdOutlineThumbUpAlt color="#B27910" size="18px"/></span>}
+          {like === true ? <span onClick={handleLike}><IoMdThumbsUp color="#B27910" size="18px" /></span> :
+            <span onClick={handleLike}><MdOutlineThumbUpAlt color="#B27910" size="18px" /></span>}
           <span>{likeCnt}</span>
           <span><FaComment color="#B27910" size="13px" /></span>
           <span>{text.comments.length}</span>
-          {text.isOwner && 
+          {text.isOwner &&
             <>
               <span>수정</span>
               <span onClick={deleteBoard}>삭제</span>
@@ -320,8 +325,8 @@ const BoardDetail = () => {
               </span>
               <span>{item.commentWriteNick}</span>
               <span>{item.commentCreatedAt}</span>
-              {userId === item.commentUserId ? 
-                <span onClick={() => { handleCommentDelete() }} style={{color: "#A19C97", fontWeight: "600"}}>삭제</span> :
+              {userId === item.commentUserId ?
+                <span onClick={() => { handleCommentDelete(item.commentId) }} style={{ color: "#A19C97", fontWeight: "600" }}>삭제</span> :
                 <span onClick={() => { handleClick() }}>신고</span>}
               <div>
                 <p>{item.content}</p>
@@ -331,7 +336,7 @@ const BoardDetail = () => {
         )
       })}
       <div className={styles.footer}>
-        <input value={comment} onChange={(e) => {setComment(e.target.value)}}></input>
+        <input value={comment} onChange={(e) => { setComment(e.target.value) }}></input>
         <Button onClick={handleComment} name={"등록"} />
       </div>
       {modal && <Accuse onClick={handleClick} />}

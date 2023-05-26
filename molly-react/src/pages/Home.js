@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import SignUp from './SignUp';
 import axios from 'axios';
+import { SyncLoader } from 'react-spinners';
 
 let CustomBody = styled.div`
   margin: 240px 10% 0;
@@ -168,7 +169,12 @@ const Home = () => {
         <Header />
         <CustomBody>
           <Schedule>
-            <p style={{ marginLeft: "100px" }}>loading</p>
+            <SyncLoader 
+              color="#BF7A09"
+              loading
+              margin={5}
+              size={10}
+              speedMultiplier={1}/>
           </Schedule>
           <Info>
             <div>
@@ -195,7 +201,18 @@ if (pet === null) {
           </div>
           <div>
             <div style={{ width: "350px", margin: "50px 0"}}>
-              <p style={{marginLeft: "50px"}}>동물을 등록하세요</p>
+              <p style={{
+                width: "80%",
+                marginLeft: "50px",
+                marginTop: "180px",
+                fontSize: "18px",
+                backgroundColor: "#BF7A09",
+                textAlign: "center",
+                color: "white",
+                padding: "20px 0",
+                borderRadius: "30px",
+                fontWeight: "500"
+              }}>동물을 등록하세요</p>
             </div>
           </div>
         </Schedule>
@@ -224,7 +241,18 @@ if (pet !== null && pet.length === 0) {
           </div>
           <div>
             <div style={{ width: "350px", margin: "50px 0"}}>
-              <p style={{marginLeft: "50px"}}>예방접종 이력을 등록하세요</p>
+              <p style={{
+                width: "80%",
+                marginLeft: "50px",
+                marginTop: "180px",
+                fontSize: "18px",
+                backgroundColor: "#BF7A09",
+                textAlign: "center",
+                color: "white",
+                padding: "20px 0",
+                borderRadius: "30px",
+                fontWeight: "500"
+              }}>생일과 예방접종 이력을 등록하세요</p>
             </div>
           </div>
         </Schedule>
