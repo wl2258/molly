@@ -51,15 +51,8 @@ public class VaccinationService {
 
         String vaccinationName = vaccinationSaveRequest.getVaccinationName();
         LocalDate vaccinationDate = vaccinationSaveRequest.getVaccinationDate();
-        List<VaccinationHistory> preVaccineList = vaccinationRepository.findByPet_IdOrderByVaccinationDateAsc(petId);
-
-        if (!preVaccineList.isEmpty()) {
-            for (VaccinationHistory vaccine : preVaccineList) {
-                if (vaccine.getVaccinationName().equals(vaccinationName))
-                    throw new CustomApiException("해당 예방접종 이력이 이미 존재합니다.");
-                if (vaccinationDate.isBefore(vaccine.getVaccinationDate())) throw new CustomApiException("이전에 등록된 예방접종 날짜 이후에 다음 접종을 등록할 수 있습니다.");
-            }
-        }
+        Boolean exists = vaccinationRepository.existsVaccinationByPet(petId, vaccinationName, vaccinationDate);
+        if (exists == Boolean.TRUE) throw new CustomApiException("해당 예방접종 이력이 이미 존재합니다.");
 
         VaccinationHistory vaccination = VaccinationHistory.builder()
                 .pet(findPet)
