@@ -51,8 +51,29 @@ public class VaccinationService {
 
         String vaccinationName = vaccinationSaveRequest.getVaccinationName();
         LocalDate vaccinationDate = vaccinationSaveRequest.getVaccinationDate();
-        Boolean exists = vaccinationRepository.existsVaccinationByPet(petId, vaccinationName, vaccinationDate);
-        if (exists == Boolean.TRUE) throw new CustomApiException("해당 예방접종 이력이 이미 존재합니다.");
+
+        int n_idx = vaccinationName.indexOf(" ");
+        String vaccineOriginName = vaccinationName.substring(0, n_idx - 1);
+
+        int maxDegree = 0;
+        LocalDate lastVaccineDate = null;
+        List<VaccinationHistory> vaccineList = vaccinationRepository.findByPet_Id(petId);
+        if (!vaccineList.isEmpty()) {
+            for (VaccinationHistory preVaccine : vaccineList) {
+
+                String preVaccineName = preVaccine.getVaccinationName();
+                if (preVaccineName.equals(vaccinationName)) throw new CustomApiException("해당 예방접종 이력이 이미 존재합니다.");
+
+                if (preVaccineName.contains(vaccineOriginName)) {
+                    int vaccine_Nth = preVaccineName.charAt(n_idx + 1) - '0';
+                    if (vaccine_Nth > maxDegree) {
+                        maxDegree = vaccine_Nth;
+                        lastVaccineDate = preVaccine.getVaccinationDate();
+                    }
+                }
+            }
+            if (vaccinationDate.isBefore(lastVaccineDate)) throw new CustomApiException("이전 예방접종 날짜 이후에 다음 접종을 등록할 수 있습니다.");
+        }
 
         VaccinationHistory vaccination = VaccinationHistory.builder()
                 .pet(findPet)
@@ -455,13 +476,13 @@ public class VaccinationService {
         dhpplList.sort(new Comparator<VaccinationRequest>() {
             @Override
             public int compare(VaccinationRequest o1, VaccinationRequest o2) {
-                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return 1;
+                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return -1;
                 else if (o1.getVaccinationDate().isEqual(o2.getVaccinationDate())) return 0;
-                else return -1;
+                else return 1;
             }
         });
 
-        VaccinationRequest lastVaccine = dhpplList.get(0);
+        VaccinationRequest lastVaccine = dhpplList.get(dhpplList.size() - 1);
         LocalDate lastVaccineDate = lastVaccine.getVaccinationDate();
         String lastVaccineName = lastVaccine.getVaccinationName();
         int n_idx = lastVaccineName.indexOf(" ");
@@ -481,6 +502,7 @@ public class VaccinationService {
             VaccineInfoResponse vaccine = responseList.get(i);
             vaccine.setVaccinationDate(vaccine.getVaccinationDate().plusDays(between));
         }
+
         return responseList;
     }
 
@@ -521,13 +543,13 @@ public class VaccinationService {
         cvrpList.sort(new Comparator<VaccinationRequest>() {
             @Override
             public int compare(VaccinationRequest o1, VaccinationRequest o2) {
-                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return 1;
+                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return -1;
                 else if (o1.getVaccinationDate().isEqual(o2.getVaccinationDate())) return 0;
-                else return -1;
+                else return 1;
             }
         });
 
-        VaccinationRequest lastVaccine = cvrpList.get(0);
+        VaccinationRequest lastVaccine = cvrpList.get(cvrpList.size() - 1);
         LocalDate lastVaccineDate = lastVaccine.getVaccinationDate();
         String lastVaccineName = lastVaccine.getVaccinationName();
         int n_idx = lastVaccineName.indexOf(" ");
