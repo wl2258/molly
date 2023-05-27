@@ -455,13 +455,13 @@ public class VaccinationService {
         dhpplList.sort(new Comparator<VaccinationRequest>() {
             @Override
             public int compare(VaccinationRequest o1, VaccinationRequest o2) {
-                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return 1;
+                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return -1;
                 else if (o1.getVaccinationDate().isEqual(o2.getVaccinationDate())) return 0;
-                else return -1;
+                else return 1;
             }
         });
 
-        VaccinationRequest lastVaccine = dhpplList.get(0);
+        VaccinationRequest lastVaccine = dhpplList.get(dhpplList.size() - 1);
         LocalDate lastVaccineDate = lastVaccine.getVaccinationDate();
         String lastVaccineName = lastVaccine.getVaccinationName();
         int n_idx = lastVaccineName.indexOf(" ");
@@ -481,6 +481,7 @@ public class VaccinationService {
             VaccineInfoResponse vaccine = responseList.get(i);
             vaccine.setVaccinationDate(vaccine.getVaccinationDate().plusDays(between));
         }
+
         return responseList;
     }
 
@@ -521,13 +522,13 @@ public class VaccinationService {
         cvrpList.sort(new Comparator<VaccinationRequest>() {
             @Override
             public int compare(VaccinationRequest o1, VaccinationRequest o2) {
-                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return 1;
+                if (o1.getVaccinationDate().isBefore(o2.getVaccinationDate())) return -1;
                 else if (o1.getVaccinationDate().isEqual(o2.getVaccinationDate())) return 0;
-                else return -1;
+                else return 1;
             }
         });
 
-        VaccinationRequest lastVaccine = cvrpList.get(0);
+        VaccinationRequest lastVaccine = cvrpList.get(cvrpList.size() - 1);
         LocalDate lastVaccineDate = lastVaccine.getVaccinationDate();
         String lastVaccineName = lastVaccine.getVaccinationName();
         int n_idx = lastVaccineName.indexOf(" ");
