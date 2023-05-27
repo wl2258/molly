@@ -69,7 +69,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .select(board.count())
                 .from(board)
                 .where(categoryEq(retrievePostListCondition.getCategory()),
-                        petTypeEq(retrievePostListCondition.getPetType()));
+                        petTypeEq(retrievePostListCondition.getPetType()),
+                        searchWordLike(retrievePostListCondition.getSearchWord()));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
