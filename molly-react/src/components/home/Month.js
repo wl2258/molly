@@ -41,31 +41,34 @@ const Month = (props) => {
                     <div style={{ marginTop: "5px" }}></div>
                     {petVaccine.map((item, index) => {
                       return (
-                        item.vaccine.map((date) => {
-                          return (
-                            date.vaccinationDate === days.format('YYYY-MM-DD') ?
-                              <>
-                                <div
-                                  style={{ backgroundColor: color[index] }}
-                                  className={styles.vaccine}></div>
-                                <div className={styles.vaccineInfo}>
-                                  {petVaccine.map((item) => {
-                                    return (
-                                      item.vaccine.map((vaccine, index) => {
-                                        return (
-                                          vaccine.vaccinationDate === days.format('YYYY-MM-DD') ?
-                                            <div className={styles.vaccineBox}>
-                                              <span className={styles.petName}>{item.petName}</span>
-                                              <span>{vaccine.vaccinationName}</span>
-                                              <br />
-                                            </div> : null
-                                        )
-                                      })
-                                    )
-                                  })}
-                                </div>
-                              </> : null
-                          )
+                        item.vaccine.map((date, i) => {
+                          if(i < 3) {
+                            return (
+                              date.vaccinationDate === days.format('YYYY-MM-DD') ?
+                                <>
+                                  <div
+                                    style={{ backgroundColor: color[index] }}
+                                    className={styles.vaccine}></div>
+                                  <div className={styles.vaccineInfo}>
+                                    {petVaccine.map((item) => {
+                                      return (
+                                        item.vaccine.map((vaccine, index) => {
+                                          return (
+                                            vaccine.vaccinationDate === days.format('YYYY-MM-DD') ?
+                                              <div className={styles.vaccineBox}>
+                                                <span className={styles.petName}>{item.petName}</span>
+                                                <span>{vaccine.vaccinationName}</span>
+                                                <br />
+                                              </div> : null
+                                          )
+                                        })
+                                      )
+                                    })}
+                                  </div>
+                                  {item.vaccine.length > 3 && i === 1 ? <div className={styles.plus}>+</div> : null}
+                                </> : null
+                            )
+                          } else return null
                         })
                       )
                     })}
@@ -84,31 +87,34 @@ const Month = (props) => {
                     <div style={{ marginTop: "5px" }}></div>
                     {petVaccine.map((item, index) => {
                       return (
-                        item.vaccine.map((date) => {
-                          return (
-                            date.vaccinationDate === days.format('YYYY-MM-DD') ?
-                              <>
-                                <div
-                                  style={{ backgroundColor: color[index] }}
-                                  className={styles.vaccine}></div>
-                                <div className={styles.vaccineInfo}>
-                                  {petVaccine.map((item) => {
-                                    return (
-                                      item.vaccine.map((vaccine, index) => {
-                                        return (
-                                          vaccine.vaccinationDate === days.format('YYYY-MM-DD') ?
-                                            <div className={styles.vaccineBox}>
-                                              <span className={styles.petName}>{item.petName}</span>
-                                              <span>{vaccine.vaccinationName}</span>
-                                              <br />
-                                            </div> : null
-                                        )
-                                      })
-                                    )
-                                  })}
-                                </div>
-                              </> : null
-                          )
+                        item.vaccine.map((date, i) => {
+                          if(i < 3) {
+                            return (
+                              date.vaccinationDate === days.format('YYYY-MM-DD') ?
+                                <>
+                                  <div
+                                    style={{ backgroundColor: color[index] }}
+                                    className={styles.vaccine}></div>
+                                  <div className={styles.vaccineInfo}>
+                                    {petVaccine.map((item) => {
+                                      return (
+                                        item.vaccine.map((vaccine, index) => {
+                                          return (
+                                            vaccine.vaccinationDate === days.format('YYYY-MM-DD') ?
+                                              <div className={styles.vaccineBox}>
+                                                <span className={styles.petName}>{item.petName}</span>
+                                                <span>{vaccine.vaccinationName}</span>
+                                                <br />
+                                              </div> : null
+                                          )
+                                        })
+                                      )
+                                    })}
+                                  </div>
+                                  {item.vaccine.length > 3 && i === 1 ? <div className={styles.plus}>+</div> : null}
+                                </> : null
+                            )
+                          } else return null
                         })
                       )
                     })}

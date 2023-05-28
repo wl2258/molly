@@ -95,7 +95,7 @@ const SignUp = () => {
         else if(errResponseStatus === 401) {
           console.log(error.response.data.data);
           console.log("인증 실패");
-          //window.location.replace("/login");
+          window.location.replace("/login");
         }
         else if(errResponseStatus === 403) {
           alert("권한이 없습니다.");

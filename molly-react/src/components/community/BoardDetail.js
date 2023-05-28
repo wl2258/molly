@@ -7,6 +7,7 @@ import { MdOutlineThumbUpAlt } from 'react-icons/md';
 import { FaComment } from 'react-icons/fa';
 import { Button } from '../Button';
 import Accuse from './Accuse';
+import LoginModal from './LoginModal';
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
 import { SyncLoader } from 'react-spinners';
@@ -20,6 +21,7 @@ const BoardDetail = () => {
   const [comment, setComment] = useState("");
   const [like, setLike] = useState(false);
   const [likeCnt, setLikeCnt] = useState(0);
+  const [loginModal, setLoginModal] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -118,21 +120,21 @@ const BoardDetail = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setText({
-  //     "isOwner": true,
+  //     "owner": true,
   //     "title": "강아지 자랑",
   //     "content": "<p>제 강아지 예쁘죠?</p>",
   //     "writerNick": "홀리몰리",
   //     "createdAt": "2023-03-01 11:00:34",
   //     "views": 392,
-  //     "writerProfileImage": "",
+  //     "writerProfileImage": "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
   //     "boardImages" :[],
   //     "comments": [
   //       {
-  //         "commentUserId": "",
+  //         "commentUserId": 1,
   //         "commentWriteNick": "일당백",
   //         "commentCreatedAt": "2023-03-02 12:39:11",
   //         "content": "예쁘네요",
-  //         "commentProfileImage": ""
+  //         "commentProfileImage": "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg"
   //       },
   //       {
   //         "commentUserId": 2343,
@@ -190,19 +192,23 @@ const BoardDetail = () => {
       }
     }
 
-    const fetchData = async function fetch() {
-      const response = await axiosInstance.post(`/api/auth/board/${id}/liky`, null, config);
-      console.log(response);
-      if (response.data.code === 1) {
-        setLike(response.data.data.thumbsUp)
-        setLikeCnt(response.data.data.likyCount)
+    if(localStorage.getItem("accessToken") === null) {
+      handleLoginModal();
+    } else {
+      const fetchData = async function fetch() {
+        const response = await axiosInstance.post(`/api/auth/board/${id}/liky`, null, config);
+        console.log(response);
+        if (response.data.code === 1) {
+          setLike(response.data.data.thumbsUp)
+          setLikeCnt(response.data.data.likyCount)
+        }
+        else {
+          console.log("좋아요 실패")
+        }
       }
-      else {
-        console.log("좋아요 실패")
-      }
+  
+      fetchData();
     }
-
-    fetchData();
   }
 
   const handleComment = () => {
@@ -217,19 +223,23 @@ const BoardDetail = () => {
       "commentContent": comment
     }
 
-    if (comment !== "") {
-      const fetchData = async function fetch() {
-        const response = await axiosInstance.post(`/api/auth/board/${id}/comment`, data, config);
-        console.log(response);
-        if (response.status === 201) {
-          window.location.reload();
+    if(localStorage.getItem("accessToken") === null) {
+      handleLoginModal();
+    } else {
+      if (comment !== "") {
+        const fetchData = async function fetch() {
+          const response = await axiosInstance.post(`/api/auth/board/${id}/comment`, data, config);
+          console.log(response);
+          if (response.status === 201) {
+            window.location.reload();
+          }
+          else {
+            console.log("댓글 작성 실패")
+          }
         }
-        else {
-          console.log("댓글 작성 실패")
-        }
+  
+        fetchData();
       }
-
-      fetchData();
     }
   }
 
@@ -248,6 +258,10 @@ const BoardDetail = () => {
       .catch((e) => {
         console.log(e);
       })
+  }
+
+  const handleLoginModal = () => {
+    setLoginModal(!loginModal)
   }
 
   if (loading) {
@@ -285,11 +299,14 @@ const BoardDetail = () => {
         <div className={styles.top}>
           <h2>{text.title}</h2>
           <span>
-            <img
-              src={text.writerProfileImage ? text.writerProfileImage :
-                text.writerProfileImage === "" ? process.env.PUBLIC_URL + '/img/profile.png' : process.env.PUBLIC_URL + '/img/profile.png'}
-              alt="프로필 이미지"
-            />
+            <div className={styles.profileuser}>
+              <img
+                className={styles.profileimg}
+                src={text.writerProfileImage ? text.writerProfileImage :
+                  text.writerProfileImage === "" ? process.env.PUBLIC_URL + '/img/profile.png' : process.env.PUBLIC_URL + '/img/profile.png'}
+                alt="프로필 이미지"
+              />
+            </div>
           </span>
           <span>{text.writerNick}</span>
           <span>{text.createdAt}</span>
@@ -305,7 +322,7 @@ const BoardDetail = () => {
           <span>{likeCnt}</span>
           <span><FaComment color="#B27910" size="13px" /></span>
           <span>{text.comments.length}</span>
-          {text.isOwner &&
+          {text.owner &&
             <>
               <span>수정</span>
               <span onClick={deleteBoard}>삭제</span>
@@ -317,15 +334,18 @@ const BoardDetail = () => {
           <div className={styles.comment}>
             <div className={styles.commentinfo}>
               <span>
-                <img
-                  src={item.commentProfileImage ? item.commentProfileImage :
-                    item.commentProfileImage === "" ? process.env.PUBLIC_URL + '/img/profile.png' : process.env.PUBLIC_URL + '/img/profile.png'}
-                  alt="프로필 이미지"
-                />
+                <div className={styles.profilecommentuser}>
+                  <img
+                    className={styles.profileimg}
+                    src={item.commentProfileImage ? item.commentProfileImage :
+                      item.commentProfileImage === "" ? process.env.PUBLIC_URL + '/img/profile.png' : process.env.PUBLIC_URL + '/img/profile.png'}
+                    alt="프로필 이미지"
+                  />
+                </div>
               </span>
               <span>{item.commentWriteNick}</span>
               <span>{item.commentCreatedAt}</span>
-              {userId === item.commentUserId ?
+              {userId === String(item.commentUserId) ?
                 <span onClick={() => { handleCommentDelete(item.commentId) }} style={{ color: "#A19C97", fontWeight: "600" }}>삭제</span> :
                 <span onClick={() => { handleClick() }}>신고</span>}
               <div>
@@ -336,10 +356,15 @@ const BoardDetail = () => {
         )
       })}
       <div className={styles.footer}>
-        <input value={comment} onChange={(e) => { setComment(e.target.value) }}></input>
-        <Button onClick={handleComment} name={"등록"} />
+        <input 
+          value={comment} 
+          onChange={(e) => { setComment(e.target.value) }}
+          onKeyDown={(e) => { if (e.key==="Enter") {handleComment()}}}
+        ></input>
+        <Button onClick={handleComment} name={"등록"}/>
       </div>
       {modal && <Accuse onClick={handleClick} />}
+      {loginModal && <LoginModal setLoginModal={handleLoginModal}/>}
     </div>
   );
 };

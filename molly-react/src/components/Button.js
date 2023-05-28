@@ -30,7 +30,12 @@ const NextButton = (props) => {
 
 const Button = (props) => {
   return (
-    <CustomButton bgColor={props.bgcolor} type={props.type} disabled={props.disabled} onClick={props.onClick}>
+    <CustomButton 
+      bgColor={props.bgcolor} 
+      type={props.type} 
+      disabled={props.disabled} 
+      onClick={props.onClick}
+    >
       <h4 style={{ fontSize: "14px", margin:"0.5px 4px 4px" }}>{props.name}</h4>
     </CustomButton>
   );

@@ -1,6 +1,5 @@
 .header {
   background-color: #F9F9F9;
-  margin-top: 200px;
   position: relative;
 }
 
@@ -17,6 +16,7 @@
   z-index: 1;
   padding: 8px 0 20px;
   padding-left: 55px;
+  padding-right: 50px;
   border-bottom: 1px solid #e6e6e6;
   color: #645C56;
   font-size: small;

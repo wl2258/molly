@@ -112,3 +112,16 @@
 .petName {
   margin-right: 5px;
 }
+
+.plus {
+  position: absolute;
+  right: 5px;
+  background-color: #bababad4;
+  color: white;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  font-size: small;
+  padding-top: 1px;
+  box-sizing: border-box;
+}
