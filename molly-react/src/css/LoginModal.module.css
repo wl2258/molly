@@ -1,0 +1,35 @@
+.container {
+    z-index: 5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #adaaa790;
+}
+
+.modal {
+    width: 300px;
+    height: 160px;
+    border-radius: 30px;
+    background-color: #FDFDFD;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -80px;
+    padding: 20px 40px;
+    box-sizing: border-box;
+}
+
+.modal>p {
+    color: #656565;
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 35px;
+}
+
+.modal > div {
+    display: flex;
+    justify-content: center;
+}

@@ -4,7 +4,7 @@
 }
 
 .board {
-  margin-top: 230px;
+  margin-top: 130px;
   position: relative;
 }
 
@@ -124,6 +124,8 @@
 .dropdown {
   position: absolute;
   width: 140px;
+  height: 150px;
+  overflow-y: scroll;
   z-index: 1;
 }
 
@@ -135,9 +137,9 @@
   background-color: #EBE7E3;
 }
 
-.dropdown > li:last-child {
+/* .dropdown > li:last-child {
   border-radius: 0 0 10px 10px;
-}
+} */
 
 .dropdown > li:hover {
   background-color: #DFDAD4;

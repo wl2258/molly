@@ -5,13 +5,13 @@ import Description from '../components/home/Description';
 import Graph from '../components/home/Graph';
 import Month from '../components/home/Month';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SignUp from './SignUp';
 import axios from 'axios';
 import { SyncLoader } from 'react-spinners';
 
 let CustomBody = styled.div`
-  margin: 240px 10% 0;
+  margin: 140px 10% 0;
 `;
 
 let Schedule = styled.div`
@@ -32,6 +32,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [pet, setPet] = useState(null);
   const [save, setSave] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -72,10 +73,6 @@ const Home = () => {
 	// 				{
 	// 					"vaccinationName": "종합백신2차",
 	// 					"vaccinationDate": "2023-05-16"
-	// 				},
-  //         {
-	// 					"vaccinationName": "종합백신3차",
-	// 					"vaccinationDate": "2023-05-30"
 	// 				}
 	// 			],
 	// 		},
@@ -95,6 +92,14 @@ const Home = () => {
 	// 					"vaccinationName": "종합백신2차",
 	// 					"vaccinationDate": "2023-05-16"
 	// 				},
+  //         {
+	// 					"vaccinationName": "종합백신2차",
+	// 					"vaccinationDate": "2023-05-16"
+	// 				},
+  //         {
+	// 					"vaccinationName": "종합백신2차",
+	// 					"vaccinationDate": "2023-05-16"
+	// 				}
 	// 			],
 	// 		}
 	// 	])
@@ -211,8 +216,13 @@ if (pet === null) {
                 color: "white",
                 padding: "20px 0",
                 borderRadius: "30px",
-                fontWeight: "500"
-              }}>동물을 등록하세요</p>
+                fontWeight: "500",
+                cursor: "pointer"
+              }}
+                onClick={() => {
+                  navigate('/registerpet')
+                }}
+              >동물을 등록하세요</p>
             </div>
           </div>
         </Schedule>
@@ -251,8 +261,10 @@ if (pet !== null && pet.length === 0) {
                 color: "white",
                 padding: "20px 0",
                 borderRadius: "30px",
-                fontWeight: "500"
-              }}>생일과 예방접종 이력을 등록하세요</p>
+                fontWeight: "500",
+                cursor: "pointer"
+              }}
+              >생일과 예방접종 이력을 등록하세요</p>
             </div>
           </div>
         </Schedule>

@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import styled from 'styled-components';
 
 let CustomBody = styled.div`
-  margin-top: 290px;
+  margin-top: 190px;
   padding: 0 5%;
 `;
 

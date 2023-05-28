@@ -3,31 +3,27 @@
   left: 0;
   top: 0;
   width: 100%;
-  height: 100px;
-  background-color: #FAF5F1;
+  height: 75px;
+  background-color: white;
+  border-bottom: 1px solid #eaeaea;
   box-sizing: border-box;
 }
 
 .header > div:first-child {
   display: flex;
-  margin-top: 10px;
-  justify-content: space-between;
   padding: 0 10%;
-}
-
-.weather {
-  width: 10%;
-  margin-left: 5%;
 }
 
 .logo {
   cursor: pointer;
   margin: 0 auto;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .icon {
   width: 10%;
-  margin-top: 20px;
+  margin-top: 25px;
   display: flex;
   position: relative;
 }
@@ -42,21 +38,18 @@
 }
 
 .navcontainer {
-  border-top: 1px solid #ECE5E0;
-  border-bottom: 1px solid #ECE5E0;
-  background-color: #FAF5F1;
-  padding: 0px 14%;
-  margin-top: -10px;
+  margin-top: 10px;
+  padding: 0px 10%;
+  width: 60%;
 }
 
 .navigation {
   display: flex;
-  justify-content: center;
 }
 
 .navigation > div {
-  margin: 0 auto;
   padding: 20px 0;
+  margin-right: 70px;
 }
 
 .changeheader {
@@ -66,30 +59,33 @@
   width: 100%;
   height: 75px;
   background-color: #FAF5F1;
-  padding-top: 10px;
 }
 
 .changenavcontainer {
+  margin-top: 10px;
   padding: 0px 10%;
   width: 60%;
 }
 
 .changeheader > div:first-child {
   display: flex;
+  padding: 0 10%;
 }
 
 .changenavigation {
   display: flex;
-  justify-content: space-around;
 }
 
 .changenavigation > div {
   padding: 20px;
+  margin-right: 50px;
 }
 
 .changelogo {
   cursor: pointer;
-  padding: 0 4% 0 12%;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .userinfo {

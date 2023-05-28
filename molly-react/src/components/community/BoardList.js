@@ -7,6 +7,7 @@ import Board from './Board';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { SyncLoader } from 'react-spinners';
+import ReactHtmlParser from "react-html-parser";
 
 const BoardList = () => {
   let { category, pet } = useParams();
@@ -89,7 +90,7 @@ const BoardList = () => {
   //         "title": "notice board1",
   //         "writerNick": "관리자",
   //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "notice content1",
+  //         "content": "<p>본명은 트찰라. 아프리카 대륙에 존재하는 가공의 국가 와칸다의 국왕이다. 블랙 팬서라는 작명이 실존했던 미국의 흑인 정당 흑표당(Black Panther Party)에서 따왔다는 말도 있다. 이에 대해서는 블랙팬서가 최초등장한 판타스틱포 362화가 1966년 7월에 나왔고 흑표당은 3개월 뒤인 10월에 창당했으므로 관계가 없다는 의견도 있으나, 정당은 하루아침에 갑자기 창당되는 것이 아니며 실제로 흑표당은 결사조직에서 정당으로 발전했다. 이 정도로 시기가 겹친다면 오히려 관계가 있다는 주장 쪽에 무게가 실린다. 다만 흑표당이 탄생한 후 이 캐릭터의 이름은 한동안 그냥 팬서라고만 알려지다 아예 '블랙 레오파드'로 변경했고 오래 가지 못하고 다시 블랙팬서로 돌아왔다. 1971년 판타스틱 포 No. 119 단 한권의 이슈에서만 블랙 레오파드라고 불렸고 이름 변경 이슈는 단 몇개월만에 일어났다 마무리되었다.</p>",
   //         "views": 43,
   //         "commentCount": 43,
   //         "likyCount": 43,
@@ -101,7 +102,7 @@ const BoardList = () => {
   //         "title": "notice board3",
   //         "writerNick": "dd",
   //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "notice content3",
+  //         "content": "<p>notice content3</p>",
   //         "views": 31,
   //         "commentCount": 31,
   //         "likyCount": 31,
@@ -113,7 +114,7 @@ const BoardList = () => {
   //         "title": "notice board2",
   //         "writerNick": "관리자",
   //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "notice content2",
+  //         "content": "<p>notice content2</p>",
   //         "views": 4,
   //         "commentCount": 4,
   //         "likyCount": 4,
@@ -125,7 +126,7 @@ const BoardList = () => {
   //         "title": "test board34",
   //         "writerNick": "일당백1",
   //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "test content34",
+  //         "content": "<p>test content34</p>",
   //         "views": 98,
   //         "commentCount": 98,
   //         "likyCount": 98,
@@ -137,7 +138,7 @@ const BoardList = () => {
   //         "title": "test board6",
   //         "writerNick": "일당백1",
   //         "createdAt": "2023-05-10 19:59:54",
-  //         "content": "test content6",
+  //         "content": "<p>test content6</p>",
   //         "views": 96,
   //         "commentCount": 100,
   //         "likyCount": 100,
@@ -334,7 +335,8 @@ const List = (props) => {
         className={styles.listManager}>
         <span>공지</span>
         <h3 style={{ cursor: "pointer" }}>{props.title}</h3>
-        <p>{props.detail}</p>
+        <p>{props.detail.length <= 50 ? ReactHtmlParser(props.detail) : 
+          ReactHtmlParser(props.detail.substr(0, 40).concat(' ...'))}</p>
         <span>{props.time}</span>
         <span>{props.writer}</span>
         <div>
@@ -353,7 +355,9 @@ const List = (props) => {
         }}
         className={styles.list}>
         <h3 style={{ cursor: "pointer" }}>{props.title}</h3>
-        <p>{props.detail}</p>
+        {console.log(ReactHtmlParser(props.detail).length)}
+        <p>{props.detail.length <= 50 ? ReactHtmlParser(props.detail) : 
+          ReactHtmlParser(props.detail.substr(0, 40).concat(' ...'))}</p>
         <span>{props.time}</span>
         <span>{props.writer}</span>
         <div>

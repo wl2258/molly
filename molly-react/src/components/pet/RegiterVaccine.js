@@ -83,8 +83,8 @@ const VaccineDropdown = (props) => {
           <li onClick={() => { props.setValue('종합백신 3차') }}>종합백신 3차</li>
           <li onClick={() => { props.setValue('종합백신 4차') }}>종합백신 4차</li>
           <li onClick={() => { props.setValue('종합백신 5차') }}>종합백신 5차</li>
-          <li onClick={() => { props.setValue('컨넬코프 1차') }}>컨넬코프 1차</li>
-          <li onClick={() => { props.setValue('컨넬코프 2차') }}>컨넬코프 2차</li>
+          <li onClick={() => { props.setValue('켄넬코프 1차') }}>켄넬코프 1차</li>
+          <li onClick={() => { props.setValue('켄넬코프 2차') }}>켄넬코프 2차</li>
           <li onClick={() => { props.setValue('코로나 장염 1차') }}>코로나 장염 1차</li>
           <li onClick={() => { props.setValue('코로나 장염 2차') }}>코로나 장염 2차</li>
           <li onClick={() => { props.setValue('인플루엔자 1차') }}>인플루엔자 1차</li>

@@ -68,14 +68,7 @@ const First = () => {
                 <CustomNavLink 
                   style={({ isActive }) => (isActive ? "active" : "")}
                   to="/home">
-                    Home
-                </CustomNavLink>
-              </div>
-              <div>
-                <CustomNavLink 
-                  style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/calendar">
-                    Calendar
+                    Schedule
                 </CustomNavLink>
               </div>
               <div>

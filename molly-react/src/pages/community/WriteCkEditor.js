@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
@@ -11,7 +11,7 @@ import styles from '../../css/Write.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
 let CustomBody = styled.div`
-  margin-top: 290px;
+  margin-top: 190px;
   padding: 0 5%;
 `;
 
@@ -27,6 +27,30 @@ const WriteCkEditor = () => {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+
+    // const test = `<p>dddd</p><img src={sdjfklsjfjdksjfl}></img><p>aaa</p>`;
+    // const test2 = "<p>dddd</p><p>aaa</p>";
+    // const arr = [...test];
+    // const arr2 = [...test2];
+
+    // console.log(arr, arr2);
+
+    // for(var i=0; i < arr.length; i++){
+    //     for(var j=0; j < arr2.length; j++){
+    //         if(arr[i] === arr2[j]){
+    //             arr.splice(i, 1);
+    //         }
+    //     }
+    // }
+
+    // console.log(arr)
+
+    // for(let i=0; i<arr.length; i++) {
+    //     if(arr[i] === "s" && arr[i+1] === "r" && arr[i+2] === "c") {
+
+    //         for(let j=i+5; j<arr.indexOf(""))
+    //     }
+    // }
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8080",
@@ -142,8 +166,7 @@ const WriteCkEditor = () => {
         axiosInstance.post(`/api/auth/board`, data, config)
             .then((response) => {
                 if (response.data.code === 1) {
-
-                    navigate("/", { replace: true });
+                    navigate(`/list/${boardValue}/${petValue}`, { replace: true });
                     return;
                 }
             })
