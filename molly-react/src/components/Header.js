@@ -11,6 +11,7 @@ import { deleteId } from '../pages/store/user.js';
 
 let CustomNavLink = styled(NavLink)`
   color: #AFA79F;
+  font-weight: 600;
   &:link {
     text-decoration: none;
   }
@@ -30,7 +31,7 @@ const Header = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [iconView, setIconView] = useState(false);
+  const [iconView, setIconView] = useState(true);
   const [pet, setPet] = useState(null);
   const [categoryView, setCategoryView] = useState(false);
   const dispatch = useDispatch();
@@ -207,11 +208,45 @@ const Header = () => {
       {scrollPosition < 100 ?
         <header className={styles.header}>
           <div>
-            <div className={styles.weather}>
-
-            </div>
             <div className={styles.logo} onClick={() => navigate('/')}>
-              <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="160px" />
+              <img src={process.env.PUBLIC_URL + '/molly-logo.png'} alt="molly-logo" width="130px" />
+            </div>
+            <div className={styles.navcontainer}>
+              <nav className={styles.navigation}>
+                <div>
+                  <CustomNavLink
+                    style={({ isActive }) => (isActive ? "active" : "")}
+                    to="/home">
+                    Schedule
+                  </CustomNavLink>
+                </div>
+                <div
+                  style={{ position: "relative" }}
+                  onMouseOver={() => { setCategoryView(true) }}
+                  onMouseOut={() => { setCategoryView(false) }}
+                >
+                  <CustomNavLink
+                    style={({ isActive }) => (isActive ? "active" : "")}
+                    to="/list/ALL/ALL">
+                    Community
+                  </CustomNavLink>
+                  {categoryView && <div className={styles.category}><CategoryDropdown /></div>}
+                </div>
+                <div>
+                  <CustomNavLink
+                    style={({ isActive }) => (isActive ? "active" : "")}
+                    to="/hospital">
+                    Hospital
+                  </CustomNavLink>
+                </div>
+                <div>
+                  <CustomNavLink
+                    style={({ isActive }) => (isActive ? "active" : "")}
+                    to="/about">
+                    About
+                  </CustomNavLink>
+                </div>
+              </nav>
             </div>
             <div className={styles.icon}>
               {iconView && <><div ref={userDropdownRef} onClick={() => { setUserView(!userView) }}>
@@ -231,50 +266,6 @@ const Header = () => {
                 </div></>}
             </div>
           </div>
-          <div className={styles.navcontainer}>
-            <nav className={styles.navigation}>
-              <div>
-                <CustomNavLink
-                  style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/home">
-                  Home
-                </CustomNavLink>
-              </div>
-              <div>
-                <CustomNavLink
-                  style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/calendar">
-                  Calendar
-                </CustomNavLink>
-              </div>
-              <div
-                style={{ position: "relative" }}
-                onMouseOver={() => { setCategoryView(true) }}
-                onMouseOut={() => { setCategoryView(false) }}
-              >
-                <CustomNavLink
-                  style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/list/ALL/ALL">
-                  Community
-                </CustomNavLink>
-                {categoryView && <div className={styles.category}><CategoryDropdown /></div>}
-              </div>
-              <div>
-                <CustomNavLink
-                  style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/hospital">
-                  Hospital
-                </CustomNavLink>
-              </div>
-              <div>
-                <CustomNavLink
-                  style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/about">
-                  About
-                </CustomNavLink>
-              </div>
-            </nav>
-          </div>
         </header> :
         <header className={styles.changeheader}>
           <div>
@@ -287,14 +278,7 @@ const Header = () => {
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
                     to="/home">
-                    Home
-                  </CustomNavLink>
-                </div>
-                <div>
-                  <CustomNavLink
-                    style={({ isActive }) => (isActive ? "active" : "")}
-                    to="/calendar">
-                    Calendar
+                    Schedule
                   </CustomNavLink>
                 </div>
                 <div

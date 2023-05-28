@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from '../../css/Dday.module.css';
 import AddVaccine from '../../pages/AddVaccine';
 
@@ -36,6 +36,7 @@ const Dday = (props) => {
 const DdayList = (props) => {
   const [modal, setModal] = useState(false);
   const [vaccineName, setVaccineName] = useState("");
+  const [plus, setPlus] = useState(false);
 
   const handleClick = () => {
     setModal(!modal);
@@ -46,6 +47,10 @@ const DdayList = (props) => {
       <div className={styles.petinfo}>
         <span className={styles.name}>{props.icon} {props.name}</span>
       </div>
+      {props.vaccine.length >= 2 ? 
+        <div className={styles.plus}>
+          <p onClick={() => setPlus(!plus)}>더보기</p>
+        </div> : null}
       {props.vaccine.map((item, index) => {
         return (
           index < 2 ? 
@@ -58,7 +63,16 @@ const DdayList = (props) => {
               D{props.day[index] >= 0 ? '-' : '+'}
               {props.day[index] === 0 ? 'day' : Math.abs(props.day[index])}
             </span>
-          </div> : null
+          </div> : plus && <div onClick={() => { 
+              handleClick();
+              setVaccineName(props.vaccine[index]);
+            }} className={styles.list} style={{ backgroundColor: props.color }}>
+            <span className={styles.vaccine} style={{ color: props.textColor }}>{props.vaccine[index]}</span>
+            <span className={styles.day}>
+              D{props.day[index] >= 0 ? '-' : '+'}
+              {props.day[index] === 0 ? 'day' : Math.abs(props.day[index])}
+            </span>
+          </div>
         )
       })}
       {modal && <AddVaccine onClick={handleClick} vaccineName={vaccineName} petId={props.petId} save={props.save} setSave={props.setSave}/>}

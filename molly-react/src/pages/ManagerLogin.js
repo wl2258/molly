@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import styles from '../css/ManagerLogin.module.css';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { storeId } from './store/user';
 
 const ManagerLogin = () => {
   const navigate = useNavigate();
   const [id, setId] = useState("");
-  const [password, setPassword] = useState(""); 
-  const dispatch = useDispatch();
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
     fetch(`http://localhost:8080/api/login`, {
@@ -26,10 +23,7 @@ const ManagerLogin = () => {
       let accountId = res.headers.get("AccountId");
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-
-      if(accountId !== null && accountId !== "") {
-        dispatch(storeId({accountId : accountId}))
-      } else console.log("accountId가 없음")
+      localStorage.setItem("accountId", accountId);
 
       return res.json();
     })

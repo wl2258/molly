@@ -6,9 +6,9 @@ import { FiPlus } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { TiDelete } from 'react-icons/ti';
 import 'react-datepicker/dist/react-datepicker.css';
-import {Button} from '../../components/Button.js';
+import { Button } from '../../components/Button.js';
 import DatePicker from 'react-datepicker';
-import {ko} from 'date-fns/esm/locale';
+import { ko } from 'date-fns/esm/locale';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { registerPet } from '../store/petSlice';
@@ -77,136 +77,148 @@ const RegisterPet = () => {
       }
     }
 
-    if(petType === "DOG") {
+    if (petType === "DOG") {
       axiosInstance.get(`/api/auth/pet/dog-species`, config)
-      .then((response) => {
-        console.log(response)
-        setPetValue(response.data.data[0]);
-        setPetKind(response.data.data);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+        .then((response) => {
+          console.log(response)
+          setPetValue(response.data.data[0]);
+          setPetKind(response.data.data);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        })
     }
-    else if(petType === "CAT") {
+    else if (petType === "CAT") {
       axiosInstance.get(`/api/auth/pet/cat-species`, config)
-      .then((response) => {
-        console.log(response)
-        setPetValue(response.data.data[0]);
-        setPetKind(response.data.data);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+        .then((response) => {
+          console.log(response)
+          setPetValue(response.data.data[0]);
+          setPetKind(response.data.data);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        })
     }
     else {
       axiosInstance.get(`/api/auth/pet/rabbit-species`, config)
-      .then((response) => {
-        console.log(response)
-        setPetValue(response.data.data[0]);
-        setPetKind(response.data.data);
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+        .then((response) => {
+          console.log(response)
+          setPetValue(response.data.data[0]);
+          setPetKind(response.data.data);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        })
     }
     setLoading(false);
   }, [petType])
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setPetKind([
-  //     {
-  //         "speciesKo": "말티즈",
-  //         "speciesEn": "MALTESE"
-  //     },
-  //     {
-  //         "speciesKo": "포메라니안",
-  //         "speciesEn": "POMERANIAN"
-  //     },
-  //     {
-  //         "speciesKo": "프렌치 불도그",
-  //         "speciesEn": "FRENCH_BULLDOG"
-  //     },
-  //   ])
-  //   setPetValue({
-  //     "speciesKo": "말티즈",
-  //     "speciesEn": "MALTESE"
-  //   })
-  //   setLoading(false);
-  // }, [])
+  useEffect(() => {
+    setLoading(true);
+    setPetKind([
+      {
+        "speciesKo": "말티즈",
+        "speciesEn": "MALTESE"
+      },
+      {
+        "speciesKo": "포메라니안",
+        "speciesEn": "POMERANIAN"
+      },
+      {
+        "speciesKo": "프렌치 불도그",
+        "speciesEn": "FRENCH_BULLDOG"
+      },
+    ])
+    setPetValue({
+      "speciesKo": "말티즈",
+      "speciesEn": "MALTESE"
+    })
+    setLoading(false);
+  }, [])
 
-  // useEffect(() => {
-  //   setLoading(true)
-  //   if(petType === "DOG") {
-  //     setPetValue({
-  //       "speciesKo": "말티즈",
-  //       "speciesEn": "MALTESE"
-  //   },)
-  //     setPetKind([
-  //       {
-  //           "speciesKo": "말티즈",
-  //           "speciesEn": "MALTESE"
-  //       },
-  //       {
-  //           "speciesKo": "포메라니안",
-  //           "speciesEn": "POMERANIAN"
-  //       },
-  //       {
-  //           "speciesKo": "프렌치 불도그",
-  //           "speciesEn": "FRENCH_BULLDOG"
-  //       },
-  //     ])
-  //   }
-  //   else if(petType === "CAT") {
-  //     setPetValue({
-  //       "speciesKo": "노르웨이 숲",
-  //       "speciesEn": "NORWEGIAN_FOREST"
-  //   },)
-  //     setPetKind([
-  //       {
-  //           "speciesKo": "노르웨이 숲",
-  //           "speciesEn": "NORWEGIAN_FOREST"
-  //       },
-  //       {
-  //           "speciesKo": "네벨룽",
-  //           "speciesEn": "NEBELUNG"
-  //       },
-  //       {
-  //           "speciesKo": "네바 마스커레이드",
-  //           "speciesEn": "NEVA_MASQUERADE"
-  //       },
-  //       {
-  //           "speciesKo": "데본렉스",
-  //           "speciesEn": "DEVON_REX"
-  //       },
-	// 	  ])
-  //   }
-  //   else {
-  //     setPetValue({
-  //       "speciesKo": "앙고라 토끼",
-  //       "speciesEn": "ANGORA_RABBIT"
-  //   },)
-  //     setPetKind([
-  //       {
-  //           "speciesKo": "앙고라 토끼",
-  //           "speciesEn": "ANGORA_RABBIT"
-  //       },
-  //       {
-  //           "speciesKo": "롭이어",
-  //           "speciesEn": "ROBYEAR"
-  //       },
-  //       {
-  //           "speciesKo": "렉스",
-  //           "speciesEn": "REX"
-  //       },
-	// 	  ])
-  //   }
-  //   setLoading(false);
-  // }, [petType])
+  useEffect(() => {
+    setLoading(true)
+    if (petType === "DOG") {
+      setPetValue({
+        "speciesKo": "말티즈",
+        "speciesEn": "MALTESE"
+      },)
+      setPetKind([
+        {
+          "speciesKo": "말티즈",
+          "speciesEn": "MALTESE"
+        },
+        {
+          "speciesKo": "포메라니안",
+          "speciesEn": "POMERANIAN"
+        },
+        {
+          "speciesKo": "프렌치 불도그",
+          "speciesEn": "FRENCH_BULLDOG"
+        },
+        {
+          "speciesKo": "말티즈",
+          "speciesEn": "MALTESE"
+        },
+        {
+          "speciesKo": "포메라니안",
+          "speciesEn": "POMERANIAN"
+        },
+        {
+          "speciesKo": "프렌치 불도그",
+          "speciesEn": "FRENCH_BULLDOG"
+        },
+      ])
+    }
+    else if (petType === "CAT") {
+      setPetValue({
+        "speciesKo": "노르웨이 숲",
+        "speciesEn": "NORWEGIAN_FOREST"
+      },)
+      setPetKind([
+        {
+          "speciesKo": "노르웨이 숲",
+          "speciesEn": "NORWEGIAN_FOREST"
+        },
+        {
+          "speciesKo": "네벨룽",
+          "speciesEn": "NEBELUNG"
+        },
+        {
+          "speciesKo": "네바 마스커레이드",
+          "speciesEn": "NEVA_MASQUERADE"
+        },
+        {
+          "speciesKo": "데본렉스",
+          "speciesEn": "DEVON_REX"
+        },
+      ])
+    }
+    else {
+      setPetValue({
+        "speciesKo": "앙고라 토끼",
+        "speciesEn": "ANGORA_RABBIT"
+      },)
+      setPetKind([
+        {
+          "speciesKo": "앙고라 토끼",
+          "speciesEn": "ANGORA_RABBIT"
+        },
+        {
+          "speciesKo": "롭이어",
+          "speciesEn": "ROBYEAR"
+        },
+        {
+          "speciesKo": "렉스",
+          "speciesEn": "REX"
+        },
+      ])
+    }
+    setLoading(false);
+  }, [petType])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -222,9 +234,9 @@ const RegisterPet = () => {
         const prevRequest = error.config;
         const errMsg = error.response.data.msg;
 
-        if(errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
+        if (errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
           const preRefreshToken = localStorage.getItem("refreshToken");
-          if(preRefreshToken) {
+          if (preRefreshToken) {
             async function issuedToken() {
               const config = {
                 headers: {
@@ -239,9 +251,9 @@ const RegisterPet = () => {
                   const reRefreshToken = res.headers.get("Refresh-token");
                   localStorage.setItem("accessToken", reAccessToken);
                   localStorage.setItem("refreshToken", reRefreshToken);
-                  
+
                   prevRequest.headers.Authorization = reAccessToken;
-                  
+
                   return await axios(prevRequest);
                 })
                 .catch((e) => {
@@ -254,14 +266,14 @@ const RegisterPet = () => {
             throw new Error("There is no refresh token");
           }
         }
-        else if(errResponseStatus === 400) {
+        else if (errResponseStatus === 400) {
           console.log(error.response.data.data)
         }
-        else if(errResponseStatus === 401) {
+        else if (errResponseStatus === 401) {
           console.log("인증 실패");
           window.location.replace("/login");
         }
-        else if(errResponseStatus === 403) {
+        else if (errResponseStatus === 403) {
           alert("권한이 없습니다.");
         }
       } catch (e) {
@@ -288,11 +300,11 @@ const RegisterPet = () => {
 
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
-    
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-        setImgFile(reader.result);
+      setImgFile(reader.result);
     };
   };
 
@@ -306,7 +318,7 @@ const RegisterPet = () => {
     formData.append("petType", petType);
     formData.append("petName", petNickName);
     formData.append("species", petValue.speciesEn);
-    if(imgRef.current.files[0] !== undefined) {
+    if (imgRef.current.files[0] !== undefined) {
       formData.append("petProfileImage", imgRef.current.files[0]);
     }
     formData.append("birthdate", dateFormat(birthdayDate));
@@ -314,35 +326,35 @@ const RegisterPet = () => {
     formData.append("neuteredStatus", neuteredStatus);
     formData.append("weight", Number(weight));
     formData.append("caution", caution);
-    
-    for(let i =0; i<surgeryHistory.length; i++) {
-      formData.append("surgery["+i+"].surgeryName", surgeryHistory[i].surgeryName);
-      formData.append("surgery["+i+"].surgeryDate", surgeryHistory[i].surgeryDate);
+
+    for (let i = 0; i < surgeryHistory.length; i++) {
+      formData.append("surgery[" + i + "].surgeryName", surgeryHistory[i].surgeryName);
+      formData.append("surgery[" + i + "].surgeryDate", surgeryHistory[i].surgeryDate);
     }
 
-    for(let i =0; i<medicine.length; i++) {
-      formData.append("medication["+i+"].medicationName", medicine[i].medicationName);
-      formData.append("medication["+i+"].medicationStartDate", medicine[i].medicationStartDate);
-      formData.append("medication["+i+"].medicationEndDate", medicine[i].medicationEndDate);
+    for (let i = 0; i < medicine.length; i++) {
+      formData.append("medication[" + i + "].medicationName", medicine[i].medicationName);
+      formData.append("medication[" + i + "].medicationStartDate", medicine[i].medicationStartDate);
+      formData.append("medication[" + i + "].medicationEndDate", medicine[i].medicationEndDate);
     }
 
-    for(let i =0; i<vaccineHistory.length; i++) {
-      formData.append("vaccination["+i+"].vaccinationName", vaccineHistory[i].vaccinationName);
-      formData.append("vaccination["+i+"].vaccinationDate", vaccineHistory[i].vaccinationDate);
+    for (let i = 0; i < vaccineHistory.length; i++) {
+      formData.append("vaccination[" + i + "].vaccinationName", vaccineHistory[i].vaccinationName);
+      formData.append("vaccination[" + i + "].vaccinationDate", vaccineHistory[i].vaccinationDate);
     }
 
     const config = {
       headers: {
-        Authorization : localStorage.getItem("accessToken"),
+        Authorization: localStorage.getItem("accessToken"),
       }
     }
 
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(`/api/auth/pet`, formData, config)
-      console.log(response); 
-      if(response.data.code === 1) {
+      console.log(response);
+      if (response.data.code === 1) {
         const petId = response.data.data.petId;
-        dispatch(registerPet({name: petNickName, petId: petId}));
+        dispatch(registerPet({ name: petNickName, petId: petId }));
         window.location.replace(`/detailpet/${petId}`);
       }
       else {
@@ -363,7 +375,7 @@ const RegisterPet = () => {
     return date.getFullYear() + '-' + month + '-' + day;
   }
 
-  if(loading) {
+  if (loading) {
     return (
       <div className={styles.container}>
         <Header />
@@ -380,17 +392,17 @@ const RegisterPet = () => {
       <div className={styles.board}>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div>
-            <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${petType}-logo.png`} alt="pet-icon" width="90px"/>
-            {typeView ? <span onClick={() => {setTypeView(!typeView)}} style={{position:"absolute", top:"22px", left:"-50px", cursor:"pointer"}}>
-              <MdExpandLess size="32px" color="#AFA79F"/></span> : 
-              <span onClick={() => {setTypeView(!typeView)}} style={{position:"absolute", top: "22px", left:"-50px", cursor:"pointer"}}>
-                <MdExpandMore size="32px" color="#AFA79F"/>
+            <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${petType}-logo.png`} alt="pet-icon" width="90px" />
+            {typeView ? <span onClick={() => { setTypeView(!typeView) }} style={{ position: "absolute", top: "22px", left: "-50px", cursor: "pointer" }}>
+              <MdExpandLess size="32px" color="#AFA79F" /></span> :
+              <span onClick={() => { setTypeView(!typeView) }} style={{ position: "absolute", top: "22px", left: "-50px", cursor: "pointer" }}>
+                <MdExpandMore size="32px" color="#AFA79F" />
               </span>
             }
             <h1>반려동물 등록</h1>
           </div>
           <div className={styles.dropdowncontainer}>
-            {typeView && <TypeDropdown setPetType={setPetType}/>}
+            {typeView && <TypeDropdown setPetType={setPetType} />}
           </div>
           <div className={styles.upload}>
             <label htmlFor="profileImg">
@@ -401,28 +413,29 @@ const RegisterPet = () => {
                   alt="프로필 이미지"
                 />
               </div>
-              {imgFile && 
+              {imgFile &&
                 <div className={styles.delete}>
-                  <span onClick={(e) => { 
+                  <span onClick={(e) => {
                     e.preventDefault();
-                    setImgFile(""); }} >
-                    <RiDeleteBin6Line size="18px" color="#F9F9F9"/>
+                    setImgFile("");
+                  }} >
+                    <RiDeleteBin6Line size="18px" color="#F9F9F9" />
                   </span>
                 </div>
               }
             </label>
             <input
-                name="accountProfileImage"
-                className={styles.profileinput}
-                type="file"
-                accept="image/*"
-                id="profileImg"
-                onChange={saveImgFile}
-                ref={imgRef}
-              />
-            <input 
-              className={styles.name} 
-              placeholder="이름" 
+              name="accountProfileImage"
+              className={styles.profileinput}
+              type="file"
+              accept="image/*"
+              id="profileImg"
+              onChange={saveImgFile}
+              ref={imgRef}
+            />
+            <input
+              className={styles.name}
+              placeholder="이름"
               type="text"
               value={petNickName}
               onChange={(e) => {
@@ -432,34 +445,35 @@ const RegisterPet = () => {
           </div>
           <div className={styles.boarddetail}>
             <h4>품종</h4>
-            <div onClick={() => {setPet(!pet)}} className={styles.sort} style={{borderRadius: pet? "10px 10px 0 0" : "10px"}}>
+            <div onClick={() => { setPet(!pet) }} className={styles.sort} style={{ borderRadius: pet ? "10px 10px 0 0" : "10px" }}>
               <span className={styles.default}>
-                {petValue === undefined || petValue === null || Object.keys(petValue).length === 0? "선택하세요" 
-                : petValue.speciesKo}
+                {petValue === undefined || petValue === null || Object.keys(petValue).length === 0 ? "선택하세요"
+                  : petValue.speciesKo}
               </span>
-              {pet ? <span style={{position:"absolute", top:"2px", right:"10px"}}>
-                <MdExpandLess size="25px" color="#AFA79F"/></span> : 
-                <span style={{position:"absolute", top: "2px", right:"10px"}}>
-                  <MdExpandMore size="25px" color="#AFA79F"/>
+              {pet ? <span style={{ position: "absolute", top: "2px", right: "10px" }}>
+                <MdExpandLess size="25px" color="#AFA79F" /></span> :
+                <span style={{ position: "absolute", top: "2px", right: "10px" }}>
+                  <MdExpandMore size="25px" color="#AFA79F" />
                 </span>
               }
-              {pet && <PetDropdown setValue={setPetValue} petKind={petKind}/>}
+              {pet && <PetDropdown setValue={setPetValue} petKind={petKind} />}
             </div>
             <div className={styles.info}>
               <h4>생일</h4>
-              <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
-                <DatePicker 
+              <div className={styles.datepicker} onClick={(e) => { e.preventDefault() }}>
+                <DatePicker
                   locale={ko}
                   selected={birthdayDate}
                   onChange={(date) => {
-                    setBirthdayDate(date)}}
+                    setBirthdayDate(date)
+                  }}
                   dateFormat="yyyy/MM/dd"
                   customInput={<CustomInput />}
                 />
               </div>
-              <h4 style={{marginLeft: "80px"}}>몸무게</h4>
-              <input 
-                className={styles.weight} 
+              <h4 style={{ marginLeft: "80px" }}>몸무게</h4>
+              <input
+                className={styles.weight}
                 type="number"
                 step="0.001"
                 value={weight}
@@ -476,78 +490,78 @@ const RegisterPet = () => {
               <br />
               <h4>성별</h4>
               <label className={styles.radio}>
-                <input type="radio" onChange={handleGenderButton} value="MALE" checked={gender === "MALE"}/>
+                <input type="radio" onChange={handleGenderButton} value="MALE" checked={gender === "MALE"} />
                 <span>암컷</span>
-                <input type="radio" onChange={handleGenderButton} value="FEMALE" checked={gender === "FEMALE"}/>
+                <input type="radio" onChange={handleGenderButton} value="FEMALE" checked={gender === "FEMALE"} />
                 <span>수컷</span>
               </label>
               <br />
               <h4>중성화</h4>
               <label className={styles.radio}>
-                <input type="radio" onChange={handleNeuteredButton} value="안 함" checked={neutered === "안 함"}/>
+                <input type="radio" onChange={handleNeuteredButton} value="안 함" checked={neutered === "안 함"} />
                 <span>함</span>
-                <input type="radio" onChange={handleNeuteredButton} value="함" checked={neutered === "함"}/>
+                <input type="radio" onChange={handleNeuteredButton} value="함" checked={neutered === "함"} />
                 <span>안 함</span>
               </label>
               <br />
               <h4>수술이력</h4>
               <label className={styles.radio}>
-                <input type="radio" onChange={handleSurgeryButton} value="있음" checked={surgery === "있음"}/>
+                <input type="radio" onChange={handleSurgeryButton} value="있음" checked={surgery === "있음"} />
                 <span>있음</span>
-                <input type="radio" onChange={handleSurgeryButton} value="없음" checked={surgery === "없음"}/>
+                <input type="radio" onChange={handleSurgeryButton} value="없음" checked={surgery === "없음"} />
                 <span>없음</span>
               </label>
-              {surgery === "있음" ? 
+              {surgery === "있음" ?
                 <div className={styles.surgery}>
-                  <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
-                    <DatePicker 
+                  <div className={styles.datepicker} onClick={(e) => { e.preventDefault() }}>
+                    <DatePicker
                       locale={ko}
                       selected={surgeryDate}
-                      onChange={(date) => {setSurgeryDate(date)}}
+                      onChange={(date) => { setSurgeryDate(date) }}
                       dateFormat="yyyy/MM/dd"
                       customInput={<CustomInput />}
                     />
-                  </div> 
-                  <input 
-                    className={styles.surgeryname} 
-                    placeholder="수술명" 
-                    type="text" 
-                    onChange={(e) => {setSurgeryName(e.target.value)}} 
+                  </div>
+                  <input
+                    className={styles.surgeryname}
+                    placeholder="수술명"
+                    type="text"
+                    onChange={(e) => { setSurgeryName(e.target.value) }}
                     value={surgeryName}></input>
                   <span onClick={() => {
-                    if(surgeryName !== "") 
+                    if (surgeryName !== "")
                       setSurgeryHistory([...surgeryHistory, {
-                        surgeryId : surgeryNo.current++,
-                        surgeryDate: dateFormat(surgeryDate), 
+                        surgeryId: surgeryNo.current++,
+                        surgeryDate: dateFormat(surgeryDate),
                         surgeryName: surgeryName
                       }])
                     setSurgeryName("");
-                  }}><FiPlus color="#AFA79F" size="18px"/></span>
+                  }}><FiPlus color="#AFA79F" size="18px" /></span>
                   <div>
-                    {surgeryHistory.map((data, index)=>{
+                    {surgeryHistory.map((data, index) => {
                       return (
                         <div key={index} className={styles.surgeryHistory}>
                           <span>{data.surgeryDate}</span>
                           <span>{data.surgeryName}</span>
                           <span onClick={() => {
                             setSurgeryHistory(surgeryHistory.filter(surgeryHistory => surgeryHistory.surgeryId !== data.surgeryId))
-                          }}><TiDelete size="18px" color="#827870"/></span>
+                          }}><TiDelete size="18px" color="#827870" /></span>
                         </div>
                       )
-                    })} 
+                    })}
                   </div>
                 </div> : null}
               <br />
               <h4>복용약</h4>
               <div className={styles.drug}>
-                <input 
-                  placeholder="복용약명" 
+                <input
+                  placeholder="복용약명"
                   type="text"
-                  onChange={(e) => {setMedicineName(e.target.value)}}
+                  onChange={(e) => { setMedicineName(e.target.value) }}
                   value={medicineName}></input>
                 <p>start</p>
-                <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
-                  <DatePicker 
+                <div className={styles.datepicker} onClick={(e) => { e.preventDefault() }}>
+                  <DatePicker
                     locale={ko}
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
@@ -556,8 +570,8 @@ const RegisterPet = () => {
                   />
                 </div>
                 <p>end</p>
-                <div className={styles.datepicker} onClick={(e) => {e.preventDefault()}}>
-                  <DatePicker 
+                <div className={styles.datepicker} onClick={(e) => { e.preventDefault() }}>
+                  <DatePicker
                     locale={ko}
                     selected={endDate}
                     onChange={(date) => setEndDate(date)}
@@ -566,15 +580,15 @@ const RegisterPet = () => {
                   />
                 </div>
                 <span onClick={() => {
-                  if(medicineName !== "") 
+                  if (medicineName !== "")
                     setMedicine([...medicine, {
-                      medicineId : medicineNo.current++,
-                      medicationStartDate: dateFormat(startDate), 
+                      medicineId: medicineNo.current++,
+                      medicationStartDate: dateFormat(startDate),
                       medicationEndDate: dateFormat(endDate),
                       medicationName: medicineName
                     }])
                   setMedicineName("");
-                }}><FiPlus color="#AFA79F" size="18px"/></span>
+                }}><FiPlus color="#AFA79F" size="18px" /></span>
               </div>
               <div className={styles.medicineContainer}>
                 {medicine.map((data, index) => {
@@ -584,7 +598,7 @@ const RegisterPet = () => {
                       <span>{data.medicationStartDate} ~ {data.medicationEndDate}</span>
                       <span onClick={() => {
                         setMedicine(medicine.filter(medicine => medicine.medicineId !== data.medicineId))
-                      }}><TiDelete size="18px" color="#827870"/></span>
+                      }}><TiDelete size="18px" color="#827870" /></span>
                     </div>
                   )
                 })}
@@ -592,7 +606,7 @@ const RegisterPet = () => {
               <br />
               <h4>주의할 점</h4>
               <div className={styles.caution}>
-                <input 
+                <input
                   type="text"
                   value={caution}
                   onChange={(e) => {
@@ -601,22 +615,22 @@ const RegisterPet = () => {
               </div>
               <br />
               <h4>예방접종 이력</h4>
-              <button style={{cursor:"pointer"}} onClick={handleModal} type="button">추가</button>
+              <button style={{ cursor: "pointer" }} onClick={handleModal} type="button">추가</button>
             </div>
-            <div style={{marginLeft: "500px", marginBottom: "10px"}}>
-              <Button name="등록"/>
+            <div style={{ marginLeft: "500px", marginBottom: "10px" }}>
+              <Button name="등록" />
             </div>
           </div>
-        {modal && 
-          <RegisterVaccine 
-            onClick={handleModal} 
-            vaccineHistory={vaccineHistory} 
-            setVaccineHistory={setVaccineHistory} 
-            dateFormat={dateFormat} 
-            petType={petType}
-          />}
+          {modal &&
+            <RegisterVaccine
+              onClick={handleModal}
+              vaccineHistory={vaccineHistory}
+              setVaccineHistory={setVaccineHistory}
+              dateFormat={dateFormat}
+              petType={petType}
+            />}
         </form>
-      </div>  
+      </div>
     </div>
   );
 };
@@ -624,8 +638,8 @@ const RegisterPet = () => {
 const TypeDropdown = (props) => {
   return (
     <div className={styles.typedropdown}>
-      <li onClick={() => {props.setPetType('DOG')}}><img src={process.env.PUBLIC_URL + `/img/DOG-logo.png`} alt="pet-icon" width="90px"/></li>
-      <li onClick={() => {props.setPetType('CAT')}}><img src={process.env.PUBLIC_URL + `/img/CAT-logo.png`} alt="pet-icon" width="80px"/></li>
+      <li onClick={() => { props.setPetType('DOG') }}><img src={process.env.PUBLIC_URL + `/img/DOG-logo.png`} alt="pet-icon" width="90px" /></li>
+      <li onClick={() => { props.setPetType('CAT') }}><img src={process.env.PUBLIC_URL + `/img/CAT-logo.png`} alt="pet-icon" width="80px" /></li>
     </div>
   )
 }
@@ -636,7 +650,7 @@ const PetDropdown = (props) => {
       {
         props.petKind.map((item) => {
           return (
-            <li onClick={() => {props.setValue(item)}}>{item.speciesKo}</li>
+            <li onClick={() => { props.setValue(item) }}>{item.speciesKo}</li>
           )
         })
       }
@@ -644,7 +658,7 @@ const PetDropdown = (props) => {
   )
 }
 
-const CustomInput = forwardRef(({value, onClick}, ref) => (
+const CustomInput = forwardRef(({ value, onClick }, ref) => (
   <button className={styles.custominput} onClick={onClick} ref={ref}>
     {value}
   </button>
