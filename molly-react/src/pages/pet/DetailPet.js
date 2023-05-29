@@ -5,9 +5,14 @@ import Header from '../../components/Header';
 import styled from 'styled-components';
 import {Button} from '../../components/Button';
 import axios from 'axios';
+import { SyncLoader } from 'react-spinners';
+import { IoMdSettings } from 'react-icons/io';
+import Surgery from '../../components/pet/Surgery';
+import Medicine from '../../components/pet/Medicine';
+import Vaccine from '../../components/pet/Vaccine';
 
 let CustomBody = styled.div`
-  margin-top: 240px;
+  margin-top: 100px;
   margin-bottom: 50px;
 `;
 
@@ -15,6 +20,10 @@ const DetailPet = () => {
   let {id} = useParams();
   const [text, setText] = useState({});
   const [loading, setLoading] = useState(false);
+  const [surgeryModal, setSurgeryModal] = useState(false);
+  const [medicineModal, setMedicineModal] = useState(false);
+  const [vaccineModal, setVaccineModal] = useState(false);
+  const [petKind, setPetKind] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -28,12 +37,103 @@ const DetailPet = () => {
     axiosInstance.get(`/api/auth/pet/${id}`, config)
       .then((response) => {
         setText(response.data.data);
+        if(response.data.data.petType === "DOG") {
+          axiosInstance.get(`/api/auth/pet/dog-species`, config)
+            .then((response) => {
+              setPetKind(response.data.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            })
+        }
+        else if(response.data.data.petType === "CAT") {
+          axiosInstance.get(`/api/auth/pet/cat-species`, config)
+            .then((response) => {
+              setPetKind(response.data.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            })
+        }
+        else if(response.data.data.petType === "RABBIT") {
+          axiosInstance.get(`/api/auth/pet/rabbit-species`, config)
+            .then((response) => {
+              setPetKind(response.data.data);
+            })
+            .catch((e) => {
+              console.log(e);
+            })
+        }
         setLoading(false);
       })
       .catch((e) => {
         console.log(e);
       })
   }, [])
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setText({
+	// 		"userId": 32492,
+	// 		"petId": 1234,
+	// 		"petType": "DOG",
+	// 		"petName": "molly",
+	// 		"species": "MALTESE",
+	// 		"profileImage": "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
+	// 		"birthdate": "2013-08-07",
+	// 		"gender": "FEMALE",
+	// 		"neuteredStatus" : false,
+	// 		"weight" : 3.4,
+	// 		"caution" : "",
+	// 		"surgery": [{
+  //       "surgeryId": 1,
+  //       "surgeryName": "수직이도성형술",
+  //       "surgeryDate": "2023-01-01"
+  //     },],
+	// 		"medication": [{
+	// 			"medicationId": 1432,
+	// 			"medicationName": "넥스가드",
+	// 			"medicationStartDate": "2023-02-01",
+	// 			"medicationEndDate": "2023-02-15"
+	// 		}],
+	// 		"vaccination": [
+	// 			{
+  //         "vaccinationId": 1,
+	// 				"vaccinationName": "종합백신1차",
+	// 				"vaccinationDate": "2018-01-01"
+	// 			},
+	// 		]
+	//   })
+
+  //   setPetKind([
+  //     {
+  //       "speciesKo": "말티즈",
+  //       "speciesEn": "MALTESE"
+  //     },
+  //     {
+  //       "speciesKo": "포메라니안",
+  //       "speciesEn": "POMERANIAN"
+  //     },
+  //     {
+  //       "speciesKo": "프렌치 불도그",
+  //       "speciesEn": "FRENCH_BULLDOG"
+  //     },
+  //     {
+  //       "speciesKo": "말티즈",
+  //       "speciesEn": "MALTESEd"
+  //     },
+  //     {
+  //       "speciesKo": "포메라니안",
+  //       "speciesEn": "POMERANIAN"
+  //     },
+  //     {
+  //       "speciesKo": "프렌치 불도그",
+  //       "speciesEn": "FRENCH_BULLDOG"
+  //     },
+  //   ])
+
+  //   setLoading(false);
+  // }, [])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -132,11 +232,41 @@ const DetailPet = () => {
       })
   }
 
+  const handleSurgeryModal = () => {
+    setSurgeryModal(!surgeryModal);
+  }
+
+  const handleMedicineModal = () => {
+    setMedicineModal(!medicineModal);
+  }
+
+  const handleVaccineModal = () => {
+    setVaccineModal(!vaccineModal);
+  }
+
+  function dateFormat(date) {
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    month = month >= 10 ? month : '0' + month;
+    day = day >= 10 ? day : '0' + day;
+
+    return date.getFullYear() + '-' + month + '-' + day;
+  }
+
   if (loading) {
     return (
       <div>
         <Header />
-        <CustomBody><p style={{marginLeft: "100px"}}>loading</p>
+        <CustomBody>
+          <div style={{display: "flex", justifyContent: "center", marginTop: "300px"}}>
+            <SyncLoader
+              color="#BF7A09"
+              loading
+              margin={5}
+              size={10}
+              speedMultiplier={1} />
+          </div>
         </CustomBody>
       </div>
     )
@@ -152,16 +282,21 @@ const DetailPet = () => {
       <CustomBody>
         <div className={styles.container}>
           <div className={styles.info}>
-            <img
-              className={styles.profileimg}
-              src={text.profileImage !== null ? text.profileImage : process.env.PUBLIC_URL + '/img/profile.png'}
-              alt="프로필 이미지"
-              width="70px"
-            />
+            <div className={styles.profile}>
+              <img
+                className={styles.profileimg}
+                src={text.profileImage !== null ? text.profileImage : process.env.PUBLIC_URL + '/img/profile.png'}
+                alt="프로필 이미지"
+                width="70px"
+              />
+            </div>
             <h1>{text.petName}</h1>
             <div>
               <h4>품종</h4>
-              <span>{text.species}</span>
+              {petKind.map((i) => { 
+                if(i.speciesEn === text.species)
+                  return <span>{i.speciesKo}</span>
+              })}
               <br/>
               <h4>생일</h4>
               <span style={{marginRight: "30px"}}>{text.birthdate}</span>
@@ -174,6 +309,9 @@ const DetailPet = () => {
                 <span>수컷</span>
               </label>
               <br/>
+              <h4>몸무게</h4>
+              <span>{text.weight}  kg</span>
+              <br />
               <h4>중성화</h4>
               <label className={styles.radio}>
                 <input type="radio" readOnly={true} value="함" checked={text.neuteredStatus}/>
@@ -184,11 +322,15 @@ const DetailPet = () => {
               <br/>
               <h4 style={{marginRight: "27px"}}>수술이력</h4>
               <label className={styles.radio}>
-                <input type="radio" readOnly={true} value="있음" checked={text.surgery === null ? false : true}/>
+                <input type="radio" readOnly={true} value="있음" checked={text.surgery === null || text.surgery.length === 0 ? false : true}/>
                 <span>있음</span>
-                <input type="radio" readOnly={true} value="없음" checked={text.surgery === null ? true : false}/>
+                <input type="radio" readOnly={true} value="없음" checked={text.surgery === null || text.surgery.length === 0 ? true : false}/>
                 <span>없음</span>
               </label>
+              <span style={{cursor: "pointer"}} onClick={handleSurgeryModal}>
+                <IoMdSettings color="#827870" size="18px"/>
+              </span>
+              {surgeryModal && <Surgery onClick={handleSurgeryModal} dateFormat={dateFormat} text={text} petId={id}/>}
               <br/>
               {text.surgery !== null ? 
                 text.surgery.map((item) => {
@@ -214,14 +356,16 @@ const DetailPet = () => {
                     })
                   : null}
                 </div>
+                <span style={{cursor: "pointer"}} onClick={handleMedicineModal}>
+                  <IoMdSettings color="#827870" size="18px"/>
+                </span>
+                {medicineModal && <Medicine onClick={handleMedicineModal} dateFormat={dateFormat} text={text} petId={id}/>}
               </div>
               <h4>주의할 점</h4>
-              <p>{text.caution}</p>
+              {text.caution === "" ? null : <p>{text.caution}</p>}
             </div>
           </div>
           <div className={styles.weight}>
-            <h4 style={{marginRight: "50px"}}>몸무게</h4>
-            <span>{text.weight}  kg</span>
           </div>
           <div className={styles.care}>
             <h4>🦴 건강관리</h4>
@@ -233,6 +377,10 @@ const DetailPet = () => {
             <br/>
             <span>권장 운동량</span>
             <h4>💉 예방접종 이력</h4>
+            <span style={{cursor: "pointer", position: "absolute", top: "170px", right: "20px"}} onClick={handleVaccineModal}>
+              <IoMdSettings color="#827870" size="18px"/>
+            </span>
+            {vaccineModal && <Vaccine onClick={handleVaccineModal} dateFormat={dateFormat} text={text} petId={id}/>}
             {text.vaccination !== null ? text.vaccination.map((item) => {
               return (
                 <div className={styles.vaccine}>

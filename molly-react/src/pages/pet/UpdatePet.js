@@ -4,13 +4,10 @@ import styles from '../../css/UpdatePet.module.css';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button } from '../../components/Button.js';
-import Vaccine from '../../components/pet/Vaccine';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import axios from 'axios';
-import Surgery from '../../components/pet/Surgery';
-import Medicine from '../../components/pet/Medicine';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdatePet = () => {
   let {id} = useParams();
@@ -20,9 +17,6 @@ const UpdatePet = () => {
   const [petValue, setPetValue] = useState('BICHON'); // 동물 품종
   const [gender, setGender] = useState(""); // 성별 라디오 버튼
   const [neutered, setNeutered] = useState(""); // 중성화 라디오 버튼
-  const [vaccineModal, setVaccineModal] = useState(false); // 예방접종 이력 추가 모달
-  const [surgeryModal, setSurgeryModal] = useState(false); // 수술 이력 추가 모달
-  const [medicineModal, setMedicineModal] = useState(false); // 복용약 이력 추가 모달
   const [imgFile, setImgFile] = useState("");
   const [birthdayDate, setBirthdayDate] = useState(new Date());
   const [profile, setProfile] = useState(false);
@@ -35,6 +29,7 @@ const UpdatePet = () => {
   const [caution, setCaution] = useState(""); // 주의할 점 input
 
   const imgRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -168,18 +163,6 @@ const UpdatePet = () => {
     setNeutered(e.target.value);
   }
 
-  const handleVaccineModal = () => {
-    setVaccineModal(!vaccineModal);
-  }
-
-  const handleSurgeryModal = () => {
-    setSurgeryModal(!surgeryModal);
-  }
-
-  const handleMedicineModal = () => {
-    setMedicineModal(!medicineModal);
-  }
-
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
@@ -295,16 +278,7 @@ const UpdatePet = () => {
 
   const handleConfirm = () => {
     setConfirm(!confirm);
-  }
-
-  function dateFormat(date) {
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-
-    month = month >= 10 ? month : '0' + month;
-    day = day >= 10 ? day : '0' + day;
-
-    return date.getFullYear() + '-' + month + '-' + day;
+    navigate(`/detailpet/${id}`);
   }
 
   if (loading) {
@@ -328,9 +302,9 @@ const UpdatePet = () => {
       <div className={styles.board}>
         <div>
           <img className={styles.petimg} src={process.env.PUBLIC_URL + `/img/${petType}-logo.png`} alt="pet-icon" width="90px" />
-          {typeView ? <span onClick={() => { setTypeView(!typeView) }} style={{ position: "absolute", top: "22px", left: "-50px", cursor: "pointer" }}>
+          {typeView ? <span onClick={() => { setTypeView(!typeView) }} style={{ position: "absolute", top: "22px", left: "-25px", cursor: "pointer" }}>
             <MdExpandLess size="32px" color="#AFA79F" /></span> :
-            <span onClick={() => { setTypeView(!typeView) }} style={{ position: "absolute", top: "22px", left: "-50px", cursor: "pointer" }}>
+            <span onClick={() => { setTypeView(!typeView) }} style={{ position: "absolute", top: "22px", left: "-25px", cursor: "pointer" }}>
               <MdExpandMore size="32px" color="#AFA79F" />
             </span>
           }
@@ -440,19 +414,6 @@ const UpdatePet = () => {
               <Button onClick={handleUpdate} name="수정하기" />
             </div>
           </div>
-        </div>
-        <div className={styles.history}>
-          <h4>수술이력</h4>
-          <button style={{ cursor: "pointer" }} onClick={handleSurgeryModal} type="button">수정</button>
-          {surgeryModal && <Surgery onClick={handleSurgeryModal} dateFormat={dateFormat} text={text} petId={id}/>}
-          <br />
-          <h4>복용약</h4>
-          <button style={{ cursor: "pointer" }} onClick={handleMedicineModal} type="button">수정</button>
-          {medicineModal && <Medicine onClick={handleMedicineModal} dateFormat={dateFormat} text={text} petId={id}/>}
-          <br />
-          <h4>예방접종 이력</h4>
-          <button style={{ cursor: "pointer" }} onClick={handleVaccineModal} type="button">수정</button>
-          {vaccineModal && <Vaccine onClick={handleVaccineModal} dateFormat={dateFormat} text={text} petId={id}/>}
         </div>
         {confirm && <ConfirmModal onClick={handleConfirm}/>}
       </div>

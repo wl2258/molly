@@ -15,6 +15,7 @@ import ManagerLogin from './pages/ManagerLogin';
 import UserInfo from './pages/UserInfo';
 import UpdatePet from './pages/pet/UpdatePet';
 import ManagerHome from './pages/ManagerHome';
+import Update from './pages/community/Update';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/about" element={<About />}/>
         <Route path="/board/:id/:category/:pet" element={<Detail />}/>
         <Route path="/list/:category/write" element={<WriteCkEditor />}/>
+        <Route path="/board/:id/:category/update" element={<Update/>}/>
         <Route path="/userinfo" element={<UserInfo/>} />
         <Route path="/registerpet" element={<RegisterPet />}/>
         <Route path="/detailpet/:id" element={<DetailPet />}/>
