@@ -37,6 +37,8 @@ public class BoardRespDto {
     public static class PostDetailResponse {
         private boolean isOwner;
         private String title;
+        private String category;
+        private String petType;
         private List<String> boardImages;
         private String content;
         private String writerNick;
