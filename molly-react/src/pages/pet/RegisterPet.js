@@ -116,109 +116,109 @@ const RegisterPet = () => {
     setLoading(false);
   }, [petType])
 
-  useEffect(() => {
-    setLoading(true);
-    setPetKind([
-      {
-        "speciesKo": "말티즈",
-        "speciesEn": "MALTESE"
-      },
-      {
-        "speciesKo": "포메라니안",
-        "speciesEn": "POMERANIAN"
-      },
-      {
-        "speciesKo": "프렌치 불도그",
-        "speciesEn": "FRENCH_BULLDOG"
-      },
-    ])
-    setPetValue({
-      "speciesKo": "말티즈",
-      "speciesEn": "MALTESE"
-    })
-    setLoading(false);
-  }, [])
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setPetKind([
+  //     {
+  //       "speciesKo": "말티즈",
+  //       "speciesEn": "MALTESE"
+  //     },
+  //     {
+  //       "speciesKo": "포메라니안",
+  //       "speciesEn": "POMERANIAN"
+  //     },
+  //     {
+  //       "speciesKo": "프렌치 불도그",
+  //       "speciesEn": "FRENCH_BULLDOG"
+  //     },
+  //   ])
+  //   setPetValue({
+  //     "speciesKo": "말티즈",
+  //     "speciesEn": "MALTESE"
+  //   })
+  //   setLoading(false);
+  // }, [])
 
-  useEffect(() => {
-    setLoading(true)
-    if (petType === "DOG") {
-      setPetValue({
-        "speciesKo": "말티즈",
-        "speciesEn": "MALTESE"
-      },)
-      setPetKind([
-        {
-          "speciesKo": "말티즈",
-          "speciesEn": "MALTESE"
-        },
-        {
-          "speciesKo": "포메라니안",
-          "speciesEn": "POMERANIAN"
-        },
-        {
-          "speciesKo": "프렌치 불도그",
-          "speciesEn": "FRENCH_BULLDOG"
-        },
-        {
-          "speciesKo": "말티즈",
-          "speciesEn": "MALTESE"
-        },
-        {
-          "speciesKo": "포메라니안",
-          "speciesEn": "POMERANIAN"
-        },
-        {
-          "speciesKo": "프렌치 불도그",
-          "speciesEn": "FRENCH_BULLDOG"
-        },
-      ])
-    }
-    else if (petType === "CAT") {
-      setPetValue({
-        "speciesKo": "노르웨이 숲",
-        "speciesEn": "NORWEGIAN_FOREST"
-      },)
-      setPetKind([
-        {
-          "speciesKo": "노르웨이 숲",
-          "speciesEn": "NORWEGIAN_FOREST"
-        },
-        {
-          "speciesKo": "네벨룽",
-          "speciesEn": "NEBELUNG"
-        },
-        {
-          "speciesKo": "네바 마스커레이드",
-          "speciesEn": "NEVA_MASQUERADE"
-        },
-        {
-          "speciesKo": "데본렉스",
-          "speciesEn": "DEVON_REX"
-        },
-      ])
-    }
-    else {
-      setPetValue({
-        "speciesKo": "앙고라 토끼",
-        "speciesEn": "ANGORA_RABBIT"
-      },)
-      setPetKind([
-        {
-          "speciesKo": "앙고라 토끼",
-          "speciesEn": "ANGORA_RABBIT"
-        },
-        {
-          "speciesKo": "롭이어",
-          "speciesEn": "ROBYEAR"
-        },
-        {
-          "speciesKo": "렉스",
-          "speciesEn": "REX"
-        },
-      ])
-    }
-    setLoading(false);
-  }, [petType])
+  // useEffect(() => {
+  //   setLoading(true)
+  //   if (petType === "DOG") {
+  //     setPetValue({
+  //       "speciesKo": "말티즈",
+  //       "speciesEn": "MALTESE"
+  //     },)
+  //     setPetKind([
+  //       {
+  //         "speciesKo": "말티즈",
+  //         "speciesEn": "MALTESE"
+  //       },
+  //       {
+  //         "speciesKo": "포메라니안",
+  //         "speciesEn": "POMERANIAN"
+  //       },
+  //       {
+  //         "speciesKo": "프렌치 불도그",
+  //         "speciesEn": "FRENCH_BULLDOG"
+  //       },
+  //       {
+  //         "speciesKo": "말티즈",
+  //         "speciesEn": "MALTESE"
+  //       },
+  //       {
+  //         "speciesKo": "포메라니안",
+  //         "speciesEn": "POMERANIAN"
+  //       },
+  //       {
+  //         "speciesKo": "프렌치 불도그",
+  //         "speciesEn": "FRENCH_BULLDOG"
+  //       },
+  //     ])
+  //   }
+  //   else if (petType === "CAT") {
+  //     setPetValue({
+  //       "speciesKo": "노르웨이 숲",
+  //       "speciesEn": "NORWEGIAN_FOREST"
+  //     },)
+  //     setPetKind([
+  //       {
+  //         "speciesKo": "노르웨이 숲",
+  //         "speciesEn": "NORWEGIAN_FOREST"
+  //       },
+  //       {
+  //         "speciesKo": "네벨룽",
+  //         "speciesEn": "NEBELUNG"
+  //       },
+  //       {
+  //         "speciesKo": "네바 마스커레이드",
+  //         "speciesEn": "NEVA_MASQUERADE"
+  //       },
+  //       {
+  //         "speciesKo": "데본렉스",
+  //         "speciesEn": "DEVON_REX"
+  //       },
+  //     ])
+  //   }
+  //   else {
+  //     setPetValue({
+  //       "speciesKo": "앙고라 토끼",
+  //       "speciesEn": "ANGORA_RABBIT"
+  //     },)
+  //     setPetKind([
+  //       {
+  //         "speciesKo": "앙고라 토끼",
+  //         "speciesEn": "ANGORA_RABBIT"
+  //       },
+  //       {
+  //         "speciesKo": "롭이어",
+  //         "speciesEn": "ROBYEAR"
+  //       },
+  //       {
+  //         "speciesKo": "렉스",
+  //         "speciesEn": "REX"
+  //       },
+  //     ])
+  //   }
+  //   setLoading(false);
+  // }, [petType])
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",

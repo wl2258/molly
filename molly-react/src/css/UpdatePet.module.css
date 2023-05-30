@@ -4,13 +4,13 @@
   }
   
 .board {
-margin-top: 230px;
+margin-top: 110px;
 position: relative;
 }
 
 .board > div:first-child {
 display: flex;
-margin-left: -130px;
+margin-left: -100px;
 }
 
 .petimg {
@@ -22,7 +22,7 @@ filter: drop-shadow(2px 2px 1px #BFBFBF);
 .dropdowncontainer {
 position: absolute;
 z-index: 2;
-left: -140px;
+left: -110px;
 margin-top: 20px;
 }
 
