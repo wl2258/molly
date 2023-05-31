@@ -49,12 +49,12 @@ public class BoardService {
         Board board = boardRepository.save(new Board(findAccount, createPostRequest));
 
         List<Long> boardImageIds = createPostRequest.getBoardImageIds();
-        List<BoardImage> findBoardImages = boardImageRepository.findAllById(boardImageIds);
-        if (!findBoardImages.isEmpty()) {
-            board.changeHasImage(true);
+        if (boardImageIds != null && !boardImageIds.isEmpty()) {
+            List<BoardImage> findBoardImages = boardImageRepository.findAllById(boardImageIds);
+            if (!findBoardImages.isEmpty()) {
+                board.changeHasImage(true);
 
-            for (BoardImage findBoardImage : findBoardImages) {
-                findBoardImage.changeBoardId(board.getId());
+                findBoardImages.forEach(boardImage -> boardImage.changeBoardId(board.getId()));
             }
         }
 
@@ -64,15 +64,17 @@ public class BoardService {
     @Transactional
     public void quitCreatePost(List<Long> boardImageIds) {
 
-        List<BoardImage> findBoardImages = boardImageRepository.findAllById(boardImageIds);
-        deleteBoardImagesInBatch(findBoardImages);
+        if (boardImageIds != null) {
+            List<BoardImage> findBoardImages = boardImageRepository.findAllById(boardImageIds);
+            deleteBoardImagesInBatch(findBoardImages);
+        }
     }
 
     @Transactional
     public AddBoardImageResponse addBoardImage(Long accountId, MultipartFile boardImage) {
 
         AddBoardImageResponse addBoardImageResponse = new AddBoardImageResponse();
-        if (boardImage != null) {
+        if (boardImage != null && !boardImage.isEmpty()) {
             try {
                 BoardImage storedBoardImage =
                         saveBoardImageToTmp(boardImage, FileRootPathVO.BOARD_PATH + accountId);
@@ -84,12 +86,6 @@ public class BoardService {
         }
 
         return addBoardImageResponse;
-    }
-
-    @Transactional
-    public void deleteBoardImage(Long boardId, Long accountId, Long boardImageId) {
-
-        // Board 객체의 hasImage 검사하는 로직도 구현해야 함
     }
 
     public Page<RetrievePostListDto> getPostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
