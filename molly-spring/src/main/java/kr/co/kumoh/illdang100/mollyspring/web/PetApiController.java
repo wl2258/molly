@@ -64,9 +64,10 @@ public class PetApiController {
 
     @PostMapping("/image")
     public ResponseEntity<?> updatePetProfileImage(@ModelAttribute @Valid PetProfileImageUpdateRequest petProfileImageUpdateRequest,
-                                                   BindingResult bindingResult) {
+                                                   BindingResult bindingResult,
+                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        petService.updatePetProfileImage(petProfileImageUpdateRequest);
+        petService.updatePetProfileImage(principalDetails.getAccount().getId(), petProfileImageUpdateRequest);
 
         return new ResponseEntity<>(new ResponseDto(1, "반려동물 프로필 이미지를 수정했습니다.", null), HttpStatus.OK);
     }

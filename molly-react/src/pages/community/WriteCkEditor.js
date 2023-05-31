@@ -20,7 +20,6 @@ const WriteCkEditor = () => {
   const [boardValue, setBoardValue] = useState("MEDICAL");
   const [petView, setPetView] = useState(false);
   const [petValue, setPetValue] = useState("NOT_SELECTED");
-  const [imgId, setImgId] = useState([]);
 
   const navigate = useNavigate();
 
@@ -62,6 +61,7 @@ const WriteCkEditor = () => {
   // console.log(imgUrl)
 
   useEffect(() => {
+    console.log("ckeditor render");
     const config = {
       headers: {
         Authorization: localStorage.getItem("accessToken"),
@@ -69,13 +69,14 @@ const WriteCkEditor = () => {
     };
 
     const data = {
-      boardImageIds: imgId,
+      boardImageIds: JSON.parse(localStorage.getItem("imgId")),
     };
 
     return () => {
       axiosInstance.post(`/auth/board/quit`, data, config).then((response) => {
         if (response.data.code === 1) {
           console.log(response.data.msg);
+          localStorage.removeItem("imgId");
         }
       });
     };
@@ -147,6 +148,7 @@ const WriteCkEditor = () => {
         Authorization: localStorage.getItem("accessToken"),
       },
     };
+    let imgId = JSON.parse(localStorage.getItem("imgId"));
 
     return {
       upload() {
@@ -159,7 +161,8 @@ const WriteCkEditor = () => {
               .post(`/api/auth/board/image`, formData, config)
               .then((res) => {
                 console.log(res);
-                setImgId([...imgId, res.data.data.boardImageId]);
+                imgId.push(res.data.data.boardImageId);
+                localStorage.setItem("imgId", JSON.stringify(imgId));
                 resolve({
                   default: res.data.data.storedBoardImageUrl,
                 });
@@ -168,10 +171,10 @@ const WriteCkEditor = () => {
             // const reader = new FileReader();
             // reader.readAsDataURL(file);
             // reader.onloadend = () => {
-            //     resolve({
-            //         default: reader.result
-            //     });
-            // }
+            //   resolve({
+            //     default: reader.result,
+            //   });
+            // };
           });
         });
       },
@@ -204,17 +207,39 @@ const WriteCkEditor = () => {
       content: content,
       category: boardValue,
       petType: petValue,
-      boardImageIds: imgId,
+      boardImageIds: JSON.parse(localStorage.getItem("imgId")),
     };
 
     console.log(data);
 
     axiosInstance.post(`/api/auth/board`, data, config).then((response) => {
       if (response.data.code === 1) {
-        navigate(`/list/${boardValue}/${petValue}`, { replace: true });
-        return;
+        localStorage.removeItem("imgId");
+        navigate(`/list/ALL/ALL`, { replace: true });
       }
     });
+  };
+
+  const handleCancle = () => {
+    const config = {
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
+
+    const data = {
+      boardImageIds: JSON.parse(localStorage.getItem("imgId")),
+    };
+
+    return () => {
+      axiosInstance.post(`/auth/board/quit`, data, config).then((response) => {
+        if (response.data.code === 1) {
+          console.log(response.data.msg);
+          localStorage.removeItem("imgId");
+          navigate(-1, { replace: true });
+        }
+      });
+    };
   };
 
   return (
@@ -304,10 +329,7 @@ const WriteCkEditor = () => {
           </section>
           <div className={styles.footer}>
             <span>
-              <Button
-                name="취소"
-                onClick={() => navigate(-1, { replace: true })}
-              />
+              <Button name="취소" onClick={handleCancle} />
             </span>
             <span>
               <Button name="완료" onClick={handleSubmit} />
