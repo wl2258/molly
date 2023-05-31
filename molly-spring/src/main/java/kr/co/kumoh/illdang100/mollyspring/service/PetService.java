@@ -315,7 +315,7 @@ public class PetService {
      * @param petProfileImageUpdateRequest
      */
     @Transactional
-    public void updatePetProfileImage(PetProfileImageUpdateRequest petProfileImageUpdateRequest) {
+    public void updatePetProfileImage(Long accountId, PetProfileImageUpdateRequest petProfileImageUpdateRequest) {
 
         Long petId = petProfileImageUpdateRequest.getPetId();
         Pet findPet = findPetOrElseThrow(petId);
@@ -324,7 +324,7 @@ public class PetService {
         Optional<PetImage> findPetImageOpt = petImageRepository.findByPet_Id(petId);
 
         try {
-            ImageFile updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH);
+            ImageFile updatedImageFile = s3Service.upload(petProfileImage, FileRootPathVO.PET_PATH + "/" + accountId);
 
             if (findPetImageOpt.isPresent()) {
                 PetImage findPetImage = findPetImageOpt.get();
@@ -409,6 +409,10 @@ public class PetService {
             Optional<PetImage> petImageOpt = petImageRepository.findByPet_Id(petId);
             if (petImageOpt.isPresent()) {
                 homeProfile.add(new PetHomeProfileResponse(petId, petImageOpt.get().getPetProfileImage().getStoreFileUrl()));
+            }
+
+            for (VaccineInfoResponse v : postVaccineList) {
+                log.info("vaccine={} {}", v.getVaccinationName(), v.getVaccinationDate());
             }
         }
 

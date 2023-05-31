@@ -321,7 +321,7 @@ public class PetServiceTest extends DummyObject {
         when(petRepository.findById(pet.getId())).thenReturn(Optional.of(pet));
 
         //when
-        petService.updatePetProfileImage(petProfileImageUpdateRequest);
+        petService.updatePetProfileImage(account.getId(), petProfileImageUpdateRequest);
 
         //then
     }
