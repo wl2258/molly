@@ -13,26 +13,32 @@ import java.util.List;
 
 public class BoardReqDto {
 
-    @Getter @Setter
+    @Getter
     public static class CreatePostRequest {
 
         @NotBlank
         @Size(max = 60, message = "제목은 60자 이하로 작성해주세요")
         private String title;
+        // TODO: content를 길이 제한이 아닌 용량 제한으로 변경하기
+//        @Size(max = 10 * 1024 * 1024, message = "게시글 크기는 최대 10MB까지 허용됩니다.")
         @NotBlank
         @Size(max = 2000, message = "내용은 2,000자 이하로 작성해주세요")
         private String content;
-        @Size(max = 5, message = "이미지는 최대 5장까지 업로드 가능합니다")
-        private List<MultipartFile> boardImages;
         @NotBlank
         @Pattern(regexp = "(MEDICAL|FREE)$")
         private String category;
         @NotBlank
         @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
         private String petType;
+        private List<Long> boardImageIds;
     }
 
-    @Getter @Setter
+    @Getter
+    public static class QuitCreatePostRequest {
+        private List<Long> boardImageIds;
+    }
+
+    @Getter
     public static class UpdatePostRequest {
 
         @NotBlank
@@ -50,7 +56,7 @@ public class BoardReqDto {
     }
 
     @AllArgsConstructor
-    @Getter @Setter
+    @Getter
     public static class RetrievePostListCondition {
         @NotBlank
         @Pattern(regexp = "(MEDICAL|FREE|ALL)$")

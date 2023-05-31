@@ -4,6 +4,7 @@ import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.service.BoardService;
 import kr.co.kumoh.illdang100.mollyspring.service.CommentService;
+import kr.co.kumoh.illdang100.mollyspring.service.ComplaintService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentRespDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.complaint.ComplaintReqDto.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class BoardApiController {
 
     private final BoardService boardService;
     private final CommentService commentService;
+    private final ComplaintService complaintService;
 
     /**
      * 게시글 작성
@@ -41,13 +44,21 @@ public class BoardApiController {
      * @return 저장된 게시글 PK
      */
     @PostMapping("/auth/board")
-    public ResponseEntity<?> createNewPost(@ModelAttribute @Valid CreatePostRequest createPostRequest,
+    public ResponseEntity<?> createNewPost(@RequestBody @Valid CreatePostRequest createPostRequest,
                                            BindingResult bindingResult,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         CreatePostResponse createPostResponse = boardService.createPost(principalDetails.getAccount().getId(), createPostRequest);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성에 성공했습니다", createPostResponse), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/auth/board/quit")
+    public ResponseEntity<?> quitCreatePost(@RequestBody QuitCreatePostRequest quitCreatePostRequest,
+                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        boardService.quitCreatePost(quitCreatePostRequest.getBoardImageIds());
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성이 중단되었습니다", null), HttpStatus.OK);
     }
 
     /**
@@ -112,20 +123,14 @@ public class BoardApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/board/{boardId}/image")
-    public ResponseEntity<?> addBoardImage(@PathVariable("boardId") Long boardId,
-                                           @RequestParam("boardImage") MultipartFile boardImage,
+    @PostMapping("/auth/board/image")
+    public ResponseEntity<?> addBoardImage(@RequestParam("boardImage") MultipartFile boardImage,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        AddBoardImageResponse result = boardService.addBoardImage(boardId, principalDetails.getAccount().getId(), boardImage);
+        // TODO: 이미지 크기 제한
+
+        AddBoardImageResponse result = boardService.addBoardImage(principalDetails.getAccount().getId(), boardImage);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", result), HttpStatus.CREATED);
-    }
-
-    // TODO: 게시글 이미지 삭제
-    @DeleteMapping("/auth/board/{boardId}/image/{imageId}w")
-    public ResponseEntity<?> deleteBoardImage() {
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", null), HttpStatus.OK);
     }
 
     /**
@@ -175,5 +180,14 @@ public class BoardApiController {
 
         LikyBoardResponse result = boardService.toggleLikePost(principalDetails.getAccount().getId(), boardId);
         return new ResponseEntity<>(new ResponseDto<>(1, result.getMessage(), result), HttpStatus.OK);
+    }
+
+    @PostMapping("/auth/board/{boardId}/report")
+    public ResponseEntity<?> reportPost(@PathVariable("boardId") Long boardId,
+                                        @RequestBody ReportPostRequest reportPostRequest,
+                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        complaintService.reportPost(boardId, principalDetails.getAccount().getId(), reportPostRequest);
+        return new ResponseEntity<>(new ResponseDto<>(1, "신고가 정상적으로 이루어졌습니다", null), HttpStatus.CREATED);
     }
 }

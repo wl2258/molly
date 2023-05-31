@@ -1,8 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.image;
 
-import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,16 +16,18 @@ public class BoardImage{
     @Column(name = "board_image_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    private Long boardId;
 
     @Embedded
     @Column(nullable = false)
     private ImageFile boardImageFile;
 
-    public BoardImage(Board board, ImageFile boardImageFile) {
-        this.board = board;
+    public BoardImage(Long boardId, ImageFile boardImageFile) {
+        this.boardId = boardId;
         this.boardImageFile = boardImageFile;
+    }
+
+    public void changeBoardId(Long boardId) {
+        this.boardId = boardId;
     }
 }

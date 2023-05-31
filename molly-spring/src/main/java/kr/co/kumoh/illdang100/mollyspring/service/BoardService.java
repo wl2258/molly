@@ -48,16 +48,13 @@ public class BoardService {
 
         Board board = boardRepository.save(new Board(findAccount, createPostRequest));
 
-        // 게시글 이미지 저장
-        List<MultipartFile> boardImages = createPostRequest.getBoardImages();
-        if (boardImages != null && !boardImages.isEmpty()) {
-            for (MultipartFile boardImage : boardImages) {
-                try {
-                    saveBoardImage(board, boardImage);
-                    board.changeHasImage(true);
-                } catch (Exception e) {
-                    throw new CustomApiException(e.getMessage());
-                }
+        List<Long> boardImageIds = createPostRequest.getBoardImageIds();
+        List<BoardImage> findBoardImages = boardImageRepository.findAllById(boardImageIds);
+        if (!findBoardImages.isEmpty()) {
+            board.changeHasImage(true);
+
+            for (BoardImage findBoardImage : findBoardImages) {
+                findBoardImage.changeBoardId(board.getId());
             }
         }
 
@@ -65,24 +62,34 @@ public class BoardService {
     }
 
     @Transactional
-    public AddBoardImageResponse addBoardImage(Long boardId, Long accountId, MultipartFile boardImage) {
+    public void quitCreatePost(List<Long> boardImageIds) {
 
-        Board findBoard = findBoardByIdOrThrowException(boardId);
-        checkBoardAccessAuthorization(accountId, findBoard);
+        List<BoardImage> findBoardImages = boardImageRepository.findAllById(boardImageIds);
+        deleteBoardImagesInBatch(findBoardImages);
+    }
+
+    @Transactional
+    public AddBoardImageResponse addBoardImage(Long accountId, MultipartFile boardImage) {
 
         AddBoardImageResponse addBoardImageResponse = new AddBoardImageResponse();
         if (boardImage != null) {
             try {
-                BoardImage storedBoardImage = saveBoardImage(findBoard, boardImage);
+                BoardImage storedBoardImage =
+                        saveBoardImageToTmp(boardImage, FileRootPathVO.BOARD_PATH + accountId);
                 addBoardImageResponse.setBoardImageId(storedBoardImage.getId());
                 addBoardImageResponse.setStoredBoardImageUrl(storedBoardImage.getBoardImageFile().getStoreFileUrl());
-                findBoard.changeHasImage(true);
             } catch (Exception e) {
                 throw new CustomApiException(e.getMessage());
             }
         }
 
         return addBoardImageResponse;
+    }
+
+    @Transactional
+    public void deleteBoardImage(Long boardId, Long accountId, Long boardImageId) {
+
+        // Board 객체의 hasImage 검사하는 로직도 구현해야 함
     }
 
     public Page<RetrievePostListDto> getPostList(RetrievePostListCondition retrievePostListCondition, Pageable pageable) {
@@ -112,6 +119,8 @@ public class BoardService {
         return PostDetailResponse.builder()
                 .isOwner(isOwner)
                 .title(findBoard.getBoardTitle())
+                .category(findBoard.getCategory().toString())
+                .petType(findBoard.getPetType().toString())
                 .boardImages(boardImages)
                 .content(findBoard.getBoardContent())
                 .writerNick(findBoard.getAccount().getNickname())
@@ -140,6 +149,7 @@ public class BoardService {
                             ? account.getAccountProfileImage().getStoreFileUrl() : null;
 
                     return new BoardCommentDto(
+                            comment.getId(),
                             comment.getAccountId(),
                             nickname,
                             comment.getCreatedDate(),
@@ -151,7 +161,7 @@ public class BoardService {
     }
 
     private List<String> getBoardImages(Long boardId) {
-        return boardImageRepository.findByBoard_id(boardId)
+        return boardImageRepository.findByBoardId(boardId)
                 .stream()
                 .map(boardImage -> boardImage.getBoardImageFile().getStoreFileUrl())
                 .collect(Collectors.toList());
@@ -207,22 +217,23 @@ public class BoardService {
     @Transactional
     public void deletePost(Long boardId, Long accountId) {
 
+        // TODO: 신고 테이블 필드 변경 (boardId -> null)
+
         Board findBoard = findBoardByIdOrThrowException(boardId);
 
         checkBoardAccessAuthorization(accountId, findBoard);
 
         deleteCommentsByBoardIdInBatch(boardId);
         deleteLikiesByBoardIdInBatch(boardId);
-        deleteBoardImagesByBoardIdInBatch(boardId);
+        deleteBoardImagesInBatch(boardImageRepository.findByBoardId(boardId));
         boardRepository.deleteById(boardId);
     }
 
-    private void deleteBoardImagesByBoardIdInBatch(Long boardId) {
+    private void deleteBoardImagesInBatch(List<BoardImage> boardImages) {
 
-        List<BoardImage> boardImages = boardImageRepository.findByBoard_id(boardId);
         boardImages.forEach(boardImage -> {
-                    s3Service.delete(boardImage.getBoardImageFile().getStoreFileName());
-                });
+            s3Service.delete(boardImage.getBoardImageFile().getStoreFileName());
+        });
 
         boardImageRepository.deleteAllByIdInBatch(boardImages.stream()
                 .map(BoardImage::getId)
@@ -241,11 +252,18 @@ public class BoardService {
                 .collect(Collectors.toList()));
     }
 
-    private BoardImage saveBoardImage(Board board, MultipartFile boardImage) throws IOException {
+    private BoardImage saveBoardImage(Long boardId, MultipartFile boardImage, String filePath) throws IOException {
         ImageFile boardImageFile =
-                s3Service.upload(boardImage, FileRootPathVO.BOARD_PATH);
+                s3Service.upload(boardImage, filePath + boardId);
 
-        return boardImageRepository.save(new BoardImage(board, boardImageFile));
+        return boardImageRepository.save(new BoardImage(boardId, boardImageFile));
+    }
+
+    private BoardImage saveBoardImageToTmp(MultipartFile boardImage, String filePath) throws IOException {
+        ImageFile boardImageFile =
+                s3Service.upload(boardImage, filePath);
+
+        return boardImageRepository.save(new BoardImage(null, boardImageFile));
     }
 
     private Account findAccountByIdOrThrowException(Long accountId) {
