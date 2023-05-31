@@ -65,6 +65,7 @@ const WriteCkEditor = () => {
     const config = {
       headers: {
         Authorization: localStorage.getItem("accessToken"),
+        "Content-Type": "application/json",
       },
     };
 
@@ -73,12 +74,14 @@ const WriteCkEditor = () => {
     };
 
     return () => {
-      axiosInstance.post(`/auth/board/quit`, data, config).then((response) => {
-        if (response.data.code === 1) {
-          console.log(response.data.msg);
-          localStorage.removeItem("imgId");
-        }
-      });
+      axiosInstance
+        .post(`/api/auth/board/quit`, data, config)
+        .then((response) => {
+          if (response.data.code === 1) {
+            console.log(response.data.msg);
+            localStorage.removeItem("imgId");
+          }
+        });
     };
   }, []);
 
@@ -161,7 +164,9 @@ const WriteCkEditor = () => {
               .post(`/api/auth/board/image`, formData, config)
               .then((res) => {
                 console.log(res);
-                imgId.push(res.data.data.boardImageId);
+                imgId !== null
+                  ? imgId.push(res.data.data.boardImageId)
+                  : (imgId = [res.data.data.boardImageId]);
                 localStorage.setItem("imgId", JSON.stringify(imgId));
                 resolve({
                   default: res.data.data.storedBoardImageUrl,
@@ -221,9 +226,12 @@ const WriteCkEditor = () => {
   };
 
   const handleCancle = () => {
+    console.log("cancle");
+
     const config = {
       headers: {
         Authorization: localStorage.getItem("accessToken"),
+        "Content-Type": "application/json",
       },
     };
 
@@ -231,15 +239,15 @@ const WriteCkEditor = () => {
       boardImageIds: JSON.parse(localStorage.getItem("imgId")),
     };
 
-    return () => {
-      axiosInstance.post(`/auth/board/quit`, data, config).then((response) => {
+    axiosInstance
+      .post(`/api/auth/board/quit`, data, config)
+      .then((response) => {
         if (response.data.code === 1) {
           console.log(response.data.msg);
           localStorage.removeItem("imgId");
           navigate(-1, { replace: true });
         }
       });
-    };
   };
 
   return (
