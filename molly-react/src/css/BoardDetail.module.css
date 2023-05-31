@@ -1,7 +1,7 @@
 .boardTop {
   height: 50px;
   margin-top: -150px;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   border-radius: 30px 30px 0 0;
   padding-top: 15px;
 }
@@ -17,7 +17,7 @@
 }
 
 .board {
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   position: relative;
 }
 
@@ -26,7 +26,7 @@
 }
 
 .top > h2 {
-  color: #645C56;
+  color: #645c56;
   display: inline-block;
   margin-bottom: 30px;
 }
@@ -35,30 +35,30 @@
   position: absolute;
   left: 63px;
   top: 70px;
-  color: #A19C97;
+  color: #a19c97;
 }
 
 .top > span:nth-child(2) > img {
   width: 30px;
 }
 
-.top > span:nth-child(3){
+.top > span:nth-child(3) {
   position: absolute;
   left: 105px;
   top: 75px;
-  color: #A19C97;
+  color: #a19c97;
 }
 
-.top > span:nth-child(4){
+.top > span:nth-child(4) {
   position: absolute;
   left: 180px;
   top: 75px;
-  color: #A19C97;
+  color: #a19c97;
 }
 
 .top > span:nth-child(5) {
   position: absolute;
-  color: #A19C97;
+  color: #a19c97;
   right: 60px;
   top: 40px;
   font-size: 13px;
@@ -67,7 +67,7 @@
 
 .top > span:nth-child(6) {
   position: absolute;
-  color: #A19C97;
+  color: #a19c97;
   right: 60px;
   top: 73px;
   font-size: 13px;
@@ -100,8 +100,18 @@
   color: #787471;
 }
 
+.middle table {
+  border-collapse: collapse;
+}
+
+.middle td {
+  border: 1px solid #a19c97;
+  padding: 10px;
+}
+
 .middle > img {
   padding: 10px 63px;
+  width: 80%;
 }
 
 .count {
@@ -110,7 +120,7 @@
 }
 
 .count > span:nth-child(1) {
-  color: #B27910;
+  color: #b27910;
   position: absolute;
   left: 60px;
   bottom: 16px;
@@ -118,21 +128,21 @@
 }
 
 .count > span:nth-child(2) {
-  color: #B27910;
+  color: #b27910;
   position: absolute;
   left: 85px;
   bottom: 19px;
 }
 
 .count > span:nth-child(3) {
-  color: #B27910;
+  color: #b27910;
   position: absolute;
   left: 120px;
   bottom: 18px;
 }
 
 .count > span:nth-child(4) {
-  color: #B27910;
+  color: #b27910;
   position: absolute;
   left: 140px;
   bottom: 19px;
@@ -141,7 +151,7 @@
 .count > span:nth-child(5) {
   font-size: 14px;
   font-weight: 700;
-  color: #B27910;
+  color: #b27910;
   position: absolute;
   right: 110px;
   bottom: 22px;
@@ -151,7 +161,7 @@
 .count > span:nth-child(6) {
   font-size: 14px;
   font-weight: 700;
-  color: #B27910;
+  color: #b27910;
   position: absolute;
   right: 70px;
   bottom: 22px;
@@ -159,7 +169,7 @@
 }
 
 .comment {
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   padding: 40px 20px 12px;
   border-top: 1px solid #e6e6e6;
   width: 100%;
@@ -175,7 +185,7 @@
 }
 
 .commentinfo > span:nth-child(1) {
-  color: #87827F;
+  color: #87827f;
   position: absolute;
   left: 60px;
   top: 20px;
@@ -185,9 +195,8 @@
   width: 25px;
 }
 
-
 .commentinfo > span:nth-child(2) {
-  color: #87827F;
+  color: #87827f;
   font-weight: 700;
   position: absolute;
   left: 95px;
@@ -195,7 +204,7 @@
 }
 
 .commentinfo > span:nth-child(3) {
-  color: #87827F;
+  color: #87827f;
   position: absolute;
   font-size: small;
   left: 170px;
@@ -203,7 +212,7 @@
 }
 
 .commentinfo > span:nth-child(4) {
-  color: #87827F;
+  color: #87827f;
   font-size: small;
   position: absolute;
   right: 60px;
@@ -217,7 +226,7 @@
 
 .commentinfo > div > p {
   margin-left: 50px;
-  color: #A19C97;
+  color: #a19c97;
   font-size: small;
   box-sizing: border-box;
   word-break: break-all;
@@ -225,7 +234,7 @@
 }
 
 .footer {
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   padding: 20px 60px;
   border-top: 1px solid #e6e6e6;
   margin-bottom: 50px;
@@ -235,11 +244,11 @@
   width: 70%;
   height: 34px;
   border-radius: 10px;
-  background-color: #E9E5E3;
+  background-color: #e9e5e3;
   border: none;
   margin-right: 10px;
   padding-left: 15px;
-  caret-color: #C7C3BF;
+  caret-color: #c7c3bf;
 }
 
 .footer > input:focus {
