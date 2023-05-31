@@ -19,10 +19,8 @@ public class BoardReqDto {
         @NotBlank
         @Size(max = 60, message = "제목은 60자 이하로 작성해주세요")
         private String title;
-        // TODO: content를 길이 제한이 아닌 용량 제한으로 변경하기
-//        @Size(max = 10 * 1024 * 1024, message = "게시글 크기는 최대 10MB까지 허용됩니다.")
         @NotBlank
-        @Size(max = 2000, message = "내용은 2,000자 이하로 작성해주세요")
+        @Size(max = 5000, message = "내용은 5,000자 이하로 작성해주세요")
         private String content;
         @NotBlank
         @Pattern(regexp = "(MEDICAL|FREE)$")
@@ -45,7 +43,7 @@ public class BoardReqDto {
         @Size(max = 60, message = "제목은 60자 이하로 작성해주세요")
         private String title;
         @NotBlank
-        @Size(max = 2000, message = "내용은 2,000자 이하로 작성해주세요")
+        @Size(max = 5000, message = "내용은 5,000자 이하로 작성해주세요")
         private String content;
         @NotBlank
         @Pattern(regexp = "(MEDICAL|FREE)$")

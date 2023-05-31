@@ -32,6 +32,8 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.complaint.ComplaintReqDto.*
 @Slf4j
 public class BoardApiController {
 
+    private static final Long BOARD_IMAGE_MAX_SIZE = (long) (2 * 1024 * 1024);
+
     private final BoardService boardService;
     private final CommentService commentService;
     private final ComplaintService complaintService;
@@ -127,7 +129,9 @@ public class BoardApiController {
     public ResponseEntity<?> addBoardImage(@RequestParam("boardImage") MultipartFile boardImage,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        // TODO: 이미지 크기 제한
+        if (boardImage.getSize() > BOARD_IMAGE_MAX_SIZE) {
+            return new ResponseEntity<>(new ResponseDto<>(-1, "이미지 크기는 2MB보다 작아야 합니다", null), HttpStatus.BAD_REQUEST);
+        }
 
         AddBoardImageResponse result = boardService.addBoardImage(principalDetails.getAccount().getId(), boardImage);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 이미지가 추가되었습니다", result), HttpStatus.CREATED);
