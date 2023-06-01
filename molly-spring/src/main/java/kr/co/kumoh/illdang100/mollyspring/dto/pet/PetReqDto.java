@@ -26,8 +26,8 @@ public class PetReqDto {
         @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
         private String petType;
 
-        @NotBlank(message = "반려동물 이름은 빈 문자열이면 안 됩니다.")
-        @Size(max = 20)
+        @NotEmpty
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z]{1,10}$", message = "한글/영문 1~10자 이내로 작성해주세요")
         private String petName;
 
         @NotBlank(message = "반려동물 품종은 빈 문자열이면 안 됩니다.")
@@ -64,7 +64,8 @@ public class PetReqDto {
         @Pattern(regexp = "(CAT|DOG|RABBIT|NOT_SELECTED)$")
         private String petType;
 
-        @NotBlank(message = "반려동물 이름은 빈 문자열이면 안 됩니다.")
+        @NotEmpty
+        @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z]{1,10}$", message = "한글/영문 1~10자 이내로 작성해주세요")
         private String petName;
 
         @NotBlank(message = "반려동물 품종은 빈 문자열이면 안 됩니다.")
