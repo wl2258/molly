@@ -1,4 +1,4 @@
-package kr.co.kumoh.illdang100.mollyspring.service;
+package kr.co.kumoh.illdang100.mollyspring.service.community;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
@@ -12,6 +12,8 @@ import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.comment.CommentRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.image.BoardImageRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.liky.LikyRepository;
+import kr.co.kumoh.illdang100.mollyspring.service.FileRootPathVO;
+import kr.co.kumoh.illdang100.mollyspring.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
