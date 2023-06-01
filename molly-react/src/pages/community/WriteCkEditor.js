@@ -20,6 +20,7 @@ const WriteCkEditor = () => {
   const [boardValue, setBoardValue] = useState("MEDICAL");
   const [petView, setPetView] = useState(false);
   const [petValue, setPetValue] = useState("NOT_SELECTED");
+  const [tooltip, setTooltip] = useState(false);
 
   const navigate = useNavigate();
 
@@ -132,6 +133,7 @@ const WriteCkEditor = () => {
           }
         } else if (errResponseStatus === 400) {
           console.log(error.response.data.data);
+          alert(error.response.data.msg);
           return error.response;
         } else if (errResponseStatus === 401) {
           console.log("인증 실패");
@@ -192,8 +194,6 @@ const WriteCkEditor = () => {
     };
   }
 
-  console.log(content);
-
   const handleSubmit = () => {
     if (title.length < 1) {
       titleRef.current.focus();
@@ -217,12 +217,16 @@ const WriteCkEditor = () => {
 
     console.log(data);
 
-    axiosInstance.post(`/api/auth/board`, data, config).then((response) => {
-      if (response.data.code === 1) {
-        localStorage.removeItem("imgId");
-        navigate(`/list/ALL/ALL`, { replace: true });
-      }
-    });
+    if (content.length < 5000) {
+      axiosInstance.post(`/api/auth/board`, data, config).then((response) => {
+        if (response.data.code === 1) {
+          localStorage.removeItem("imgId");
+          navigate(`/list/ALL/ALL`, { replace: true });
+        }
+      });
+    } else {
+      setTooltip(true);
+    }
   };
 
   const handleCancle = () => {
@@ -325,21 +329,25 @@ const WriteCkEditor = () => {
               }}
               onChange={(event, editor) => {
                 setContent(editor.getData());
-                console.log({ event, editor, content });
+                //console.log({ event, editor, content });
               }}
               onBlur={(event, editor) => {
-                console.log("Blur.", editor);
+                //console.log("Blur.", editor);
               }}
               onFocus={(event, editor) => {
-                console.log("Focus.", editor);
+                //console.log("Focus.", editor);
               }}
             />
           </section>
           <div className={styles.footer}>
-            <span>
+            {tooltip && <p>글자수를 초과하였습니다.</p>}
+            <span
+              className={styles.numberOfChar}
+            >{`${content.length}/5000`}</span>
+            <span className={styles.cancleBtn}>
               <Button name="취소" onClick={handleCancle} />
             </span>
-            <span>
+            <span className={styles.submitBtn}>
               <Button name="완료" onClick={handleSubmit} />
             </span>
           </div>
