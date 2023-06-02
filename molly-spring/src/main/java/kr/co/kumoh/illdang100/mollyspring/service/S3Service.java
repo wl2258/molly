@@ -18,7 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import static com.amazonaws.services.s3.model.DeleteObjectsRequest.*;
 
 @Slf4j
 @Service
@@ -31,7 +35,6 @@ public class S3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-
     /**
      * S3 bucket 파일 다운로드
      */
@@ -79,5 +82,22 @@ public class S3Service {
         boolean isExistObject = amazonS3Client.doesObjectExist(bucket, storeFileName);
         if (isExistObject)
             amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, storeFileName));
+    }
+
+    /**
+     * 파일 여러 개 삭제
+     * @param storeFileNameList
+     */
+    public void deleteFiles(List<String> storeFileNameList) {
+        List<KeyVersion> keyList = new ArrayList<>();
+
+        for (String fileName : storeFileNameList) {
+            keyList.add(new KeyVersion(fileName));
+        }
+
+        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
+        deleteObjectsRequest.setKeys(keyList);
+
+        amazonS3Client.deleteObjects(deleteObjectsRequest);
     }
 }
