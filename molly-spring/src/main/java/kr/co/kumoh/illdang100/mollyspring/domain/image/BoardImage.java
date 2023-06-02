@@ -1,5 +1,6 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.image;
 
+import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardImage{
+public class BoardImage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

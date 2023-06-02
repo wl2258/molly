@@ -79,7 +79,7 @@ public class BoardService {
         if (boardImage != null && !boardImage.isEmpty()) {
             try {
                 BoardImage storedBoardImage =
-                        saveBoardImageToTmp(boardImage, FileRootPathVO.BOARD_PATH + accountId);
+                        saveBoardImage(boardImage, FileRootPathVO.BOARD_PATH + accountId);
                 addBoardImageResponse.setBoardImageId(storedBoardImage.getId());
                 addBoardImageResponse.setStoredBoardImageUrl(storedBoardImage.getBoardImageFile().getStoreFileUrl());
             } catch (Exception e) {
@@ -250,14 +250,7 @@ public class BoardService {
                 .collect(Collectors.toList()));
     }
 
-    private BoardImage saveBoardImage(Long boardId, MultipartFile boardImage, String filePath) throws IOException {
-        ImageFile boardImageFile =
-                s3Service.upload(boardImage, filePath + boardId);
-
-        return boardImageRepository.save(new BoardImage(boardId, boardImageFile));
-    }
-
-    private BoardImage saveBoardImageToTmp(MultipartFile boardImage, String filePath) throws IOException {
+    private BoardImage saveBoardImage(MultipartFile boardImage, String filePath) throws IOException {
         ImageFile boardImageFile =
                 s3Service.upload(boardImage, filePath);
 
