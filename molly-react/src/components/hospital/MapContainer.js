@@ -31,28 +31,23 @@ const MapContainer = () => {
 
             // 주변 동물병원 마커를 표시하는 함수
             const displayNearbyAnimalHospitals = () => {
-              // 주변 동물병원 검색 요청을 생성합니다.
               const places = new kakao.maps.services.Places();
-              places.keywordSearch(
-                "동물병원",
-                (results, status) => {
-                  if (status === kakao.maps.services.Status.OK) {
-                    // 검색 결과를 받아와서 마커로 표시합니다.
-                    for (let i = 0; i < results.length; i++) {
-                      const marker = new kakao.maps.Marker({
-                        position: new kakao.maps.LatLng(
-                          results[i].y,
-                          results[i].x
-                        ),
-                        map: map,
-                      });
-                    }
+              places.keywordSearch("동물병원", (results, status) => {
+                if (status === kakao.maps.services.Status.OK) {
+                  // 검색 결과를 받아와서 마커로 표시합니다.
+                  for (let i = 0; i < results.length; i++) {
+                    const marker = new kakao.maps.Marker({
+                      position: new kakao.maps.LatLng(
+                        results[i].y,
+                        results[i].x
+                      ),
+                      map: map,
+                    });
+
+                    marker.setMap(map);
                   }
-                },
-                {
-                  location: new kakao.maps.LatLng(33.450701, 126.570667),
                 }
-              );
+              });
             };
 
             displayNearbyAnimalHospitals(); // 주변 동물병원 마커를 표시합니다.
