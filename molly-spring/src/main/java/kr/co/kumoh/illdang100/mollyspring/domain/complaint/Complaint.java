@@ -1,16 +1,15 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.complaint;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
-import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Complaint extends BaseTimeEntity {
 
     @Id
@@ -18,13 +17,13 @@ public class Complaint extends BaseTimeEntity {
     @Column(name = "complaint_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @Column(nullable = false, length = 40)
+    private String reporterEmail;
 
-    @Column(length = 45)
-    private String complaintTitle;
+    private Long boardId;
+    private Long commentId;
 
-    @Column(length = 255)
-    private String complaintContent;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 25)
+    private ComplaintReasonEnum complaintReason;
 }

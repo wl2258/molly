@@ -2,9 +2,9 @@ package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
 import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
-import kr.co.kumoh.illdang100.mollyspring.service.BoardService;
-import kr.co.kumoh.illdang100.mollyspring.service.CommentService;
-import kr.co.kumoh.illdang100.mollyspring.service.ComplaintService;
+import kr.co.kumoh.illdang100.mollyspring.service.community.BoardService;
+import kr.co.kumoh.illdang100.mollyspring.service.community.CommentService;
+import kr.co.kumoh.illdang100.mollyspring.service.community.ComplaintService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,7 +32,7 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.complaint.ComplaintReqDto.*
 @Slf4j
 public class BoardApiController {
 
-    private static final Long BOARD_IMAGE_MAX_SIZE = (long) (2 * 1024 * 1024);
+    private static final Long BOARD_IMAGE_MAX_SIZE = (long) (1 * 1024 * 1024);
 
     private final BoardService boardService;
     private final CommentService commentService;
@@ -70,7 +70,7 @@ public class BoardApiController {
      * @param updatePostRequest 수정한 게시글 정보
      * @param principalDetails  인증된 사용자 정보
      */
-    @PostMapping("/auth/board/{boardId}")
+    @PutMapping("/auth/board/{boardId}")
     public ResponseEntity<?> editPost(@PathVariable("boardId") Long boardId,
                                       @RequestBody UpdatePostRequest updatePostRequest,
                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -188,10 +188,19 @@ public class BoardApiController {
 
     @PostMapping("/auth/board/{boardId}/report")
     public ResponseEntity<?> reportPost(@PathVariable("boardId") Long boardId,
-                                        @RequestBody ReportPostRequest reportPostRequest,
+                                        @RequestBody ReportRequest reportPostRequest,
                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        complaintService.reportPost(boardId, principalDetails.getAccount().getId(), reportPostRequest);
+        complaintService.reportPost(boardId, principalDetails.getAccount().getId(), reportPostRequest.getReason());
+        return new ResponseEntity<>(new ResponseDto<>(1, "신고가 정상적으로 이루어졌습니다", null), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/auth/comment/{commentId}/report")
+    public ResponseEntity<?> reportComment(@PathVariable("commentId") Long commentId,
+                                        @RequestBody ReportRequest reportRequest,
+                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        complaintService.reportComment(commentId, principalDetails.getAccount().getId(), reportRequest.getReason());
         return new ResponseEntity<>(new ResponseDto<>(1, "신고가 정상적으로 이루어졌습니다", null), HttpStatus.CREATED);
     }
 }
