@@ -1,4 +1,4 @@
-package kr.co.kumoh.illdang100.mollyspring.service;
+package kr.co.kumoh.illdang100.mollyspring.service.community;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
@@ -58,7 +58,7 @@ public class CommentService {
     }
 
     private Board findBoardByIdOrThrowException(Long boardId) {
-        return boardRepository.findWithAccountById(boardId)
+        return boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 게시글입니다"));
     }
 }

@@ -1,4 +1,4 @@
-package kr.co.kumoh.illdang100.mollyspring.service;
+package kr.co.kumoh.illdang100.mollyspring.service.community;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
@@ -12,6 +12,8 @@ import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.comment.CommentRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.image.BoardImageRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.liky.LikyRepository;
+import kr.co.kumoh.illdang100.mollyspring.service.FileRootPathVO;
+import kr.co.kumoh.illdang100.mollyspring.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -77,7 +79,7 @@ public class BoardService {
         if (boardImage != null && !boardImage.isEmpty()) {
             try {
                 BoardImage storedBoardImage =
-                        saveBoardImageToTmp(boardImage, FileRootPathVO.BOARD_PATH + accountId);
+                        saveBoardImage(boardImage, FileRootPathVO.BOARD_PATH + accountId);
                 addBoardImageResponse.setBoardImageId(storedBoardImage.getId());
                 addBoardImageResponse.setStoredBoardImageUrl(storedBoardImage.getBoardImageFile().getStoreFileUrl());
             } catch (Exception e) {
@@ -248,14 +250,7 @@ public class BoardService {
                 .collect(Collectors.toList()));
     }
 
-    private BoardImage saveBoardImage(Long boardId, MultipartFile boardImage, String filePath) throws IOException {
-        ImageFile boardImageFile =
-                s3Service.upload(boardImage, filePath + boardId);
-
-        return boardImageRepository.save(new BoardImage(boardId, boardImageFile));
-    }
-
-    private BoardImage saveBoardImageToTmp(MultipartFile boardImage, String filePath) throws IOException {
+    private BoardImage saveBoardImage(MultipartFile boardImage, String filePath) throws IOException {
         ImageFile boardImageFile =
                 s3Service.upload(boardImage, filePath);
 

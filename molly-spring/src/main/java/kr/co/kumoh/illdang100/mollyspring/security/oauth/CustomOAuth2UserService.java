@@ -1,5 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.security.oauth;
 
+import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomOAuth2AuthenticationException;
+import kr.co.kumoh.illdang100.mollyspring.repository.suspension.SuspensionDateRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.security.oauth.provider.GoogleUserInfo;
 import kr.co.kumoh.illdang100.mollyspring.security.oauth.provider.KakaoUserInfo;
@@ -16,6 +18,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +29,7 @@ import java.util.UUID;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final AccountRepository accountRepository;
+    private final SuspensionDateRepository suspensionDateRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -64,6 +68,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             log.error("지원하지 않는 소셜 로그인");
             throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다");
         }
+
+        suspensionDateRepository.findByAccountEmail(oAuth2UserInfo.getEmail()).ifPresent(suspensionDate -> {
+            log.info("정지된 사용자 계정입니다.");
+            if (!LocalDate.now().isAfter(suspensionDate.getSuspensionExpiryDate())) {
+                throw new CustomOAuth2AuthenticationException("정지된 사용자 계정입니다. 정지 기간:" + suspensionDate.getSuspensionExpiryDate());
+            }
+        });
 
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
 
