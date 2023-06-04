@@ -25,7 +25,7 @@ public abstract class Pet extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(nullable = false, name = "account_id")
     private Account account;
 
     @Column(nullable = false, length = 30)

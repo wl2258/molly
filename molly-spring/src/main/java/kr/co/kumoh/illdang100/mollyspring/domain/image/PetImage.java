@@ -19,7 +19,7 @@ public class PetImage {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id")
+    @JoinColumn(nullable = false, name = "pet_id")
     private Pet pet;
 
     @Embedded
