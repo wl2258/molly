@@ -18,7 +18,7 @@ public class Suspension extends BaseTimeEntity {
     @Column(name = "suspension_id")
     private Long id;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 45)
     private String accountEmail;
     @Column(unique = true) // <- 이 게시글 혹은 댓글이 삭제되었을 수도 있는데 그냥 PK만 가지고 잇으므로 상관x
     private Long boardId;
