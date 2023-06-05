@@ -31,7 +31,7 @@ public class Account extends BaseTimeEntity {
     @Column(nullable = false, length = 10)
     private AccountEnum role; // ADMIN, CUSTOMER
 
-    @Column(unique = true, length = 40)
+    @Column(unique = true, length = 45)
     private String email;
 
     @Embedded
