@@ -10,6 +10,7 @@ import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.pet.PetRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshToken;
 import kr.co.kumoh.illdang100.mollyspring.security.jwt.RefreshTokenRedisRepository;
+import kr.co.kumoh.illdang100.mollyspring.service.community.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,19 +64,21 @@ public class AccountService {
         Account account = findAccountByIdOrThrowException(accountId);
 
         String nickname = saveAccountRequest.getNickname();
-
         checkNicknameDuplicate(nickname);
         account.changeNickname(nickname);
 
-        if (saveAccountRequest.getAccountProfileImage() != null) {
+        Optional<MultipartFile> profileImageOptional = Optional.ofNullable(saveAccountRequest.getAccountProfileImage());
+        profileImageOptional.ifPresent(profileImage -> {
             try {
-                ImageFile accountImageFile =
-                        s3Service.upload(saveAccountRequest.getAccountProfileImage(), FileRootPathVO.ACCOUNT_PATH);
+                ImageFile accountImageFile = s3Service.upload(profileImage, FileRootPathVO.ACCOUNT_PATH);
                 account.changeProfileImage(accountImageFile);
             } catch (Exception e) {
                 throw new CustomApiException(e.getMessage());
             }
-        }
+        });
+
+        List<Board> boards = boardRepository.findByAccountEmail(account.getEmail());
+        boards.forEach(board -> board.reconnect(account));
     }
 
     private Account findAccountByIdOrThrowException(Long accountId) {
@@ -172,17 +175,15 @@ public class AccountService {
         // pet 삭제
         deletePetByAccountId(accountId);
 
-        // board 삭제
-        deleteBoardByAccountId(accountId);
+        // 사용자가 작성한 게시글 board.account -> null로 변경
+        resetAccountFromBoard(accountId);
 
         accountRepository.delete(findAccount);
     }
 
-    private void deleteBoardByAccountId(Long accountId) {
+    private void resetAccountFromBoard(Long accountId) {
         List<Board> findBoards = boardRepository.findByAccount_Id(accountId);
-        findBoards.forEach(board -> {
-            boardService.deletePost(board.getId(), accountId);
-        });
+        findBoards.forEach(Board::resetAccount);
     }
 
     private void deletePetByAccountId(Long accountId) {
