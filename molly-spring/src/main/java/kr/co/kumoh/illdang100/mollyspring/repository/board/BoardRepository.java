@@ -13,4 +13,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
     Optional<Board> findWithAccountById(Long boardId);
 
     List<Board> findByAccount_Id(Long accountId);
+
+    List<Board> findByAccountEmail(String accountEmail);
 }

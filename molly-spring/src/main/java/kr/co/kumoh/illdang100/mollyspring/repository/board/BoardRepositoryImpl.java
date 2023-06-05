@@ -47,7 +47,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.hasImage,
                         board.isNotice))
                 .from(board)
-                .join(board.account, account)
+                .leftJoin(board.account, account)
                 .where(categoryEq(retrievePostListCondition.getCategory()),
                         petTypeEq(retrievePostListCondition.getPetType()),
                         searchWordLike(retrievePostListCondition.getSearchWord()))
