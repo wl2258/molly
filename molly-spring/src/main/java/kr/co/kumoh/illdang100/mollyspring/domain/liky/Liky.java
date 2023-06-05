@@ -20,12 +20,11 @@ public class Liky {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+    @Column(nullable = false, length = 45)
+    private String accountEmail;
 
-    @Column(nullable = false)
-    private Long accountId;
-
-    public Liky(Board board, Long accountId) {
+    public Liky(Board board, String accountEmail) {
         this.board = board;
-        this.accountId = accountId;
+        this.accountEmail = accountEmail;
     }
 }
