@@ -1,7 +1,9 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
+import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
@@ -16,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.account.AccountReqDto.*;
@@ -35,8 +39,8 @@ class AccountServiceTest extends DummyObject {
     @Mock
     private S3Service s3Service;
 
-    @Spy
-    private ObjectMapper om;
+    @Mock
+    private BoardRepository boardRepository;
 
     @Test
     public void checkNicknameDuplicate_test() {
@@ -78,6 +82,8 @@ class AccountServiceTest extends DummyObject {
         // stub
         Account account = newMockAccount(1L, "google_1234", "molly", AccountEnum.CUSTOMER);
         when(accountRepository.findById(any())).thenReturn(Optional.of(account));
+
+        when(boardRepository.findByAccountEmail(account.getEmail())).thenReturn(new ArrayList<>());
 
         // when
         accountService.saveAdditionalAccountInfo(accountId, saveAccountRequest);

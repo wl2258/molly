@@ -11,6 +11,7 @@ import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.liky.LikyRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
+import kr.co.kumoh.illdang100.mollyspring.service.community.BoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -110,11 +111,12 @@ class BoardServiceTest extends DummyObject {
         Account account = newMockAccount(accountId, "kakao_1234", "molly", AccountEnum.CUSTOMER);
         Board board =
                 newMockBoard(boardId, account, "testTitle", "testContent", BoardEnum.FREE, PetTypeEnum.DOG, false);
+        when(accountRepository.findById(any())).thenReturn(Optional.of(account));
         when(boardRepository.findWithAccountById(any())).thenReturn(Optional.of(board));
 
         // stub
-        Liky liky = newMockLiky(1L, board, accountId, boardRepository);
-        when(likyRepository.existsByAccountIdAndBoard_Id(any(), any())).thenReturn(false);
+        Liky liky = newMockLiky(1L, board, account.getEmail(), boardRepository);
+        when(likyRepository.existsByAccountEmailAndBoard_Id(any(), any())).thenReturn(false);
 
         // when
         LikyBoardResponse likyBoardResponse = boardService.toggleLikePost(accountId, boardId);
@@ -136,11 +138,12 @@ class BoardServiceTest extends DummyObject {
         Account account = newMockAccount(accountId, "kakao_1234", "molly", AccountEnum.CUSTOMER);
         Board board =
                 newMockBoard(boardId, account, "testTitle", "testContent", BoardEnum.FREE, PetTypeEnum.DOG, false);
+        when(accountRepository.findById(any())).thenReturn(Optional.of(account));
         when(boardRepository.findWithAccountById(any())).thenReturn(Optional.of(board));
 
         // stub
         // newMockLiky 이후 board의 likyCnt값 감소하는지 검사하기
-        when(likyRepository.existsByAccountIdAndBoard_Id(any(), any())).thenReturn(true);
+        when(likyRepository.existsByAccountEmailAndBoard_Id(any(), any())).thenReturn(true);
 
         // when
         LikyBoardResponse likyBoardResponse = boardService.toggleLikePost(accountId, boardId);
