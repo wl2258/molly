@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Header from '../components/Header';
-import styles from '../css/UserInfo.module.css';
-import {MdModeEdit} from 'react-icons/md';
-import axios from 'axios';
+import React, { useEffect, useRef, useState } from "react";
+import Header from "../components/Header";
+import styles from "../css/UserInfo.module.css";
+import { MdModeEdit } from "react-icons/md";
+import axios from "axios";
 
 const UserInfo = () => {
   const [user, setUser] = useState({}); // user 정보
@@ -29,21 +29,21 @@ const UserInfo = () => {
     setLoading(true);
 
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
-      }
-    }
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
 
-    axiosInstance.get(`/api/auth/account`, config)
+    axiosInstance
+      .get(`/api/auth/account`, config)
       .then((response) => {
         setUser(response.data.data);
         setLoading(false);
       })
       .catch((e) => {
         console.log(e);
-      })
-
-  }, [])
+      });
+  }, []);
 
   // useEffect(() => {
   //   setLoading(true)
@@ -77,15 +77,15 @@ const UserInfo = () => {
         const prevRequest = error.config;
         const errMsg = error.response.data.msg;
 
-        if(errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
+        if (errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
           const preRefreshToken = localStorage.getItem("refreshToken");
-          if(preRefreshToken) {
+          if (preRefreshToken) {
             async function issuedToken() {
               const config = {
                 headers: {
-                  "Refresh-Token": preRefreshToken
-                }
-              }
+                  "Refresh-Token": preRefreshToken,
+                },
+              };
               return await axios
                 .post(`http://localhost:8080/api/token/refresh`, null, config)
                 .then(async (res) => {
@@ -94,9 +94,9 @@ const UserInfo = () => {
                   const reRefreshToken = res.headers.get("Refresh-token");
                   localStorage.setItem("accessToken", reAccessToken);
                   localStorage.setItem("refreshToken", reRefreshToken);
-                  
+
                   prevRequest.headers.Authorization = reAccessToken;
-                  
+
                   return await axios(prevRequest);
                 })
                 .catch((e) => {
@@ -108,20 +108,20 @@ const UserInfo = () => {
           } else {
             throw new Error("There is no refresh token");
           }
-        }
-        else if(errResponseStatus === 400) {
-          console.log(error.response.data.data);
-          return error.response;
-        }
-        else if(errResponseStatus === 401) {
+        } else if (errResponseStatus === 400) {
+          console.log(error.response.data);
+        } else if (errResponseStatus === 401) {
           console.log("인증 실패");
           window.location.replace("/login");
-        }
-        else if(errResponseStatus === 403) {
-          alert("권한이 없습니다.");
-        }
-        else if(errResponseStatus === 404) {
-          console.log(error.response.data.data);
+        } else if (errResponseStatus === 403) {
+          alert(errMsg);
+          axios.delete(`http://localhost:8080/api/account/logout`, {
+            headers: {
+              "Refresh-Token": localStorage.getItem("refreshToken"),
+            },
+          });
+          localStorage.clear();
+          window.location.replace("/");
         }
       } catch (e) {
         return Promise.reject(e);
@@ -129,16 +129,14 @@ const UserInfo = () => {
     }
   );
 
-  // 닉네임 input value 
+  // 닉네임 input value
   const handleChange = (e) => {
     if (e.target.value.length <= 10) {
       setNickName(e.target.value);
+    } else {
+      setNickName(e.target.value.slice(0, 10));
     }
-    else {
-      setNickName(e.target.value.slice(0, 10))
-    }
-  }
-
+  };
 
   // 이미지 업로드 patch
   const saveImgFile = () => {
@@ -150,23 +148,27 @@ const UserInfo = () => {
     };
 
     const formData = new FormData();
-    if(imgRef.current.files[0] !== undefined) {
+    if (imgRef.current.files[0] !== undefined) {
       formData.append("accountProfileImage", imgRef.current.files[0]);
     }
 
     const config = {
       headers: {
-        Authorization : localStorage.getItem("accessToken"),
-      }
-    }
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.patch(`/api/auth/account/profile-image`, formData, config)
-      if(response.data.code === 1) {
+      const response = await axiosInstance.patch(
+        `/api/auth/account/profile-image`,
+        formData,
+        config
+      );
+      if (response.data.code === 1) {
         console.log("사용자 이미지 수정 완료");
         setModal(!modal);
       }
-    }
+    };
 
     fetchData();
   };
@@ -174,13 +176,12 @@ const UserInfo = () => {
   // 닉네임 유효성 검사
   const checkNickname = (e) => {
     const regExp = /^[가-힣a-zA-Z]{1,10}$/;
-    if(regExp.test(e.target.value) === true) {
+    if (regExp.test(e.target.value) === true) {
       setEffective(true);
-    }
-    else { 
+    } else {
       setEffective(false);
     }
-  }
+  };
 
   // 닉네임 중복 검사
   const checkDuplicate = (e) => {
@@ -188,64 +189,69 @@ const UserInfo = () => {
     setDuplicate(0);
 
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken"),
-        "Content-Type": "application/json"
-      }
-    }
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+        "Content-Type": "application/json",
+      },
+    };
 
     const data = {
-      "nickname" : nickname
-    }
+      nickname: nickname,
+    };
 
-    if(effective === false) {
+    if (effective === false) {
       setEffectiveColor("red");
-    } 
-    else if(effective === true) {
+    } else if (effective === true) {
       setEffectiveColor("#827870");
-      
+
       const fetchData = async function fetch() {
-        const response = await axiosInstance.post(`/api/auth/account/duplicate`, data, config);
-        console.log(response); 
-        if(response.data.code === 1) {
+        const response = await axiosInstance.post(
+          `/api/auth/account/duplicate`,
+          data,
+          config
+        );
+        console.log(response);
+        if (response.data.code === 1) {
           setDisabled(false);
           setCursor("pointer");
           setDuplicate(2);
-        } 
-        else {
+        } else {
           setDisabled(true);
           setCursor("");
           setDuplicate(1);
         }
-      }
-  
+      };
+
       fetchData();
     }
-  }
+  };
 
   // 기본 이미지 변경 delete
   const deleteImg = () => {
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
-      }
-    }
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
     setImgFile(null);
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.delete(`/api/auth/account/profile-image`, config);
-      if(response.data.code === 1) {
+      const response = await axiosInstance.delete(
+        `/api/auth/account/profile-image`,
+        config
+      );
+      if (response.data.code === 1) {
         console.log("기본 이미지 변경 완료");
         setModal(!modal);
       }
-    }
+    };
 
     fetchData();
-  }
+  };
 
   const handleModal = () => {
     setModal(!modal);
-  }
+  };
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -256,40 +262,44 @@ const UserInfo = () => {
   // 닉네임 수정 patch
   const handleNicknameSave = () => {
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken"),
-        "Content-Type": "application/json"
-      }
-    }
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+        "Content-Type": "application/json",
+      },
+    };
 
     const data = {
-      "nickname" : nickname
-    }
+      nickname: nickname,
+    };
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.post(`/api/auth/account/nickname`, data, config)
-      console.log(response); 
-      if(response.data.code === 1) {
+      const response = await axiosInstance.post(
+        `/api/auth/account/nickname`,
+        data,
+        config
+      );
+      console.log(response);
+      if (response.data.code === 1) {
         setEdit(!edit);
         setSave(true);
         console.log("닉네임 수정 완료");
-      }
-      else {
+      } else {
         console.log("유효성 검사 실패");
       }
-    }
+    };
 
     fetchData();
-  }
+  };
 
   const handleLeave = () => {
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken")
-      }
-    }
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
 
-    axiosInstance.delete(`/api/auth/account`, config)
+    axiosInstance
+      .delete(`/api/auth/account`, config)
       .then((response) => {
         console.log(response);
         console.log("탈퇴 완료");
@@ -298,21 +308,21 @@ const UserInfo = () => {
       })
       .catch((e) => {
         console.log(e);
-      })
-  }
+      });
+  };
 
   if (loading) {
-    return(
+    return (
       <div>
         <Header />
-        <div className={styles.box} style={{marginLeft: "100px"}}>
+        <div className={styles.box} style={{ marginLeft: "100px" }}>
           loading
         </div>
       </div>
-    )
+    );
   }
 
-  if (Object.keys(user).length === 0 ) {
+  if (Object.keys(user).length === 0) {
     return null;
   }
 
@@ -326,11 +336,15 @@ const UserInfo = () => {
               <div className={styles.profileuser} onClick={handleModal}>
                 <img
                   className={styles.profileimg}
-                  src={imgFile !== null ? imgFile : process.env.PUBLIC_URL + '/img/profile.png'}
+                  src={
+                    imgFile !== null
+                      ? imgFile
+                      : process.env.PUBLIC_URL + "/img/profile.png"
+                  }
                   alt="프로필 이미지"
                 />
               </div>
-              {modal && <Profile onClick={handleModal} deleteImg={deleteImg}/>}
+              {modal && <Profile onClick={handleModal} deleteImg={deleteImg} />}
               <input
                 name="accountProfileImage"
                 className={styles.profileinput}
@@ -341,59 +355,102 @@ const UserInfo = () => {
                 ref={imgRef}
               />
             </form>
-            {edit ? 
+            {edit ? (
               <div className={styles.modal}>
-                <span style={{color: `${effectiveColor}`}} className={styles.nicknameguide}>
+                <span
+                  style={{ color: `${effectiveColor}` }}
+                  className={styles.nicknameguide}
+                >
                   한글/영어를 사용하여 10자 이내로 작성
                 </span>
-                <input 
+                <input
                   name="nickname"
-                  type="text" 
-                  value={nickname} 
-                  onChange={handleChange} 
+                  type="text"
+                  value={nickname}
+                  onChange={handleChange}
                   placeholder="닉네임"
                   required
                   onBlur={checkNickname}
                   maxLength="10"
                 />
                 <span onClick={checkDuplicate}>중복확인</span>
-                {duplicate === 0 ? null : 
-                  duplicate === 1 ? <span style={{color:"red"}} className={styles.duplicatepass}>사용 불가능한 닉네임입니다.</span> 
-                  : <span className={styles.duplicatepass}>사용 가능한 닉네임입니다.</span>}
-                <span className={styles.cancle}><span onClick={() => {setEdit(false)}}>취소</span></span>
+                {duplicate === 0 ? null : duplicate === 1 ? (
+                  <span
+                    style={{ color: "red" }}
+                    className={styles.duplicatepass}
+                  >
+                    사용 불가능한 닉네임입니다.
+                  </span>
+                ) : (
+                  <span className={styles.duplicatepass}>
+                    사용 가능한 닉네임입니다.
+                  </span>
+                )}
+                <span className={styles.cancle}>
+                  <span
+                    onClick={() => {
+                      setEdit(false);
+                    }}
+                  >
+                    취소
+                  </span>
+                </span>
                 <span className={styles.save}>
-                  <button disabled={disabled} style={{color:`${color}`, cursor: `${cursor}`}} onClick={handleNicknameSave}>
+                  <button
+                    disabled={disabled}
+                    style={{ color: `${color}`, cursor: `${cursor}` }}
+                    onClick={handleNicknameSave}
+                  >
                     저장
                   </button>
                 </span>
-              </div> :
-              <div className={styles.modal}>
-                <div className={styles.nickname}>
-                  {nickname}
-                </div>
-                <span className={styles.editicon} onClick={()=>{setEdit(true)}}><MdModeEdit color="#827870" size="25px"/></span>
               </div>
-            }
+            ) : (
+              <div className={styles.modal}>
+                <div className={styles.nickname}>{nickname}</div>
+                <span
+                  className={styles.editicon}
+                  onClick={() => {
+                    setEdit(true);
+                  }}
+                >
+                  <MdModeEdit color="#827870" size="25px" />
+                </span>
+              </div>
+            )}
             <div></div>
             <div></div>
           </div>
           <div className={styles.info}>
             <div>
               <h1>회원가입 정보</h1>
-              {accountLogo === "kakao" ? 
-                <img src={process.env.PUBLIC_URL + '/img/kakao-account.png'} alt="kakao 로고" width="40px" height="40px"/> 
-                : <img src={process.env.PUBLIC_URL + '/img/google-account.png'} alt="google 로고" width="50px"/> 
-              }
+              {accountLogo === "kakao" ? (
+                <img
+                  src={process.env.PUBLIC_URL + "/img/kakao-account.png"}
+                  alt="kakao 로고"
+                  width="40px"
+                  height="40px"
+                />
+              ) : (
+                <img
+                  src={process.env.PUBLIC_URL + "/img/google-account.png"}
+                  alt="google 로고"
+                  width="50px"
+                />
+              )}
               <p>{email}</p>
             </div>
             <div>
               <h1>탈퇴하기</h1>
               <button onClick={handleLeave}>탈퇴하기</button>
             </div>
-            <p>탈퇴 시 작성하신 포스트 및 댓글과 반려동물 등록 정보가 모두 삭제되며 복구되지 않습니다.</p>
+            <p>
+              탈퇴 시 작성하신 포스트 및 댓글과 반려동물 등록 정보가 모두
+              삭제되며 복구되지 않습니다.
+            </p>
           </div>
         </div>
-      </div> 
+      </div>
     </div>
   );
 };
@@ -407,8 +464,8 @@ const Profile = (props) => {
       width: 100%;`;
     return () => {
       const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
     };
   }, []);
 
@@ -424,14 +481,16 @@ const Profile = (props) => {
           </label>
         </div>
         <div>
-          <h2 htmlFor="profileImg" onClick={props.deleteImg}>기본 이미지로 변경</h2>
+          <h2 htmlFor="profileImg" onClick={props.deleteImg}>
+            기본 이미지로 변경
+          </h2>
         </div>
         <div>
           <p onClick={props.onClick}>취소</p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default UserInfo;
