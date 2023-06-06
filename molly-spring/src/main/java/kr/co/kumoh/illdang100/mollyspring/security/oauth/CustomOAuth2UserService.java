@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -33,68 +32,71 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
         return processOAuth2User(userRequest, oAuth2User);
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
-
         Map<String, Object> attributes = oAuth2User.getAttributes();
-
-        // Attribute를 파싱해서 공통 객체로 묶는다. 관리가 편함.
-        OAuth2UserInfo oAuth2UserInfo = null;
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        String username = "";
+        String username = getUsername(oAuth2User, registrationId, attributes);
+        OAuth2UserInfo oAuth2UserInfo = getOAuth2UserInfo(registrationId, attributes);
+
+        validateUserSuspension(oAuth2UserInfo.getEmail());
+
+        Account account = accountRepository.findByUsername(username)
+                .orElseGet(() -> createNewAccount(username, oAuth2UserInfo.getEmail()));
+
+        return new PrincipalDetails(account, attributes);
+    }
+
+    private String getUsername(OAuth2User oAuth2User, String registrationId, Map<String, Object> attributes) {
+        String providerId;
         if (registrationId.equals("google")) {
-
             log.debug("구글 로그인 요청!");
-
-            String providerId = oAuth2User.getAttribute("sub");
-            username = registrationId + "_" + providerId;
-
-            oAuth2UserInfo = new GoogleUserInfo(attributes);
+            providerId = oAuth2User.getAttribute("sub");
         } else if (registrationId.equals("kakao")) {
-
             log.debug("카카오 로그인 요청!");
-
-            long providerId = (long) attributes.get("id");
-            username = registrationId + "_" + providerId;
-
-            oAuth2UserInfo = new KakaoUserInfo(attributes);
+            providerId = String.valueOf(attributes.get("id"));
         } else {
             log.error("지원하지 않는 소셜 로그인");
             throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다");
         }
+        return registrationId + "_" + providerId;
+    }
 
-        suspensionDateRepository.findByAccountEmail(oAuth2UserInfo.getEmail()).ifPresent(suspensionDate -> {
+    private OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
+        if (registrationId.equals("google")) {
+            return new GoogleUserInfo(attributes);
+        } else if (registrationId.equals("kakao")) {
+            return new KakaoUserInfo(attributes);
+        } else {
+            log.error("지원하지 않는 소셜 로그인");
+            throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다");
+        }
+    }
+
+    private void validateUserSuspension(String email) {
+        suspensionDateRepository.findByAccountEmail(email).ifPresent(suspensionDate -> {
             log.info("정지된 사용자 계정입니다.");
             if (!LocalDate.now().isAfter(suspensionDate.getSuspensionExpiryDate())) {
                 throw new CustomOAuth2AuthenticationException("정지된 사용자 계정입니다. 정지 기간:" + suspensionDate.getSuspensionExpiryDate());
             }
         });
+    }
 
-        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+    private Account createNewAccount(String username, String email) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String password = passwordEncoder.encode(UUID.randomUUID().toString());
 
-        Account account;
-        String oauthEmail = oAuth2UserInfo.getEmail();
-        if (accountOptional.isEmpty()) {
+        Account account = Account.builder()
+                .username(username)
+                .email(email)
+                .password(password)
+                .role(AccountEnum.CUSTOMER)
+                .build();
 
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-            account = Account.builder()
-                    .username(username)
-                    .email(oauthEmail)
-                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .role(AccountEnum.CUSTOMER)
-                    .build();
-            accountRepository.save(account);
-        } else {
-            account = accountOptional.get();
-        }
-
-        return new PrincipalDetails(account, attributes);
+        return accountRepository.save(account);
     }
 }
