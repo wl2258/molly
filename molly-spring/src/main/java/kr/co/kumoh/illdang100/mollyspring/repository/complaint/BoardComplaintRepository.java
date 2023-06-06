@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BoardComplaintRepository extends JpaRepository<BoardComplaint, Long> {
+public interface BoardComplaintRepository extends JpaRepository<BoardComplaint, Long>, BoardComplaintRepositoryCustom {
 
     List<BoardComplaint> findByBoard_Id(Long boardId);
 

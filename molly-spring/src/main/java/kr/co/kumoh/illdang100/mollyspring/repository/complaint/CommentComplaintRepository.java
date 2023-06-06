@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CommentComplaintRepository extends JpaRepository<CommentComplaint, Long> {
+public interface CommentComplaintRepository extends JpaRepository<CommentComplaint, Long>, CommentComplaintRepositoryCustom {
 
     List<CommentComplaint> findByComment_IdIn(List<Long> commentIds);
 
