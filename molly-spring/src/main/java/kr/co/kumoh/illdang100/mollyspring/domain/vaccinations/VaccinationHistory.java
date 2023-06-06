@@ -22,7 +22,7 @@ public class VaccinationHistory extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id")
+    @JoinColumn(nullable = false, name = "pet_id")
     private Pet pet;
 
     @Column(nullable = false)
