@@ -223,35 +223,35 @@ class BoardRepositoryImplTest extends DummyObject {
         Board maengguBoard = boardRepository.save(newBoard(maenggu, "maengguPost", "maengguContent", BoardEnum.MEDICAL,
                 PetTypeEnum.CAT, true));
 
-        likyRepository.save(newLiky(jjangguBoard, yuli.getId(), boardRepository));
-        likyRepository.save(newLiky(jjangguBoard, cheolsu.getId(), boardRepository));
-        likyRepository.save(newLiky(jjangguBoard, 100L, boardRepository));
-        likyRepository.save(newLiky(jjangguBoard, 101L, boardRepository));
-        likyRepository.save(newLiky(yuliBoard, jjanggu.getId(), boardRepository));
-        likyRepository.save(newLiky(yuliBoard, cheolsu.getId(), boardRepository));
-        likyRepository.save(newLiky(cheolsuBoard, jjanggu.getId(), boardRepository));
-        likyRepository.save(newLiky(cheolsuBoard, yuli.getId(), boardRepository));
-        likyRepository.save(newLiky(cheolsuBoard, 100L, boardRepository));
-        likyRepository.save(newLiky(maengguBoard, jjanggu.getId(), boardRepository));
-        likyRepository.save(newLiky(maengguBoard, yuli.getId(), boardRepository));
+        likyRepository.save(newLiky(jjangguBoard, yuli.getEmail(), boardRepository));
+        likyRepository.save(newLiky(jjangguBoard, cheolsu.getEmail(), boardRepository));
+        likyRepository.save(newLiky(jjangguBoard, "test100L@naver.com", boardRepository));
+        likyRepository.save(newLiky(jjangguBoard, "test101L@naver.com", boardRepository));
+        likyRepository.save(newLiky(yuliBoard, jjanggu.getEmail(), boardRepository));
+        likyRepository.save(newLiky(yuliBoard, cheolsu.getEmail(), boardRepository));
+        likyRepository.save(newLiky(cheolsuBoard, jjanggu.getEmail(), boardRepository));
+        likyRepository.save(newLiky(cheolsuBoard, yuli.getEmail(), boardRepository));
+        likyRepository.save(newLiky(cheolsuBoard, "test100L@naver.com", boardRepository));
+        likyRepository.save(newLiky(maengguBoard, jjanggu.getEmail(), boardRepository));
+        likyRepository.save(newLiky(maengguBoard, yuli.getEmail(), boardRepository));
 
-        commentRepository.save(newComment(jjangguBoard, "짱구야 소꿉놀이 하자.", yuli.getId(), boardRepository));
-        commentRepository.save(newComment(jjangguBoard, "싫어 나 액션가면 봐야해.", jjanggu.getId(), boardRepository));
-        commentRepository.save(newComment(jjangguBoard, "바보", yuli.getId(), boardRepository));
-        commentRepository.save(newComment(jjangguBoard, "메롱", jjanggu.getId(), boardRepository));
-        commentRepository.save(newComment(jjangguBoard, "짱구야 공부하자.", cheolsu.getId(), boardRepository));
-        commentRepository.save(newComment(jjangguBoard, "부리부리 부리부리", jjanggu.getId(), boardRepository));
+        commentRepository.save(newComment(jjangguBoard, "짱구야 소꿉놀이 하자.", yuli.getEmail(), boardRepository));
+        commentRepository.save(newComment(jjangguBoard, "싫어 나 액션가면 봐야해.", jjanggu.getEmail(), boardRepository));
+        commentRepository.save(newComment(jjangguBoard, "바보", yuli.getEmail(), boardRepository));
+        commentRepository.save(newComment(jjangguBoard, "메롱", jjanggu.getEmail(), boardRepository));
+        commentRepository.save(newComment(jjangguBoard, "짱구야 공부하자.", cheolsu.getEmail(), boardRepository));
+        commentRepository.save(newComment(jjangguBoard, "부리부리 부리부리", jjanggu.getEmail(), boardRepository));
 
-        commentRepository.save(newComment(yuliBoard, "유리야 그거 재밌어?", jjanggu.getId(), boardRepository));
-        commentRepository.save(newComment(yuliBoard, "응 다음에 짱구도 같이 하자.", yuli.getId(), boardRepository));
-        commentRepository.save(newComment(yuliBoard, "내일보자 유리야", cheolsu.getId(), boardRepository));
-        commentRepository.save(newComment(yuliBoard, "그래", yuli.getId(), boardRepository));
+        commentRepository.save(newComment(yuliBoard, "유리야 그거 재밌어?", jjanggu.getEmail(), boardRepository));
+        commentRepository.save(newComment(yuliBoard, "응 다음에 짱구도 같이 하자.", yuli.getEmail(), boardRepository));
+        commentRepository.save(newComment(yuliBoard, "내일보자 유리야", cheolsu.getEmail(), boardRepository));
+        commentRepository.save(newComment(yuliBoard, "그래", yuli.getEmail(), boardRepository));
 
-        commentRepository.save(newComment(cheolsuBoard, "철수야 소꿉놀이 하자.", yuli.getId(), boardRepository));
-        commentRepository.save(newComment(cheolsuBoard, "안돼 나 학원 가야 할 시간이야.", cheolsu.getId(), boardRepository));
-        commentRepository.save(newComment(cheolsuBoard, "철수야 사랑해", jjanggu.getId(), boardRepository));
-        commentRepository.save(newComment(cheolsuBoard, "으~ 징그러", cheolsu.getId(), boardRepository));
-        commentRepository.save(newComment(cheolsuBoard, "히히 철수도 좋으면서", jjanggu.getId(), boardRepository));
+        commentRepository.save(newComment(cheolsuBoard, "철수야 소꿉놀이 하자.", yuli.getEmail(), boardRepository));
+        commentRepository.save(newComment(cheolsuBoard, "안돼 나 학원 가야 할 시간이야.", cheolsu.getEmail(), boardRepository));
+        commentRepository.save(newComment(cheolsuBoard, "철수야 사랑해", jjanggu.getEmail(), boardRepository));
+        commentRepository.save(newComment(cheolsuBoard, "으~ 징그러", cheolsu.getEmail(), boardRepository));
+        commentRepository.save(newComment(cheolsuBoard, "히히 철수도 좋으면서", jjanggu.getEmail(), boardRepository));
     }
 
     private void autoIncrementReset() {

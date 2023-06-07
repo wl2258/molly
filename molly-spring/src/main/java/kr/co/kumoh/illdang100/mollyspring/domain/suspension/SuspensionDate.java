@@ -20,8 +20,9 @@ public class SuspensionDate extends BaseTimeEntity {
     @Column(name = "suspension_date_id")
     private Long id;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 45)
     private String accountEmail;
+    @Column(nullable = false)
     private LocalDate suspensionExpiryDate;
 
     public SuspensionDate(String accountEmail, LocalDate suspensionExpiryDate) {

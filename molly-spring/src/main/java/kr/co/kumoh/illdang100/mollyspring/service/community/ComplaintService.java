@@ -3,17 +3,21 @@ package kr.co.kumoh.illdang100.mollyspring.service.community;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
-import kr.co.kumoh.illdang100.mollyspring.domain.complaint.Complaint;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.BoardComplaint;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.CommentComplaint;
 import kr.co.kumoh.illdang100.mollyspring.domain.complaint.ComplaintReasonEnum;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.comment.CommentRepository;
-import kr.co.kumoh.illdang100.mollyspring.repository.complaint.ComplaintRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.complaint.BoardComplaintRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.complaint.CommentComplaintRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static kr.co.kumoh.illdang100.mollyspring.dto.complaint.ComplaintReqDto.*;
 
 @Slf4j
 @Service
@@ -22,7 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComplaintService {
 
     private final AccountRepository accountRepository;
-    private final ComplaintRepository complaintRepository;
+    private final BoardComplaintRepository boardComplaintRepository;
+    private final CommentComplaintRepository commentComplaintRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
@@ -33,28 +38,30 @@ public class ComplaintService {
      * @param accountId 신고자PK
      */
     @Transactional
-    public void reportPost(Long boardId, Long accountId, String reason) {
+    public void reportPost(Long boardId, Long accountId, ReportRequest reportPostRequest) {
 
         Account reporter = findAccountByIdOrThrowException(accountId);
-        findBoardByIdOrThrowException(boardId);
+        Board findBoard = findBoardWithAccountByIdOrThrowException(boardId);
 
-        Complaint complaint = complaintRepository.save(Complaint.builder()
+        boardComplaintRepository.save(BoardComplaint.builder()
+                .board(findBoard)
                 .reporterEmail(reporter.getEmail())
-                .boardId(boardId)
-                .complaintReason(ComplaintReasonEnum.valueOf(reason))
+                .reportedEmail(findBoard.getAccountEmail())
+                .complaintReason(ComplaintReasonEnum.valueOf(reportPostRequest.getReason()))
                 .build());
     }
 
     @Transactional
-    public void reportComment(Long commentId, Long accountId, String reason) {
+    public void reportComment(Long commentId, Long accountId, ReportRequest reportPostRequest) {
 
         Account reporter = findAccountByIdOrThrowException(accountId);
-        findCommentByIdOrThrowException(commentId);
+        Comment findComment = findCommentByIdOrThrowException(commentId);
 
-        Complaint complaint = complaintRepository.save(Complaint.builder()
+        commentComplaintRepository.save(CommentComplaint.builder()
+                .comment(findComment)
                 .reporterEmail(reporter.getEmail())
-                .commentId(commentId)
-                .complaintReason(ComplaintReasonEnum.valueOf(reason))
+                .reportedEmail(findComment.getAccountEmail())
+                .complaintReason(ComplaintReasonEnum.valueOf(reportPostRequest.getReason()))
                 .build());
     }
 
@@ -64,8 +71,8 @@ public class ComplaintService {
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다"));
     }
 
-    private Board findBoardByIdOrThrowException(Long boardId) {
-        return boardRepository.findById(boardId)
+    private Board findBoardWithAccountByIdOrThrowException(Long boardId) {
+        return boardRepository.findWithAccountById(boardId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 게시글입니다"));
     }
 

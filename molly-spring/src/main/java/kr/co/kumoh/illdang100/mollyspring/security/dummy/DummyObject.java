@@ -9,6 +9,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.liky.Liky;
 import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
 import kr.co.kumoh.illdang100.mollyspring.domain.surgery.SurgeryHistory;
+import kr.co.kumoh.illdang100.mollyspring.domain.suspension.SuspensionDate;
 import kr.co.kumoh.illdang100.mollyspring.domain.vaccinations.VaccinationHistory;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +32,20 @@ public class DummyObject {
                 .build();
     }
 
+    protected Account newAdmin(String username, String nickname) {
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encPassword = passwordEncoder.encode("1234");
+
+        return Account.builder()
+                .username(username)
+                .password(encPassword)
+                .email(username + "@naver.com")
+                .nickname(nickname)
+                .role(AccountEnum.ADMIN)
+                .build();
+    }
+
     protected Account newMockAccount(Long id, String username, String nickname, AccountEnum accountEnum) {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -46,11 +61,17 @@ public class DummyObject {
                 .build();
     }
 
+    protected SuspensionDate newMockSuspensionDate(Long id, String email, LocalDate expiryDate) {
+
+        return new SuspensionDate(id, email, expiryDate);
+    }
+
     protected Board newBoard(Account account, String title, String content,
                              BoardEnum category, PetTypeEnum petType, boolean isNotice) {
 
         return Board.builder()
                 .account(account)
+                .accountEmail(account.getEmail())
                 .boardTitle(title)
                 .boardContent(content)
                 .category(category)
@@ -69,6 +90,7 @@ public class DummyObject {
         return Board.builder()
                 .id(id)
                 .account(account)
+                .accountEmail(account.getEmail())
                 .boardTitle(title)
                 .boardContent(content)
                 .category(category)
@@ -81,7 +103,7 @@ public class DummyObject {
                 .build();
     }
 
-    protected Liky newLiky(Board board, Long accountId, BoardRepository boardRepository) {
+    protected Liky newLiky(Board board, String accountEmail, BoardRepository boardRepository) {
 
         board.increaseViews();
         board.increaseLikyCnt();
@@ -90,10 +112,10 @@ public class DummyObject {
             boardRepository.save(board);
         }
 
-        return new Liky(board, accountId);
+        return new Liky(board, accountEmail);
     }
 
-    protected Liky newMockLiky(Long id, Board board, Long accountId, BoardRepository boardRepository) {
+    protected Liky newMockLiky(Long id, Board board, String accountEmail, BoardRepository boardRepository) {
 
         board.increaseViews();
         board.increaseLikyCnt();
@@ -105,12 +127,12 @@ public class DummyObject {
         return Liky.builder()
                 .id(id)
                 .board(board)
-                .accountId(accountId)
+                .accountEmail(accountEmail)
                 .build();
     }
 
     protected Comment newComment(Board board, String commentContent,
-                                 Long accountId, BoardRepository boardRepository) {
+                                 String accountEmail, BoardRepository boardRepository) {
 
         board.increaseViews();
         board.increaseCommentCnt();
@@ -119,7 +141,7 @@ public class DummyObject {
             boardRepository.save(board);
         }
 
-        return new Comment(board, commentContent, accountId);
+        return new Comment(board, commentContent, accountEmail);
     }
 
     protected Pet newPet(Account account, String petName, LocalDate birthdate, PetGenderEnum gender, boolean neuteredStatus, double weight, PetTypeEnum petType, String caution, DogEnum species) {

@@ -3,6 +3,8 @@ package kr.co.kumoh.illdang100.mollyspring.service.community;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.BoardComplaint;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.CommentComplaint;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.BoardImage;
 import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.domain.liky.Liky;
@@ -10,6 +12,8 @@ import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.comment.CommentRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.complaint.BoardComplaintRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.complaint.CommentComplaintRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.image.BoardImageRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.liky.LikyRepository;
 import kr.co.kumoh.illdang100.mollyspring.service.FileRootPathVO;
@@ -42,6 +46,8 @@ public class BoardService {
     private final BoardImageRepository boardImageRepository;
     private final CommentRepository commentRepository;
     private final LikyRepository likyRepository;
+    private final BoardComplaintRepository boardComplaintRepository;
+    private final CommentComplaintRepository commentComplaintRepository;
 
     @Transactional
     public CreatePostResponse createPost(Long accountId, CreatePostRequest createPostRequest) {
@@ -56,7 +62,7 @@ public class BoardService {
             if (!findBoardImages.isEmpty()) {
                 board.changeHasImage(true);
 
-                findBoardImages.forEach(boardImage -> boardImage.changeBoardId(board.getId()));
+                findBoardImages.forEach(boardImage -> boardImage.changeBoard(board));
             }
         }
 
@@ -99,74 +105,83 @@ public class BoardService {
     public PostDetailResponse getPostDetail(Long boardId, Long accountId) {
 
         Board findBoard = findBoardByIdOrThrowException(boardId);
-
         findBoard.increaseViews();
-
-        List<String> boardImages = getBoardImages(boardId);
 
         boolean isOwner = false;
         boolean thumbsUp = false;
+        String writerNick = null;
+        String writerProfileImage = null;
 
         if (accountId != null) {
-            thumbsUp = likyRepository.existsByAccountIdAndBoard_Id(accountId, boardId);
+            Account findAccount = findAccountByIdOrThrowException(accountId);
+            thumbsUp = likyRepository.existsByAccountEmailAndBoard_Id(findAccount.getEmail(), boardId);
             isOwner = isAuthorizedToAccessBoard(findBoard, accountId);
         }
 
-        List<BoardCommentDto> commentDtoList = getBoardCommentDtoList(boardId);
+        if (findBoard.getAccount() != null) {
+            writerNick = findBoard.getAccount().getNickname();
+            writerProfileImage = extractAccountProfileUrlFromBoard(findBoard);
+        }
+
+        List<BoardCommentDto> commentDtoList = getBoardCommentDtoList(boardId, accountId);
 
         return PostDetailResponse.builder()
-                .isOwner(isOwner)
+                .boardOwner(isOwner)
                 .title(findBoard.getBoardTitle())
                 .category(findBoard.getCategory().toString())
                 .petType(findBoard.getPetType().toString())
-                .boardImages(boardImages)
                 .content(findBoard.getBoardContent())
-                .writerNick(findBoard.getAccount().getNickname())
+                .writerNick(writerNick)
+                .writerEmail(findBoard.getAccountEmail())
                 .createdAt(findBoard.getCreatedDate())
                 .views(findBoard.getViews())
-                .writerProfileImage(extractAccountProfileUrlFromBoard(findBoard))
+                .writerProfileImage(writerProfileImage)
                 .comments(commentDtoList)
                 .thumbsUp(thumbsUp)
                 .likyCnt(findBoard.getLikyCnt())
                 .build();
     }
 
-    private List<BoardCommentDto> getBoardCommentDtoList(Long boardId) {
+
+    private List<BoardCommentDto> getBoardCommentDtoList(Long boardId, Long accountId) {
+        // TODO: 댓글 페이징 기능
         List<Comment> comments = commentRepository.findByBoard_IdOrderByCreatedDate(boardId);
-        List<Long> commentAccountIds = comments.stream().map(Comment::getAccountId).collect(Collectors.toList());
-        Map<Long, Account> accountMap = accountRepository.findByIdIn(commentAccountIds)
-                .stream().collect(Collectors.toMap(Account::getId, account -> account));
+        List<String> commentAccountEmails = comments.stream().map(Comment::getAccountEmail).distinct().collect(Collectors.toList());
+        Map<String, Account> accountMap = accountRepository.findByEmailIn(commentAccountEmails)
+                .stream().collect(Collectors.toMap(Account::getEmail, account -> account));
+
+        Account findAccount = (accountId != null) ? findAccountByIdOrThrowException(accountId) : null;
 
         return comments.stream()
-                .map(comment -> {
-                    Account account = accountMap.get(comment.getAccountId());
-
-                    String nickname = account != null ? account.getNickname() : null;
-
-                    String commentProfileImageUrl = account != null && account.getAccountProfileImage() != null
-                            ? account.getAccountProfileImage().getStoreFileUrl() : null;
-
-                    return new BoardCommentDto(
-                            comment.getId(),
-                            comment.getAccountId(),
-                            nickname,
-                            comment.getCreatedDate(),
-                            comment.getCommentContent(),
-                            commentProfileImageUrl
-                    );
-                })
+                .map(comment -> createBoardCommentDto(comment, accountMap, findAccount))
                 .collect(Collectors.toList());
     }
 
-    private List<String> getBoardImages(Long boardId) {
-        return boardImageRepository.findByBoardId(boardId)
-                .stream()
-                .map(boardImage -> boardImage.getBoardImageFile().getStoreFileUrl())
-                .collect(Collectors.toList());
+    private BoardCommentDto createBoardCommentDto(Comment comment, Map<String, Account> accountMap, Account findAccount) {
+        Account account = accountMap.get(comment.getAccountEmail());
+        boolean commentOwner = (account != null && findAccount != null && account.getId().equals(findAccount.getId()));
+        String nickname = (account != null) ? account.getNickname() : null;
+        String commentProfileImageUrl = (account != null && account.getAccountProfileImage() != null)
+                ? account.getAccountProfileImage().getStoreFileUrl() : null;
+
+        return new BoardCommentDto(
+                comment.getId(),
+                commentOwner,
+                comment.getAccountEmail(),
+                nickname,
+                comment.getCreatedDate(),
+                comment.getCommentContent(),
+                commentProfileImageUrl
+        );
     }
 
     private boolean isAuthorizedToAccessBoard(Board board, Long accountId) {
-        return board.getAccount().getId().equals(accountId);
+        boolean result = false;
+        Account account = board.getAccount();
+        if (account != null) {
+            result = board.getAccount().getId().equals(accountId);
+        }
+        return result;
     }
 
     private String extractAccountProfileUrlFromBoard(Board board) {
@@ -184,16 +199,17 @@ public class BoardService {
     @Transactional
     public LikyBoardResponse toggleLikePost(Long accountId, Long boardId) {
 
+        String email = findAccountByIdOrThrowException(accountId).getEmail();
         Board findBoard = findBoardByIdOrThrowException(boardId);
         boolean thumbsUp;
         String message;
-        if (likyRepository.existsByAccountIdAndBoard_Id(accountId, boardId)) {
-            likyRepository.deleteByAccountIdAndBoard_Id(accountId, boardId);
+        if (likyRepository.existsByAccountEmailAndBoard_Id(email, boardId)) {
+            likyRepository.deleteByAccountEmailAndBoard_Id(email, boardId);
             findBoard.decreaseLikyCnt();
             message = "게시글 좋아요 삭제";
             thumbsUp = false;
         } else {
-            likyRepository.save(new Liky(findBoard, accountId));
+            likyRepository.save(new Liky(findBoard, email));
             findBoard.increaseLikyCnt();
             message = "게시글 좋아요";
             thumbsUp = true;
@@ -215,23 +231,35 @@ public class BoardService {
     @Transactional
     public void deletePost(Long boardId, Long accountId) {
 
-        // TODO: 신고 테이블 필드 변경 (boardId -> null)
-
         Board findBoard = findBoardByIdOrThrowException(boardId);
 
         checkBoardAccessAuthorization(accountId, findBoard);
 
         deleteCommentsByBoardIdInBatch(boardId);
         deleteLikiesByBoardIdInBatch(boardId);
-        deleteBoardImagesInBatch(boardImageRepository.findByBoardId(boardId));
+        List<BoardImage> findBoardImages = boardImageRepository.findByBoardId(boardId);
+        if (!findBoardImages.isEmpty()) {
+            deleteBoardImagesInBatch(findBoardImages);
+        }
+        deleteBoardComplaintsByBoardIdInBatch(boardId);
         boardRepository.deleteById(boardId);
+    }
+
+    private void deleteBoardComplaintsByBoardIdInBatch(Long boardId) {
+        List<Long> complaintIds = boardComplaintRepository.findByBoard_Id(boardId)
+                .stream()
+                .map(BoardComplaint::getId)
+                .collect(Collectors.toList());
+        boardComplaintRepository.deleteAllByIdInBatch(complaintIds);
     }
 
     private void deleteBoardImagesInBatch(List<BoardImage> boardImages) {
 
-        boardImages.forEach(boardImage -> {
-            s3Service.delete(boardImage.getBoardImageFile().getStoreFileName());
-        });
+        List<String> storeFileNames = boardImages.stream()
+                .map(boardImage -> boardImage.getBoardImageFile().getStoreFileName())
+                .collect(Collectors.toList());
+
+        s3Service.deleteFiles(storeFileNames);
 
         boardImageRepository.deleteAllByIdInBatch(boardImages.stream()
                 .map(BoardImage::getId)
@@ -245,9 +273,23 @@ public class BoardService {
     }
 
     private void deleteCommentsByBoardIdInBatch(Long boardId) {
-        commentRepository.deleteAllByIdInBatch(commentRepository.findByBoard_Id(boardId).stream()
+        List<Comment> comments = commentRepository.findByBoard_Id(boardId);
+
+        List<Long> commentIds = comments.stream()
                 .map(Comment::getId)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+        deleteCommentComplaintsByCommentIdInBatch(commentIds);
+
+        commentRepository.deleteAllByIdInBatch(commentIds);
+    }
+
+    private void deleteCommentComplaintsByCommentIdInBatch(List<Long> commentIds) {
+        List<Long> complaintIds = commentComplaintRepository.findByComment_IdIn(commentIds)
+                .stream()
+                .map(CommentComplaint::getId)
+                .collect(Collectors.toList());
+        commentComplaintRepository.deleteAllByIdInBatch(complaintIds);
     }
 
     private BoardImage saveBoardImage(MultipartFile boardImage, String filePath) throws IOException {

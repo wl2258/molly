@@ -191,7 +191,7 @@ public class BoardApiController {
                                         @RequestBody ReportRequest reportPostRequest,
                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        complaintService.reportPost(boardId, principalDetails.getAccount().getId(), reportPostRequest.getReason());
+        complaintService.reportPost(boardId, principalDetails.getAccount().getId(), reportPostRequest);
         return new ResponseEntity<>(new ResponseDto<>(1, "신고가 정상적으로 이루어졌습니다", null), HttpStatus.CREATED);
     }
 
@@ -200,7 +200,7 @@ public class BoardApiController {
                                         @RequestBody ReportRequest reportRequest,
                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        complaintService.reportComment(commentId, principalDetails.getAccount().getId(), reportRequest.getReason());
+        complaintService.reportComment(commentId, principalDetails.getAccount().getId(), reportRequest);
         return new ResponseEntity<>(new ResponseDto<>(1, "신고가 정상적으로 이루어졌습니다", null), HttpStatus.CREATED);
     }
 }

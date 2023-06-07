@@ -35,13 +35,13 @@ public class BoardRespDto {
     @Builder
     @Getter @Setter
     public static class PostDetailResponse {
-        private boolean isOwner;
+        private boolean boardOwner;
         private String title;
         private String category;
         private String petType;
-        private List<String> boardImages;
         private String content;
         private String writerNick;
+        private String writerEmail;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime createdAt;
         private long views;
@@ -55,7 +55,8 @@ public class BoardRespDto {
     @Getter @Setter
     public static class BoardCommentDto {
         private Long commentId;
-        private long commentUserId;
+        private boolean commentOwner;
+        private String commentAccountEmail;
         private String commentWriteNick;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime commentCreatedAt;

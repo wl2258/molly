@@ -1,6 +1,7 @@
 package kr.co.kumoh.illdang100.mollyspring.domain.complaint;
 
 import kr.co.kumoh.illdang100.mollyspring.domain.BaseTimeEntity;
+import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,18 +11,22 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Complaint extends BaseTimeEntity {
+public class BoardComplaint extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "complaint_id")
+    @Column(name = "comment_complaint__id")
     private Long id;
 
-    @Column(nullable = false, length = 40)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
+
+    @Column(nullable = false, length = 45)
     private String reporterEmail;
 
-    private Long boardId;
-    private Long commentId;
+    @Column(nullable = false, length = 45)
+    private String reportedEmail;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 25)

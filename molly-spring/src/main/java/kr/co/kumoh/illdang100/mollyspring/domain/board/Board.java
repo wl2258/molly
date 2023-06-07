@@ -25,6 +25,9 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @Column(nullable = false, length = 45)
+    private String accountEmail;
+
     @Column(nullable = false, length = 60)
     private String boardTitle;
 
@@ -56,6 +59,7 @@ public class Board extends BaseTimeEntity {
 
     public Board(Account account, CreatePostRequest createPostRequest) {
         this.account = account;
+        this.accountEmail = account.getEmail();
         this.boardTitle = createPostRequest.getTitle();
         this.boardContent = createPostRequest.getContent();
         this.category = BoardEnum.valueOf(createPostRequest.getCategory());
@@ -96,5 +100,13 @@ public class Board extends BaseTimeEntity {
         this.boardContent = updatePostRequest.getContent();
         this.category = BoardEnum.valueOf(updatePostRequest.getCategory());
         this.petType = PetTypeEnum.valueOf(updatePostRequest.getPetType());
+    }
+
+    public void reconnect(Account account) {
+        this.account = account;
+    }
+
+    public void resetAccount() {
+        this.account = null;
     }
 }

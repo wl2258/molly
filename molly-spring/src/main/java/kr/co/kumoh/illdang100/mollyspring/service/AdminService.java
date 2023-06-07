@@ -3,22 +3,31 @@ package kr.co.kumoh.illdang100.mollyspring.service;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.BoardComplaint;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.CommentComplaint;
 import kr.co.kumoh.illdang100.mollyspring.domain.complaint.ComplaintReasonEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.Suspension;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.SuspensionDate;
+import kr.co.kumoh.illdang100.mollyspring.dto.admin.AdminRespDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.comment.CommentRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.complaint.BoardComplaintRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.complaint.CommentComplaintRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.suspension.SuspensionDateRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.suspension.SuspensionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
+import static kr.co.kumoh.illdang100.mollyspring.dto.admin.AdminRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.suspension.SuspensionReqDto.*;
 
 @Slf4j
@@ -32,9 +41,49 @@ public class AdminService {
     private final SuspensionDateRepository suspensionDateRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final BoardComplaintRepository boardComplaintRepository;
+    private final CommentComplaintRepository commentComplaintRepository;
+
+    public Slice<RetrieveComplaintListDto> getBoardComplaintList(Pageable pageable) {
+        return boardComplaintRepository.searchSlice(pageable);
+    }
+
+    public Slice<RetrieveComplaintListDto> getCommentComplaintList(Pageable pageable) {
+        return commentComplaintRepository.searchSlice(pageable);
+    }
+
+    public ComplaintDetailResponse getBoardComplaintDetail(Long boardComplaintId) {
+
+        BoardComplaint boardComplaint = findBoardComplaintByIdOrThrowException(boardComplaintId);
+
+        return ComplaintDetailResponse.builder()
+                .complaintId(boardComplaint.getId())
+                .reportedItemId(boardComplaint.getBoard().getId())
+                .reporterEmail(boardComplaint.getReporterEmail())
+                .reportedEmail(boardComplaint.getReportedEmail())
+                .createdAt(boardComplaint.getCreatedDate())
+                .reason(boardComplaint.getComplaintReason().getValue())
+                .build();
+    }
+
+    public ComplaintDetailResponse getCommentComplaintDetail(Long commentComplaintId) {
+
+        CommentComplaint commentComplaint = findCommentComplaintByIdOrThrowException(commentComplaintId);
+
+        return ComplaintDetailResponse.builder()
+                .complaintId(commentComplaint.getId())
+                .reportedItemId(commentComplaint.getComment().getId())
+                .reporterEmail(commentComplaint.getReporterEmail())
+                .reportedEmail(commentComplaint.getReportedEmail())
+                .createdAt(commentComplaint.getCreatedDate())
+                .reason(commentComplaint.getComplaintReason().getValue())
+                .build();
+    }
 
     @Transactional
     public void suspendAccount(Long accountId, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
+
+        // TODO: 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
 
         Account findAccount = findAccountByIdOrThrowException(accountId);
 
@@ -58,6 +107,7 @@ public class AdminService {
     }
 
     private void saveSuspension(String accountEmail, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
+        // TODO: 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
         suspensionRepository.save(Suspension.builder()
                 .accountEmail(accountEmail)
                 .boardId(boardId)
@@ -86,7 +136,7 @@ public class AdminService {
 
     // TODO: 관리자한테 사용자 리스트 뿌려주는 기능
     // TODO: 관리자가 사용자 이메일로 검색하는 기능
-    // TODO: 관리자한테 신고 목록 뿌려주는 기능 (게시글 신고, 댓글 신고 나눠야 할까?)
+    // TODO: 관리자한테 신고 목록 뿌려주는 기능
 
     private Account findAccountByIdOrThrowException(Long accountId) {
         return accountRepository
@@ -102,5 +152,15 @@ public class AdminService {
     private Comment findCommentByIdOrThrowException(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 댓긆입니다"));
+    }
+
+    private BoardComplaint findBoardComplaintByIdOrThrowException(Long boardComplaintId) {
+        return boardComplaintRepository.findById(boardComplaintId)
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 신고입니다"));
+    }
+
+    private CommentComplaint findCommentComplaintByIdOrThrowException(Long commentComplaintId) {
+        return commentComplaintRepository.findById(commentComplaintId)
+                .orElseThrow(() -> new CustomApiException("존재하지 않는 신고입니다"));
     }
 }
