@@ -20,7 +20,7 @@ public class Suspension extends BaseTimeEntity {
 
     @Column(nullable = false, length = 45)
     private String accountEmail;
-    @Column(unique = true) // <- 이 게시글 혹은 댓글이 삭제되었을 수도 있는데 그냥 PK만 가지고 잇으므로 상관x
+    @Column(unique = true)
     private Long boardId;
     @Column(unique = true)
     private Long commentId;
