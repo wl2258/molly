@@ -58,6 +58,7 @@ public class AdminService {
 
         return ComplaintDetailResponse.builder()
                 .complaintId(boardComplaint.getId())
+                .reportedItemId(boardComplaint.getBoard().getId())
                 .reporterEmail(boardComplaint.getReporterEmail())
                 .reportedEmail(boardComplaint.getReportedEmail())
                 .createdAt(boardComplaint.getCreatedDate())
@@ -71,6 +72,7 @@ public class AdminService {
 
         return ComplaintDetailResponse.builder()
                 .complaintId(commentComplaint.getId())
+                .reportedItemId(commentComplaint.getComment().getId())
                 .reporterEmail(commentComplaint.getReporterEmail())
                 .reportedEmail(commentComplaint.getReportedEmail())
                 .createdAt(commentComplaint.getCreatedDate())
