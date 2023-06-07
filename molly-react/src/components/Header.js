@@ -119,13 +119,19 @@ const Header = () => {
             throw new Error("There is no refresh token");
           }
         } else if (errResponseStatus === 400) {
-          console.log(error.response.data.data);
+          console.log(error.response.data);
         } else if (errResponseStatus === 401) {
           console.log("인증 실패");
-          console.log(error.response.data.data);
           window.location.replace("/login");
         } else if (errResponseStatus === 403) {
-          alert("권한이 없습니다.");
+          alert(errMsg);
+          axios.delete(`http://localhost:8080/api/account/logout`, {
+            headers: {
+              "Refresh-Token": localStorage.getItem("refreshToken"),
+            },
+          });
+          localStorage.clear();
+          window.location.replace("/");
         }
       } catch (e) {
         return Promise.reject(e);

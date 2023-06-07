@@ -14,7 +14,14 @@ import { SyncLoader } from "react-spinners";
 
 const BoardDetail = () => {
   let { id, category, pet } = useParams();
-  const [modal, setModal] = useState(false);
+  const [boardAccuseModal, setBoardAccuseModal] = useState(false);
+  const [commentAccuseModal, setCommentAccuseModal] = useState(false);
+  const [accuseComment, setAccuseComment] = useState({
+    commentId: "",
+    accuseNick: "",
+    accuseContent: "",
+    accuseEmail: "",
+  });
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({});
   const userId = localStorage.getItem("accountId");
@@ -112,7 +119,14 @@ const BoardDetail = () => {
           console.log("인증 실패");
           window.location.replace("/login");
         } else if (errResponseStatus === 403) {
-          alert("권한이 없습니다.");
+          alert(errMsg);
+          axios.delete(`http://localhost:8080/api/account/logout`, {
+            headers: {
+              "Refresh-Token": localStorage.getItem("refreshToken"),
+            },
+          });
+          localStorage.clear();
+          window.location.replace("/");
         }
       } catch (e) {
         return Promise.reject(e);
@@ -123,38 +137,43 @@ const BoardDetail = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setText({
-  //     owner: true,
+  //     boardOwner: true,
   //     title: "강아지 자랑",
-  //     content:
-  //       "<img src='https://mblogthumb-phinf.pstatic.net/MjAyMDAzMDVfMjgy/MDAxNTgzNDA1Nzc3MjIy.YGsJYEtAG6zXnuqhb354iQtjeSu3xw2O8oyhgNJ8hU0g.mbFsH3SGL2qkxlwQCdCq5Yhqm18CbnyaUSCpnbePUDIg.JPEG.westar4501/%EB%B0%B0%EA%B2%BD%ED%99%94%EB%A9%B4+%EB%85%B8%ED%8A%B8%EB%B6%81.jpg?type=w800'/>",
-  //     writerNick: "홀리몰리",
+  //     category: "MEDICAL",
+  //     petType: "CAT",
+  //     content: "제 강아지 예쁘죠?",
+  //     writerNick: null,
+  //     writerEmail: "writer@naver.com",
   //     createdAt: "2023-03-01 11:00:34",
   //     views: 392,
-  //     writerProfileImage:
-  //       "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
-  //     boardImages: [],
+  //     writerProfileImage: null,
   //     comments: [
   //       {
-  //         commentUserId: 1,
-  //         commentWriteNick: "일당백",
+  //         commentId: 1111,
+  //         commentOwner: true,
+  //         commentAccountEmail: "testmolly@naver.com",
+  //         commentWriteNick: "dfsf",
   //         commentCreatedAt: "2023-03-02 12:39:11",
   //         content: "예쁘네요",
-  //         commentProfileImage:
-  //           "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
+  //         commentProfileImage: null,
   //       },
   //       {
-  //         commentUserId: 2343,
-  //         commentWriteNick: "일당백",
+  //         commentId: 1111,
+  //         commentOwner: false,
+  //         commentAccountEmail: "testmolly@naver.com",
+  //         commentWriteNick: null,
   //         commentCreatedAt: "2023-03-02 12:39:11",
   //         content: "예쁘네요",
-  //         commentProfileImage: "",
+  //         commentProfileImage: null,
   //       },
   //       {
-  //         commentUserId: 2343,
-  //         commentWriteNick: "일당백",
+  //         commentId: 1111,
+  //         commentOwner: false,
+  //         commentAccountEmail: "testmolly@naver.com",
+  //         commentWriteNick: null,
   //         commentCreatedAt: "2023-03-02 12:39:11",
   //         content: "예쁘네요",
-  //         commentProfileImage: "",
+  //         commentProfileImage: null,
   //       },
   //     ],
   //     thumbsUp: false,
@@ -168,8 +187,12 @@ const BoardDetail = () => {
     setLikeCnt(text.likyCnt);
   }, [text]);
 
-  const handleClick = () => {
-    setModal(!modal);
+  const handleBoardAccuseClick = () => {
+    setBoardAccuseModal(!boardAccuseModal);
+  };
+
+  const handleCommentAccuseClick = () => {
+    setCommentAccuseModal(!commentAccuseModal);
   };
 
   const deleteBoard = () => {
@@ -324,26 +347,30 @@ const BoardDetail = () => {
       <div className={styles.board}>
         <div className={styles.top}>
           <h2>{text.title}</h2>
-          <span>
-            <div className={styles.profileuser}>
-              <img
-                className={styles.profileimg}
-                src={
-                  text.writerProfileImage
-                    ? text.writerProfileImage
-                    : text.writerProfileImage === ""
-                    ? process.env.PUBLIC_URL + "/img/profile.png"
-                    : process.env.PUBLIC_URL + "/img/profile.png"
-                }
-                alt="프로필 이미지"
-              />
-            </div>
-          </span>
-          <span>{text.writerNick}</span>
-          <span>{text.createdAt}</span>
+          <div>
+            <span>
+              <div className={styles.profileuser}>
+                <img
+                  className={styles.profileimg}
+                  src={
+                    text.writerProfileImage
+                      ? text.writerProfileImage
+                      : text.writerProfileImage === ""
+                      ? process.env.PUBLIC_URL + "/img/profile.png"
+                      : process.env.PUBLIC_URL + "/img/profile.png"
+                  }
+                  alt="프로필 이미지"
+                />
+              </div>
+            </span>
+            <span>
+              {text.writerNick === null ? "(알 수 없음)" : text.writerNick}
+            </span>
+            <span>{text.createdAt}</span>
+          </div>
           <span
             onClick={() => {
-              handleClick();
+              handleBoardAccuseClick();
             }}
           >
             신고
@@ -366,7 +393,7 @@ const BoardDetail = () => {
             <FaComment color="#B27910" size="13px" />
           </span>
           <span>{text.comments.length}</span>
-          {text.owner && (
+          {text.boardOwner && (
             <>
               <span
                 onClick={() => {
@@ -384,24 +411,30 @@ const BoardDetail = () => {
         return (
           <div className={styles.comment}>
             <div className={styles.commentinfo}>
-              <span>
-                <div className={styles.profilecommentuser}>
-                  <img
-                    className={styles.profileimg}
-                    src={
-                      item.commentProfileImage
-                        ? item.commentProfileImage
-                        : item.commentProfileImage === ""
-                        ? process.env.PUBLIC_URL + "/img/profile.png"
-                        : process.env.PUBLIC_URL + "/img/profile.png"
-                    }
-                    alt="프로필 이미지"
-                  />
-                </div>
-              </span>
-              <span>{item.commentWriteNick}</span>
-              <span>{item.commentCreatedAt}</span>
-              {userId === String(item.commentUserId) ? (
+              <div>
+                <span>
+                  <div className={styles.profilecommentuser}>
+                    <img
+                      className={styles.profileimg}
+                      src={
+                        item.commentProfileImage
+                          ? item.commentProfileImage
+                          : item.commentProfileImage === ""
+                          ? process.env.PUBLIC_URL + "/img/profile.png"
+                          : process.env.PUBLIC_URL + "/img/profile.png"
+                      }
+                      alt="프로필 이미지"
+                    />
+                  </div>
+                </span>
+                <span>
+                  {item.commentWriteNick === null
+                    ? "(알 수 없음)"
+                    : item.commentWriteNick}
+                </span>
+                <span>{item.commentCreatedAt}</span>
+              </div>
+              {item.commentOwner ? (
                 <span
                   onClick={() => {
                     handleCommentDelete(item.commentId);
@@ -413,7 +446,13 @@ const BoardDetail = () => {
               ) : (
                 <span
                   onClick={() => {
-                    handleClick();
+                    handleCommentAccuseClick();
+                    setAccuseComment({
+                      commentId: item.commentId,
+                      accuseNick: item.commentWriteNick,
+                      accuseContent: item.content,
+                      accuseEmail: item.commentAccountEmail,
+                    });
                   }}
                 >
                   신고
@@ -423,6 +462,16 @@ const BoardDetail = () => {
                 <p>{item.content}</p>
               </div>
             </div>
+            {commentAccuseModal && (
+              <Accuse
+                type="comment"
+                commentId={accuseComment.commentId}
+                onClick={handleCommentAccuseClick}
+                accuseName={accuseComment.accuseNick}
+                accuseContent={accuseComment.accuseContent}
+                accuseEmail={accuseComment.accuseEmail}
+              />
+            )}
           </div>
         );
       })}
@@ -440,7 +489,16 @@ const BoardDetail = () => {
         ></input>
         <Button onClick={handleComment} name={"등록"} />
       </div>
-      {modal && <Accuse onClick={handleClick} />}
+      {boardAccuseModal && (
+        <Accuse
+          type="board"
+          boardId={id}
+          onClick={handleBoardAccuseClick}
+          accuseName={text.writerNick}
+          accuseContent={text.title}
+          accuseEmail={text.writerEmail}
+        />
+      )}
       {loginModal && <LoginModal setLoginModal={handleLoginModal} />}
     </div>
   );

@@ -11,80 +11,99 @@
 .modal {
   width: 540px;
   height: 600px;
-  border-radius: 30px;
-  background-color: #FDFDFD;
+  background-color: #fdfdfd;
   position: absolute;
   top: 50%;
   left: 50%;
   margin-left: -270px;
   margin-top: -300px;
-  padding: 20px 40px;
+  padding: 20px 0;
   box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+.modal > span {
+  color: #cfc9c4;
+  font-size: 22px;
+  position: absolute;
+  cursor: pointer;
+  margin-left: 20px;
 }
 
 .modal > h1 {
   color: #656565;
-  font-size: 25px;
-  margin-left: 20px;
+  font-size: 23px;
+  margin-left: 60px;
+  margin-top: 40px;
 }
 
-.modal > div:nth-child(2) {
+.accuseDetail {
+  border-bottom: 1px solid #ded8d3;
+  border-top: 1px solid #ded8d3;
+  margin-top: 30px;
+  padding: 3px 60px;
+}
+
+.accuseDetail > div {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+}
+
+.accuseDetail > div:first-child {
+  margin-bottom: -15px;
+}
+
+.accuseDetail > div > p:first-child {
+  color: #656565;
+  font-weight: 600;
+  margin-right: 20px;
+}
+
+.accuseDetail > div > p:last-child {
+  color: #868480;
+}
+
+.modal > h4 {
+  color: #656565;
+  margin-left: 60px;
   margin-top: 30px;
 }
 
-.modal > div > input {
-  width: 408px;
-  height: 45px;
-  border-radius: 10px;
-  background-color: #E9E5E3;
-  border: none;
-  margin-right: 10px;
-  margin-bottom: 20px;
-  padding: 0 20px;
-  caret-color: #C7C3BF;
-  color: #656565;
-  font-size: 17px;
-  font-weight: 800;
-  box-sizing: border-box;
-}
-
-.modal > div > input:focus {
-  outline: none;
-}
-
-.modal > div > input::placeholder {
-  color: #b4b1ad;
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.modal > div > textarea {
-  width: 350px;
-  border-radius: 15px;
-  background-color: #E9E5E3;
-  border: none;
-  margin-right: 10px;
-  padding: 30px 30px;
-  caret-color: #C7C3BF;
-  min-height: 280px;
-  font-size: 16px;
-  color: #656565;
-  resize: none;
-}
-
-.modal > div > textarea:focus {
-  outline: none;
-}
-
-.modal > div > textarea::placeholder {
-  color: #b4b1ad;
-}
-
-.modal > div:nth-child(3) {
+.modal > div:nth-child(6) {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+
+.reason {
+  color: #868480;
+  margin: -8px 50px 25px;
+}
+
+.reason > div {
+  padding-left: 25px;
+  position: relative;
+  border: 1px solid #ded8d3;
+}
+
+.reason > div:not(:first-of-type) {
+  border-top: 0.5px solid #ded;
+}
+
+.reason > div > span {
+  position: absolute;
+  bottom: 9px;
+}
+
+.reason > div > p {
+  margin-left: 38px;
+}
+
+.accuseBtn {
+  background-color: #b27910;
+  margin: 10px 50px;
+  padding: 15px;
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
 }

@@ -69,9 +69,19 @@ const BoardList = () => {
     async (error) => {
       try {
         const errResponseStatus = error.response.status;
+        const errMsg = error.response.data.msg;
 
         if (errResponseStatus === 400) {
           console.log(error.response.data.data);
+        } else if (errResponseStatus === 403) {
+          alert(errMsg);
+          axios.delete(`http://localhost:8080/api/account/logout`, {
+            headers: {
+              "Refresh-Token": localStorage.getItem("refreshToken"),
+            },
+          });
+          localStorage.clear();
+          window.location.replace("/");
         }
       } catch (e) {
         return Promise.reject(e);
@@ -125,7 +135,7 @@ const BoardList = () => {
   //       {
   //         boardId: 62,
   //         title: "test board34",
-  //         writerNick: "일당백1",
+  //         writerNick: null,
   //         createdAt: "2023-05-10 19:59:54",
   //         content: "<p>test content34</p>",
   //         views: 98,
@@ -434,7 +444,7 @@ const List = (props) => {
             : ReactHtmlParser(props.detail.substr(0, 70).concat(" ..."))}
         </p>
         <span>{props.time}</span>
-        <span>{props.writer}</span>
+        <span>{props.writer === null ? "(알 수 없음)" : props.writer}</span>
         <div>
           <span>
             <IoMdThumbsUp color="#B27910" size="18px" />

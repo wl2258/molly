@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styles from '../css/SignUp.module.css';
-import {Button} from '../components/Button';
-import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useRef, useState } from "react";
+import styles from "../css/SignUp.module.css";
+import { Button } from "../components/Button";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const SignUp = () => {
   useEffect(() => {
@@ -13,8 +13,8 @@ const SignUp = () => {
       width: 100%;`;
     return () => {
       const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
     };
   }, []);
 
@@ -30,17 +30,15 @@ const SignUp = () => {
   const params = new URLSearchParams(location.search);
   let color = disabled ? "#D6CCC3" : "#B27910";
 
-
   useEffect(() => {
-    const accessToken = params.get('accessToken');
-    const refreshToken = params.get('refreshToken');
-    const accountId = params.get('accountId');
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+    const accountId = params.get("accountId");
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("accountId", accountId);
   }, []);
-  
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -56,15 +54,15 @@ const SignUp = () => {
         const prevRequest = error.config;
         const errMsg = error.response.data.msg;
 
-        if(errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
+        if (errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
           const preRefreshToken = localStorage.getItem("refreshToken");
-          if(preRefreshToken) {
+          if (preRefreshToken) {
             async function issuedToken() {
               const config = {
                 headers: {
-                  "Refresh-Token": preRefreshToken
-                }
-              }
+                  "Refresh-Token": preRefreshToken,
+                },
+              };
               return await axios
                 .post(`http://localhost:8080/api/token/refresh`, null, config)
                 .then(async (res) => {
@@ -73,9 +71,9 @@ const SignUp = () => {
                   const reRefreshToken = res.headers.get("Refresh-token");
                   localStorage.setItem("accessToken", reAccessToken);
                   localStorage.setItem("refreshToken", reRefreshToken);
-                  
+
                   prevRequest.headers.Authorization = reAccessToken;
-                  
+
                   return await axios(prevRequest);
                 })
                 .catch((e) => {
@@ -87,18 +85,20 @@ const SignUp = () => {
           } else {
             throw new Error("There is no refresh token");
           }
-        }
-        else if(errResponseStatus === 400) {
-          console.log(error.response.data.data);
-          return error.response;
-        }
-        else if(errResponseStatus === 401) {
-          console.log(error.response.data.data);
+        } else if (errResponseStatus === 400) {
+          console.log(error.response.data);
+        } else if (errResponseStatus === 401) {
           console.log("인증 실패");
           window.location.replace("/login");
-        }
-        else if(errResponseStatus === 403) {
-          alert("권한이 없습니다.");
+        } else if (errResponseStatus === 403) {
+          alert(errMsg);
+          axios.delete(`http://localhost:8080/api/account/logout`, {
+            headers: {
+              "Refresh-Token": localStorage.getItem("refreshToken"),
+            },
+          });
+          localStorage.clear();
+          window.location.replace("/");
         }
       } catch (e) {
         return Promise.reject(e);
@@ -110,96 +110,99 @@ const SignUp = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("nickname", nickname);
-    if(imgRef.current.files[0] !== undefined) {
+    if (imgRef.current.files[0] !== undefined) {
       formData.append("accountProfileImage", imgRef.current.files[0]);
     }
 
     const config = {
       headers: {
-        Authorization : localStorage.getItem("accessToken"),
-      }
-    }
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
 
     const fetchData = async function fetch() {
-      const response = await axiosInstance.post(`/api/auth/account/save`, formData, config)
-      console.log(response); 
-      if(response.data.code === 1) {
+      const response = await axiosInstance.post(
+        `/api/auth/account/save`,
+        formData,
+        config
+      );
+      console.log(response);
+      if (response.data.code === 1) {
         window.location.replace("/");
-      }
-      else if(response.data.code === -1) {
+      } else if (response.data.code === -1) {
         console.log(response.data.msg);
       }
-    }
+    };
 
     fetchData();
-  }
+  };
 
   const checkDuplicate = (e) => {
     setDisabled(true);
     setDuplicate(0);
 
     const config = {
-      headers : {
-        Authorization : localStorage.getItem("accessToken"),
-        "Content-Type": "application/json"
-      }
-    }
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+        "Content-Type": "application/json",
+      },
+    };
 
     const data = {
-      "nickname" : nickname
-    }
+      nickname: nickname,
+    };
 
-    if(effective === false) {
+    if (effective === false) {
       setEffectiveColor("red");
-    } 
-    else if(effective === true) {
+    } else if (effective === true) {
       setEffectiveColor("#827870");
-      
+
       const fetchData = async function fetch() {
-        const response = await axiosInstance.post(`/api/auth/account/duplicate`, data, config);
-        console.log(response); 
-        if(response.data.code === 1) {
+        const response = await axiosInstance.post(
+          `/api/auth/account/duplicate`,
+          data,
+          config
+        );
+        console.log(response);
+        if (response.data.code === 1) {
           setDisabled(false);
           setDuplicate(2);
-        } 
-        else {
+        } else {
           setDisabled(true);
           setDuplicate(1);
         }
-      }
-  
+      };
+
       fetchData();
     }
-  }
+  };
 
   const handleChange = (e) => {
     if (e.target.value.length <= 10) {
       setNickName(e.target.value);
+    } else {
+      setNickName(e.target.value.slice(0, 10));
     }
-    else {
-      setNickName(e.target.value.slice(0, 10))
-    }
-  }
+  };
 
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-        setImgFile(reader.result);
+      setImgFile(reader.result);
     };
   };
 
   const checkNickname = (e) => {
     const regExp = /^[가-힣a-zA-Z]{1,10}$/;
-    if(regExp.test(e.target.value) === true) {
+    if (regExp.test(e.target.value) === true) {
       setEffective(true);
-    }
-    else { 
+    } else {
       setEffective(false);
     }
-  }
-  
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.modalContainer}>
@@ -208,12 +211,18 @@ const SignUp = () => {
             <div className={styles.profileuser}>
               <img
                 className={styles.profileimg}
-                src={imgFile ? imgFile : process.env.PUBLIC_URL + '/img/profile.png'}
+                src={
+                  imgFile
+                    ? imgFile
+                    : process.env.PUBLIC_URL + "/img/profile.png"
+                }
                 alt="프로필 이미지"
               />
             </div>
           </label>
-          <label className={styles.profilelabel} htmlFor="profileImg">프로필 이미지 추가</label>
+          <label className={styles.profilelabel} htmlFor="profileImg">
+            프로필 이미지 추가
+          </label>
           <input
             name="accountProfileImage"
             className={styles.profileinput}
@@ -224,14 +233,17 @@ const SignUp = () => {
             ref={imgRef}
           />
           <div className={styles.modal}>
-            <span style={{color: `${effectiveColor}`}} className={styles.nicknameguide}>
+            <span
+              style={{ color: `${effectiveColor}` }}
+              className={styles.nicknameguide}
+            >
               한글/영어를 사용하여 10자 이내로 작성
             </span>
-            <input 
+            <input
               name="nickname"
-              type="text" 
-              value={nickname} 
-              onChange={handleChange} 
+              type="text"
+              value={nickname}
+              onChange={handleChange}
               placeholder="닉네임"
               required
               onBlur={checkNickname}
@@ -239,10 +251,18 @@ const SignUp = () => {
             />
             <span onClick={checkDuplicate}>중복확인</span>
           </div>
-          {duplicate === 0 ? null : 
-            duplicate === 1 ? <span style={{color:"red"}} className={styles.duplicatepass}>사용 불가능한 닉네임입니다.</span> 
-              : <span className={styles.duplicatepass}>사용 가능한 닉네임입니다.</span>}
-          <span><Button disabled={disabled} name="저장" bgcolor={color}/></span>
+          {duplicate === 0 ? null : duplicate === 1 ? (
+            <span style={{ color: "red" }} className={styles.duplicatepass}>
+              사용 불가능한 닉네임입니다.
+            </span>
+          ) : (
+            <span className={styles.duplicatepass}>
+              사용 가능한 닉네임입니다.
+            </span>
+          )}
+          <span>
+            <Button disabled={disabled} name="저장" bgcolor={color} />
+          </span>
         </form>
       </div>
     </div>
