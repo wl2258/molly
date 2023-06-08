@@ -1,6 +1,5 @@
 package kr.co.kumoh.illdang100.mollyspring.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.Account;
 import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
@@ -10,7 +9,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.suspension.SuspensionDate;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
-import kr.co.kumoh.illdang100.mollyspring.repository.comment.CommentRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.complaint.BoardComplaintRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.suspension.SuspensionDateRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.suspension.SuspensionRepository;
 import kr.co.kumoh.illdang100.mollyspring.security.dummy.DummyObject;
@@ -18,10 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.suspension.SuspensionReqDto.*;
@@ -42,6 +41,8 @@ class AdminServiceTest extends DummyObject {
     private SuspensionDateRepository suspensionDateRepository;
     @Mock
     private BoardRepository boardRepository;
+    @Mock
+    private BoardComplaintRepository boardComplaintRepository;
 
     @Test
     public void suspendAccount_success_test() {
@@ -67,6 +68,9 @@ class AdminServiceTest extends DummyObject {
         SuspensionDate suspensionDate = newMockSuspensionDate(1L, account.getEmail(), LocalDate.now());
         when(suspensionDateRepository.findByAccountEmail(account.getEmail())).thenReturn(Optional.of(suspensionDate));
 
+        // stub
+        when(boardComplaintRepository.findByBoard_Id(boardId)).thenReturn(new ArrayList<>());
+
         // when
         adminService.suspendAccount(accountId, boardId, commentId, suspendAccountRequest);
 
@@ -75,7 +79,7 @@ class AdminServiceTest extends DummyObject {
     }
 
     @Test
-    public void suspendAccount_failure_test() {
+    public void suspendAccount_failure_test_by_board() {
 
         // given
         Long accountId = 1L;
@@ -97,5 +101,27 @@ class AdminServiceTest extends DummyObject {
         assertThatThrownBy(() -> adminService.suspendAccount(accountId, boardId, commentId, suspendAccountRequest))
                 .isInstanceOf(CustomApiException.class)
                 .hasMessageContaining("존재하지 않는 게시글입니다");
+    }
+
+    @Test
+    public void suspendAccount_failure_test_by_suspension() {
+
+        // given
+        Long accountId = 1L;
+        Long boardId = 1L;
+        Long commentId = null;
+        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "SPAM_PROMOTION");
+
+        // stub
+        Account account = newMockAccount(accountId, "username", "nickname", AccountEnum.CUSTOMER);
+        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
+
+        // stub
+        when(suspensionRepository.existsByBoardId(boardId)).thenReturn(true);
+
+        // when
+        assertThatThrownBy(() -> adminService.suspendAccount(accountId, boardId, commentId, suspendAccountRequest))
+                .isInstanceOf(CustomApiException.class)
+                .hasMessageContaining("이미 존재하는 정지입니다");
     }
 }
