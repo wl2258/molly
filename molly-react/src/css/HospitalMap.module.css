@@ -77,13 +77,18 @@
 
 .night div {
   background-color: #e5e1dc;
-  width: 100%;
+  width: 110%;
   padding: 8px 20px;
   border-radius: 15px;
   color: #736e6a;
+  margin-bottom: 10px;
 }
 
 .open {
   margin-bottom: 30px;
   color: #198237;
+}
+
+.gm-style-iw {
+  box-shadow: none !important;
 }

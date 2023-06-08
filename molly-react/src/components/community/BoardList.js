@@ -69,19 +69,60 @@ const BoardList = () => {
     async (error) => {
       try {
         const errResponseStatus = error.response.status;
+        const prevRequest = error.config;
         const errMsg = error.response.data.msg;
 
-        if (errResponseStatus === 400) {
-          console.log(error.response.data.data);
+        if (errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
+          const preRefreshToken = localStorage.getItem("refreshToken");
+          if (preRefreshToken) {
+            async function issuedToken() {
+              const config = {
+                headers: {
+                  "Refresh-Token": preRefreshToken,
+                },
+              };
+              return await axios
+                .post(`http://localhost:8080/api/token/refresh`, null, config)
+                .then(async (res) => {
+                  localStorage.removeItem("accessToken");
+                  localStorage.removeItem("refreshToken");
+                  const reAccessToken = res.headers.get("Authorization");
+                  const reRefreshToken = res.headers.get("Refresh-token");
+                  localStorage.setItem("accessToken", reAccessToken);
+                  localStorage.setItem("refreshToken", reRefreshToken);
+
+                  prevRequest.headers.Authorization = reAccessToken;
+
+                  return await axios(prevRequest);
+                })
+                .catch((e) => {
+                  console.log("토큰 재발급 실패");
+                  if (e.response.status === 401) {
+                    alert(e.response.data.msg);
+                    window.location.replace("/");
+                  } else if (e.response.status === 403) {
+                    alert(e.response.data.msg);
+                    axios.delete(`http://localhost:8080/api/account/logout`, {
+                      headers: {
+                        "Refresh-Token": localStorage.getItem("refreshToken"),
+                      },
+                    });
+                    localStorage.clear();
+                    window.location.replace("/");
+                  }
+                });
+            }
+            return await issuedToken();
+          } else {
+            throw new Error("There is no refresh token");
+          }
+        } else if (errResponseStatus === 400) {
+          console.log(error.response.data);
+        } else if (errResponseStatus === 401) {
+          console.log("인증 실패");
+          window.location.replace("/login");
         } else if (errResponseStatus === 403) {
-          alert(errMsg);
-          axios.delete(`http://localhost:8080/api/account/logout`, {
-            headers: {
-              "Refresh-Token": localStorage.getItem("refreshToken"),
-            },
-          });
-          localStorage.clear();
-          window.location.replace("/");
+          alert("권한이 없습니다.");
         }
       } catch (e) {
         return Promise.reject(e);

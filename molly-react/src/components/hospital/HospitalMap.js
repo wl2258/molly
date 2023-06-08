@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  InfoWindow,
+  Marker,
+  useLoadScript,
+} from "@react-google-maps/api";
 import styles from "../../css/HospitalMap.module.css";
 import {
   MdOutlineStarOutline,
@@ -13,8 +18,18 @@ const mapContainerStyle = {
   width: "65%",
   height: "400px",
 };
+
+const myStyles = [
+  {
+    featureType: "poi",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+];
+
 const options = {
   disableDefaultUI: true,
+  styles: myStyles,
 };
 
 const HospitalMap = () => {
@@ -22,6 +37,9 @@ const HospitalMap = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [search, setSearch] = useState(false);
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  let count = 0;
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyCvNXc4xAKwBK99wTMBapkko0Oqs4Kdqro",
@@ -41,13 +59,25 @@ const HospitalMap = () => {
 
             const request = {
               location,
-              radius: "500",
+              radius: "10000",
               query: "동물병원",
             };
 
             service.textSearch(request, (results, status) => {
               if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                setSearchResults(results);
+                const sortedResults = results.sort((a, b) => {
+                  const aOpenNow = a.opening_hours && a.opening_hours.open_now;
+                  const bOpenNow = b.opening_hours && b.opening_hours.open_now;
+
+                  if (aOpenNow && !bOpenNow) {
+                    return -1; // a가 영업 중이고 b가 영업 종료인 경우 a를 앞으로
+                  } else if (!aOpenNow && bOpenNow) {
+                    return 1; // b가 영업 중이고 a가 영업 종료인 경우 b를 앞으로
+                  }
+                  return 0; // 영업 여부가 같거나 정보가 없는 경우 순서 변경 없음
+                });
+
+                setSearchResults(sortedResults);
               }
             });
           }
@@ -70,23 +100,41 @@ const HospitalMap = () => {
       const service = new window.google.maps.places.PlacesService(map);
 
       const request = {
-        location: currentLocation || map.getCenter(),
-        radius: "500",
-        query: searchQuery,
+        location: map.getCenter(),
+        radius: "10000",
+        query: `${searchQuery} 동물병원`,
       };
 
       service.textSearch(request, (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-          setSearchResults(results);
+          const sortedResults = results.sort((a, b) => {
+            const aOpenNow = a.opening_hours && a.opening_hours.open_now;
+            const bOpenNow = b.opening_hours && b.opening_hours.open_now;
+
+            if (aOpenNow && !bOpenNow) {
+              return -1; // a가 영업 중이고 b가 영업 종료인 경우 a를 앞으로
+            } else if (!aOpenNow && bOpenNow) {
+              return 1; // b가 영업 중이고 a가 영업 종료인 경우 b를 앞으로
+            }
+            return 0; // 영업 여부가 같거나 정보가 없는 경우 순서 변경 없음
+          });
+
+          setSearchResults(sortedResults);
+          setSearch(true);
         }
       });
     }
+  };
+
+  const handleMarkerClick = (marker) => {
+    setSelectedMarker(marker);
   };
 
   return (
     <div style={{ marginTop: "-20px" }}>
       <div className={styles.search}>
         <input
+          placeholder="지역을 입력하세요"
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -104,17 +152,46 @@ const HospitalMap = () => {
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
-            center={currentLocation}
+            center={
+              !search ? currentLocation : searchResults[0].geometry.location
+            }
             zoom={13}
             options={options}
             onLoad={onMapLoad}
           >
-            <Marker position={currentLocation}></Marker>
+            <Marker
+              position={currentLocation}
+              icon={{
+                url: process.env.PUBLIC_URL + "/img/marker.png",
+                scaledSize: new window.google.maps.Size(26, 32),
+              }}
+            ></Marker>
             {searchResults.map((result) => (
-              <Marker
-                key={result.place_id}
-                position={result.geometry.location}
-              />
+              <>
+                <Marker
+                  key={result.place_id}
+                  position={result.geometry.location}
+                  icon={{
+                    url: process.env.PUBLIC_URL + "/img/hospital-marker.png",
+                    scaledSize: new window.google.maps.Size(26, 32),
+                  }}
+                  onClick={() => handleMarkerClick(result)}
+                />
+                {selectedMarker && (
+                  <InfoWindow
+                    position={selectedMarker.geometry.location}
+                    onCloseClick={() => setSelectedMarker(null)}
+                    options={{
+                      pixelOffset: new window.google.maps.Size(0, -25),
+                    }}
+                  >
+                    <div className={styles.infoWindow}>
+                      {console.log(selectedMarker)}
+                      <p>{selectedMarker.name}</p>
+                    </div>
+                  </InfoWindow>
+                )}
+              </>
             ))}
           </GoogleMap>
         ) : (
@@ -124,15 +201,16 @@ const HospitalMap = () => {
           <h3>야간 동물 병원 🌙</h3>
           {searchResults.map((result, index) => {
             if (result.name.includes("24시")) {
+              count++;
               return (
                 <div>
                   <p>{result.name}</p>
                 </div>
               );
-            } else if (!result.name.includes("24시") && index === 0) {
+            } else if (count === 0 && index === searchResults.length - 1) {
               return (
                 <div>
-                  <p>근처 야간 동물병원이 없습니다.</p>
+                  <p>근처에 야간 동물병원이 없습니다.</p>
                 </div>
               );
             }

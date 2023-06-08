@@ -59,7 +59,8 @@ const Accuse = (props) => {
               return await axios
                 .post(`http://localhost:8080/api/token/refresh`, null, config)
                 .then(async (res) => {
-                  localStorage.clear();
+                  localStorage.removeItem("accessToken");
+                  localStorage.removeItem("refreshToken");
                   const reAccessToken = res.headers.get("Authorization");
                   const reRefreshToken = res.headers.get("Refresh-token");
                   localStorage.setItem("accessToken", reAccessToken);
@@ -71,7 +72,19 @@ const Accuse = (props) => {
                 })
                 .catch((e) => {
                   console.log("토큰 재발급 실패");
-                  return new Error(e);
+                  if (e.response.status === 401) {
+                    alert(e.response.data.msg);
+                    window.location.replace("/");
+                  } else if (e.response.status === 403) {
+                    alert(e.response.data.msg);
+                    axios.delete(`http://localhost:8080/api/account/logout`, {
+                      headers: {
+                        "Refresh-Token": localStorage.getItem("refreshToken"),
+                      },
+                    });
+                    localStorage.clear();
+                    window.location.replace("/");
+                  }
                 });
             }
             return await issuedToken();
@@ -84,14 +97,7 @@ const Accuse = (props) => {
           console.log("인증 실패");
           window.location.replace("/login");
         } else if (errResponseStatus === 403) {
-          axios.delete(`http://localhost:8080/api/account/logout`, {
-            headers: {
-              "Refresh-Token": localStorage.getItem("refreshToken"),
-            },
-          });
-          localStorage.clear();
-          alert(errMsg);
-          window.location.replace("/");
+          alert("권한이 없습니다.");
         }
       } catch (e) {
         return Promise.reject(e);
