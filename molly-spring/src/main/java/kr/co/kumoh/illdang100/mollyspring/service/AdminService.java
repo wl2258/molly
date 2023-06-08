@@ -8,7 +8,6 @@ import kr.co.kumoh.illdang100.mollyspring.domain.complaint.CommentComplaint;
 import kr.co.kumoh.illdang100.mollyspring.domain.complaint.ComplaintReasonEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.Suspension;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.SuspensionDate;
-import kr.co.kumoh.illdang100.mollyspring.dto.admin.AdminRespDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
@@ -25,7 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.admin.AdminRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.suspension.SuspensionReqDto.*;
@@ -83,31 +83,36 @@ public class AdminService {
     @Transactional
     public void suspendAccount(Long accountId, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
 
-        // TODO: 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
-
         Account findAccount = findAccountByIdOrThrowException(accountId);
 
-        // 동일한 컨텐츠(게시글 혹은 댓글)에 대해 정지가 존재하면 안됨 -> 찾아야함
+        // 동일한 컨텐츠(게시글 혹은 댓글)에 대해 정지가 존재하면 안된다.
         if (boardId != null && commentId == null) {
             if (suspensionRepository.existsByBoardId(boardId)) {
                 return;
             }
-            findBoardByIdOrThrowException(boardId);
+            Board findBoard = findBoardByIdOrThrowException(boardId);
+            // 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
+            checkAccessAuthorization(findBoard.getAccountEmail(), findAccount.getEmail());
             saveSuspension(findAccount.getEmail(), boardId, null, suspendAccountRequest);
+            // 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
+            deleteBoardComplaintsByBoardIdInBatch(findBoard.getId());
 
         } else if (boardId == null && commentId != null) {
             if (suspensionRepository.existsByCommentId(commentId)) {
                 return;
             }
-            findCommentByIdOrThrowException(commentId);
+            Comment findComment = findCommentByIdOrThrowException(commentId);
+            // 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
+            checkAccessAuthorization(findComment.getAccountEmail(), findAccount.getEmail());
             saveSuspension(findAccount.getEmail(), null, commentId, suspendAccountRequest);
+            // 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
+            deleteCommentComplaintsByBoardIdInBatch(findComment.getId());
         }
 
         updateSuspensionDate(findAccount.getEmail(), suspendAccountRequest.getSuspensionPeriod());
     }
 
     private void saveSuspension(String accountEmail, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
-        // TODO: 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
         suspensionRepository.save(Suspension.builder()
                 .accountEmail(accountEmail)
                 .boardId(boardId)
@@ -117,6 +122,12 @@ public class AdminService {
                 .build());
 
         log.info("정지가 성공적으로 생성되었습니다. [accountEmail={}, suspensionExpiryDate={}]", accountEmail, suspendAccountRequest.getSuspensionPeriod());
+    }
+
+    private void checkAccessAuthorization(String writerEmail, String accountEmail) {
+        if (!writerEmail.equals(accountEmail)) {
+            throw new CustomApiException("해당 게시글에 접근할 권한이 없습니다");
+        }
     }
 
     private void updateSuspensionDate(String accountEmail, Long suspensionPeriod) {
@@ -133,10 +144,6 @@ public class AdminService {
 
         log.info("정지 기간이 성공적으로 업데이트되었습니다. [accountEmail={}, suspensionExpiryDate={}]", accountEmail, sd.getSuspensionExpiryDate());
     }
-
-    // TODO: 관리자한테 사용자 리스트 뿌려주는 기능
-    // TODO: 관리자가 사용자 이메일로 검색하는 기능
-    // TODO: 관리자한테 신고 목록 뿌려주는 기능
 
     private Account findAccountByIdOrThrowException(Long accountId) {
         return accountRepository
@@ -162,5 +169,21 @@ public class AdminService {
     private CommentComplaint findCommentComplaintByIdOrThrowException(Long commentComplaintId) {
         return commentComplaintRepository.findById(commentComplaintId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 신고입니다"));
+    }
+
+    private void deleteBoardComplaintsByBoardIdInBatch(Long boardId) {
+        List<Long> complaintIds = boardComplaintRepository.findByBoard_Id(boardId)
+                .stream()
+                .map(BoardComplaint::getId)
+                .collect(Collectors.toList());
+        boardComplaintRepository.deleteAllByIdInBatch(complaintIds);
+    }
+
+    private void deleteCommentComplaintsByBoardIdInBatch(Long commentId) {
+        List<Long> complaintIds = commentComplaintRepository.findByComment_Id(commentId)
+                .stream()
+                .map(CommentComplaint::getId)
+                .collect(Collectors.toList());
+        commentComplaintRepository.deleteAllByIdInBatch(complaintIds);
     }
 }
