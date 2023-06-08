@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,14 +45,27 @@ public class AdminService {
     private final BoardComplaintRepository boardComplaintRepository;
     private final CommentComplaintRepository commentComplaintRepository;
 
+    /**
+     * 게시글에 대한 신고 목록 조회
+     * @return 게시글에 대한 신고 목록
+     */
     public Slice<RetrieveComplaintListDto> getBoardComplaintList(Pageable pageable) {
         return boardComplaintRepository.searchSlice(pageable);
     }
 
+    /**
+     * 댓글에 대한 신고 목록 조회
+     * @return 댓글에 대한 신고 목록
+     */
     public Slice<RetrieveComplaintListDto> getCommentComplaintList(Pageable pageable) {
         return commentComplaintRepository.searchSlice(pageable);
     }
 
+    /**
+     * 게시글에 대한 신고 상세조회
+     * @param boardComplaintId 게시글에 대한 신고 PK
+     * @return 신고 상세 정보
+     */
     public ComplaintDetailResponse getBoardComplaintDetail(Long boardComplaintId) {
 
         BoardComplaint boardComplaint = findBoardComplaintByIdOrThrowException(boardComplaintId);
@@ -66,6 +80,11 @@ public class AdminService {
                 .build();
     }
 
+    /**
+     * 댓글에 대한 신고 상세조회
+     * @param commentComplaintId 댓글에 대한 신고 PK
+     * @return 신고 상세 정보
+     */
     public ComplaintDetailResponse getCommentComplaintDetail(Long commentComplaintId) {
 
         CommentComplaint commentComplaint = findCommentComplaintByIdOrThrowException(commentComplaintId);
@@ -80,6 +99,13 @@ public class AdminService {
                 .build();
     }
 
+    /**
+     * 사용자 정지
+     * @param accountId 신고 당하는 사용자 PK
+     * @param boardId 신고 당하는 게시글 PK
+     * @param commentId 신고 당하는 댓글 PK
+     * @param suspendAccountRequest 정지 기간 및 정지 사유
+     */
     @Transactional
     public void suspendAccount(Long accountId, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
 
@@ -88,7 +114,7 @@ public class AdminService {
         // 동일한 컨텐츠(게시글 혹은 댓글)에 대해 정지가 존재하면 안된다.
         if (boardId != null && commentId == null) {
             if (suspensionRepository.existsByBoardId(boardId)) {
-                return;
+                throw new CustomApiException("이미 존재하는 정지입니다");
             }
             Board findBoard = findBoardByIdOrThrowException(boardId);
             // 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
@@ -99,7 +125,7 @@ public class AdminService {
 
         } else if (boardId == null && commentId != null) {
             if (suspensionRepository.existsByCommentId(commentId)) {
-                return;
+                throw new CustomApiException("이미 존재하는 정지입니다");
             }
             Comment findComment = findCommentByIdOrThrowException(commentId);
             // 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
@@ -126,7 +152,7 @@ public class AdminService {
 
     private void checkAccessAuthorization(String writerEmail, String accountEmail) {
         if (!writerEmail.equals(accountEmail)) {
-            throw new CustomApiException("해당 게시글에 접근할 권한이 없습니다");
+            throw new CustomApiException("해당 사용자가 작성한 게시물이 아닙니다");
         }
     }
 
@@ -145,30 +171,29 @@ public class AdminService {
         log.info("정지 기간이 성공적으로 업데이트되었습니다. [accountEmail={}, suspensionExpiryDate={}]", accountEmail, sd.getSuspensionExpiryDate());
     }
 
+    private <T> T findByIdOrThrowException(Long id, JpaRepository<T, Long> repository, String exceptionMessage) {
+        return repository.findById(id)
+                .orElseThrow(() -> new CustomApiException(exceptionMessage));
+    }
+
     private Account findAccountByIdOrThrowException(Long accountId) {
-        return accountRepository
-                .findById(accountId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다"));
+        return findByIdOrThrowException(accountId, accountRepository, "존재하지 않는 사용자입니다");
     }
 
     private Board findBoardByIdOrThrowException(Long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 게시글입니다"));
+        return findByIdOrThrowException(boardId, boardRepository, "존재하지 않는 게시글입니다");
     }
 
     private Comment findCommentByIdOrThrowException(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 댓긆입니다"));
+        return findByIdOrThrowException(commentId, commentRepository, "존재하지 않는 댓글입니다");
     }
 
     private BoardComplaint findBoardComplaintByIdOrThrowException(Long boardComplaintId) {
-        return boardComplaintRepository.findById(boardComplaintId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 신고입니다"));
+        return findByIdOrThrowException(boardComplaintId, boardComplaintRepository, "존재하지 않는 신고입니다");
     }
 
     private CommentComplaint findCommentComplaintByIdOrThrowException(Long commentComplaintId) {
-        return commentComplaintRepository.findById(commentComplaintId)
-                .orElseThrow(() -> new CustomApiException("존재하지 않는 신고입니다"));
+        return findByIdOrThrowException(commentComplaintId, commentComplaintRepository, "존재하지 않는 신고입니다");
     }
 
     private void deleteBoardComplaintsByBoardIdInBatch(Long boardId) {
