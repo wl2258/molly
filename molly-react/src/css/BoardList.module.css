@@ -22,7 +22,7 @@
   color: #645c56;
   font-size: small;
   position: relative;
-  height: 100px;
+  height: 75px;
 }
 
 .list > p,
@@ -59,13 +59,13 @@
   font-size: 10px;
 }
 
-.list > span:nth-child(3),
-.listManager > span:nth-child(4) {
+.list > span:nth-child(2),
+.listManager > span:nth-child(3) {
   padding-right: 15px;
 }
 
-.list > div:nth-child(5),
-.listManager > div:nth-child(6) {
+.list > div:nth-child(4),
+.listManager > div:nth-child(5) {
   position: absolute;
   right: 50px;
   bottom: 30px;

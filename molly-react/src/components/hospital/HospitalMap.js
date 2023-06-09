@@ -15,6 +15,7 @@ import {
 import { BiCurrentLocation } from "react-icons/bi";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
+import useDidMountEffect from "../../pages/useDidMountEffect";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -64,61 +65,57 @@ const HospitalMap = () => {
       .then((res) => {
         console.log(res);
         if (res.data.code === 1) {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                const { latitude, longitude } = position.coords;
-                const location = { lat: latitude, lng: longitude };
-                setCurrentLocation(location);
-
-                if (map !== null) {
-                  const service = new window.google.maps.places.PlacesService(
-                    map
-                  );
-
-                  const request = {
-                    location,
-                    radius: "10000",
-                    query: "동물병원",
-                  };
-
-                  service.textSearch(request, (results, status) => {
-                    if (
-                      status ===
-                      window.google.maps.places.PlacesServiceStatus.OK
-                    ) {
-                      const sortedResults = results.sort((a, b) => {
-                        const aOpenNow =
-                          a.opening_hours && a.opening_hours.open_now;
-                        const bOpenNow =
-                          b.opening_hours && b.opening_hours.open_now;
-
-                        if (aOpenNow && !bOpenNow) {
-                          return -1; // a가 영업 중이고 b가 영업 종료인 경우 a를 앞으로
-                        } else if (!aOpenNow && bOpenNow) {
-                          return 1; // b가 영업 중이고 a가 영업 종료인 경우 b를 앞으로
-                        }
-                        return 0; // 영업 여부가 같거나 정보가 없는 경우 순서 변경 없음
-                      });
-
-                      setSearchResults(sortedResults);
-                    }
-                  });
-                }
-              },
-              (error) => {
-                console.error("Error getting the user's location:", error);
-              }
-            );
-          } else {
-            console.error("Geolocation is not supported by this browser.");
-          }
           setLoading(false);
         }
       })
       .catch((e) => {
         console.log(e);
       });
+  }, []);
+
+  useDidMountEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const location = { lat: latitude, lng: longitude };
+          setCurrentLocation(location);
+
+          if (map !== null) {
+            const service = new window.google.maps.places.PlacesService(map);
+
+            const request = {
+              location,
+              radius: "10000",
+              query: "동물병원",
+            };
+
+            service.textSearch(request, (results, status) => {
+              if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                const sortedResults = results.sort((a, b) => {
+                  const aOpenNow = a.opening_hours && a.opening_hours.open_now;
+                  const bOpenNow = b.opening_hours && b.opening_hours.open_now;
+
+                  if (aOpenNow && !bOpenNow) {
+                    return -1; // a가 영업 중이고 b가 영업 종료인 경우 a를 앞으로
+                  } else if (!aOpenNow && bOpenNow) {
+                    return 1; // b가 영업 중이고 a가 영업 종료인 경우 b를 앞으로
+                  }
+                  return 0; // 영업 여부가 같거나 정보가 없는 경우 순서 변경 없음
+                });
+
+                setSearchResults(sortedResults);
+              }
+            });
+          }
+        },
+        (error) => {
+          console.error("Error getting the user's location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
   }, [map]);
 
   const axiosInstance = axios.create({
