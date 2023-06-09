@@ -146,6 +146,8 @@ const WriteCkEditor = () => {
           }
         } else if (errResponseStatus === 400) {
           console.log(error.response.data);
+          alert(error.response.data.msg);
+          return error.response;
         } else if (errResponseStatus === 401) {
           console.log("인증 실패");
           window.location.replace("/login");

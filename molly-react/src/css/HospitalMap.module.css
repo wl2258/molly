@@ -68,6 +68,7 @@
 
 .night {
   margin-left: 50px;
+  position: relative;
 }
 
 .night > h3 {
@@ -91,4 +92,15 @@
 
 .gm-style-iw {
   box-shadow: none !important;
+}
+
+.infoWindow {
+  border: none;
+}
+
+.currentLocation {
+  position: absolute;
+  left: -85px;
+  top: -40px;
+  cursor: pointer;
 }

@@ -512,7 +512,10 @@ const RegisterPet = () => {
               required
             ></input>
           </div>
-          <div className={styles.boarddetail}>
+          <div
+            className={styles.boarddetail}
+            style={petType === "RABBIT" ? { marginTop: "-40px" } : null}
+          >
             <h4>품종</h4>
             <div
               onClick={() => {
@@ -848,6 +851,17 @@ const TypeDropdown = (props) => {
           src={process.env.PUBLIC_URL + `/img/CAT-logo.png`}
           alt="pet-icon"
           width="80px"
+        />
+      </li>
+      <li
+        onClick={() => {
+          props.setPetType("RABBIT");
+        }}
+      >
+        <img
+          src={process.env.PUBLIC_URL + `/img/RABBIT-logo.png`}
+          alt="pet-icon"
+          width="70px"
         />
       </li>
     </div>
