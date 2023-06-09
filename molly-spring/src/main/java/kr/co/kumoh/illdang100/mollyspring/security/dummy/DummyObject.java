@@ -5,6 +5,8 @@ import kr.co.kumoh.illdang100.mollyspring.domain.account.AccountEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.Board;
 import kr.co.kumoh.illdang100.mollyspring.domain.board.BoardEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.BoardComplaint;
+import kr.co.kumoh.illdang100.mollyspring.domain.complaint.ComplaintReasonEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.liky.Liky;
 import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
@@ -59,6 +61,21 @@ public class DummyObject {
                 .nickname(nickname)
                 .role(accountEnum)
                 .build();
+    }
+
+    protected BoardComplaint newBoardComplaint(Board board, String reporterEmail, String reportedEmail, ComplaintReasonEnum complaintReason) {
+
+        return BoardComplaint.builder()
+                .board(board)
+                .reporterEmail(reporterEmail)
+                .reportedEmail(reportedEmail)
+                .complaintReason(complaintReason)
+                .build();
+    }
+
+    protected SuspensionDate newSuspensionDate(String email, LocalDate expiryDate) {
+
+        return new SuspensionDate(email, expiryDate);
     }
 
     protected SuspensionDate newMockSuspensionDate(Long id, String email, LocalDate expiryDate) {

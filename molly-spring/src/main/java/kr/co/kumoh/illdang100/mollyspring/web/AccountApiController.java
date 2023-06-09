@@ -132,4 +132,10 @@ public class AccountApiController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "기본 이미지 변경 완료", null), HttpStatus.OK);
     }
+
+    @GetMapping("/auth/hospital")
+    public ResponseEntity<?> checkHospitalMapAccess() {
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "유효한 회원입니다", null), HttpStatus.OK);
+    }
 }
