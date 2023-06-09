@@ -5,6 +5,7 @@ import {
   RiCheckboxCircleFill,
 } from "react-icons/ri";
 import axios from "axios";
+import { Button } from "../Button";
 
 const Accuse = (props) => {
   useEffect(() => {
@@ -32,6 +33,7 @@ const Accuse = (props) => {
     animal: false,
     fake: false,
   });
+  const [modal, setModal] = useState(false);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -119,26 +121,31 @@ const Accuse = (props) => {
     };
 
     if (reason !== "") {
-      return () => {
-        if (props.type === "board") {
-          axiosInstance
-            .post(`/auth/board/${props.boardId}/report`, data, config)
-            .then((response) => {
-              if (response.data.code === 1) {
-                console.log(response.data.msg);
-              }
-            });
-        } else {
-          axiosInstance
-            .post(`/auth/comment/${props.commentId}/report`, data, config)
-            .then((response) => {
-              if (response.data.code === 1) {
-                console.log(response.data.msg);
-              }
-            });
-        }
-      };
+      if (props.type === "board") {
+        axiosInstance
+          .post(`/api/auth/board/${props.boardId}/report`, data, config)
+          .then((response) => {
+            if (response.data.code === 1) {
+              console.log(response.data.msg);
+              setModal(true);
+            }
+          });
+      } else {
+        axiosInstance
+          .post(`/api/auth/comment/${props.commentId}/report`, data, config)
+          .then((response) => {
+            if (response.data.code === 1) {
+              console.log(response.data.msg);
+              setModal(true);
+            }
+          });
+      }
     }
+  };
+
+  const handleClick = () => {
+    setModal(!modal);
+    props.onClick();
   };
 
   return (
@@ -471,8 +478,40 @@ const Accuse = (props) => {
             <p>가짜 정보를 유포하고 있습니다.</p>
           </div>
         </div>
-        <div className={styles.accuseBtn} onClick={handleAccuse}>
+        <div
+          className={styles.accuseBtn}
+          onClick={() => {
+            handleAccuse();
+          }}
+        >
           신고하기
+        </div>
+      </div>
+      {modal && <AccuseConfirmModal onClick={handleClick} />}
+    </div>
+  );
+};
+
+const AccuseConfirmModal = (props) => {
+  useEffect(() => {
+    document.body.style.cssText = `
+    position: fixed; 
+    top: -${window.scrollY}px;
+    overflow-y: scroll;
+    width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, []);
+
+  return (
+    <div className={styles.confirmContainer}>
+      <div className={styles.confirmModal}>
+        <p>신고가 완료되었습니다.</p>
+        <div>
+          <Button name="확인" onClick={props.onClick} />
         </div>
       </div>
     </div>

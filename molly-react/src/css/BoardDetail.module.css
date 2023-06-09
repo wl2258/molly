@@ -83,7 +83,9 @@
 }
 
 .middle {
+  width: 100%;
   padding: 35px 63px 0;
+  box-sizing: border-box;
   color: #787471;
 }
 
@@ -97,8 +99,7 @@
 }
 
 .middle img {
-  padding: 10px 63px;
-  width: 80%;
+  max-width: 100%;
 }
 
 .count {

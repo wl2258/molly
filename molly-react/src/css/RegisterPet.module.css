@@ -16,7 +16,7 @@
 .petimg {
   margin-left: -10px;
   margin-right: 40px;
-  filter: drop-shadow(2px 2px 1px #BFBFBF);
+  filter: drop-shadow(2px 2px 1px #bfbfbf);
 }
 
 .dropdowncontainer {
@@ -34,7 +34,8 @@
 }
 
 .typedropdown > li > img {
-  filter: drop-shadow(2px 2px 1px #BFBFBF);
+  filter: drop-shadow(2px 2px 1px #bfbfbf);
+  margin-bottom: 8px;
 }
 
 .board > form > div:first-child > h1 {
@@ -54,31 +55,35 @@
   height: 80px;
 }
 
-.board > input, .surgeryname, .weight, .drug > input, .caution > input, .upload > input {
+.board > input,
+.surgeryname,
+.weight,
+.drug > input,
+.caution > input,
+.upload > input {
   width: 120px;
   border-radius: 10px;
   color: #656565;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   border: none;
   text-align: center;
-  caret-color: #C7C3BF;
+  caret-color: #c7c3bf;
 }
 
-.board > input:focus, 
-.surgeryname:focus, 
-.weight:focus, 
+.board > input:focus,
+.surgeryname:focus,
+.weight:focus,
 .drug > input:focus,
 .caution > input:focus,
 .name {
   outline: none;
 }
 
-.board > input::placeholder, 
+.board > input::placeholder,
 .surgeryname::placeholder,
 .weight::placeholder,
 .drug > input::placeholder,
-.caution > input::placeholder
-.upload > input::placeholder {
+.caution > input::placeholder .upload > input::placeholder {
   color: #b4b1ad;
 }
 
@@ -93,7 +98,8 @@
   width: 150px;
 }
 
-.boarddetail > h4, .info > h4 {
+.boarddetail > h4,
+.info > h4 {
   display: inline-block;
   color: #827870;
   font-weight: bold;
@@ -106,7 +112,7 @@
   top: -45px;
   left: 72px;
   color: #827870;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   width: 140px;
   position: relative;
   box-sizing: border-box;
@@ -134,7 +140,7 @@
   font-size: small;
   list-style: none;
   padding: 7px 13px;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
 }
 
 /* .dropdown > li:last-child {
@@ -142,7 +148,7 @@
 } */
 
 .dropdown > li:hover {
-  background-color: #DFDAD4;
+  background-color: #dfdad4;
 }
 
 .info {
@@ -162,7 +168,7 @@
 .radio > input {
   margin-right: 10px;
   accent-color: #827870;
-  border: none !important
+  border: none !important;
 }
 
 .surgery {
@@ -219,7 +225,8 @@
   padding: 0 30px;
 }
 
-.drug, .caution {
+.drug,
+.caution {
   display: inline-block;
   position: relative;
 }
@@ -237,7 +244,7 @@
 
 .medicineData > p {
   color: #827870;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   padding: 6px 15px;
   border-radius: 10px;
   font-size: 13px;
@@ -300,7 +307,7 @@
 .info > button {
   margin-left: -16px;
   margin-bottom: 20px;
-  background-color: #AFA79F;
+  background-color: #afa79f;
   color: white;
   font-size: 14px;
   border: none;
@@ -333,7 +340,7 @@
   width: 100px;
   height: 50px;
   border-radius: 0 0 50px 50px;
-  background : linear-gradient( to bottom, rgba(255, 255, 255, 0), #65656575 60%);;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #65656575 60%);
   position: absolute;
   top: 150px;
   left: -30px;
@@ -353,7 +360,7 @@
 
 .custominput {
   color: #827870;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   border-style: none;
   border-radius: 10px;
   padding: 7px;

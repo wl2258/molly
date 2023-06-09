@@ -4,7 +4,7 @@
   top: 0;
   width: 100%;
   height: 75px;
-  background-color: #FAF5F1;
+  background-color: #faf5f1;
   padding-top: 10px;
 }
 
@@ -31,7 +31,7 @@
 
 .logout {
   width: 10%;
-  color: #AFA79F;
+  color: #afa79f;
   font-size: 13px;
   margin-right: 40px;
   margin-top: 20px;
@@ -44,36 +44,52 @@
 }
 
 .accuse > h1 {
-  color: #645C56;
+  color: #645c56;
   font-size: 20px;
   margin-left: 20px;
 }
 
+.category {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 15px 15px 0 0;
+  background-color: #d1ccca;
+  width: 40%;
+  height: 50px;
+}
+
+.category > div {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .accuseBoard {
-  margin-top: 25px;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   padding: 20px 30px;
-  border-radius: 20px;
+  border-radius: 0 20px 20px 20px;
   min-height: 450px;
 }
 
 .accuseBoard > div {
   padding: 10px 0;
-  border-bottom: 1px solid #AFA79F;
+  border-bottom: 1px solid #afa79f;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .accuseBoard > div > h3 {
-  color: #645C56;
+  color: #645c56;
   font-size: 15px;
   margin-left: 25px;
   margin-right: 15px;
 }
 
 .accuseBoard > div > span {
-  color: #AFA79F;
+  color: #afa79f;
   font-size: 13px;
   margin-right: 28px;
 }
@@ -89,54 +105,8 @@
 }
 
 .member > div > h1 {
-  color: #645C56;
+  color: #645c56;
   font-size: 20px;
   margin-right: 8%;
   margin-left: 10px;
-}
-
-.search {
-  width: 50%;
-  height: 35px;
-  border-radius: 10px;
-  background-color: #EEECEC;
-  border: none;
-  padding-left: 20px;
-  box-sizing: border-box;
-  caret-color: #C7C3BF;
-}
-
-.search:focus {
-  outline: none;
-}
-
-.search::placeholder {
-  color: #b4b1ad;
-}
-
-.memberlist {
-  margin-top: 40px;
-  width: 100%;
-}
-
-.memberlist > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #F5F5F4;
-  margin-bottom: 15px;
-  border-radius: 16px;
-  padding: 0 30px 0 40px;
-  box-sizing: border-box;
-}
-
-.memberlist > div > h3 {
-  color: #645C56;
-  font-size: 17px;
-}
-
-.memberlist > div > span {
-  color: #AFA79F;
-  font-weight: 800;
-  cursor: pointer;
 }

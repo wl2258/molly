@@ -147,7 +147,8 @@ const BoardDetail = () => {
   //     title: "강아지 자랑",
   //     category: "MEDICAL",
   //     petType: "CAT",
-  //     content: "제 강아지 예쁘죠?",
+  //     content:
+  //       "<p>제 강아지 예쁘죠?</p><figure><img src='/img/test.png'></img></figure><figure><img src='/img/CAT-logo.png'></figure>",
   //     writerNick: null,
   //     writerEmail: "writer@naver.com",
   //     createdAt: "2023-03-01 11:00:34",
