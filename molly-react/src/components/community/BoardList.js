@@ -7,7 +7,6 @@ import Board from "./Board";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
-import ReactHtmlParser from "react-html-parser";
 
 const BoardList = () => {
   let { category, pet } = useParams();
@@ -31,7 +30,7 @@ const BoardList = () => {
           petType: pet,
           sort: `${value},desc`,
           page: pageNum,
-          size: 5,
+          size: 15,
         })
       : (params = {
           category: category === "undefined" ? "ALL" : category,
@@ -39,7 +38,7 @@ const BoardList = () => {
           searchWord: search,
           sort: `${value},desc`,
           page: pageNum,
-          size: 5,
+          size: 15,
         });
 
     const config = {
@@ -154,7 +153,7 @@ const BoardList = () => {
   //         title: "notice board3",
   //         writerNick: "dd",
   //         createdAt: "2023-05-10 19:59:54",
-  //         content: "<p>notice content3</p>",
+  //         content: "<h1>notice content3</h1>",
   //         views: 31,
   //         commentCount: 31,
   //         likyCount: 31,
@@ -166,7 +165,7 @@ const BoardList = () => {
   //         title: "notice board2",
   //         writerNick: "관리자",
   //         createdAt: "2023-05-10 19:59:54",
-  //         content: "<p>notice content2</p>",
+  //         content: "<img src='/img/marker.png'></img>",
   //         views: 4,
   //         commentCount: 4,
   //         likyCount: 4,
@@ -182,6 +181,90 @@ const BoardList = () => {
   //         views: 98,
   //         commentCount: 98,
   //         likyCount: 98,
+  //         hasImage: false,
+  //         notice: false,
+  //       },
+  //       {
+  //         boardId: 11,
+  //         title: "test board6",
+  //         writerNick: "일당백1",
+  //         createdAt: "2023-05-10 19:59:54",
+  //         content: "<p>test content6</p>",
+  //         views: 96,
+  //         commentCount: 100,
+  //         likyCount: 100,
+  //         hasImage: false,
+  //         notice: false,
+  //       },
+  //       {
+  //         boardId: 11,
+  //         title: "test board6",
+  //         writerNick: "일당백1",
+  //         createdAt: "2023-05-10 19:59:54",
+  //         content: "<p>test content6</p>",
+  //         views: 96,
+  //         commentCount: 100,
+  //         likyCount: 100,
+  //         hasImage: false,
+  //         notice: false,
+  //       },
+  //       {
+  //         boardId: 11,
+  //         title: "test board6",
+  //         writerNick: "일당백1",
+  //         createdAt: "2023-05-10 19:59:54",
+  //         content: "<p>test content6</p>",
+  //         views: 96,
+  //         commentCount: 100,
+  //         likyCount: 100,
+  //         hasImage: false,
+  //         notice: false,
+  //       },
+  //       {
+  //         boardId: 11,
+  //         title: "test board6",
+  //         writerNick: "일당백1",
+  //         createdAt: "2023-05-10 19:59:54",
+  //         content: "<p>test content6</p>",
+  //         views: 96,
+  //         commentCount: 100,
+  //         likyCount: 100,
+  //         hasImage: false,
+  //         notice: false,
+  //       },
+  //       {
+  //         boardId: 11,
+  //         title: "test board6",
+  //         writerNick: "일당백1",
+  //         createdAt: "2023-05-10 19:59:54",
+  //         content: "<p>test content6</p>",
+  //         views: 96,
+  //         commentCount: 100,
+  //         likyCount: 100,
+  //         hasImage: false,
+  //         notice: false,
+  //       },
+  //       {
+  //         boardId: 11,
+  //         title: "test board6",
+  //         writerNick: "일당백1",
+  //         createdAt: "2023-05-10 19:59:54",
+  //         content: "<p>test content6</p>",
+  //         views: 96,
+  //         commentCount: 100,
+  //         likyCount: 100,
+  //         hasImage: false,
+  //         notice: false,
+  //       },
+  //       {
+  //         boardId: 11,
+  //         title: "test board6",
+  //         writerNick: "일당백1",
+  //         createdAt: "2023-05-10 19:59:54",
+  //         content: "<p>test content6</p>",
+  //         views: 96,
+  //         commentCount: 100,
+  //         likyCount: 100,
   //         hasImage: false,
   //         notice: false,
   //       },
@@ -450,11 +533,6 @@ const List = (props) => {
       >
         <span>공지</span>
         <h3 style={{ cursor: "pointer" }}>{props.title}</h3>
-        <p>
-          {props.detail.length <= 50
-            ? ReactHtmlParser(props.detail)
-            : ReactHtmlParser(props.detail.substr(0, 40).concat(" ..."))}
-        </p>
         <span>{props.time}</span>
         <span>{props.writer}</span>
         <div>
@@ -478,12 +556,6 @@ const List = (props) => {
         className={styles.list}
       >
         <h3 style={{ cursor: "pointer" }}>{props.title}</h3>
-        {console.log(ReactHtmlParser(props.detail).length)}
-        <p>
-          {props.detail.length <= 70
-            ? ReactHtmlParser(props.detail)
-            : ReactHtmlParser(props.detail.substr(0, 70).concat(" ..."))}
-        </p>
         <span>{props.time}</span>
         <span>{props.writer === null ? "(알 수 없음)" : props.writer}</span>
         <div>
