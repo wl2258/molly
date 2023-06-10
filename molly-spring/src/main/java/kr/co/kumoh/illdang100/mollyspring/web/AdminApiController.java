@@ -16,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.admin.AdminRespDto.*;
-import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.suspension.SuspensionReqDto.*;
 
 @RestController
@@ -57,7 +56,7 @@ public class AdminApiController {
     @GetMapping("/admin/board-complaint/{id}")
     public ResponseEntity<?> retrieveBoardComplaintDetail(@PathVariable("id") Long boardComplaintId) {
 
-        ComplaintDetailResponse boardComplaintDetail = adminService.getBoardComplaintDetail(boardComplaintId);
+        BoardComplaintDetailResponse boardComplaintDetail = adminService.getBoardComplaintDetail(boardComplaintId);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 신고 상세 조회에 성공했습니다", boardComplaintDetail), HttpStatus.OK);
     }
 
@@ -69,7 +68,7 @@ public class AdminApiController {
     @GetMapping("/admin/comment-complaint/{id}")
     public ResponseEntity<?> retrieveCommentComplaintDetail(@PathVariable("id") Long commentComplaintId) {
 
-        ComplaintDetailResponse commentComplaintDetail = adminService.getCommentComplaintDetail(commentComplaintId);
+        CommentComplaintDetailResponse commentComplaintDetail = adminService.getCommentComplaintDetail(commentComplaintId);
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 신고 상세 조회에 성공했습니다", commentComplaintDetail), HttpStatus.OK);
     }
 
@@ -103,10 +102,6 @@ public class AdminApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "정지되었습니다", null), HttpStatus.OK);
     }
 
-    // TODO: 신고 상세조회에서 이동 버튼 누르면 이동하는 기능
-
-    // TODO: 신고 삭제
-
     /**
      * 게시글 신고 삭제
      * @param complaintId 신고 PK
@@ -129,10 +124,6 @@ public class AdminApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 신고 삭제에 성공했습니다", null), HttpStatus.OK);
     }
 
-    // TODO: 관리자 커뮤니티 목록 페이지
-
-    // TODO: 관리자 커뮨티 게시글 상세조회 페이지
-
     /**
      * 관리자용 게시글 상세 조회
      *
@@ -149,7 +140,8 @@ public class AdminApiController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세 조회에 성공했습니다", postDetailForAdminResponse), HttpStatus.OK);
     }
 
-    // TODO: 관리자가 특정 게시글 정지(o), 삭제, 수정 기능
+    // TODO: 관리자용 게시글 수정, 삭제 기능
+    // TODO: 관리자용 댓글 삭제 기능
 
     // 게시글 수정
     /**

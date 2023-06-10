@@ -71,13 +71,13 @@ public class AdminService {
      * @param boardComplaintId 게시글에 대한 신고 PK
      * @return 신고 상세 정보
      */
-    public ComplaintDetailResponse getBoardComplaintDetail(Long boardComplaintId) {
+    public BoardComplaintDetailResponse getBoardComplaintDetail(Long boardComplaintId) {
 
         BoardComplaint boardComplaint = findBoardComplaintByIdOrThrowException(boardComplaintId);
 
-        return ComplaintDetailResponse.builder()
-                .complaintId(boardComplaint.getId())
-                .reportedItemId(boardComplaint.getBoard().getId())
+        return BoardComplaintDetailResponse.builder()
+                .boardComplaintId(boardComplaint.getId())
+                .boardId(boardComplaint.getBoard().getId())
                 .reporterEmail(boardComplaint.getReporterEmail())
                 .reportedEmail(boardComplaint.getReportedEmail())
                 .createdAt(boardComplaint.getCreatedDate())
@@ -90,13 +90,14 @@ public class AdminService {
      * @param commentComplaintId 댓글에 대한 신고 PK
      * @return 신고 상세 정보
      */
-    public ComplaintDetailResponse getCommentComplaintDetail(Long commentComplaintId) {
+    public CommentComplaintDetailResponse getCommentComplaintDetail(Long commentComplaintId) {
 
         CommentComplaint commentComplaint = findCommentComplaintByIdOrThrowException(commentComplaintId);
 
-        return ComplaintDetailResponse.builder()
-                .complaintId(commentComplaint.getId())
-                .reportedItemId(commentComplaint.getComment().getId())
+        return CommentComplaintDetailResponse.builder()
+                .commentComplaintId(commentComplaint.getId())
+                .boardId(commentComplaint.getComment().getBoard().getId())
+                .commentId(commentComplaint.getComment().getId())
                 .reporterEmail(commentComplaint.getReporterEmail())
                 .reportedEmail(commentComplaint.getReportedEmail())
                 .createdAt(commentComplaint.getCreatedDate())
