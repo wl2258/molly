@@ -50,11 +50,11 @@ public class BoardService {
     private final CommentComplaintRepository commentComplaintRepository;
 
     @Transactional
-    public CreatePostResponse createPost(Long accountId, CreatePostRequest createPostRequest) {
+    public CreatePostResponse createPost(Long accountId, CreatePostRequest createPostRequest, boolean isNotice) {
 
         Account findAccount = findAccountByIdOrThrowException(accountId);
 
-        Board board = boardRepository.save(new Board(findAccount, createPostRequest));
+        Board board = boardRepository.save(new Board(findAccount, createPostRequest, isNotice));
 
         List<Long> boardImageIds = createPostRequest.getBoardImageIds();
         if (boardImageIds != null && !boardImageIds.isEmpty()) {
@@ -237,12 +237,16 @@ public class BoardService {
 
         deleteCommentsByBoardIdInBatch(boardId);
         deleteLikiesByBoardIdInBatch(boardId);
+        deleteBoardImagesIfNotEmpty(boardId);
+        deleteBoardComplaintsByBoardIdInBatch(boardId);
+        boardRepository.deleteById(boardId);
+    }
+
+    public void deleteBoardImagesIfNotEmpty(Long boardId) {
         List<BoardImage> findBoardImages = boardImageRepository.findByBoardId(boardId);
         if (!findBoardImages.isEmpty()) {
             deleteBoardImagesInBatch(findBoardImages);
         }
-        deleteBoardComplaintsByBoardIdInBatch(boardId);
-        boardRepository.deleteById(boardId);
     }
 
     private void deleteBoardComplaintsByBoardIdInBatch(Long boardId) {
@@ -266,13 +270,13 @@ public class BoardService {
                 .collect(Collectors.toList()));
     }
 
-    private void deleteLikiesByBoardIdInBatch(Long boardId) {
+    public void deleteLikiesByBoardIdInBatch(Long boardId) {
         likyRepository.deleteAllByIdInBatch(likyRepository.findByBoard_Id(boardId).stream()
                 .map(Liky::getId)
                 .collect(Collectors.toList()));
     }
 
-    private void deleteCommentsByBoardIdInBatch(Long boardId) {
+    public void deleteCommentsByBoardIdInBatch(Long boardId) {
         List<Comment> comments = commentRepository.findByBoard_Id(boardId);
 
         List<Long> commentIds = comments.stream()

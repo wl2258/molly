@@ -145,7 +145,7 @@ public class AdminApiController {
                 adminService.getPostDetail(boardId, principalDetails.getAccount().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세 조회에 성공했습니다", postDetailForAdminResponse), HttpStatus.OK);
     }
-    
+
     /**
      * 관리자용 게시글 작성
      *
