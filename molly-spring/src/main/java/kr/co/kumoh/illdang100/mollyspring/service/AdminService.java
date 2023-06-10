@@ -8,6 +8,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.complaint.CommentComplaint;
 import kr.co.kumoh.illdang100.mollyspring.domain.complaint.ComplaintReasonEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.Suspension;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.SuspensionDate;
+import kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
@@ -152,7 +153,7 @@ public class AdminService {
             checkAccessAuthorization(findComment.getAccountEmail(), findAccount.getEmail());
             saveSuspension(findAccount.getEmail(), null, commentId, suspendAccountRequest);
             // 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
-            deleteCommentComplaintsByBoardIdInBatch(findComment.getId());
+            deleteCommentComplaintsByCommentIdInBatch(findComment.getId());
         }
 
         updateSuspensionDate(findAccount.getEmail(), suspendAccountRequest.getSuspensionPeriod());
@@ -228,6 +229,38 @@ public class AdminService {
         );
     }
 
+    @Transactional
+    public void updatePost(Long boardId, BoardReqDto.UpdatePostRequest updatePostRequest) {
+
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+
+        findBoard.update(updatePostRequest);
+    }
+
+    @Transactional
+    public void deletePost(Long boardId) {
+
+        findBoardByIdOrThrowException(boardId);
+
+        boardService.deleteCommentsByBoardIdInBatch(boardId);
+        boardService.deleteLikiesByBoardIdInBatch(boardId);
+        boardService.deleteBoardImagesIfNotEmpty(boardId);
+        deleteBoardComplaintsByBoardIdInBatch(boardId);
+        boardRepository.deleteById(boardId);
+    }
+
+    @Transactional
+    public void deleteComment(Long boardId, Long commentId) {
+
+        Comment findComment = findCommentByIdOrThrowException(commentId);
+
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+        findBoard.decreaseCommentCnt();
+
+        deleteCommentComplaintsByCommentIdInBatch(findComment.getId());
+        commentRepository.delete(findComment);
+    }
+
     private void saveSuspension(String accountEmail, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
         suspensionRepository.save(Suspension.builder()
                 .accountEmail(accountEmail)
@@ -294,7 +327,7 @@ public class AdminService {
         boardComplaintRepository.deleteAllByIdInBatch(complaintIds);
     }
 
-    private void deleteCommentComplaintsByBoardIdInBatch(Long commentId) {
+    private void deleteCommentComplaintsByCommentIdInBatch(Long commentId) {
         List<Long> complaintIds = commentComplaintRepository.findByComment_Id(commentId)
                 .stream()
                 .map(CommentComplaint::getId)

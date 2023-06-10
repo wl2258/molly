@@ -57,7 +57,7 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isNotice;
 
-    public Board(Account account, CreatePostRequest createPostRequest) {
+    public Board(Account account, CreatePostRequest createPostRequest, boolean isNotice) {
         this.account = account;
         this.accountEmail = account.getEmail();
         this.boardTitle = createPostRequest.getTitle();
@@ -68,7 +68,7 @@ public class Board extends BaseTimeEntity {
         this.likyCnt = 0;
         this.commentCnt = 0;
         this.hasImage = false;
-        this.isNotice = false;
+        this.isNotice = isNotice;
     }
 
     public void changeHasImage(boolean hasImage) {

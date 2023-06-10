@@ -1,9 +1,10 @@
 package kr.co.kumoh.illdang100.mollyspring.web;
 
 import kr.co.kumoh.illdang100.mollyspring.dto.ResponseDto;
-import kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto;
+import kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto;
 import kr.co.kumoh.illdang100.mollyspring.security.auth.PrincipalDetails;
 import kr.co.kumoh.illdang100.mollyspring.service.AdminService;
+import kr.co.kumoh.illdang100.mollyspring.service.community.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +14,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static kr.co.kumoh.illdang100.mollyspring.dto.admin.AdminRespDto.*;
+import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.suspension.SuspensionReqDto.*;
 
 @RestController
@@ -25,6 +30,7 @@ import static kr.co.kumoh.illdang100.mollyspring.dto.suspension.SuspensionReqDto
 public class AdminApiController {
 
     private final AdminService adminService;
+    private final BoardService boardService;
 
     /**
      * 게시글에 대한 신고 목록 조회
@@ -139,27 +145,67 @@ public class AdminApiController {
                 adminService.getPostDetail(boardId, principalDetails.getAccount().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 상세 조회에 성공했습니다", postDetailForAdminResponse), HttpStatus.OK);
     }
-
-    // TODO: 관리자용 게시글 수정, 삭제 기능
-    // TODO: 관리자용 댓글 삭제 기능
-
-    // 게시글 수정
+    
     /**
-     * 게시글 수정
+     * 관리자용 게시글 작성
+     *
+     * @param createPostRequest 게시글 정보
+     * @param principalDetails  인증된 사용자 정보
+     * @return 저장된 게시글 PK
+     */
+    @PostMapping("/admin/board")
+    public ResponseEntity<?> createNewPost(@RequestBody @Valid CreatePostRequest createPostRequest,
+                                           BindingResult bindingResult,
+                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        BoardRespDto.CreatePostResponse createPostResponse
+                = boardService.createPost(principalDetails.getAccount().getId(), createPostRequest, true);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 작성에 성공했습니다", createPostResponse), HttpStatus.CREATED);
+    }
+
+    /**
+     * 관리자용 게시글 수정
      *
      * @param boardId           게시글PK
      * @param updatePostRequest 수정한 게시글 정보
-     * @param principalDetails  인증된 사용자 정보
      */
     @PutMapping("/admin/board/{boardId}")
     public ResponseEntity<?> editPost(@PathVariable("boardId") Long boardId,
-                                      @RequestBody BoardReqDto.UpdatePostRequest updatePostRequest,
-                                      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                                      @RequestBody UpdatePostRequest updatePostRequest) {
 
-//        boardService.updatePost(boardId, principalDetails.getAccount().getId(), updatePostRequest);
+        adminService.updatePost(boardId, updatePostRequest);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 수정에 성공했습니다", null), HttpStatus.OK);
     }
 
-    // 게시글 삭제
+    /**
+     * 관리자용 게시글 삭제
+     *
+     * @param boardId          삭제하고자 하는 게시글 PK
+     * @param principalDetails 인증된 사용자 정보
+     */
+    @DeleteMapping("/admin/board/{boardId}")
+    public ResponseEntity<?> deletePost(@PathVariable("boardId") Long boardId,
+                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        adminService.deletePost(boardId);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 삭제에 성공했습니다", null), HttpStatus.OK);
+    }
+
+    /**
+     * 댓글 삭제
+     *
+     * @param boardId          게시판PK
+     * @param commentId        댓글PK
+     */
+    @DeleteMapping("/admin/board/{boardId}/comment/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable("boardId") Long boardId,
+                                           @PathVariable("commentId") Long commentId) {
+
+        // topdo
+        adminService.deleteComment(boardId, commentId);
+        return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성이 완료되었습니다", null), HttpStatus.CREATED);
+    }
+
 }
