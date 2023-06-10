@@ -184,7 +184,7 @@ public class BoardService {
         return result;
     }
 
-    private String extractAccountProfileUrlFromBoard(Board board) {
+    public String extractAccountProfileUrlFromBoard(Board board) {
         if (hasAccountProfileImageFromBoard(board)) {
             return board.getAccount().getAccountProfileImage().getStoreFileUrl();
         } else {
