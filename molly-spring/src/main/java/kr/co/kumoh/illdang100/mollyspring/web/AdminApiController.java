@@ -203,7 +203,6 @@ public class AdminApiController {
     public ResponseEntity<?> deleteComment(@PathVariable("boardId") Long boardId,
                                            @PathVariable("commentId") Long commentId) {
 
-        // topdo
         adminService.deleteComment(boardId, commentId);
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성이 완료되었습니다", null), HttpStatus.CREATED);
     }
