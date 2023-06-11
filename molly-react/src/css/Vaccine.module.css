@@ -8,6 +8,13 @@
   background-color: #adaaa790;
 }
 
+.modalContainer > span:first-child {
+  position: absolute;
+  top: -30px;
+  right: 400px;
+  cursor: pointer;
+}
+
 .modalContainer {
   width: 400px;
   height: 500px;
@@ -33,7 +40,16 @@
 }
 
 .sort {
-  z-index: 2;
+  z-index: 3;
+  color: #827870;
+  background-color: #EBE7E3;
+  width: 130px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.editSort {
+  z-index: 1;
   color: #827870;
   background-color: #EBE7E3;
   width: 130px;
@@ -42,6 +58,7 @@
 }
 
 .default {
+  z-index: 1;
   position: relative;
   left: 13px;
   bottom: 1px;
@@ -63,8 +80,76 @@
   background-color: #DFDAD4;
 }
 
+.modalContainer > div:nth-child(4) {
+  position: absolute;
+  left: 190px;
+  top: 87px;
+  height: 50px;
+}
+
 .modalContainer > span {
   position: absolute;
-  right: 60px;
-  top: 87px;
+  right: 50px;
+  top: 92px;
+  cursor: pointer;
+}
+
+.datepicker {
+  display: inline-block;
+}
+
+.custominput {
+  color: #827870;
+  background-color: #EBE7E3;
+  border-style: none;
+  border-radius: 10px;
+  padding: 7px;
+  box-sizing: border-box;
+  width: 110px;
+}
+
+.modalContainer > div:nth-child(6) {
+  position: absolute;
+  top: 135px;
+  left: 60px;
+}
+
+.vaccineHistory {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.vaccineHistory > span {
+  color: #827870;
+  font-size: 14px;
+}
+
+.vaccineHistory > span:first-child {
+  margin-right: 65px;
+}
+
+.vaccineHistory > span:nth-child(3) {
+  position: absolute;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.vaccineHistory > span:last-child {
+  position: absolute;
+  margin-left: 55px;
+  cursor: pointer;
+}
+
+.editVaccine {
+  display: flex;
+}
+
+.editVaccine > ul {
+  margin: 0 20px 20px -60px;
+}
+
+.check {
+  cursor: pointer;
+  margin-left: 31px;
+  margin-top: 5px;
 }

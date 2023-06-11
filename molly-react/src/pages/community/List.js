@@ -3,8 +3,8 @@ import BoardList from '../../components/community/BoardList';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 
-let CustomBody = styled.body`
-  margin-top: 140px;
+let CustomBody = styled.div`
+  margin-top: 190px;
   padding: 0 5%;
 `;
 

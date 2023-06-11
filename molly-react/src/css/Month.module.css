@@ -1,0 +1,127 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10%;
+  width: 400px;
+}
+
+.calendartr > td {
+  width: 40px;
+  height: 78px;
+  position: relative;
+  text-align: center;
+}
+
+.month {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.month > span:nth-child(1) {
+  position: absolute;
+  right: 158px;
+  top: 7px;
+}
+
+.month > span:nth-child(3) {
+  position: absolute;
+  left: 160px;
+  top: 7px;
+}
+
+.month > span:nth-child(2) {
+  font-weight: bold;
+  font-size: 25px;
+  color: #E36F03;
+}
+
+.week > td {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 17px;
+  padding: 10px 0;
+}
+
+.monthline {
+  height: 10px;
+}
+
+.calendartr > td > span {
+  position: absolute;
+  top: 5px;
+  right: 30%;
+}
+
+.todaycontainer {
+  position: relative;
+}
+
+.today {
+  background-color: #F4E1D4;
+  width: 22px;
+  height: 22px;
+  border-radius: 100%;
+  position: absolute;
+  left: 19px;
+}
+
+.vaccine {
+  width: 31px;
+  height: 11px;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  margin-bottom: 3px;
+}
+
+.vaccine:hover + .vaccineInfo {
+  display: block;
+}
+
+.vaccineInfo {
+  background-color: #939393d4;
+  color: white;
+  font-size: 10px;
+  width: 110px;
+  border-radius: 8px;
+  position: absolute;
+  left: 55px;
+  top: 10px;
+  z-index: 2;
+  padding: 5px 0;
+  display: none;
+}
+
+.vaccineInfo::after {
+  position: absolute;
+  top: 10px;
+  left: -14px;
+  content: "";
+  border: 0.6em solid transparent; 
+  border-right: 0.8em solid #939393d4;
+}
+
+.vaccineBox {
+  padding: 5px 0px;
+}
+
+.petName {
+  margin-right: 5px;
+}
+
+.plus {
+  position: absolute;
+  right: 5px;
+  background-color: #bababad4;
+  color: white;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  font-size: small;
+  padding-top: 1px;
+  box-sizing: border-box;
+}

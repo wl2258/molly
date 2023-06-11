@@ -23,6 +23,7 @@
   font-weight: 700;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .vaccine {
@@ -33,4 +34,21 @@
 .day {
   color: white;
   padding-right: 30px;
+}
+
+.plus { 
+  position: absolute;
+  right: 140px;
+  margin-top: 90px;
+}
+
+.plus > p {
+  background-color: #d4d0cc;
+  color: white;
+  width: 50px;
+  font-size: 13px;
+  text-align: center;
+  padding: 4px 2px;
+  border-radius: 20px;
+  cursor: pointer;
 }

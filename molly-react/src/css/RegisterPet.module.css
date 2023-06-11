@@ -4,38 +4,86 @@
 }
 
 .board {
-  margin-top: 120px;
+  margin-top: 130px;
   position: relative;
 }
 
-.board > h1 {
+.board > form > div:first-child {
+  display: flex;
+  margin-left: -130px;
+}
+
+.petimg {
+  margin-left: -10px;
+  margin-right: 40px;
+  filter: drop-shadow(2px 2px 1px #bfbfbf);
+}
+
+.dropdowncontainer {
+  position: absolute;
+  z-index: 2;
+  left: -140px;
+  margin-top: 20px;
+}
+
+.typedropdown {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.typedropdown > li > img {
+  filter: drop-shadow(2px 2px 1px #bfbfbf);
+  margin-bottom: 8px;
+}
+
+.board > form > div:first-child > h1 {
   color: #656565;
   font-size: 28px;
 }
 
-.board > input, .surgeryname, .weight, .drug > input, .caution > input {
+.upload {
+  display: flex;
+  margin-top: 35px;
+}
+
+.upload > label {
+  margin-left: -20px;
+  margin-bottom: 36px;
+  width: 80px;
+  height: 80px;
+}
+
+.board > input,
+.surgeryname,
+.weight,
+.drug > input,
+.caution > input,
+.upload > input {
   width: 120px;
   border-radius: 10px;
   color: #656565;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   border: none;
   text-align: center;
-  caret-color: #C7C3BF;
+  caret-color: #c7c3bf;
 }
 
-.board > input:focus, 
-.surgeryname:focus, 
-.weight:focus, 
+.board > input:focus,
+.surgeryname:focus,
+.weight:focus,
 .drug > input:focus,
-.caution > input:focus {
+.caution > input:focus,
+.name {
   outline: none;
 }
 
-.board > input::placeholder, 
+.board > input::placeholder,
 .surgeryname::placeholder,
 .weight::placeholder,
 .drug > input::placeholder,
-.caution > input::placeholder {
+.caution > input::placeholder .upload > input::placeholder {
   color: #b4b1ad;
 }
 
@@ -43,10 +91,15 @@
   height: 30px;
   font-size: 15px;
   font-weight: bold;
-  margin-bottom: 30px;
+  position: absolute;
+  top: 150px;
+  left: 100px;
+  height: 35px;
+  width: 150px;
 }
 
-.board > h4, .info > h4 {
+.boarddetail > h4,
+.info > h4 {
   display: inline-block;
   color: #827870;
   font-weight: bold;
@@ -56,11 +109,11 @@
 
 .sort {
   position: absolute;
-  top: -47px;
+  top: -45px;
   left: 72px;
   color: #827870;
-  background-color: #EBE7E3;
-  width: 110px;
+  background-color: #ebe7e3;
+  width: 140px;
   position: relative;
   box-sizing: border-box;
   padding-top: 7px;
@@ -74,20 +127,28 @@
   font-size: small;
 }
 
+.dropdown {
+  position: absolute;
+  width: 140px;
+  height: 150px;
+  overflow-y: scroll;
+  z-index: 1;
+}
+
 .dropdown > li {
   position: relative;
   font-size: small;
   list-style: none;
   padding: 7px 13px;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
 }
 
-.dropdown > li:last-child {
+/* .dropdown > li:last-child {
   border-radius: 0 0 10px 10px;
-}
+} */
 
 .dropdown > li:hover {
-  background-color: #DFDAD4;
+  background-color: #dfdad4;
 }
 
 .info {
@@ -107,7 +168,7 @@
 .radio > input {
   margin-right: 10px;
   accent-color: #827870;
-  border: none !important
+  border: none !important;
 }
 
 .surgery {
@@ -115,14 +176,42 @@
   position: relative;
 }
 
+.surgeryHistory {
+  margin: 0 0 15px 12px;
+  position: relative;
+}
+
+.surgeryHistory > span:first-child {
+  color: #827870;
+  font-size: 14px;
+  margin-right: 25px;
+}
+
+.surgeryHistory > span:nth-child(2) {
+  color: #827870;
+  font-size: 14px;
+  margin-right: 20px;
+}
+
+.surgeryHistory > span:nth-child(3) {
+  position: absolute;
+  top: 2px;
+  cursor: pointer;
+}
+
 .surgery > span {
   position: absolute;
   top: 5px;
-  right: 160px;
+  right: 170px;
+  cursor: pointer;
+}
+
+.surgery > div:nth-child(4) {
+  margin-top: 20px;
 }
 
 .surgeryname {
-  margin-left: 20px;
+  margin-left: 35px;
   width: 130px;
   height: 29px;
   font-size: 13px;
@@ -136,9 +225,46 @@
   padding: 0 30px;
 }
 
-.drug, .caution {
+.drug,
+.caution {
   display: inline-block;
   position: relative;
+}
+
+.medicineContainer {
+  margin: -10px 0 10px 100px;
+}
+
+.medicineData {
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  margin-bottom: -10px;
+}
+
+.medicineData > p {
+  color: #827870;
+  background-color: #ebe7e3;
+  padding: 6px 15px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-right: 20px;
+}
+
+.medicineData > span:nth-child(2) {
+  color: #827870;
+  font-size: 14px;
+  margin-right: 20px;
+}
+
+.medicineData > span:nth-child(3) {
+  display: inline-block;
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+.drug {
+  margin-bottom: 5px;
 }
 
 .drug > input {
@@ -155,13 +281,14 @@
 }
 
 .drug > p:nth-child(2) {
-  margin-left: 30px;
+  margin-left: 40px;
 }
 
 .drug > span {
   position: absolute;
   top: 5px;
-  right: -30px;
+  right: -40px;
+  cursor: pointer;
 }
 
 .caution > input {
@@ -180,10 +307,91 @@
 .info > button {
   margin-left: -16px;
   margin-bottom: 20px;
-  background-color: #AFA79F;
+  background-color: #afa79f;
   color: white;
   font-size: 14px;
   border: none;
   padding: 5px 14px;
   border-radius: 8px;
+}
+
+.profilepet {
+  width: 100px;
+  height: 100px;
+  border-radius: 70%;
+  overflow: hidden;
+  cursor: pointer;
+  position: absolute;
+  left: -30px;
+  top: 100px;
+}
+
+.profileinput[type="file"] {
+  display: none;
+}
+
+.profileimg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delete {
+  width: 100px;
+  height: 50px;
+  border-radius: 0 0 50px 50px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #65656575 60%);
+  position: absolute;
+  top: 150px;
+  left: -30px;
+  cursor: pointer;
+  display: none;
+}
+
+.upload > label:hover .delete {
+  display: block;
+}
+
+.delete > span {
+  position: absolute;
+  top: 18px;
+  left: 41px;
+}
+
+.custominput {
+  color: #827870;
+  background-color: #ebe7e3;
+  border-style: none;
+  border-radius: 10px;
+  padding: 7px;
+  box-sizing: border-box;
+  width: 110px;
+}
+
+.datepicker {
+  display: inline-block;
+}
+
+.birthdate {
+  position: absolute;
+  top: 275px;
+  left: 72px;
+}
+
+.surgerydate {
+  position: absolute;
+  top: 465px;
+  left: 102px;
+}
+
+.startdate {
+  position: absolute;
+  bottom: 210px;
+  left: 290px;
+}
+
+.enddate {
+  position: absolute;
+  bottom: 210px;
+  left: 470px;
 }

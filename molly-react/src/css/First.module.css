@@ -9,24 +9,26 @@
 
 .user {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding-right: 5%;
   padding-top: 10px;
+  position: relative;
+  z-index: 5;
 }
 
 .user > h4 {
   font-size: 13px;
   color: #827870;
+  cursor: pointer;
 }
 
 .container {
   position: fixed;
   left: 0;
-  top: 0;
+  top: 40px;
   width: 100%;
   display: flex;
   align-items: center;
-  padding-top: 35px;
 }
 
 .navcontainer {

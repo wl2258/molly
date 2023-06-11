@@ -1,0 +1,185 @@
+.surgeryContainer, .confirmModal {
+    z-index: 5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #adaaa790;
+}
+
+.modalContainer>span:first-child {
+    position: absolute;
+    top: -30px;
+    right: 400px;
+    cursor: pointer;
+}
+
+.modalContainer {
+    width: 400px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #FDFDFD;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -200px;
+    margin-top: -250px;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+}
+
+.modalContainer>h1 {
+    font-size: 20px;
+    margin: 30px 40px;
+    color: #656565;
+}
+
+.datepicker {
+    display: inline-block;
+}
+
+.custominput {
+    color: #827870;
+    background-color: #EBE7E3;
+    border-style: none;
+    border-radius: 10px;
+    padding: 7px;
+    box-sizing: border-box;
+    width: 110px;
+}
+
+.radio {
+    margin-left: 40px;
+}
+
+.radio>label>span {
+    color: #827870;
+    font-size: 15px;
+    margin-right: 20px;
+}
+
+.radio>input {
+    margin-right: 10px;
+    accent-color: #827870;
+    border: none !important
+}
+
+.surgeryname {
+    border-radius: 10px;
+    color: #656565;
+    background-color: #EBE7E3;
+    border: none;
+    text-align: center;
+    caret-color: #C7C3BF;
+}
+
+.surgeryname:focus {
+    outline: none;
+}
+
+.surgeryname::placeholder {
+    color: #b4b1ad;
+}
+
+.surgeryname {
+    margin-left: 20px;
+    width: 130px;
+    height: 28px;
+    font-size: 13px;
+}
+
+.surgery {
+    margin: 20px 40px;
+    position: relative;
+}
+
+.surgeryHistory {
+    margin: 0 0 15px 12px;
+    position: relative;
+}
+
+.surgeryHistory>span:first-child {
+    color: #827870;
+    font-size: 14px;
+    margin-right: 25px;
+}
+
+.surgeryHistory>span:nth-child(2) {
+    color: #827870;
+    font-size: 14px;
+    margin-right: 20px;
+}
+
+.surgeryHistory>span:nth-child(3) {
+    position: absolute;
+    top: 2px;
+    cursor: pointer;
+}
+
+.surgeryHistory>span:nth-child(4) {
+    position: absolute;
+    top: 2px;
+    margin-left: 30px;
+}
+
+.surgery>span {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.surgery>div:nth-child(4) {
+    margin-top: 20px;
+}
+
+.update {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+}
+
+.surgeryEdit {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.check {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 25px;
+}
+
+.confirm {
+    width: 300px;
+    height: 120px;
+    border-radius: 20px;
+    background-color: #FDFDFD;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -60px;
+    display: flex;
+    justify-content: center;
+}
+
+.confirm>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirm>div>p {
+    color: #656565;
+    font-weight: 800;
+    margin: 0 10px;
+}
+
+.confirm>div>div {
+    margin-top: 10px;
+    display: flex;
+}

@@ -1,6 +1,5 @@
 .header {
-  background-color: #F9F9F9;
-  margin-top: 200px;
+  background-color: #f9f9f9;
   position: relative;
 }
 
@@ -10,66 +9,109 @@
 
 .board {
   margin-top: -16px;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
 }
 
-.list {
+.list,
+.listManager {
   z-index: 1;
   padding: 8px 0 20px;
   padding-left: 55px;
-  border-bottom: 1px solid #B2ACA7;
-  color: #645C56;
+  padding-right: 50px;
+  border-bottom: 1px solid #e6e6e6;
+  color: #645c56;
   font-size: small;
   position: relative;
+  height: 75px;
 }
 
-.list > p, .list > span {
-  color: #A19C97;
+.list > p,
+.list > div > p,
+.list > span,
+.listManager > p,
+.listManager > div > p,
+.listManager > span {
+  color: #a19c97;
 }
 
-.list > span:nth-child(3) {
+.list > div,
+.listManager > div {
+  overflow: hidden;
+}
+
+.listManager > h3 {
+  margin-left: 47px;
+  font-size: 16px;
+}
+
+.list > h3 {
+  font-size: 16px;
+}
+
+.listManager > span:nth-child(1) {
+  position: absolute;
+  left: 54px;
+  top: 23px;
+  background-color: tomato;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+}
+
+.list > span:nth-child(2),
+.listManager > span:nth-child(3) {
   padding-right: 15px;
 }
 
-.list > span:nth-child(5) {
-  color: #B27910;
+.list > div:nth-child(4),
+.listManager > div:nth-child(5) {
   position: absolute;
-  right: 80px;
+  right: 50px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
 }
 
-.list > span:nth-child(6) {
-  color: #B27910;
-  position: absolute;
-  right: 70px;
-  bottom: 19px;
+.list > div > span:nth-child(1),
+.listManager > div > span:nth-child(1) {
+  color: #b27910;
+  margin-right: 5px;
 }
 
-.list > span:nth-child(7) {
-  color: #B27910;
-  position: absolute;
-  right: 45px;
-  bottom: 18px;
+.list > div > span:nth-child(2),
+.listManager > div > span:nth-child(2) {
+  color: #b27910;
+  margin-right: 15px;
 }
 
-.list > span:nth-child(8) {
-  color: #B27910;
-  position: absolute;
-  right: 33px;
-  bottom: 19px;
+.list > div > span:nth-child(3),
+.listManager > div > span:nth-child(3) {
+  color: #b27910;
+  margin-right: 5px;
+}
+
+.list > div > span:nth-child(4),
+.listManager > div > span:nth-child(4) {
+  color: #b27910;
 }
 
 .footer {
   height: 80px;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
   margin: auto;
   border-radius: 0 0 20px 20px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 80px;
 }
 
 .sort {
   z-index: 2;
-  color: #A19C97;
-  background-color: #EEECEC;
+  color: #a19c97;
+  background-color: #eeecec;
   width: 108px;
   position: absolute;
   top: 15px;
@@ -88,9 +130,27 @@
   font-size: 13.5px;
   list-style: none;
   padding: 5px 10px;
-  border-top: 1px solid #CFCFCF ;
+  border-top: 1px solid #cfcfcf;
 }
 
 .dropdown > li:hover {
   background-color: #e3dede;
+}
+
+.footer > div > button {
+  border: none;
+  color: #d4cbbb;
+  padding: 0 10px;
+  font-size: 15px;
+  background-color: #f9f9f9;
+}
+
+.footer > div > button:hover {
+  cursor: pointer;
+}
+
+.footer > div > button[aria-current] {
+  font-weight: bold;
+  color: #b27910;
+  cursor: pointer;
 }

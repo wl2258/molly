@@ -1,0 +1,112 @@
+.header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 75px;
+  background-color: #faf5f1;
+  padding-top: 10px;
+}
+
+.header > div:first-child {
+  display: flex;
+}
+
+.logo {
+  padding: 0 7% 0 10%;
+}
+
+.navcontainer {
+  padding: 18px 10% 0 0;
+  width: 60%;
+}
+
+.navigation {
+  display: flex;
+}
+
+.navigation > div {
+  margin-right: 10%;
+}
+
+.logout {
+  width: 10%;
+  color: #afa79f;
+  font-size: 13px;
+  margin-right: 40px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.accuse {
+  width: 50%;
+  margin-right: 10%;
+}
+
+.accuse > h1 {
+  color: #645c56;
+  font-size: 20px;
+  margin-left: 20px;
+}
+
+.category {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 15px 15px 0 0;
+  background-color: #d1ccca;
+  width: 40%;
+  height: 50px;
+}
+
+.category > div {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.accuseBoard {
+  background-color: #ebe7e3;
+  padding: 20px 30px;
+  border-radius: 0 20px 20px 20px;
+  min-height: 450px;
+}
+
+.accuseBoard > div {
+  padding: 10px 0;
+  border-bottom: 1px solid #afa79f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accuseBoard > div > h3 {
+  color: #645c56;
+  font-size: 15px;
+  margin-left: 25px;
+  margin-right: 15px;
+}
+
+.accuseBoard > div > span {
+  color: #afa79f;
+  font-size: 13px;
+  margin-right: 28px;
+}
+
+.member {
+  width: 50%;
+}
+
+.member > div:first-child {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.member > div > h1 {
+  color: #645c56;
+  font-size: 20px;
+  margin-right: 8%;
+  margin-left: 10px;
+}

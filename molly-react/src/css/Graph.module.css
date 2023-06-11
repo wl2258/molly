@@ -43,6 +43,7 @@
 }
 
 .table {
+  width: 800px;
   position: relative;
   z-index: 1;
   text-align: center;
@@ -63,7 +64,7 @@
 }
 
 .table td {
-  padding: 14px 24px;
+  padding: 18px 24px;
 }
 
 .table > tbody > tr:first-child > td:first-child {
@@ -80,5 +81,5 @@
 
 .table > tbody > tr:last-child > td {
   border-top: 1px solid #D3D3D3;
-  padding-bottom: 15px;
+  padding-bottom: 18px;
 }

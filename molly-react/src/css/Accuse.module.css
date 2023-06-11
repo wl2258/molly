@@ -1,0 +1,139 @@
+.container {
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #adaaa790;
+}
+
+.modal {
+  width: 540px;
+  height: 600px;
+  background-color: #fdfdfd;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -270px;
+  margin-top: -300px;
+  padding: 20px 0;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+.modal > span {
+  color: #cfc9c4;
+  font-size: 22px;
+  position: absolute;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.modal > h1 {
+  color: #656565;
+  font-size: 23px;
+  margin-left: 60px;
+  margin-top: 40px;
+}
+
+.accuseDetail {
+  border-bottom: 1px solid #ded8d3;
+  border-top: 1px solid #ded8d3;
+  margin-top: 30px;
+  padding: 3px 60px;
+}
+
+.accuseDetail > div {
+  display: flex;
+}
+
+.accuseDetail > div:first-child {
+  margin-bottom: -15px;
+}
+
+.accuseDetail > div > p:first-child {
+  color: #656565;
+  font-weight: 600;
+  margin-right: 20px;
+}
+
+.accuseDetail > div > p:last-child {
+  color: #868480;
+}
+
+.modal > h4 {
+  color: #656565;
+  margin-left: 60px;
+  margin-top: 30px;
+}
+
+.modal > div:nth-child(6) {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.reason {
+  color: #868480;
+  margin: -8px 50px 25px;
+}
+
+.reason > div {
+  padding-left: 25px;
+  position: relative;
+  border: 1px solid #ded8d3;
+}
+
+.reason > div:not(:first-of-type) {
+  border-top: 0.5px solid #ded;
+}
+
+.reason > div > span {
+  position: absolute;
+  bottom: 9px;
+}
+
+.reason > div > p {
+  margin-left: 38px;
+}
+
+.accuseBtn {
+  background-color: #b27910;
+  margin: 10px 50px;
+  padding: 15px;
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirmContainer {
+  z-index: 8;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #9c9995c8;
+}
+
+.confirmModal {
+  width: 260px;
+  height: 160px;
+  background-color: #fdfdfd;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -130px;
+  margin-top: -80px;
+  border-radius: 25px;
+  padding: 20px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #656565;
+  font-weight: 700;
+}
