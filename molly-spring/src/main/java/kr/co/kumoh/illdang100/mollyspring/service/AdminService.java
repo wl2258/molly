@@ -8,14 +8,17 @@ import kr.co.kumoh.illdang100.mollyspring.domain.complaint.CommentComplaint;
 import kr.co.kumoh.illdang100.mollyspring.domain.complaint.ComplaintReasonEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.Suspension;
 import kr.co.kumoh.illdang100.mollyspring.domain.suspension.SuspensionDate;
+import kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto;
 import kr.co.kumoh.illdang100.mollyspring.handler.ex.CustomApiException;
 import kr.co.kumoh.illdang100.mollyspring.repository.account.AccountRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.board.BoardRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.comment.CommentRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.complaint.BoardComplaintRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.complaint.CommentComplaintRepository;
+import kr.co.kumoh.illdang100.mollyspring.repository.liky.LikyRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.suspension.SuspensionDateRepository;
 import kr.co.kumoh.illdang100.mollyspring.repository.suspension.SuspensionRepository;
+import kr.co.kumoh.illdang100.mollyspring.service.community.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static kr.co.kumoh.illdang100.mollyspring.dto.admin.AdminRespDto.*;
@@ -44,6 +48,8 @@ public class AdminService {
     private final CommentRepository commentRepository;
     private final BoardComplaintRepository boardComplaintRepository;
     private final CommentComplaintRepository commentComplaintRepository;
+    private final LikyRepository likyRepository;
+    private final BoardService boardService;
 
     /**
      * 게시글에 대한 신고 목록 조회
@@ -66,13 +72,13 @@ public class AdminService {
      * @param boardComplaintId 게시글에 대한 신고 PK
      * @return 신고 상세 정보
      */
-    public ComplaintDetailResponse getBoardComplaintDetail(Long boardComplaintId) {
+    public BoardComplaintDetailResponse getBoardComplaintDetail(Long boardComplaintId) {
 
         BoardComplaint boardComplaint = findBoardComplaintByIdOrThrowException(boardComplaintId);
 
-        return ComplaintDetailResponse.builder()
-                .complaintId(boardComplaint.getId())
-                .reportedItemId(boardComplaint.getBoard().getId())
+        return BoardComplaintDetailResponse.builder()
+                .boardComplaintId(boardComplaint.getId())
+                .boardId(boardComplaint.getBoard().getId())
                 .reporterEmail(boardComplaint.getReporterEmail())
                 .reportedEmail(boardComplaint.getReportedEmail())
                 .createdAt(boardComplaint.getCreatedDate())
@@ -85,18 +91,33 @@ public class AdminService {
      * @param commentComplaintId 댓글에 대한 신고 PK
      * @return 신고 상세 정보
      */
-    public ComplaintDetailResponse getCommentComplaintDetail(Long commentComplaintId) {
+    public CommentComplaintDetailResponse getCommentComplaintDetail(Long commentComplaintId) {
 
         CommentComplaint commentComplaint = findCommentComplaintByIdOrThrowException(commentComplaintId);
 
-        return ComplaintDetailResponse.builder()
-                .complaintId(commentComplaint.getId())
-                .reportedItemId(commentComplaint.getComment().getId())
+        return CommentComplaintDetailResponse.builder()
+                .commentComplaintId(commentComplaint.getId())
+                .boardId(commentComplaint.getComment().getBoard().getId())
+                .commentId(commentComplaint.getComment().getId())
                 .reporterEmail(commentComplaint.getReporterEmail())
                 .reportedEmail(commentComplaint.getReportedEmail())
                 .createdAt(commentComplaint.getCreatedDate())
                 .reason(commentComplaint.getComplaintReason().getValue())
                 .build();
+    }
+
+    @Transactional
+    public void deleteBoardComplaint(Long complaintId) {
+
+        BoardComplaint boardComplaint = findBoardComplaintByIdOrThrowException(complaintId);
+        boardComplaintRepository.delete(boardComplaint);
+    }
+
+    @Transactional
+    public void deleteCommentComplaint(Long complaintId) {
+
+        CommentComplaint commentComplaint = findCommentComplaintByIdOrThrowException(complaintId);
+        commentComplaintRepository.delete(commentComplaint);
     }
 
     /**
@@ -132,10 +153,112 @@ public class AdminService {
             checkAccessAuthorization(findComment.getAccountEmail(), findAccount.getEmail());
             saveSuspension(findAccount.getEmail(), null, commentId, suspendAccountRequest);
             // 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
-            deleteCommentComplaintsByBoardIdInBatch(findComment.getId());
+            deleteCommentComplaintsByCommentIdInBatch(findComment.getId());
         }
 
         updateSuspensionDate(findAccount.getEmail(), suspendAccountRequest.getSuspensionPeriod());
+    }
+
+    /**
+     * 관리자용 게시글 상세 조회
+     * @param boardId 신고 당하는 게시글 PK
+     * @param adminId 관리자 PK
+     * @return 게시글 상세 조회 결과
+     */
+    @Transactional
+    public PostDetailForAdminResponse getPostDetail(Long boardId, Long adminId) {
+
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+        Account admin = findAccountByIdOrThrowException(adminId);
+        findBoard.increaseViews();
+
+        boolean thumbsUp = likyRepository.existsByAccountEmailAndBoard_Id(admin.getEmail(), boardId);
+        String writerNick = null;
+        String writerProfileImage = null;
+
+        if (findBoard.getAccount() != null) {
+            writerNick = findBoard.getAccount().getNickname();
+            writerProfileImage = boardService.extractAccountProfileUrlFromBoard(findBoard);
+        }
+
+        List<BoardCommentForAdminDto> commentDtoList = getBoardCommentForAdminDtoList(boardId, adminId);
+
+        return PostDetailForAdminResponse.builder()
+                .title(findBoard.getBoardTitle())
+                .category(findBoard.getCategory().toString())
+                .petType(findBoard.getPetType().toString())
+                .content(findBoard.getBoardContent())
+                .writerNick(writerNick)
+                .writerEmail(findBoard.getAccountEmail())
+                .createdAt(findBoard.getCreatedDate())
+                .views(findBoard.getViews())
+                .writerProfileImage(writerProfileImage)
+                .comments(commentDtoList)
+                .thumbsUp(thumbsUp)
+                .likyCnt(findBoard.getLikyCnt())
+                .build();
+    }
+
+    private List<BoardCommentForAdminDto> getBoardCommentForAdminDtoList(Long boardId, Long accountId) {
+
+        List<Comment> comments = commentRepository.findByBoard_IdOrderByCreatedDate(boardId);
+        List<String> commentAccountEmails = comments.stream().map(Comment::getAccountEmail).distinct().collect(Collectors.toList());
+        Map<String, Account> accountMap = accountRepository.findByEmailIn(commentAccountEmails)
+                .stream().collect(Collectors.toMap(Account::getEmail, account -> account));
+
+        Account findAccount = (accountId != null) ? findAccountByIdOrThrowException(accountId) : null;
+
+        return comments.stream()
+                .map(comment -> createBoardCommentForAdminDto(comment, accountMap, findAccount))
+                .collect(Collectors.toList());
+    }
+
+    private BoardCommentForAdminDto createBoardCommentForAdminDto(Comment comment, Map<String, Account> accountMap, Account findAccount) {
+        Account account = accountMap.get(comment.getAccountEmail());
+        String nickname = (account != null) ? account.getNickname() : null;
+        String commentProfileImageUrl = (account != null && account.getAccountProfileImage() != null)
+                ? account.getAccountProfileImage().getStoreFileUrl() : null;
+
+        return new BoardCommentForAdminDto(
+                comment.getId(),
+                comment.getAccountEmail(),
+                nickname,
+                comment.getCreatedDate(),
+                comment.getCommentContent(),
+                commentProfileImageUrl
+        );
+    }
+
+    @Transactional
+    public void updatePost(Long boardId, BoardReqDto.UpdatePostRequest updatePostRequest) {
+
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+
+        findBoard.update(updatePostRequest);
+    }
+
+    @Transactional
+    public void deletePost(Long boardId) {
+
+        findBoardByIdOrThrowException(boardId);
+
+        boardService.deleteCommentsByBoardIdInBatch(boardId);
+        boardService.deleteLikiesByBoardIdInBatch(boardId);
+        boardService.deleteBoardImagesIfNotEmpty(boardId);
+        deleteBoardComplaintsByBoardIdInBatch(boardId);
+        boardRepository.deleteById(boardId);
+    }
+
+    @Transactional
+    public void deleteComment(Long boardId, Long commentId) {
+
+        Comment findComment = findCommentByIdOrThrowException(commentId);
+
+        Board findBoard = findBoardByIdOrThrowException(boardId);
+        findBoard.decreaseCommentCnt();
+
+        deleteCommentComplaintsByCommentIdInBatch(findComment.getId());
+        commentRepository.delete(findComment);
     }
 
     private void saveSuspension(String accountEmail, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
@@ -204,7 +327,7 @@ public class AdminService {
         boardComplaintRepository.deleteAllByIdInBatch(complaintIds);
     }
 
-    private void deleteCommentComplaintsByBoardIdInBatch(Long commentId) {
+    private void deleteCommentComplaintsByCommentIdInBatch(Long commentId) {
         List<Long> complaintIds = commentComplaintRepository.findByComment_Id(commentId)
                 .stream()
                 .map(CommentComplaint::getId)

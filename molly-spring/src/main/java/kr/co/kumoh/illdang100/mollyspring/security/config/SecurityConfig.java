@@ -98,6 +98,7 @@ public class SecurityConfig {
 
         configuration.addExposedHeader(JwtVO.ACCESS_TOKEN_HEADER);
         configuration.addExposedHeader(JwtVO.REFRESH_TOKEN_HEADER);
+        configuration.addExposedHeader(JwtVO.PK_HEADER);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // 모든 주소요청에 위 설정을 적용

@@ -83,7 +83,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String refreshToken = saveRefreshToken(principalDetails.getAccount());
 
-        response.addHeader("AccountId", String.valueOf(principalDetails.getAccount().getId()));
+        response.addHeader(JwtVO.PK_HEADER, String.valueOf(principalDetails.getAccount().getId()));
         response.addHeader(JwtVO.ACCESS_TOKEN_HEADER, jwtToken);
         response.addHeader(JwtVO.REFRESH_TOKEN_HEADER, refreshToken);
 
