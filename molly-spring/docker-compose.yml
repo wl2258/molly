@@ -1,0 +1,42 @@
+version: "3.2"
+
+services:
+  database:
+    container_name: database
+    image: mariadb
+    volumes:
+      - ~/docker/mariadb/etc/mysql/conf.d:/etc/mysql/conf.d:ro
+      - ~/docker/mariadb/var/lib/mysql:/var/lib/mysql
+      - ~/docker/mariadb/var/log/maria:/var/log/maria
+    environment:
+      - MYSQL_DATABASE=molly
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_ROOT_HOST=%
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    ports:
+      - 3306:3306
+    networks:
+      - mynetwork
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - mynetwork
+
+  application:
+    image: jeongyeonjun/docker-springboot
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+      - redis
+    restart: always
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
