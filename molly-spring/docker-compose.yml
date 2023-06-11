@@ -3,7 +3,7 @@ version: "3.8"
 services:
   application:
     image: jeongyeonjun/docker-springboot
-    depends_on:
+    environment:
       - MYSQL_HOST=${{ secrets.RDS_END_POINT }}
       - MYSQL_PORT=3306
       - MYSQL_ROOT_PASSWORD=molly1234
