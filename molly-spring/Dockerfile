@@ -1,5 +1,5 @@
 FROM openjdk:11-jdk-slim
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build/libs/molly-spring-0.0.1-SNAPSHOT.jar
 
 # 터미널 접근 경로
 WORKDIR /app
