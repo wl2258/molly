@@ -4,7 +4,7 @@ services:
   application:
     image: jeongyeonjun/docker-springboot
     environment:
-      - MYSQL_HOST=${{ secrets.RDS_END_POINT }}
+      - MYSQL_HOST=molly-database.c3ytlezhswih.ap-northeast-2.rds.amazonaws.com
       - MYSQL_PORT=3306
       - MYSQL_ROOT_PASSWORD=molly1234
       - MYSQL_DATABASE=mollydb
