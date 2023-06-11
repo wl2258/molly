@@ -1,6 +1,10 @@
 version: "3.8"
 
 services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
   application:
     image: jeongyeonjun/docker-springboot
     environment:
@@ -9,6 +13,9 @@ services:
       - MYSQL_ROOT_PASSWORD=molly1234
       - MYSQL_DATABASE=mollydb
       - MYSQL_USER=root
+      - SPRING_DATA_REDIS_HOST=redis
+    depends_on:
+      - redis
     restart: always
 
   nginx:
