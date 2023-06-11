@@ -36,6 +36,7 @@ jobs:
 
       - name : Build Docker Image & Push to Docker Hub
         run: |
+          cd ./molly-spring
           docker build . -t jeongyeonjun/docker-springboot
           docker build ./nginx -t jeongyeonjun/docker-nginx
           docker push jeongyeonjun/docker-springboot
