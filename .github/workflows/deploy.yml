@@ -20,7 +20,7 @@ jobs:
           distribution: zulu
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./molly-apring/gradlew
+        run: chmod +x ./molly-spring/gradlew
 
       - name: Build with Gradle
         run: ./molly-spring/gradlew clean build -x test
