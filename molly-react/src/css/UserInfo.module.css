@@ -1,5 +1,5 @@
 .box {
-  margin-top: 260px;
+  margin-top: 160px;
 }
 
 .container {
@@ -84,9 +84,9 @@
   height: 48px;
   border-radius: 14px;
   color: #656565;
-  background-color: #E5E1DC;
+  background-color: #e5e1dc;
   border: none;
-  caret-color: #C7C3BF;
+  caret-color: #c7c3bf;
   text-align: center;
   box-sizing: border-box;
 }
@@ -117,7 +117,7 @@
 }
 
 .cancle > span {
-  color: #B27910;
+  color: #b27910;
   font-size: 14px;
   cursor: pointer;
   font-weight: 800;
@@ -162,7 +162,7 @@
   height: 48px;
   border-radius: 14px;
   color: #656565;
-  background-color: #E5E1DC;
+  background-color: #e5e1dc;
   border: none;
   text-align: center;
   line-height: 48px;
@@ -185,7 +185,7 @@
 }
 
 .info > div > p {
-  color: #AFA79F;
+  color: #afa79f;
   margin-left: 15px;
 }
 
@@ -197,8 +197,8 @@
   margin-right: 88px;
 }
 
-.info > div:nth-child(2) > button{
-  background-color: #B27910;
+.info > div:nth-child(2) > button {
+  background-color: #b27910;
   color: white;
   border: none;
   border-radius: 10px;
@@ -208,7 +208,7 @@
 }
 
 .info > p {
-  color: #AFA79F;
+  color: #afa79f;
   font-size: 12px;
 }
 
@@ -226,7 +226,7 @@
   width: 400px;
   height: 240px;
   border-radius: 20px;
-  background-color: #FDFDFD;
+  background-color: #fdfdfd;
   position: absolute;
   top: 50%;
   left: 50%;
