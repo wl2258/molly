@@ -114,44 +114,7 @@ const ManagerHome = () => {
   //   setLoading(true);
 
   //   setList({
-  //     content: [
-  //       {
-  //         complaintId: 1,
-  //         reporterEmail: "jyj000217@gmail.com",
-  //         reportedEmail: "kakao_1234@naver.com",
-  //         createdAt: "2023-06-07 12:29:35",
-  //       },
-  //       {
-  //         complaintId: 2,
-  //         reporterEmail: "jyj000217@gmail.com",
-  //         reportedEmail: "kakao_5678@naver.com",
-  //         createdAt: "2023-06-07 12:29:38",
-  //       },
-  //       {
-  //         complaintId: 3,
-  //         reporterEmail: "jyj000217@gmail.com",
-  //         reportedEmail: "kakao_9101@naver.com",
-  //         createdAt: "2023-06-07 12:29:41",
-  //       },
-  //       {
-  //         complaintId: 1,
-  //         reporterEmail: "jyj000217@gmail.com",
-  //         reportedEmail: "kakao_1234@naver.com",
-  //         createdAt: "2023-06-07 12:29:35",
-  //       },
-  //       {
-  //         complaintId: 2,
-  //         reporterEmail: "jyj000217@gmail.com",
-  //         reportedEmail: "kakao_5678@naver.com",
-  //         createdAt: "2023-06-07 12:29:38",
-  //       },
-  //       {
-  //         complaintId: 3,
-  //         reporterEmail: "jyj000217@gmail.com",
-  //         reportedEmail: "kakao_9101@naver.com",
-  //         createdAt: "2023-06-07 12:29:41",
-  //       },
-  //     ],
+  //     content: [],
   //     pageable: {
   //       sort: {
   //         empty: false,
@@ -194,48 +157,6 @@ const ManagerHome = () => {
   //       reporterEmail: "jyj000217@gmail.com",
   //       reportedEmail: "kakao_9101@naver.com",
   //       createdAt: "2023-06-07 12:29:41",
-  //     },
-  //     {
-  //       complaintId: 1,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_1234@naver.com",
-  //       createdAt: "2023-06-07 12:29:35",
-  //     },
-  //     {
-  //       complaintId: 2,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_5678@naver.com",
-  //       createdAt: "2023-06-07 12:29:38",
-  //     },
-  //     {
-  //       complaintId: 1,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_1234@naver.com",
-  //       createdAt: "2023-06-07 12:29:35",
-  //     },
-  //     {
-  //       complaintId: 2,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_5678@naver.com",
-  //       createdAt: "2023-06-07 12:29:38",
-  //     },
-  //     {
-  //       complaintId: 3,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_9101@naver.com",
-  //       createdAt: "2023-06-07 12:29:41",
-  //     },
-  //     {
-  //       complaintId: 1,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_1234@naver.com",
-  //       createdAt: "2023-06-07 12:29:35",
-  //     },
-  //     {
-  //       complaintId: 2,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_5678@naver.com",
-  //       createdAt: "2023-06-07 12:29:38",
   //     },
   //   ]);
   //   setLoading(false);
@@ -306,6 +227,7 @@ const ManagerHome = () => {
           .get(`/api/admin/board-complaints`, config)
           .then((response) => {
             console.log(response.data.data);
+            setList(response.data.data);
             setContent(content.concat(response.data.data.content));
             setLoading(false);
           })
@@ -316,6 +238,7 @@ const ManagerHome = () => {
           .get(`/api/admin/comment-complaints`, config)
           .then((response) => {
             console.log(response.data.data);
+            setList(response.data.data);
             setContent(content.concat(response.data.data.content));
             setLoading(false);
           })
@@ -350,7 +273,7 @@ const ManagerHome = () => {
                 <div>
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
-                    to="/list/ALL/ALL"
+                    to="/manager/list/ALL/ALL"
                   >
                     Community
                   </CustomNavLink>
@@ -387,10 +310,6 @@ const ManagerHome = () => {
     );
   }
 
-  if (Object.keys(list).length === 0 || content.length === 0) {
-    return null;
-  }
-
   return (
     <div>
       <header className={styles.header}>
@@ -415,7 +334,7 @@ const ManagerHome = () => {
               <div>
                 <CustomNavLink
                   style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/list/ALL/ALL"
+                  to="/manager/list/ALL/ALL"
                 >
                   Community
                 </CustomNavLink>
@@ -486,9 +405,11 @@ const ManagerHome = () => {
                     </div>
                   );
                 })}
-                <div className={styles.plus}>
-                  <p onClick={fetchMoreData}>더보기</p>
-                </div>
+                {list.last === false && (
+                  <div className={styles.plus}>
+                    <p onClick={fetchMoreData}>더보기</p>
+                  </div>
+                )}
               </div>
             </div>
             {detailView && <AccuseDetail id={id} category={category} />}
@@ -538,21 +459,21 @@ const AccuseDetail = (props) => {
     }
   }, [props.id]);
 
-  // useEffect(() => {
-  //   console.log("detail render");
-  //   setLoading(true);
-  //   setText({
-  //     commentComplaintId: 1,
-  //     boardId: 3,
-  //     commentId: 19,
-  //     reportedItemId: 2,
-  //     reporterEmail: "jyj000217@gmail.com",
-  //     reportedEmail: "kakao_1234@naver.com",
-  //     createdAt: "2023-06-07 12:29:35",
-  //     reason: "스팸홍보/도배글입니다.",
-  //   });
-  //   setLoading(false);
-  // }, [props.id]);
+  useEffect(() => {
+    console.log("detail render");
+    setLoading(true);
+    setText({
+      commentComplaintId: 1,
+      boardId: 3,
+      commentId: 19,
+      reportedItemId: 2,
+      reporterEmail: "jyj000217@gmail.com",
+      reportedEmail: "kakao_1234@naver.com",
+      createdAt: "2023-06-07 12:29:35",
+      reason: "스팸홍보/도배글입니다.",
+    });
+    setLoading(false);
+  }, [props.id]);
 
   const deleteAccuse = () => {
     const config = {

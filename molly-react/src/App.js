@@ -17,6 +17,8 @@ import UpdatePet from "./pages/pet/UpdatePet";
 import ManagerHome from "./pages/ManagerHome";
 import Update from "./pages/community/Update";
 import ManagerBoard from "./pages/ManagerBoard";
+import ManagerList from "./pages/community/ManagerList";
+import ManagerWrite from "./pages/community/ManagerWrite";
 
 function App() {
   return (
@@ -32,6 +34,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/board/:id/:category/:pet" element={<Detail />} />
         <Route path="/list/:category/write" element={<WriteCkEditor />} />
+        <Route
+          path="/manager/list/:category/write"
+          element={<ManagerWrite />}
+        />
         <Route path="/board/:id/:category/update" element={<Update />} />
         <Route path="/userinfo" element={<UserInfo />} />
         <Route path="/registerpet" element={<RegisterPet />} />
@@ -44,6 +50,7 @@ function App() {
           path="/manager/board/:id/:commentId"
           element={<ManagerBoard />}
         />
+        <Route path="/manager/list/:category/:pet" element={<ManagerList />} />
       </Routes>
     </div>
   );

@@ -3,12 +3,12 @@ import styles from "../../css/BoardList.module.css";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { IoMdThumbsUp } from "react-icons/io";
 import { FaComment } from "react-icons/fa";
-import Board from "./Board";
+import ManagerBoard from "./ManagerBoard";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
 
-const BoardList = () => {
+const ManagerBoardList = () => {
   let { category, pet } = useParams();
   const [list, setList] = useState({});
   const [loading, setLoading] = useState(false);
@@ -344,7 +344,7 @@ const BoardList = () => {
 
   return (
     <div style={{ position: "relative", width: "75%", margin: "auto" }}>
-      <Board pet={pet} setSearch={setSearch} />
+      <ManagerBoard pet={pet} setSearch={setSearch} />
       <div className={styles.header}>
         <ul
           onClick={() => {
@@ -527,7 +527,7 @@ const List = (props) => {
     return (
       <div
         onClick={() => {
-          navigate(`/board/${props.id}/${props.category}/${props.pet}`);
+          navigate(`/manager/board/${props.id}`);
         }}
         className={styles.listManager}
       >
@@ -551,7 +551,7 @@ const List = (props) => {
     return (
       <div
         onClick={() => {
-          navigate(`/board/${props.id}/${props.category}/${props.pet}`);
+          navigate(`/manager/board/${props.id}`);
         }}
         className={styles.list}
       >
@@ -573,4 +573,4 @@ const List = (props) => {
   }
 };
 
-export default BoardList;
+export default ManagerBoardList;
