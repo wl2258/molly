@@ -139,26 +139,7 @@ const ManagerHome = () => {
   //     numberOfElements: 3,
   //     empty: false,
   //   });
-  //   setContent([
-  //     {
-  //       complaintId: 1,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_1234@naver.com",
-  //       createdAt: "2023-06-07 12:29:35",
-  //     },
-  //     {
-  //       complaintId: 2,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_5678@naver.com",
-  //       createdAt: "2023-06-07 12:29:38",
-  //     },
-  //     {
-  //       complaintId: 3,
-  //       reporterEmail: "jyj000217@gmail.com",
-  //       reportedEmail: "kakao_9101@naver.com",
-  //       createdAt: "2023-06-07 12:29:41",
-  //     },
-  //   ]);
+  //   setContent([]);
   //   setLoading(false);
   // }, [category]);
 
@@ -356,7 +337,7 @@ const ManagerHome = () => {
         <div className={styles.accuse}>
           <h1>🚨 신고목록</h1>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
+            <div style={{ width: "50%", marginRight: "20px" }}>
               <div className={styles.category}>
                 <div
                   onClick={() => setCategory("board")}
@@ -459,21 +440,21 @@ const AccuseDetail = (props) => {
     }
   }, [props.id]);
 
-  useEffect(() => {
-    console.log("detail render");
-    setLoading(true);
-    setText({
-      commentComplaintId: 1,
-      boardId: 3,
-      commentId: 19,
-      reportedItemId: 2,
-      reporterEmail: "jyj000217@gmail.com",
-      reportedEmail: "kakao_1234@naver.com",
-      createdAt: "2023-06-07 12:29:35",
-      reason: "스팸홍보/도배글입니다.",
-    });
-    setLoading(false);
-  }, [props.id]);
+  // useEffect(() => {
+  //   console.log("detail render");
+  //   setLoading(true);
+  //   setText({
+  //     commentComplaintId: 1,
+  //     boardId: 3,
+  //     commentId: 19,
+  //     reportedItemId: 2,
+  //     reporterEmail: "jyj000217@gmail.com",
+  //     reportedEmail: "kakao_1234@naver.com",
+  //     createdAt: "2023-06-07 12:29:35",
+  //     reason: "스팸홍보/도배글입니다.",
+  //   });
+  //   setLoading(false);
+  // }, [props.id]);
 
   const deleteAccuse = () => {
     const config = {
