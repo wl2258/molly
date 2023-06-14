@@ -80,31 +80,27 @@ public class AdminApiController {
 
     /**
      * 사용자 정지
-     * @param accountId 신고 당하는 사용자 PK
      * @param boardId 신고 당하는 게시글 PK
-     * @param suspendAccountRequest 정지 기간 및 정지 사유
+     * @param suspendAccountRequest 정지에 관한 정보
      */
-    @PostMapping("/admin/account/{accountId}/suspend/board/{boardId}")
-    public ResponseEntity<?> suspendAccountByBoard(@PathVariable("accountId") Long accountId,
-                                                   @PathVariable("boardId") Long boardId,
+    @PostMapping("/admin/suspend/board/{boardId}")
+    public ResponseEntity<?> suspendAccountByBoard(@PathVariable("boardId") Long boardId,
                                                    @RequestBody SuspendAccountRequest suspendAccountRequest) {
 
-        adminService.suspendAccount(accountId, boardId, null, suspendAccountRequest);
+        adminService.suspendAccount(boardId, null, suspendAccountRequest);
         return new ResponseEntity<>(new ResponseDto<>(1, "정지되었습니다", null), HttpStatus.OK);
     }
 
     /**
      * 사용자 정지
-     * @param accountId 신고 당하는 사용자 PK
      * @param commentId 신고 당하는 댓글 PK
-     * @param suspendAccountRequest 정지 기간 및 정지 사유
+     * @param suspendAccountRequest 정지에 관한 정보
      */
-    @PostMapping("/admin/account/{accountId}/suspend/comment/{commentId}")
-    public ResponseEntity<?> suspendAccountByComment(@PathVariable("accountId") Long accountId,
-                                                     @PathVariable("commentId") Long commentId,
+    @PostMapping("/admin/suspend/comment/{commentId}")
+    public ResponseEntity<?> suspendAccountByComment(@PathVariable("commentId") Long commentId,
                                                      @RequestBody SuspendAccountRequest suspendAccountRequest) {
 
-        adminService.suspendAccount(accountId, null, commentId, suspendAccountRequest);
+        adminService.suspendAccount(null, commentId, suspendAccountRequest);
         return new ResponseEntity<>(new ResponseDto<>(1, "정지되었습니다", null), HttpStatus.OK);
     }
 

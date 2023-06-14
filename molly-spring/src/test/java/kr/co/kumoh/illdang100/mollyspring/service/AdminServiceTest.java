@@ -51,11 +51,9 @@ class AdminServiceTest extends DummyObject {
         Long accountId = 1L;
         Long boardId = 1L;
         Long commentId = null;
-        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "SPAM_PROMOTION");
-
-        // stub
         Account account = newMockAccount(accountId, "username", "nickname", AccountEnum.CUSTOMER);
-        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        String reportedEmail = account.getEmail();
+        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "SPAM_PROMOTION", reportedEmail);
 
         // stub
         when(suspensionRepository.existsByBoardId(boardId)).thenReturn(false);
@@ -72,7 +70,7 @@ class AdminServiceTest extends DummyObject {
         when(boardComplaintRepository.findByBoard_Id(boardId)).thenReturn(new ArrayList<>());
 
         // when
-        adminService.suspendAccount(accountId, boardId, commentId, suspendAccountRequest);
+        adminService.suspendAccount(boardId, commentId, suspendAccountRequest);
 
         // then
         assertThat(suspensionDate.getSuspensionExpiryDate()).isEqualTo(LocalDate.now().plusDays(3));
@@ -85,11 +83,9 @@ class AdminServiceTest extends DummyObject {
         Long accountId = 1L;
         Long boardId = 1L;
         Long commentId = null;
-        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "SPAM_PROMOTION");
-
-        // stub
         Account account = newMockAccount(accountId, "username", "nickname", AccountEnum.CUSTOMER);
-        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        String reportedEmail = account.getEmail();
+        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "SPAM_PROMOTION", reportedEmail);
 
         // stub
         when(suspensionRepository.existsByBoardId(boardId)).thenReturn(false);
@@ -98,7 +94,7 @@ class AdminServiceTest extends DummyObject {
         when(boardRepository.findById(boardId)).thenReturn(Optional.empty());
 
         // when
-        assertThatThrownBy(() -> adminService.suspendAccount(accountId, boardId, commentId, suspendAccountRequest))
+        assertThatThrownBy(() -> adminService.suspendAccount(boardId, commentId, suspendAccountRequest))
                 .isInstanceOf(CustomApiException.class)
                 .hasMessageContaining("존재하지 않는 게시글입니다");
     }
@@ -110,17 +106,15 @@ class AdminServiceTest extends DummyObject {
         Long accountId = 1L;
         Long boardId = 1L;
         Long commentId = null;
-        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "SPAM_PROMOTION");
-
-        // stub
         Account account = newMockAccount(accountId, "username", "nickname", AccountEnum.CUSTOMER);
-        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        String reportedEmail = account.getEmail();
+        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "SPAM_PROMOTION", reportedEmail);
 
         // stub
         when(suspensionRepository.existsByBoardId(boardId)).thenReturn(true);
 
         // when
-        assertThatThrownBy(() -> adminService.suspendAccount(accountId, boardId, commentId, suspendAccountRequest))
+        assertThatThrownBy(() -> adminService.suspendAccount(boardId, commentId, suspendAccountRequest))
                 .isInstanceOf(CustomApiException.class)
                 .hasMessageContaining("이미 존재하는 정지입니다");
     }

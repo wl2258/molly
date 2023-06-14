@@ -89,24 +89,31 @@ class AdminApiControllerTest extends DummyObject {
     public void suspendAccountByBoard() throws Exception {
 
         // given
-        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "ILLEGAL_INFORMATION");
+        String jjangguEmail = "kakao_1234@naver.com";
+        SuspendAccountRequest suspendAccountRequest1 = new SuspendAccountRequest(3L, "ILLEGAL_INFORMATION", jjangguEmail);
+        String yuliEmail = "kakao_5678@naver.com";
+        SuspendAccountRequest suspendAccountRequest2 = new SuspendAccountRequest(3L, "ILLEGAL_INFORMATION", yuliEmail);
+        String cheolsuEmail = "kakao_9101@naver.com";
+        SuspendAccountRequest suspendAccountRequest3 = new SuspendAccountRequest(3L, "ILLEGAL_INFORMATION", cheolsuEmail);
 
-        String requestBody = om.writeValueAsString(suspendAccountRequest);
+        String requestBody1 = om.writeValueAsString(suspendAccountRequest1);
+        String requestBody2 = om.writeValueAsString(suspendAccountRequest2);
+        String requestBody3 = om.writeValueAsString(suspendAccountRequest3);
 
         // when
         // 해당 게시글에 대한 신고날짜가 이미 존재하는 경우 날짜가 제대로 증가되는지 (짱구)
-        ResultActions resultActions1 = mvc.perform(post("/api/admin/account/2/suspend/board/1")
-                .content(requestBody)
+        ResultActions resultActions1 = mvc.perform(post("/api/admin/suspend/board/1")
+                .content(requestBody1)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // 해당 게시글에 대한 신고날짜가 이미 존재하는데 정지 날짜가 지난 경우 날짜가 제대로 갱신되는지 (유리)
-        ResultActions resultActions2 = mvc.perform(post("/api/admin/account/3/suspend/board/2")
-                .content(requestBody)
+        ResultActions resultActions2 = mvc.perform(post("/api/admin/suspend/board/2")
+                .content(requestBody2)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // 해당 게시글에 대한 신고날짜가 존재하지 않은데 제대로 생성되는지 (철수)
-        ResultActions resultActions3 = mvc.perform(post("/api/admin/account/4/suspend/board/3")
-                .content(requestBody)
+        ResultActions resultActions3 = mvc.perform(post("/api/admin/suspend/board/3")
+                .content(requestBody3)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -114,9 +121,9 @@ class AdminApiControllerTest extends DummyObject {
         resultActions2.andExpect(status().isOk());
         resultActions3.andExpect(status().isOk());
 
-        SuspensionDate jjangguSuspensionDate = suspensionDateRepository.findByAccountEmail("kakao_1234@naver.com").get();
-        SuspensionDate yuliSuspensionDate = suspensionDateRepository.findByAccountEmail("kakao_5678@naver.com").get();
-        SuspensionDate cheolsuSuspensionDate = suspensionDateRepository.findByAccountEmail("kakao_9101@naver.com").get();
+        SuspensionDate jjangguSuspensionDate = suspensionDateRepository.findByAccountEmail(jjangguEmail).get();
+        SuspensionDate yuliSuspensionDate = suspensionDateRepository.findByAccountEmail(yuliEmail).get();
+        SuspensionDate cheolsuSuspensionDate = suspensionDateRepository.findByAccountEmail(cheolsuEmail).get();
 
         Assertions.assertThat(jjangguSuspensionDate.getSuspensionExpiryDate()).isEqualTo(LocalDate.now().plusDays(6));
         Assertions.assertThat(yuliSuspensionDate.getSuspensionExpiryDate()).isEqualTo(LocalDate.now().plusDays(3));
@@ -128,12 +135,13 @@ class AdminApiControllerTest extends DummyObject {
     public void suspendAccountByComment() throws Exception {
 
         // given
-        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "ILLEGAL_INFORMATION");
+        String yuliEmail = "kakao_5678@naver.com";
+        SuspendAccountRequest suspendAccountRequest = new SuspendAccountRequest(3L, "ILLEGAL_INFORMATION", yuliEmail);
 
         String requestBody = om.writeValueAsString(suspendAccountRequest);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/api/admin/account/3/suspend/comment/1")
+        ResultActions resultActions = mvc.perform(post("/api/admin/suspend/comment/1")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON));
 

@@ -30,6 +30,8 @@ public class TokenApiController {
 
         tokenService.reIssueToken(response, refreshToken);
 
+        log.debug("토큰 재발급 성공");
+
         return new ResponseEntity<>(new ResponseDto<>(1, "토큰 재발급에 성공하였습니다", null), HttpStatus.OK);
     }
 }
