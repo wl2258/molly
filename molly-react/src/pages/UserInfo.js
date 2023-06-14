@@ -45,16 +45,16 @@ const UserInfo = () => {
       });
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    setUser({
-      profileImage: "이미지 URL",
-      nickname: "사용자 닉네임",
-      provider: "kakao",
-      email: "ddd@naver.com",
-    });
-    setLoading(false);
-  }, []);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setUser({
+  //     profileImage: "이미지 URL",
+  //     nickname: "사용자 닉네임",
+  //     provider: "kakao",
+  //     email: "ddd@naver.com",
+  //   });
+  //   setLoading(false);
+  // }, []);
 
   useEffect(() => {
     setImgFile(user.profileImage);

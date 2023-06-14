@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 //import Board from './Board';
 import styles from "../css/ManagerBoard.module.css";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { IoMdThumbsUp } from "react-icons/io";
 import { MdOutlineThumbUpAlt } from "react-icons/md";
 import { FaComment } from "react-icons/fa";
@@ -10,6 +10,10 @@ import ReactHtmlParser from "react-html-parser";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
+import {
+  RiCheckboxBlankCircleLine,
+  RiCheckboxCircleFill,
+} from "react-icons/ri";
 
 let CustomNavLink = styled(NavLink)`
   color: #afa79f;
@@ -27,6 +31,78 @@ let CustomBody = styled.div`
   padding: 0 10%;
 `;
 
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8080",
+});
+
+axiosInstance.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  async (error) => {
+    try {
+      const errResponseStatus = error.response.status;
+      const prevRequest = error.config;
+      const errMsg = error.response.data.msg;
+
+      if (errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
+        const preRefreshToken = localStorage.getItem("refreshToken");
+        if (preRefreshToken) {
+          async function issuedToken() {
+            const config = {
+              headers: {
+                "Refresh-Token": preRefreshToken,
+              },
+            };
+            return await axios
+              .post(`http://localhost:8080/api/token/refresh`, null, config)
+              .then(async (res) => {
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                const reAccessToken = res.headers.get("Authorization");
+                const reRefreshToken = res.headers.get("Refresh-token");
+                localStorage.setItem("accessToken", reAccessToken);
+                localStorage.setItem("refreshToken", reRefreshToken);
+
+                prevRequest.headers.Authorization = reAccessToken;
+
+                return await axios(prevRequest);
+              })
+              .catch((e) => {
+                console.log("토큰 재발급 실패");
+                if (e.response.status === 401) {
+                  alert(e.response.data.msg);
+                  window.location.replace("/");
+                } else if (e.response.status === 403) {
+                  alert(e.response.data.msg);
+                  axios.delete(`http://localhost:8080/api/account/logout`, {
+                    headers: {
+                      "Refresh-Token": localStorage.getItem("refreshToken"),
+                    },
+                  });
+                  localStorage.clear();
+                  window.location.replace("/");
+                }
+              });
+          }
+          return await issuedToken();
+        } else {
+          throw new Error("There is no refresh token");
+        }
+      } else if (errResponseStatus === 400) {
+        console.log(error.response.data);
+      } else if (errResponseStatus === 401) {
+        console.log("인증 실패");
+        window.location.replace("/login");
+      } else if (errResponseStatus === 403) {
+        alert("권한이 없습니다.");
+      }
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+);
+
 const ManagerBoard = () => {
   let { id, commentId } = useParams();
   const [loading, setLoading] = useState(false);
@@ -35,7 +111,8 @@ const ManagerBoard = () => {
   const [like, setLike] = useState(false);
   const [likeCnt, setLikeCnt] = useState(0);
   const [loginModal, setLoginModal] = useState(false);
-  const navigate = useNavigate();
+  const [suspend, setSuspend] = useState(false);
+  const [accuseEmail, setAccuseEmail] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -58,82 +135,9 @@ const ManagerBoard = () => {
       });
   }, []);
 
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:8080",
-  });
-
-  axiosInstance.interceptors.response.use(
-    (res) => {
-      return res;
-    },
-    async (error) => {
-      try {
-        const errResponseStatus = error.response.status;
-        const prevRequest = error.config;
-        const errMsg = error.response.data.msg;
-
-        if (errResponseStatus === 400 && errMsg === "만료된 토큰입니다") {
-          const preRefreshToken = localStorage.getItem("refreshToken");
-          if (preRefreshToken) {
-            async function issuedToken() {
-              const config = {
-                headers: {
-                  "Refresh-Token": preRefreshToken,
-                },
-              };
-              return await axios
-                .post(`http://localhost:8080/api/token/refresh`, null, config)
-                .then(async (res) => {
-                  localStorage.removeItem("accessToken");
-                  localStorage.removeItem("refreshToken");
-                  const reAccessToken = res.headers.get("Authorization");
-                  const reRefreshToken = res.headers.get("Refresh-token");
-                  localStorage.setItem("accessToken", reAccessToken);
-                  localStorage.setItem("refreshToken", reRefreshToken);
-
-                  prevRequest.headers.Authorization = reAccessToken;
-
-                  return await axios(prevRequest);
-                })
-                .catch((e) => {
-                  console.log("토큰 재발급 실패");
-                  if (e.response.status === 401) {
-                    alert(e.response.data.msg);
-                    window.location.replace("/");
-                  } else if (e.response.status === 403) {
-                    alert(e.response.data.msg);
-                    axios.delete(`http://localhost:8080/api/account/logout`, {
-                      headers: {
-                        "Refresh-Token": localStorage.getItem("refreshToken"),
-                      },
-                    });
-                    localStorage.clear();
-                    window.location.replace("/");
-                  }
-                });
-            }
-            return await issuedToken();
-          } else {
-            throw new Error("There is no refresh token");
-          }
-        } else if (errResponseStatus === 400) {
-          console.log(error.response.data);
-        } else if (errResponseStatus === 401) {
-          console.log("인증 실패");
-          window.location.replace("/login");
-        } else if (errResponseStatus === 403) {
-          alert("권한이 없습니다.");
-        }
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    }
-  );
-
   // useEffect(() => {
   //   setLoading(true);
   //   setText({
-  //     boardOwner: true,
   //     title: "강아지 자랑",
   //     category: "MEDICAL",
   //     petType: "CAT",
@@ -147,7 +151,6 @@ const ManagerBoard = () => {
   //     comments: [
   //       {
   //         commentId: 19,
-  //         commentOwner: true,
   //         commentAccountEmail: "testmolly@naver.com",
   //         commentWriteNick: "dfsf",
   //         commentCreatedAt: "2023-03-02 12:39:11",
@@ -156,7 +159,6 @@ const ManagerBoard = () => {
   //       },
   //       {
   //         commentId: 1111,
-  //         commentOwner: false,
   //         commentAccountEmail: "testmolly@naver.com",
   //         commentWriteNick: null,
   //         commentCreatedAt: "2023-03-02 12:39:11",
@@ -165,7 +167,6 @@ const ManagerBoard = () => {
   //       },
   //       {
   //         commentId: 1111,
-  //         commentOwner: false,
   //         commentAccountEmail: "testmolly@naver.com",
   //         commentWriteNick: null,
   //         commentCreatedAt: "2023-03-02 12:39:11",
@@ -191,16 +192,31 @@ const ManagerBoard = () => {
       },
     };
 
-    axiosInstance
-      .delete(`/api/auth/board/${id}`, config)
-      .then((response) => {
-        console.log(response);
-        console.log("삭제 완료");
-        window.location.replace("/list/ALL/ALL");
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    if (text.boardOwner === undefined) {
+      axiosInstance
+        .delete(`/api/admin/board/${id}`, config)
+        .then((response) => {
+          console.log(response);
+          console.log("삭제 완료");
+          window.location.replace("/manager/list/ALL/ALL");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      if (text.boardOwner === true) {
+        axiosInstance
+          .delete(`/api/auth/board/${id}`, config)
+          .then((response) => {
+            console.log(response);
+            console.log("삭제 완료");
+            window.location.replace("/manager/list/ALL/ALL");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    }
   };
 
   const handleLike = () => {
@@ -215,7 +231,8 @@ const ManagerBoard = () => {
       handleLoginModal();
     } else {
       const fetchData = async function fetch() {
-        const response = await axiosInstance.post(
+        let response;
+        response = await axiosInstance.post(
           `/api/auth/board/${id}/liky`,
           null,
           config
@@ -250,7 +267,8 @@ const ManagerBoard = () => {
     } else {
       if (comment !== "") {
         const fetchData = async function fetch() {
-          const response = await axiosInstance.post(
+          let response;
+          response = await axiosInstance.post(
             `/api/auth/board/${id}/comment`,
             data,
             config
@@ -268,26 +286,41 @@ const ManagerBoard = () => {
     }
   };
 
-  const handleCommentDelete = (commentId) => {
+  const handleCommentDelete = (commentId, owner) => {
     const config = {
       headers: {
         Authorization: localStorage.getItem("accessToken"),
       },
     };
 
-    axiosInstance
-      .delete(`/api/auth/board/${id}/comment/${commentId}`, config)
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    owner === undefined
+      ? axiosInstance
+          .delete(`/api/admin/board/${id}/comment/${commentId}`, config)
+          .then((response) => {
+            console.log(response);
+            window.location.reload();
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+      : axiosInstance
+          .delete(`/api/auth/board/${id}/comment/${commentId}`, config)
+          .then((response) => {
+            console.log(response);
+            window.location.reload();
+          })
+          .catch((e) => {
+            console.log(e);
+          });
   };
 
   const handleLoginModal = () => {
     setLoginModal(!loginModal);
+  };
+
+  const handleSuspend = (email) => {
+    setSuspend(!suspend);
+    setAccuseEmail(email);
   };
 
   if (loading) {
@@ -315,7 +348,7 @@ const ManagerBoard = () => {
                 <div>
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
-                    to="/list/ALL/ALL"
+                    to="/manager/list/ALL/ALL"
                   >
                     Community
                   </CustomNavLink>
@@ -378,7 +411,7 @@ const ManagerBoard = () => {
               <div>
                 <CustomNavLink
                   style={({ isActive }) => (isActive ? "active" : "")}
-                  to="/list/ALL/ALL"
+                  to="/manager/list/ALL/ALL"
                 >
                   Community
                 </CustomNavLink>
@@ -424,7 +457,14 @@ const ManagerBoard = () => {
               </span>
               <span>{text.createdAt}</span>
             </div>
-            <span>정지</span>
+            {text.boardOwner === undefined ? (
+              <>
+                <span onClick={deleteBoard}>삭제</span>
+                <span onClick={() => handleSuspend(text.writerEmail)}>
+                  정지
+                </span>
+              </>
+            ) : null}
             <span>조회수 {text.views}</span>
           </div>
           <div className={styles.middle}>{ReactHtmlParser(text.content)}</div>
@@ -443,18 +483,6 @@ const ManagerBoard = () => {
               <FaComment color="#B27910" size="13px" />
             </span>
             <span>{text.comments.length}</span>
-            {text.boardOwner && (
-              <>
-                <span
-                  onClick={() => {
-                    navigate(`/board/${id}/${text.category}/update`);
-                  }}
-                >
-                  수정
-                </span>
-                <span onClick={deleteBoard}>삭제</span>
-              </>
-            )}
           </div>
         </div>
         {text.comments.map((item) => {
@@ -491,22 +519,33 @@ const ManagerBoard = () => {
                   </span>
                   <span>{item.commentCreatedAt}</span>
                 </div>
-                <span
-                  onClick={() => {
-                    handleCommentDelete(item.commentId);
-                  }}
-                  style={{ color: "#A19C97", fontWeight: "600" }}
-                >
-                  삭제
-                </span>
-                <span
-                  onClick={() => {
-                    handleCommentDelete(item.commentId);
-                  }}
-                  style={{ color: "#A19C97", fontWeight: "600" }}
-                >
-                  정지
-                </span>
+                {item.commentOwner === undefined ? (
+                  <>
+                    <span
+                      onClick={() => {
+                        handleCommentDelete(item.commentId, item.commentOwner);
+                      }}
+                      style={{ color: "#A19C97", fontWeight: "600" }}
+                    >
+                      삭제
+                    </span>
+                    <span
+                      onClick={() => handleSuspend(item.commentAccountEmail)}
+                      style={{ color: "#A19C97", fontWeight: "600" }}
+                    >
+                      정지
+                    </span>
+                  </>
+                ) : item.commentOwner === true ? (
+                  <span
+                    onClick={() => {
+                      handleCommentDelete(item.commentId, item.commentOwner);
+                    }}
+                    style={{ color: "#A19C97", fontWeight: "600" }}
+                  >
+                    삭제
+                  </span>
+                ) : null}
                 <div>
                   <p>{item.content}</p>
                 </div>
@@ -529,7 +568,487 @@ const ManagerBoard = () => {
           <Button onClick={handleComment} name={"등록"} />
         </div>
       </div>
+      {suspend && (
+        <Suspend
+          onClick={handleSuspend}
+          email={accuseEmail}
+          setSuspend={setSuspend}
+        />
+      )}
     </CustomBody>
+  );
+};
+
+const Suspend = (props) => {
+  useEffect(() => {
+    document.body.style.cssText = `
+    position: fixed; 
+    top: -${window.scrollY}px;
+    overflow-y: scroll;
+    width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, []);
+
+  let { id, commentId } = useParams();
+  const now = new Date();
+  const [suspendDate, setSuspendDate] = useState(1);
+  const [modal, setModal] = useState(false);
+  const [reason, setReason] = useState("");
+  const [select, setSelect] = useState({
+    spam: false,
+    pornography: false,
+    illegal: false,
+    harmful: false,
+    offensive: false,
+    personal: false,
+    unpleasant: false,
+    animal: false,
+    fake: false,
+  });
+
+  const handleClick = () => {
+    setModal(!modal);
+  };
+
+  const handleSuspend = () => {
+    const config = {
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+        "Content-Type": "application/json",
+      },
+    };
+
+    const data = {
+      suspensionPeriod: Number(suspendDate),
+      reason: reason,
+    };
+
+    const accountId = localStorage.getItem("accountId");
+
+    const fetchData = async function fetch() {
+      let response;
+      commentId !== undefined
+        ? (response = await axiosInstance.post(
+            `/api/admin/account/${accountId}/suspend/comment/${commentId}`,
+            data,
+            config
+          ))
+        : (response = await axiosInstance.post(
+            `/api/admin/account/${accountId}/suspend/board/${id}`,
+            data,
+            config
+          ));
+      console.log(response);
+      if (response.data.code === 1) {
+        setModal(true);
+      } else if (response.data.code === -1) {
+        alert(response.data.msg);
+      } else {
+        console.log("정지 실패");
+      }
+    };
+
+    fetchData();
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.modal}>
+        <span onClick={props.onClick}>✕</span>
+        <div className={styles.accuseDetail}>
+          <div>
+            <p>신고대상자</p>
+            <p>{props.email}</p>
+          </div>
+        </div>
+        <h4>사유선택</h4>
+        <div className={styles.reason}>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: true,
+                pornography: false,
+                illegal: false,
+                harmful: false,
+                offensive: false,
+                personal: false,
+                unpleasant: false,
+                animal: false,
+                fake: false,
+              });
+              setReason("SPAM_PROMOTION");
+            }}
+            style={
+              select.spam
+                ? {
+                    border: "1.5px solid #B27910",
+                    borderRadius: "15px 15px 0 0",
+                  }
+                : {
+                    borderRadius: "15px 15px 0 0",
+                  }
+            }
+          >
+            {select.spam ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>스팸홍보/도배글입니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: true,
+                illegal: false,
+                harmful: false,
+                offensive: false,
+                personal: false,
+                unpleasant: false,
+                animal: false,
+                fake: false,
+              });
+              setReason("PORNOGRAPHY");
+            }}
+            style={
+              select.pornography
+                ? {
+                    border: "1.5px solid #B27910",
+                  }
+                : null
+            }
+          >
+            {select.pornography ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>음란물입니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: false,
+                illegal: true,
+                harmful: false,
+                offensive: false,
+                personal: false,
+                unpleasant: false,
+                animal: false,
+                fake: false,
+              });
+              setReason("ILLEGAL_INFORMATION");
+            }}
+            style={
+              select.illegal
+                ? {
+                    border: "1.5px solid #B27910",
+                  }
+                : null
+            }
+          >
+            {select.illegal ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>불법정보를 포함하고 있습니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: false,
+                illegal: false,
+                harmful: true,
+                offensive: false,
+                personal: false,
+                unpleasant: false,
+                animal: false,
+                fake: false,
+              });
+              setReason("HARMFUL_TO_MINORS");
+            }}
+            style={
+              select.harmful
+                ? {
+                    border: "1.5px solid #B27910",
+                  }
+                : null
+            }
+          >
+            {select.harmful ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>청소년에게 유해한 내용입니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: false,
+                illegal: false,
+                harmful: false,
+                offensive: true,
+                personal: false,
+                unpleasant: false,
+                animal: false,
+                fake: false,
+              });
+              setReason("OFFENSIVE_EXPRESSION");
+            }}
+            style={
+              select.offensive
+                ? {
+                    border: "1.5px solid #B27910",
+                  }
+                : null
+            }
+          >
+            {select.offensive ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>욕설/생명경시/혐오/차별적 표현입니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: false,
+                illegal: false,
+                harmful: false,
+                offensive: false,
+                personal: true,
+                unpleasant: false,
+                animal: false,
+                fake: false,
+              });
+              setReason("PERSONAL_INFORMATION_EXPOSURE");
+            }}
+            style={
+              select.personal
+                ? {
+                    border: "1.5px solid #B27910",
+                  }
+                : null
+            }
+          >
+            {select.personal ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>개인정보 노출 게시물입니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: false,
+                illegal: false,
+                harmful: false,
+                offensive: false,
+                personal: false,
+                unpleasant: true,
+                animal: false,
+                fake: false,
+              });
+              setReason("UNPLEASANT_EXPRESSION");
+            }}
+            style={
+              select.unpleasant
+                ? {
+                    border: "1.5px solid #B27910",
+                  }
+                : null
+            }
+          >
+            {select.unpleasant ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>불쾌한 표현이 있습니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: false,
+                illegal: false,
+                harmful: false,
+                offensive: false,
+                personal: false,
+                unpleasant: false,
+                animal: true,
+                fake: false,
+              });
+              setReason("ANIMAL_CRUELTY");
+            }}
+            style={
+              select.animal
+                ? {
+                    border: "1.5px solid #B27910",
+                  }
+                : null
+            }
+          >
+            {select.animal ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>동물 학대 관련 내용입니다.</p>
+          </div>
+          <div
+            onClick={() => {
+              setSelect({
+                spam: false,
+                pornography: false,
+                illegal: false,
+                harmful: false,
+                offensive: false,
+                personal: false,
+                unpleasant: false,
+                animal: false,
+                fake: true,
+              });
+              setReason("FAKE_INFORMATION");
+            }}
+            style={
+              select.fake
+                ? {
+                    border: "1.5px solid #B27910",
+                    borderRadius: "0 0 15px 15px",
+                  }
+                : {
+                    borderRadius: "0 0 15px 15px",
+                  }
+            }
+          >
+            {select.fake ? (
+              <span>
+                <RiCheckboxCircleFill color="#B27910" size="25px" />
+              </span>
+            ) : (
+              <span>
+                <RiCheckboxBlankCircleLine color="#ded8d3" size="25px" />
+              </span>
+            )}
+            <p>가짜 정보를 유포하고 있습니다.</p>
+          </div>
+        </div>
+        <div className={styles.accusePeriod}>
+          <span>정지 기간</span>
+          <input
+            type="number"
+            min="1"
+            value={suspendDate}
+            onChange={(e) => {
+              setSuspendDate(e.target.value);
+            }}
+          ></input>
+          <span>해제 날짜</span>
+          <div>
+            {dateFormat(
+              new Date(now.setDate(now.getDate() + Number(suspendDate)))
+            )}
+          </div>
+        </div>
+        <div className={styles.accuseBtn} onClick={handleSuspend}>
+          정지하기
+        </div>
+      </div>
+      {modal && (
+        <SuspendConfirmModal
+          onClick={handleClick}
+          setSuspend={props.setSuspend}
+        />
+      )}
+    </div>
+  );
+};
+
+function dateFormat(date) {
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+
+  month = month >= 10 ? month : "0" + month;
+  day = day >= 10 ? day : "0" + day;
+
+  return date.getFullYear() + "-" + month + "-" + day;
+}
+
+const SuspendConfirmModal = (props) => {
+  useEffect(() => {
+    document.body.style.cssText = `
+    position: fixed; 
+    top: -${window.scrollY}px;
+    overflow-y: scroll;
+    width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, []);
+
+  const handleClick = () => {
+    props.onClick();
+    props.setSuspend();
+  };
+
+  return (
+    <div className={styles.confirmContainer}>
+      <div className={styles.confirmModal}>
+        <p>정지가 완료되었습니다.</p>
+        <div>
+          <Button name="확인" onClick={handleClick} />
+        </div>
+      </div>
+    </div>
   );
 };
 
