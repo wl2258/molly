@@ -614,7 +614,7 @@ const Suspend = (props) => {
     setModal(!modal);
   };
 
-  const handleSuspend = () => {
+  const handleSuspend = (email) => {
     const config = {
       headers: {
         Authorization: localStorage.getItem("accessToken"),
@@ -625,20 +625,19 @@ const Suspend = (props) => {
     const data = {
       suspensionPeriod: Number(suspendDate),
       reason: reason,
+      reportedEmail: email,
     };
-
-    const accountId = localStorage.getItem("accountId");
 
     const fetchData = async function fetch() {
       let response;
       commentId !== undefined
         ? (response = await axiosInstance.post(
-            `/api/admin/account/${accountId}/suspend/comment/${commentId}`,
+            `/api/admin/suspend/comment/${commentId}`,
             data,
             config
           ))
         : (response = await axiosInstance.post(
-            `/api/admin/account/${accountId}/suspend/board/${id}`,
+            ` /api/admin/suspend/board/${id}`,
             data,
             config
           ));
@@ -997,7 +996,10 @@ const Suspend = (props) => {
             )}
           </div>
         </div>
-        <div className={styles.accuseBtn} onClick={handleSuspend}>
+        <div
+          className={styles.accuseBtn}
+          onClick={() => handleSuspend(props.email)}
+        >
           정지하기
         </div>
       </div>
