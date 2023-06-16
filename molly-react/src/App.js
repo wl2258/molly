@@ -51,6 +51,7 @@ function App() {
           element={<ManagerBoard />}
         />
         <Route path="/manager/list/:category/:pet" element={<ManagerList />} />
+        <Route path="/manager/board/:id/update" element={<Update />} />
       </Routes>
     </div>
   );

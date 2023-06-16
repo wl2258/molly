@@ -283,16 +283,27 @@ const Update = () => {
     console.log(data);
 
     if (content.length < 5000) {
-      axiosInstance
-        .put(`/api/auth/board/${id}`, data, config)
-        .then((response) => {
-          if (response.data.code === 1) {
-            localStorage.removeItem("imgId");
-            navigate(`/board/${id}/${boardValue}/${petValue}`, {
-              replace: true,
+      window.location.href.includes("manager")
+        ? axiosInstance
+            .put(`/api/admin/board/${id}`, data, config)
+            .then((response) => {
+              if (response.data.code === 1) {
+                localStorage.removeItem("imgId");
+                navigate(`/board/${id}/${boardValue}/${petValue}`, {
+                  replace: true,
+                });
+              }
+            })
+        : axiosInstance
+            .put(`/api/auth/board/${id}`, data, config)
+            .then((response) => {
+              if (response.data.code === 1) {
+                localStorage.removeItem("imgId");
+                navigate(`/board/${id}/${boardValue}/${petValue}`, {
+                  replace: true,
+                });
+              }
             });
-          }
-        });
     } else {
       setTooltip(true);
     }

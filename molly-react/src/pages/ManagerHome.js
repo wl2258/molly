@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../css/ManagerHome.module.css";
 import styled from "styled-components";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button } from "../components/Button";
 import { SyncLoader } from "react-spinners";
@@ -102,12 +102,36 @@ const ManagerHome = () => {
   const [page, setPage] = useState(0);
   const [detailView, setDetailView] = useState(false);
   const [id, setId] = useState(0);
+  const [login, setLogin] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
 
   useEffect(() => {
     setLoading(true);
     setPage(0);
     getFetchData();
   }, [category]);
+
+  useEffect(() => {
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+    const accountId = params.get("accountId");
+
+    if (accessToken !== null && refreshToken !== null && accountId !== null) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("accountId", accountId);
+      setLogin(true);
+    } else if (
+      localStorage.getItem("accessToken") !== "null" &&
+      localStorage.getItem("refreshToken") !== "null" &&
+      localStorage.getItem("accessToken") !== null &&
+      localStorage.getItem("refreshToken") !== null
+    ) {
+      setLogin(true);
+    }
+  }, []);
 
   // useEffect(() => {
   //   console.log("render");
@@ -229,6 +253,17 @@ const ManagerHome = () => {
     setLoading(false);
   };
 
+  const handleLogout = () => {
+    axios.delete(`http://localhost:8080/api/account/logout`, {
+      headers: {
+        "Refresh-Token": localStorage.getItem("refreshToken"),
+      },
+    });
+
+    localStorage.clear();
+    setLogin(false);
+  };
+
   if (loading) {
     return (
       <CustomBody>
@@ -262,13 +297,17 @@ const ManagerHome = () => {
               </nav>
             </div>
             <div className={styles.logout}>
-              <span
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                로그아웃
-              </span>
+              {login ? (
+                <span onClick={handleLogout}>로그아웃</span>
+              ) : (
+                <span
+                  onClick={() => {
+                    navigate("/manager/login");
+                  }}
+                >
+                  로그인
+                </span>
+              )}
             </div>
           </div>
         </header>
@@ -323,13 +362,17 @@ const ManagerHome = () => {
             </nav>
           </div>
           <div className={styles.logout}>
-            <span
-              onClick={() => {
-                console.log("click");
-              }}
-            >
-              로그아웃
-            </span>
+            {login ? (
+              <span onClick={handleLogout}>로그아웃</span>
+            ) : (
+              <span
+                onClick={() => {
+                  navigate("/manager/login");
+                }}
+              >
+                로그인
+              </span>
+            )}
           </div>
         </div>
       </header>

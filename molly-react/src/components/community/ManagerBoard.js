@@ -103,7 +103,7 @@ const Tap = (props) => {
       className={`${props.tap} ${props.style}`}
       onClick={() => {
         props.setTap(props.name);
-        navigate(`/list/${category}/${petType}`);
+        navigate(`/manager/list/${category}/${petType}`);
         props.setSearch("");
       }}
     >
