@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ManagerBoardList from "../../components/community/ManagerBoardList";
 import styled from "styled-components";
 import styles from "../../css/ManagerHome.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 let CustomNavLink = styled(NavLink)`
   color: #afa79f;
@@ -21,6 +22,42 @@ let CustomBody = styled.div`
 `;
 
 const List = () => {
+  const [login, setLogin] = useState(false);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+    const accountId = params.get("accountId");
+
+    if (accessToken !== null && refreshToken !== null && accountId !== null) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("accountId", accountId);
+      setLogin(true);
+    } else if (
+      localStorage.getItem("accessToken") !== "null" &&
+      localStorage.getItem("refreshToken") !== "null" &&
+      localStorage.getItem("accessToken") !== null &&
+      localStorage.getItem("refreshToken") !== null
+    ) {
+      setLogin(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    axios.delete(`http://localhost:8080/api/account/logout`, {
+      headers: {
+        "Refresh-Token": localStorage.getItem("refreshToken"),
+      },
+    });
+
+    localStorage.clear();
+    setLogin(false);
+  };
+
   return (
     <div>
       <header className={styles.header}>
@@ -53,13 +90,17 @@ const List = () => {
             </nav>
           </div>
           <div className={styles.logout}>
-            <span
-              onClick={() => {
-                console.log("click");
-              }}
-            >
-              로그아웃
-            </span>
+            {login ? (
+              <span onClick={handleLogout}>로그아웃</span>
+            ) : (
+              <span
+                onClick={() => {
+                  navigate("/manager/login");
+                }}
+              >
+                로그인
+              </span>
+            )}
           </div>
         </div>
       </header>
