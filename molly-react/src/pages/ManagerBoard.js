@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 //import Board from './Board';
 import styles from "../css/ManagerBoard.module.css";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { IoMdThumbsUp } from "react-icons/io";
 import { MdOutlineThumbUpAlt } from "react-icons/md";
 import { FaComment } from "react-icons/fa";
@@ -113,6 +113,10 @@ const ManagerBoard = () => {
   const [loginModal, setLoginModal] = useState(false);
   const [suspend, setSuspend] = useState(false);
   const [accuseEmail, setAccuseEmail] = useState("");
+  const [login, setLogin] = useState(false);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -138,6 +142,7 @@ const ManagerBoard = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setText({
+  //     boardOwner: true,
   //     title: "강아지 자랑",
   //     category: "MEDICAL",
   //     petType: "CAT",
@@ -217,6 +222,37 @@ const ManagerBoard = () => {
           });
       }
     }
+  };
+
+  useEffect(() => {
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+    const accountId = params.get("accountId");
+
+    if (accessToken !== null && refreshToken !== null && accountId !== null) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("accountId", accountId);
+      setLogin(true);
+    } else if (
+      localStorage.getItem("accessToken") !== "null" &&
+      localStorage.getItem("refreshToken") !== "null" &&
+      localStorage.getItem("accessToken") !== null &&
+      localStorage.getItem("refreshToken") !== null
+    ) {
+      setLogin(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    axios.delete(`http://localhost:8080/api/account/logout`, {
+      headers: {
+        "Refresh-Token": localStorage.getItem("refreshToken"),
+      },
+    });
+
+    localStorage.clear();
+    setLogin(false);
   };
 
   const handleLike = () => {
@@ -356,13 +392,17 @@ const ManagerBoard = () => {
               </nav>
             </div>
             <div className={styles.logout}>
-              <span
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                로그아웃
-              </span>
+              {login ? (
+                <span onClick={handleLogout}>로그아웃</span>
+              ) : (
+                <span
+                  onClick={() => {
+                    navigate("/manager/login");
+                  }}
+                >
+                  로그인
+                </span>
+              )}
             </div>
           </div>
         </header>
@@ -419,13 +459,17 @@ const ManagerBoard = () => {
             </nav>
           </div>
           <div className={styles.logout}>
-            <span
-              onClick={() => {
-                console.log("click");
-              }}
-            >
-              로그아웃
-            </span>
+            {login ? (
+              <span onClick={handleLogout}>로그아웃</span>
+            ) : (
+              <span
+                onClick={() => {
+                  navigate("/manager/login");
+                }}
+              >
+                로그인
+              </span>
+            )}
           </div>
         </div>
       </header>
@@ -464,7 +508,14 @@ const ManagerBoard = () => {
                   정지
                 </span>
               </>
-            ) : null}
+            ) : (
+              <>
+                <span onClick={deleteBoard}>삭제</span>
+                <span onClick={() => navigate(`/manager/board/${id}/update`)}>
+                  수정
+                </span>
+              </>
+            )}
             <span>조회수 {text.views}</span>
           </div>
           <div className={styles.middle}>{ReactHtmlParser(text.content)}</div>
@@ -637,7 +688,7 @@ const Suspend = (props) => {
             config
           ))
         : (response = await axiosInstance.post(
-            ` /api/admin/suspend/board/${id}`,
+            `/api/admin/suspend/board/${id}`,
             data,
             config
           ));

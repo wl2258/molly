@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
 import styled from "styled-components";
 import Board from "../../components/community/Board";
@@ -33,6 +33,9 @@ const ManagerWrite = () => {
   const [petView, setPetView] = useState(false);
   const [petValue, setPetValue] = useState("NOT_SELECTED");
   const [tooltip, setTooltip] = useState(false);
+  const [login, setLogin] = useState(false);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
 
   const navigate = useNavigate();
 
@@ -72,6 +75,37 @@ const ManagerWrite = () => {
   //     }
   // }
   // console.log(imgUrl)
+
+  useEffect(() => {
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+    const accountId = params.get("accountId");
+
+    if (accessToken !== null && refreshToken !== null && accountId !== null) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("accountId", accountId);
+      setLogin(true);
+    } else if (
+      localStorage.getItem("accessToken") !== "null" &&
+      localStorage.getItem("refreshToken") !== "null" &&
+      localStorage.getItem("accessToken") !== null &&
+      localStorage.getItem("refreshToken") !== null
+    ) {
+      setLogin(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    axios.delete(`http://localhost:8080/api/account/logout`, {
+      headers: {
+        "Refresh-Token": localStorage.getItem("refreshToken"),
+      },
+    });
+
+    localStorage.clear();
+    setLogin(false);
+  };
 
   useEffect(() => {
     console.log("ckeditor render");
@@ -311,13 +345,17 @@ const ManagerWrite = () => {
             </nav>
           </div>
           <div className={styles.logout}>
-            <span
-              onClick={() => {
-                console.log("click");
-              }}
-            >
-              로그아웃
-            </span>
+            {login ? (
+              <span onClick={handleLogout}>로그아웃</span>
+            ) : (
+              <span
+                onClick={() => {
+                  navigate("/manager/login");
+                }}
+              >
+                로그인
+              </span>
+            )}
           </div>
         </div>
       </header>
