@@ -171,6 +171,8 @@ public class AdminService {
         Account admin = findAccountByIdOrThrowException(adminId);
         findBoard.increaseViews();
 
+        boolean isOwner = boardService.isAuthorizedToAccessBoard(findBoard, adminId);
+
         boolean thumbsUp = likyRepository.existsByAccountEmailAndBoard_Id(admin.getEmail(), boardId);
         String writerNick = null;
         String writerProfileImage = null;
@@ -184,6 +186,7 @@ public class AdminService {
 
         return PostDetailForAdminResponse.builder()
                 .title(findBoard.getBoardTitle())
+                .boardOwner(isOwner)
                 .category(findBoard.getCategory().toString())
                 .petType(findBoard.getPetType().toString())
                 .content(findBoard.getBoardContent())
@@ -214,12 +217,14 @@ public class AdminService {
 
     private BoardCommentForAdminDto createBoardCommentForAdminDto(Comment comment, Map<String, Account> accountMap, Account findAccount) {
         Account account = accountMap.get(comment.getAccountEmail());
+        boolean commentOwner = (account != null && findAccount != null && account.getId().equals(findAccount.getId()));
         String nickname = (account != null) ? account.getNickname() : null;
         String commentProfileImageUrl = (account != null && account.getAccountProfileImage() != null)
                 ? account.getAccountProfileImage().getStoreFileUrl() : null;
 
         return new BoardCommentForAdminDto(
                 comment.getId(),
+                commentOwner,
                 comment.getAccountEmail(),
                 nickname,
                 comment.getCreatedDate(),

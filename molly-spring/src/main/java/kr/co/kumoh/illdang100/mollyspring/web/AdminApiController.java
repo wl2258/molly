@@ -100,6 +100,7 @@ public class AdminApiController {
     public ResponseEntity<?> suspendAccountByComment(@PathVariable("commentId") Long commentId,
                                                      @RequestBody SuspendAccountRequest suspendAccountRequest) {
 
+        log.debug("start suspensionAccountByComment");
         adminService.suspendAccount(null, commentId, suspendAccountRequest);
         return new ResponseEntity<>(new ResponseDto<>(1, "정지되었습니다", null), HttpStatus.OK);
     }

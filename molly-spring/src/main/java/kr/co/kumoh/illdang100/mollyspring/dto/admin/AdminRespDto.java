@@ -52,6 +52,7 @@ public class AdminRespDto {
     @Builder
     @Getter @Setter
     public static class PostDetailForAdminResponse {
+        private boolean boardOwner;
         private String title;
         private String category;
         private String petType;
@@ -71,6 +72,7 @@ public class AdminRespDto {
     @Getter @Setter
     public static class BoardCommentForAdminDto {
         private Long commentId;
+        private boolean commentOwner;
         private String commentAccountEmail;
         private String commentWriteNick;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

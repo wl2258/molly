@@ -175,7 +175,7 @@ public class BoardService {
         );
     }
 
-    private boolean isAuthorizedToAccessBoard(Board board, Long accountId) {
+    public boolean isAuthorizedToAccessBoard(Board board, Long accountId) {
         boolean result = false;
         Account account = board.getAccount();
         if (account != null) {
