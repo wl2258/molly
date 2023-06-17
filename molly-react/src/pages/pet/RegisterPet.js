@@ -122,105 +122,103 @@ const RegisterPet = () => {
   //   setLoading(true);
   //   setPetKind([
   //     {
-  //       "speciesKo": "말티즈",
-  //       "speciesEn": "MALTESE"
+  //       speciesKo: "말티즈",
+  //       speciesEn: "MALTESE",
   //     },
   //     {
-  //       "speciesKo": "포메라니안",
-  //       "speciesEn": "POMERANIAN"
+  //       speciesKo: "포메라니안",
+  //       speciesEn: "POMERANIAN",
   //     },
   //     {
-  //       "speciesKo": "프렌치 불도그",
-  //       "speciesEn": "FRENCH_BULLDOG"
+  //       speciesKo: "프렌치 불도그",
+  //       speciesEn: "FRENCH_BULLDOG",
   //     },
-  //   ])
+  //   ]);
   //   setPetValue({
-  //     "speciesKo": "말티즈",
-  //     "speciesEn": "MALTESE"
-  //   })
+  //     speciesKo: "말티즈",
+  //     speciesEn: "MALTESE",
+  //   });
   //   setLoading(false);
-  // }, [])
+  // }, []);
 
   // useEffect(() => {
-  //   setLoading(true)
+  //   setLoading(true);
   //   if (petType === "DOG") {
   //     setPetValue({
-  //       "speciesKo": "말티즈",
-  //       "speciesEn": "MALTESE"
-  //     },)
+  //       speciesKo: "말티즈",
+  //       speciesEn: "MALTESE",
+  //     });
   //     setPetKind([
   //       {
-  //         "speciesKo": "말티즈",
-  //         "speciesEn": "MALTESE"
+  //         speciesKo: "말티즈",
+  //         speciesEn: "MALTESE",
   //       },
   //       {
-  //         "speciesKo": "포메라니안",
-  //         "speciesEn": "POMERANIAN"
+  //         speciesKo: "포메라니안",
+  //         speciesEn: "POMERANIAN",
   //       },
   //       {
-  //         "speciesKo": "프렌치 불도그",
-  //         "speciesEn": "FRENCH_BULLDOG"
+  //         speciesKo: "프렌치 불도그",
+  //         speciesEn: "FRENCH_BULLDOG",
   //       },
   //       {
-  //         "speciesKo": "말티즈",
-  //         "speciesEn": "MALTESE"
+  //         speciesKo: "말티즈",
+  //         speciesEn: "MALTESE",
   //       },
   //       {
-  //         "speciesKo": "포메라니안",
-  //         "speciesEn": "POMERANIAN"
+  //         speciesKo: "포메라니안",
+  //         speciesEn: "POMERANIAN",
   //       },
   //       {
-  //         "speciesKo": "프렌치 불도그",
-  //         "speciesEn": "FRENCH_BULLDOG"
+  //         speciesKo: "ㅇㅇ",
+  //         speciesEn: "POMERANIAN",
   //       },
-  //     ])
-  //   }
-  //   else if (petType === "CAT") {
+  //     ]);
+  //   } else if (petType === "CAT") {
   //     setPetValue({
-  //       "speciesKo": "노르웨이 숲",
-  //       "speciesEn": "NORWEGIAN_FOREST"
-  //     },)
+  //       speciesKo: "노르웨이 숲",
+  //       speciesEn: "NORWEGIAN_FOREST",
+  //     });
   //     setPetKind([
   //       {
-  //         "speciesKo": "노르웨이 숲",
-  //         "speciesEn": "NORWEGIAN_FOREST"
+  //         speciesKo: "노르웨이 숲",
+  //         speciesEn: "NORWEGIAN_FOREST",
   //       },
   //       {
-  //         "speciesKo": "네벨룽",
-  //         "speciesEn": "NEBELUNG"
+  //         speciesKo: "네벨룽",
+  //         speciesEn: "NEBELUNG",
   //       },
   //       {
-  //         "speciesKo": "네바 마스커레이드",
-  //         "speciesEn": "NEVA_MASQUERADE"
+  //         speciesKo: "네바 마스커레이드",
+  //         speciesEn: "NEVA_MASQUERADE",
   //       },
   //       {
-  //         "speciesKo": "데본렉스",
-  //         "speciesEn": "DEVON_REX"
+  //         speciesKo: "데본렉스",
+  //         speciesEn: "DEVON_REX",
   //       },
-  //     ])
-  //   }
-  //   else {
+  //     ]);
+  //   } else {
   //     setPetValue({
-  //       "speciesKo": "앙고라 토끼",
-  //       "speciesEn": "ANGORA_RABBIT"
-  //     },)
+  //       speciesKo: "앙고라 토끼",
+  //       speciesEn: "ANGORA_RABBIT",
+  //     });
   //     setPetKind([
   //       {
-  //         "speciesKo": "앙고라 토끼",
-  //         "speciesEn": "ANGORA_RABBIT"
+  //         speciesKo: "앙고라 토끼",
+  //         speciesEn: "ANGORA_RABBIT",
   //       },
   //       {
-  //         "speciesKo": "롭이어",
-  //         "speciesEn": "ROBYEAR"
+  //         speciesKo: "롭이어",
+  //         speciesEn: "ROBYEAR",
   //       },
   //       {
-  //         "speciesKo": "렉스",
-  //         "speciesEn": "REX"
+  //         speciesKo: "렉스",
+  //         speciesEn: "REX",
   //       },
-  //     ])
+  //     ]);
   //   }
   //   setLoading(false);
-  // }, [petType])
+  // }, [petType]);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -464,7 +462,9 @@ const RegisterPet = () => {
             <h1>반려동물 등록</h1>
           </div>
           <div className={styles.dropdowncontainer}>
-            {typeView && <TypeDropdown setPetType={setPetType} />}
+            {typeView && (
+              <TypeDropdown setPetType={setPetType} setTypeView={setTypeView} />
+            )}
           </div>
           <div className={styles.upload}>
             <label htmlFor="profileImg">
@@ -518,9 +518,6 @@ const RegisterPet = () => {
           >
             <h4>품종</h4>
             <div
-              onClick={() => {
-                setPet(!pet);
-              }}
               className={styles.sort}
               style={{ borderRadius: pet ? "10px 10px 0 0" : "10px" }}
             >
@@ -533,18 +530,40 @@ const RegisterPet = () => {
               </span>
               {pet ? (
                 <span
-                  style={{ position: "absolute", top: "2px", right: "10px" }}
+                  style={{
+                    position: "absolute",
+                    top: "2px",
+                    right: "10px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setPet(!pet);
+                  }}
                 >
                   <MdExpandLess size="25px" color="#AFA79F" />
                 </span>
               ) : (
                 <span
-                  style={{ position: "absolute", top: "2px", right: "10px" }}
+                  style={{
+                    position: "absolute",
+                    top: "2px",
+                    right: "10px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setPet(!pet);
+                  }}
                 >
                   <MdExpandMore size="25px" color="#AFA79F" />
                 </span>
               )}
-              {pet && <PetDropdown setValue={setPetValue} petKind={petKind} />}
+              {pet && (
+                <PetDropdown
+                  setValue={setPetValue}
+                  petKind={petKind}
+                  setPet={setPet}
+                />
+              )}
             </div>
             <div className={styles.info}>
               <h4>생일</h4>
@@ -834,6 +853,7 @@ const TypeDropdown = (props) => {
       <li
         onClick={() => {
           props.setPetType("DOG");
+          props.setTypeView(false);
         }}
       >
         <img
@@ -845,6 +865,7 @@ const TypeDropdown = (props) => {
       <li
         onClick={() => {
           props.setPetType("CAT");
+          props.setTypeView(false);
         }}
       >
         <img
@@ -856,6 +877,7 @@ const TypeDropdown = (props) => {
       <li
         onClick={() => {
           props.setPetType("RABBIT");
+          props.setTypeView(false);
         }}
       >
         <img
@@ -869,19 +891,46 @@ const TypeDropdown = (props) => {
 };
 
 const PetDropdown = (props) => {
+  const [search, setSearch] = useState("");
+
   return (
     <div className={styles.dropdown}>
-      {props.petKind.map((item) => {
-        return (
-          <li
-            onClick={() => {
-              props.setValue(item);
-            }}
-          >
-            {item.speciesKo}
-          </li>
-        );
-      })}
+      <div onClick={() => props.setPet(false)}>
+        {search === ""
+          ? props.petKind.map((item) => {
+              return (
+                <li
+                  onClick={() => {
+                    props.setValue(item);
+                  }}
+                >
+                  {item.speciesKo}
+                </li>
+              );
+            })
+          : props.petKind.map((item) => {
+              if (item.speciesKo === search) {
+                return (
+                  <li
+                    onClick={() => {
+                      props.setValue(item);
+                    }}
+                  >
+                    {item.speciesKo}
+                  </li>
+                );
+              }
+            })}
+      </div>
+      <div className={styles.kindSearch}>
+        <input
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+          }}
+          placeholder="검색"
+        ></input>
+      </div>
     </div>
   );
 };
