@@ -58,54 +58,68 @@ const Home = () => {
   // useEffect(() => {
   //   console.log("render");
   //   setLoading(true);
-  //   setPet([
-  // 		{
-  // 			"petId": 13,
-  // 			"petName": "몰리",
-  // 			"petType": "DOG",
-  // 			"birthdate": "2013-08-07",
-  // 			"vaccination": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2023-03-14"
-  // 				},
-  // 			],
-  // 			"vaccinePredict": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				}
-  // 			],
-  // 		},
-  //     {
-  // 			"petId": 14,
-  // 			"petName": "보리",
-  // 			"petType": "CAT",
-  // 			"birthdate": "2019-01-10",
-  // 			"vaccination": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2020-08-30"
-  // 				},
-  // 			],
-  // 			"vaccinePredict": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				},
-  //         {
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				},
-  //         {
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				}
-  // 			],
-  // 		}
-  // 	])
-  //   setLoading(false)
-  // }, [save])
+  //   setPet({
+  //     pet: [
+  //       {
+  //         petId: 13,
+  //         petName: "몰리",
+  //         petType: "DOG",
+  //         birthdate: "2013-08-07",
+  //         vaccination: [
+  //           {
+  //             vaccinationName: "종합백신1차",
+  //             vaccinationDate: "2023-03-14",
+  //           },
+  //         ],
+  //         vaccinePredict: [
+  //           {
+  //             vaccinationName: "종합백신2차",
+  //             vaccinationDate: "2023-05-16",
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         petId: 14,
+  //         petName: "보리",
+  //         petType: "CAT",
+  //         birthdate: "2019-01-10",
+  //         vaccination: [
+  //           {
+  //             vaccinationName: "종합백신1차",
+  //             vaccinationDate: "2020-08-30",
+  //           },
+  //         ],
+  //         vaccinePredict: [
+  //           {
+  //             vaccinationName: "종합백신2차",
+  //             vaccinationDate: "2023-05-16",
+  //           },
+  //           {
+  //             vaccinationName: "종합백신2차",
+  //             vaccinationDate: "2023-05-16",
+  //           },
+  //           {
+  //             vaccinationName: "종합백신2차",
+  //             vaccinationDate: "2023-05-16",
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //     petProfile: [
+  //       {
+  //         petId: 13,
+  //         profileImage:
+  //           "https://image.cine21.com/resize/cine21/still/2005/0512/M0020113_1[S750,750].jpg",
+  //       },
+  //       {
+  //         petId: 14,
+  //         profileImage:
+  //           "https://itcm.co.kr/files/attach/images/813/079/473/003/f63e884e06ff1cc9757b9021c77b274c.jpg",
+  //       },
+  //     ],
+  //   });
+  //   setLoading(false);
+  // }, [save]);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -255,7 +269,7 @@ const Home = () => {
     );
   }
 
-  if (pet !== null && pet.length === 0) {
+  if (pet !== null && Object.keys(pet).length === 0) {
     return (
       <div>
         <Header />
@@ -306,10 +320,15 @@ const Home = () => {
       <CustomBody>
         <Schedule>
           <div style={{ marginRight: "20%" }}>
-            <Month pet={pet} />
+            <Month pet={pet.pet} />
           </div>
           <div>
-            <Dday pet={pet} save={save} setSave={setSave} />
+            <Dday
+              pet={pet.pet}
+              petProfile={pet.petProfile}
+              save={save}
+              setSave={setSave}
+            />
           </div>
         </Schedule>
         <Info>

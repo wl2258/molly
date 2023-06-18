@@ -142,7 +142,7 @@ const ManagerBoard = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setText({
-  //     boardOwner: true,
+  //     boardOwner: false,
   //     title: "강아지 자랑",
   //     category: "MEDICAL",
   //     petType: "CAT",
@@ -155,6 +155,7 @@ const ManagerBoard = () => {
   //     writerProfileImage: null,
   //     comments: [
   //       {
+  //         commentOwner: true,
   //         commentId: 19,
   //         commentAccountEmail: "testmolly@naver.com",
   //         commentWriteNick: "dfsf",
@@ -163,6 +164,7 @@ const ManagerBoard = () => {
   //         commentProfileImage: null,
   //       },
   //       {
+  //         commentOwner: false,
   //         commentId: 1111,
   //         commentAccountEmail: "testmolly@naver.com",
   //         commentWriteNick: null,
@@ -171,6 +173,7 @@ const ManagerBoard = () => {
   //         commentProfileImage: null,
   //       },
   //       {
+  //         commentOwner: false,
   //         commentId: 1111,
   //         commentAccountEmail: "testmolly@naver.com",
   //         commentWriteNick: null,
@@ -501,7 +504,7 @@ const ManagerBoard = () => {
               </span>
               <span>{text.createdAt}</span>
             </div>
-            {text.boardOwner === undefined ? (
+            {text.boardOwner === false ? (
               <>
                 <span onClick={deleteBoard}>삭제</span>
                 <span onClick={() => handleSuspend(text.writerEmail)}>
@@ -570,7 +573,7 @@ const ManagerBoard = () => {
                   </span>
                   <span>{item.commentCreatedAt}</span>
                 </div>
-                {item.commentOwner === undefined ? (
+                {item.commentOwner === false ? (
                   <>
                     <span
                       onClick={() => {
@@ -587,7 +590,7 @@ const ManagerBoard = () => {
                       정지
                     </span>
                   </>
-                ) : item.commentOwner === true ? (
+                ) : (
                   <span
                     onClick={() => {
                       handleCommentDelete(item.commentId, item.commentOwner);
@@ -596,7 +599,7 @@ const ManagerBoard = () => {
                   >
                     삭제
                   </span>
-                ) : null}
+                )}
                 <div>
                   <p>{item.content}</p>
                 </div>
