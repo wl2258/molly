@@ -76,66 +76,65 @@ const DetailPet = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setText({
-  // 		"userId": 32492,
-  // 		"petId": 1234,
-  // 		"petType": "DOG",
-  // 		"petName": "molly",
-  // 		"species": "MALTESE",
-  // 		"profileImage": "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
-  // 		"birthdate": "2013-08-07",
-  // 		"gender": "FEMALE",
-  // 		"neuteredStatus" : false,
-  // 		"weight" : 3.4,
-  // 		"caution" : "",
-  // 		"surgery": [{
-  //       "surgeryId": 1,
-  //       "surgeryName": "수직이도성형술",
-  //       "surgeryDate": "2023-01-01"
-  //     },],
-  // 		"medication": [{
-  // 			"medicationId": 1432,
-  // 			"medicationName": "넥스가드",
-  // 			"medicationStartDate": "2023-02-01",
-  // 			"medicationEndDate": "2023-02-15"
-  // 		}],
-  // 		"vaccination": [
-  // 			{
-  //         "vaccinationId": 1,
-  // 				"vaccinationName": "종합백신1차",
-  // 				"vaccinationDate": "2018-01-01"
-  // 			},
-  // 		]
-  //   })
+  //     userId: 32492,
+  //     petId: 1234,
+  //     petType: "DOG",
+  //     petName: "molly",
+  //     species: "MALTESE",
+  //     profileImage:
+  //       "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
+  //     birthdate: "2013-08-07",
+  //     gender: "FEMALE",
+  //     neuteredStatus: false,
+  //     weight: 3.4,
+  //     caution: "",
+  //     surgery: [
+  //       {
+  //         surgeryId: 1,
+  //         surgeryName: "수직이도성형술",
+  //         surgeryDate: "2023-01-01",
+  //       },
+  //     ],
+  //     medication: [
+  //       {
+  //         medicationId: 1432,
+  //         medicationName: "넥스가드",
+  //         medicationStartDate: "2023-02-01",
+  //         medicationEndDate: "2023-02-15",
+  //       },
+  //     ],
+  //     vaccination: [],
+  //   });
 
   //   setPetKind([
   //     {
-  //       "speciesKo": "말티즈",
-  //       "speciesEn": "MALTESE"
+  //       speciesKo: "말티즈",
+  //       speciesEn: "MALTESE",
   //     },
   //     {
-  //       "speciesKo": "포메라니안",
-  //       "speciesEn": "POMERANIAN"
+  //       speciesKo: "포메라니안",
+  //       speciesEn: "POMERANIAN",
   //     },
   //     {
-  //       "speciesKo": "프렌치 불도그",
-  //       "speciesEn": "FRENCH_BULLDOG"
+  //       speciesKo: "프렌치 불도그",
+  //       speciesEn: "FRENCH_BULLDOG",
   //     },
   //     {
-  //       "speciesKo": "말티즈",
-  //       "speciesEn": "MALTESEd"
+  //       speciesKo: "말티즈",
+  //       speciesEn: "MALTESEd",
   //     },
   //     {
-  //       "speciesKo": "포메라니안",
-  //       "speciesEn": "POMERANIAN"
+  //       speciesKo: "포메라니안",
+  //       speciesEn: "POMERANIAN",
   //     },
   //     {
-  //       "speciesKo": "프렌치 불도그",
-  //       "speciesEn": "FRENCH_BULLDOG"
+  //       speciesKo: "프렌치 불도그",
+  //       speciesEn: "FRENCH_BULLDOG",
   //     },
-  //   ])
+  //   ]);
 
   //   setLoading(false);
-  // }, [])
+  // }, []);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -461,7 +460,7 @@ const DetailPet = () => {
                 cursor: "pointer",
                 position: "absolute",
                 top: "170px",
-                right: "20px",
+                left: "120px",
               }}
               onClick={handleVaccineModal}
             >

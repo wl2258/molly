@@ -280,7 +280,7 @@ const ManagerWrite = () => {
       axiosInstance.post(`/api/admin/board`, data, config).then((response) => {
         if (response.data.code === 1) {
           localStorage.removeItem("imgId");
-          navigate(`/list/ALL/ALL`, { replace: true });
+          navigate(`/manager/list/ALL/ALL`, { replace: true });
         }
       });
     } else {
