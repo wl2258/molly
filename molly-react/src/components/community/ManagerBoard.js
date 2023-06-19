@@ -5,15 +5,14 @@ import { MdSearch } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ManagerBoard = (props) => {
-  const { pet } = useParams();
-  const [tap, setTap] = useState(pet);
+  const { category } = useParams();
+  const [tap, setTap] = useState(category);
   let navigate = useNavigate();
-  let { category } = useParams();
   const [searchWord, setSearchWord] = useState("");
 
   useEffect(() => {
-    setTap(pet);
-  }, [pet]);
+    setTap(category);
+  }, [category]);
 
   return (
     <div>
@@ -21,29 +20,26 @@ const ManagerBoard = (props) => {
         setSearch={props.setSearch}
         setTap={setTap}
         name={"ALL"}
-        tap={tap === "ALL" ? styles.click : styles.tap}
-        style={styles.all}
+        tap={tap === "ALL" || category === "ALL" ? styles.click : styles.tap}
+        style={styles.boardAll}
       />
       <Tap
         setSearch={props.setSearch}
         setTap={setTap}
-        name={"DOG"}
-        tap={tap === "DOG" ? styles.click : styles.tap}
-        style={styles.dog}
+        name={"FREE"}
+        tap={tap === "FREE" || category === "FREE" ? styles.click : styles.tap}
+        style={styles.free}
       />
       <Tap
         setSearch={props.setSearch}
         setTap={setTap}
-        name={"CAT"}
-        tap={tap === "CAT" ? styles.click : styles.tap}
-        style={styles.cat}
-      />
-      <Tap
-        setSearch={props.setSearch}
-        setTap={setTap}
-        name={"RABBIT"}
-        tap={tap === "RABBIT" ? styles.click : styles.tap}
-        style={styles.rabbit}
+        name={"MEDICAL"}
+        tap={
+          tap === "MEDICAL" || category === "MEDICAL"
+            ? styles.click
+            : styles.tap
+        }
+        style={styles.medical}
       />
 
       <div className={styles.container}>
@@ -88,32 +84,21 @@ const ManagerBoard = (props) => {
 
 const Tap = (props) => {
   let navigate = useNavigate();
-  let { category } = useParams();
-  let petType =
-    props.name === "ALL"
-      ? "ALL"
-      : props.name === "DOG"
-      ? "DOG"
-      : props.name === "CAT"
-      ? "CAT"
-      : "RABBIT";
 
   return (
     <div
       className={`${props.tap} ${props.style}`}
       onClick={() => {
         props.setTap(props.name);
-        navigate(`/manager/list/${category}/${petType}`);
+        navigate(`/manager/list/${props.name}/ALL`);
         props.setSearch("");
       }}
     >
       {props.name === "ALL"
-        ? "전체"
-        : props.name === "DOG"
-        ? "강아지"
-        : props.name === "CAT"
-        ? "고양이"
-        : "토끼"}
+        ? "전체게시판"
+        : props.name === "FREE"
+        ? "자유게시판"
+        : "의료게시판"}
     </div>
   );
 };

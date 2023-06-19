@@ -5,15 +5,14 @@ import { MdSearch } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Board = (props) => {
-  const { pet } = useParams();
-  const [tap, setTap] = useState(pet);
+  const { category } = useParams();
+  const [tap, setTap] = useState(category);
   let navigate = useNavigate();
-  let { category } = useParams();
   const [searchWord, setSearchWord] = useState("");
 
   useEffect(() => {
-    setTap(pet);
-  }, [pet]);
+    setTap(category);
+  }, [category]);
 
   return (
     <div style={{ position: "relative" }}>
@@ -21,22 +20,26 @@ const Board = (props) => {
         setSearch={props.setSearch}
         setTap={setTap}
         name={"ALL"}
-        tap={tap === "ALL" ? styles.click : styles.tap}
-        style={styles.all}
+        tap={tap === "ALL" || category === "ALL" ? styles.click : styles.tap}
+        style={styles.boardAll}
       />
       <Tap
         setSearch={props.setSearch}
         setTap={setTap}
         name={"FREE"}
-        tap={tap === "FREE" ? styles.click : styles.tap}
-        style={styles.dog}
+        tap={tap === "FREE" || category === "FREE" ? styles.click : styles.tap}
+        style={styles.free}
       />
       <Tap
         setSearch={props.setSearch}
         setTap={setTap}
         name={"MEDICAL"}
-        tap={tap === "MEDICAL" ? styles.click : styles.tap}
-        style={styles.cat}
+        tap={
+          tap === "MEDICAL" || category === "MEDICAL"
+            ? styles.click
+            : styles.tap
+        }
+        style={styles.medical}
       />
 
       <div className={styles.container}>
