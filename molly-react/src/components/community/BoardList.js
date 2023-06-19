@@ -17,6 +17,7 @@ const BoardList = () => {
   const [view, setView] = useState(false);
   const [value, setValue] = useState("createdDate");
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -343,9 +344,51 @@ const BoardList = () => {
   }
 
   return (
-    <div style={{ position: "relative", width: "75%", margin: "auto" }}>
+    <div style={{ position: "relative", width: "85%", margin: "auto" }}>
       <Board pet={pet} setSearch={setSearch} />
       <div className={styles.header}>
+        <div className={styles.petTap}>
+          <span
+            onClick={() => {
+              navigate(`/list/${category}/ALL`);
+            }}
+            style={
+              pet === "ALL" ? { color: "#f16340", fontWeight: "700" } : null
+            }
+          >
+            전체
+          </span>
+          <span
+            onClick={() => {
+              navigate(`/list/${category}/DOG`);
+            }}
+            style={
+              pet === "DOG" ? { color: "#f16340", fontWeight: "700" } : null
+            }
+          >
+            강아지
+          </span>
+          <span
+            onClick={() => {
+              navigate(`/list/${category}/CAT`);
+            }}
+            style={
+              pet === "CAT" ? { color: "#f16340", fontWeight: "700" } : null
+            }
+          >
+            고양이
+          </span>
+          <span
+            onClick={() => {
+              navigate(`/list/${category}/RABBIT`);
+            }}
+            style={
+              pet === "RABBIT" ? { color: "#f16340", fontWeight: "700" } : null
+            }
+          >
+            토끼
+          </span>
+        </div>
         <ul
           onClick={() => {
             setView(!view);

@@ -24,6 +24,7 @@ const BoardDetail = () => {
   });
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({});
+  const [commentList, setCommentList] = useState([]);
   const userId = localStorage.getItem("accountId");
   const [comment, setComment] = useState("");
   const [like, setLike] = useState(false);
@@ -49,6 +50,7 @@ const BoardDetail = () => {
         .then((response) => {
           console.log(response.data.data);
           setText(response.data.data);
+          setCommentList(response.data.data.comments);
           setLoading(false);
         })
         .catch((e) => {
@@ -60,6 +62,7 @@ const BoardDetail = () => {
         .then((response) => {
           console.log(response.data.data);
           setText(response.data.data);
+          setCommentList(response.data.data.comments);
           setLoading(false);
         })
         .catch((e) => {
@@ -186,6 +189,36 @@ const BoardDetail = () => {
   //     thumbsUp: false,
   //     likyCnt: 100,
   //   });
+
+  //   setCommentList([
+  //     {
+  //       commentId: 1,
+  //       commentOwner: true,
+  //       commentAccountEmail: "testmolly@naver.com",
+  //       commentWriteNick: "dfsf",
+  //       commentCreatedAt: "2023-03-02 12:39:11",
+  //       content: "예쁘네요",
+  //       commentProfileImage: null,
+  //     },
+  //     {
+  //       commentId: 2,
+  //       commentOwner: false,
+  //       commentAccountEmail: "testmolly@naver.com",
+  //       commentWriteNick: null,
+  //       commentCreatedAt: "2023-03-02 12:39:11",
+  //       content: "예쁘네요",
+  //       commentProfileImage: null,
+  //     },
+  //     {
+  //       commentId: 3,
+  //       commentOwner: false,
+  //       commentAccountEmail: "testmolly@naver.com",
+  //       commentWriteNick: null,
+  //       commentCreatedAt: "2023-03-02 12:39:11",
+  //       content: "예쁘네요",
+  //       commentProfileImage: null,
+  //     },
+  //   ]);
   //   setLoading(false);
   // }, []);
 
@@ -275,7 +308,34 @@ const BoardDetail = () => {
           );
           console.log(response);
           if (response.status === 201) {
-            window.location.reload();
+            if (commentList !== null) {
+              setCommentList([
+                ...commentList,
+                {
+                  commentId: response.data.data.commentId,
+                  commentOwner: true,
+                  commentAccountEmail: response.data.data.commentAccountEmail,
+                  commentWriteNick: response.data.data.commentWriteNick,
+                  commentCreatedAt: response.data.data.commentCreatedAt,
+                  content: comment,
+                  commentProfileImage: response.data.data.commentProfileImage,
+                },
+              ]);
+              setComment("");
+            } else {
+              setCommentList([
+                {
+                  commentId: response.data.data.commentId,
+                  commentOwner: true,
+                  commentAccountEmail: response.data.data.commentAccountEmail,
+                  commentWriteNick: response.data.data.commentWriteNick,
+                  commentCreatedAt: response.data.data.commentCreatedAt,
+                  content: comment,
+                  commentProfileImage: response.data.data.commentProfileImage,
+                },
+              ]);
+              setComment("");
+            }
           } else {
             console.log("댓글 작성 실패");
           }
@@ -332,7 +392,7 @@ const BoardDetail = () => {
     <div style={{ position: "relative", width: "75%", margin: "auto" }}>
       <div className={styles.boardTop}>
         <div>
-          <h4>
+          <h4 onClick={() => navigate(`/list/${category}/ALL`)}>
             {category === "FREE"
               ? "자유게시판"
               : category === "MEDICAL"
@@ -340,7 +400,7 @@ const BoardDetail = () => {
               : "전체게시판"}
           </h4>
           <h4>{`>`}</h4>
-          <h4>
+          <h4 onClick={() => navigate(`/list/${category}/${pet}`)}>
             {pet === "DOG"
               ? "강아지"
               : pet === "CAT"
@@ -414,74 +474,81 @@ const BoardDetail = () => {
           )}
         </div>
       </div>
-      {text.comments.map((item) => {
-        return (
-          <div className={styles.comment}>
-            <div className={styles.commentinfo}>
-              <div>
-                <span>
-                  <div className={styles.profilecommentuser}>
-                    <img
-                      className={styles.profileimg}
-                      src={
-                        item.commentProfileImage
-                          ? item.commentProfileImage
-                          : item.commentProfileImage === ""
-                          ? process.env.PUBLIC_URL + "/img/profile.png"
-                          : process.env.PUBLIC_URL + "/img/profile.png"
-                      }
-                      alt="프로필 이미지"
-                    />
+      {commentList !== null || text.comments !== null
+        ? commentList.map((item) => {
+            return (
+              <div className={styles.comment}>
+                <div className={styles.commentinfo}>
+                  <div>
+                    <span>
+                      <div className={styles.profilecommentuser}>
+                        <img
+                          className={styles.profileimg}
+                          src={
+                            item.commentProfileImage
+                              ? item.commentProfileImage
+                              : item.commentProfileImage === ""
+                              ? process.env.PUBLIC_URL + "/img/profile.png"
+                              : process.env.PUBLIC_URL + "/img/profile.png"
+                          }
+                          alt="프로필 이미지"
+                        />
+                      </div>
+                    </span>
+                    <span>
+                      {item.commentWriteNick === null
+                        ? "(알 수 없음)"
+                        : item.commentWriteNick}
+                    </span>
+                    <span>{item.commentCreatedAt}</span>
                   </div>
-                </span>
-                <span>
-                  {item.commentWriteNick === null
-                    ? "(알 수 없음)"
-                    : item.commentWriteNick}
-                </span>
-                <span>{item.commentCreatedAt}</span>
+                  {item.commentOwner ? (
+                    <span
+                      onClick={() => {
+                        setCommentList(
+                          commentList.filter(
+                            (comment) => comment.commentId !== item.commentId
+                          )
+                        );
+                        handleCommentDelete(item.commentId);
+                      }}
+                      style={{ color: "#A19C97", fontWeight: "600" }}
+                    >
+                      삭제
+                    </span>
+                  ) : (
+                    <span
+                      onClick={() => {
+                        handleCommentAccuseClick();
+                        setAccuseComment({
+                          commentId: item.commentId,
+                          accuseNick: item.commentWriteNick,
+                          accuseContent: item.content,
+                          accuseEmail: item.commentAccountEmail,
+                        });
+                      }}
+                    >
+                      신고
+                    </span>
+                  )}
+                  <div>
+                    <p>{item.content}</p>
+                  </div>
+                </div>
+                {commentAccuseModal && (
+                  <Accuse
+                    type="comment"
+                    commentId={accuseComment.commentId}
+                    onClick={handleCommentAccuseClick}
+                    accuseName={accuseComment.accuseNick}
+                    accuseContent={accuseComment.accuseContent}
+                    accuseEmail={accuseComment.accuseEmail}
+                  />
+                )}
               </div>
-              {item.commentOwner ? (
-                <span
-                  onClick={() => {
-                    handleCommentDelete(item.commentId);
-                  }}
-                  style={{ color: "#A19C97", fontWeight: "600" }}
-                >
-                  삭제
-                </span>
-              ) : (
-                <span
-                  onClick={() => {
-                    handleCommentAccuseClick();
-                    setAccuseComment({
-                      commentId: item.commentId,
-                      accuseNick: item.commentWriteNick,
-                      accuseContent: item.content,
-                      accuseEmail: item.commentAccountEmail,
-                    });
-                  }}
-                >
-                  신고
-                </span>
-              )}
-              <div>
-                <p>{item.content}</p>
-              </div>
-            </div>
-            {commentAccuseModal && (
-              <Accuse
-                type="comment"
-                commentId={accuseComment.commentId}
-                onClick={handleCommentAccuseClick}
-                accuseName={accuseComment.accuseNick}
-                accuseContent={accuseComment.accuseContent}
-                accuseEmail={accuseComment.accuseEmail}
-              />
-            )}
-          </div>
-        );
-      })}
+            );
+          })
+        : null}
       <div className={styles.footer}>
         <input
           value={comment}

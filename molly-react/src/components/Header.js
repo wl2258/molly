@@ -257,11 +257,11 @@ const Header = () => {
                   >
                     Community
                   </CustomNavLink>
-                  {categoryView && (
+                  {/* {categoryView && (
                     <div className={styles.category}>
                       <CategoryDropdown />
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div>
                   <CustomNavLink
@@ -364,11 +364,11 @@ const Header = () => {
                   >
                     Community
                   </CustomNavLink>
-                  {categoryView && (
+                  {/* {categoryView && (
                     <div className={styles.category} style={{ left: "8px" }}>
                       <CategoryDropdown />
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div>
                   <CustomNavLink
@@ -395,35 +395,35 @@ const Header = () => {
   );
 };
 
-const CategoryDropdown = () => {
-  let navigate = useNavigate();
+// const CategoryDropdown = () => {
+//   let navigate = useNavigate();
 
-  return (
-    <div className={styles.categoryDropdown}>
-      <li
-        onClick={() => {
-          navigate("/list/ALL/ALL");
-        }}
-      >
-        전체게시판
-      </li>
-      <li
-        onClick={() => {
-          navigate("/list/MEDICAL/ALL");
-        }}
-      >
-        의료게시판
-      </li>
-      <li
-        onClick={() => {
-          navigate("/list/FREE/ALL");
-        }}
-      >
-        자유게시판
-      </li>
-    </div>
-  );
-};
+//   return (
+//     <div className={styles.categoryDropdown}>
+//       <li
+//         onClick={() => {
+//           navigate("/list/ALL/ALL");
+//         }}
+//       >
+//         전체게시판
+//       </li>
+//       <li
+//         onClick={() => {
+//           navigate("/list/MEDICAL/ALL");
+//         }}
+//       >
+//         의료게시판
+//       </li>
+//       <li
+//         onClick={() => {
+//           navigate("/list/FREE/ALL");
+//         }}
+//       >
+//         자유게시판
+//       </li>
+//     </div>
+//   );
+// };
 
 const UserDropdown = (props) => {
   let navigate = useNavigate();
