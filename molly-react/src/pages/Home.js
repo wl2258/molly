@@ -31,6 +31,7 @@ const Home = () => {
   let { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [pet, setPet] = useState(null);
+  const [petProfile, setPetProfile] = useState(null);
   const [save, setSave] = useState(false);
   const navigate = useNavigate();
 
@@ -48,6 +49,7 @@ const Home = () => {
       .then((response) => {
         console.log(response);
         setPet(response.data.data.pet);
+        setPetProfile(response.data.data.petProfile);
         setLoading(false);
       })
       .catch((e) => {
@@ -320,12 +322,12 @@ const Home = () => {
       <CustomBody>
         <Schedule>
           <div style={{ marginRight: "20%" }}>
-            <Month pet={pet.pet} />
+            <Month pet={pet} />
           </div>
           <div>
             <Dday
-              pet={pet.pet}
-              petProfile={pet.petProfile}
+              pet={pet}
+              petProfile={petProfile}
               save={save}
               setSave={setSave}
             />
