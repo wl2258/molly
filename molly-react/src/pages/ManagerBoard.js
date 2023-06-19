@@ -200,7 +200,7 @@ const ManagerBoard = () => {
       },
     };
 
-    if (text.boardOwner === undefined) {
+    if (text.boardOwner === false) {
       axiosInstance
         .delete(`/api/admin/board/${id}`, config)
         .then((response) => {
@@ -332,7 +332,7 @@ const ManagerBoard = () => {
       },
     };
 
-    owner === undefined
+    owner === false
       ? axiosInstance
           .delete(`/api/admin/board/${id}/comment/${commentId}`, config)
           .then((response) => {

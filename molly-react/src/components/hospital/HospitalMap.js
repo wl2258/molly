@@ -385,6 +385,9 @@ const HospitalMap = () => {
           })}
         </div>
       </div>
+      <div style={{ marginTop: "20px", color: "#9B9B9B" }}>
+        반경 10km 이내로 조회됩니다.
+      </div>
       <div>
         {searchResults.map((result) => (
           <div key={result.place_id} className={styles.hospitalList}>
