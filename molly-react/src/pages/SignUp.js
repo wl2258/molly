@@ -99,7 +99,10 @@ const SignUp = () => {
             throw new Error("There is no refresh token");
           }
         } else if (errResponseStatus === 400) {
-          console.log(error.response.data);
+          if (error.response.data.msg === "사용 불가능한 닉네임입니다.") {
+            setDisabled(true);
+            setDuplicate(1);
+          }
         } else if (errResponseStatus === 401) {
           console.log("인증 실패");
           window.location.replace("/login");
@@ -173,9 +176,6 @@ const SignUp = () => {
         if (response.data.code === 1) {
           setDisabled(false);
           setDuplicate(2);
-        } else {
-          setDisabled(true);
-          setDuplicate(1);
         }
       };
 

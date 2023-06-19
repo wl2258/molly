@@ -289,7 +289,7 @@ const Update = () => {
             .then((response) => {
               if (response.data.code === 1) {
                 localStorage.removeItem("imgId");
-                navigate(`/board/${id}/${boardValue}/${petValue}`, {
+                navigate(`/manager/board/${id}`, {
                   replace: true,
                 });
               }
