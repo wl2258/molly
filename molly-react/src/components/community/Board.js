@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../css/Board.module.css";
-import { Button } from "../Button";
 import { MdSearch } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Board = (props) => {
   const { category } = useParams();
   const [tap, setTap] = useState(category);
-  let navigate = useNavigate();
   const [searchWord, setSearchWord] = useState("");
 
   useEffect(() => {
@@ -15,33 +13,43 @@ const Board = (props) => {
   }, [category]);
 
   return (
-    <div style={{ position: "relative" }}>
-      <Tap
-        setSearch={props.setSearch}
-        setTap={setTap}
-        name={"ALL"}
-        tap={tap === "ALL" || category === "ALL" ? styles.click : styles.tap}
-        style={styles.boardAll}
-      />
-      <Tap
-        setSearch={props.setSearch}
-        setTap={setTap}
-        name={"FREE"}
-        tap={tap === "FREE" || category === "FREE" ? styles.click : styles.tap}
-        style={styles.free}
-      />
-      <Tap
-        setSearch={props.setSearch}
-        setTap={setTap}
-        name={"MEDICAL"}
-        tap={
-          tap === "MEDICAL" || category === "MEDICAL"
-            ? styles.click
-            : styles.tap
-        }
-        style={styles.medical}
-      />
-
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        justifyContent: "space-between",
+        marginTop: "-60px",
+      }}
+    >
+      <div style={{ display: "flex" }}>
+        <Tap
+          setSearch={props.setSearch}
+          setTap={setTap}
+          name={"ALL"}
+          tap={tap === "ALL" || category === "ALL" ? styles.click : styles.tap}
+          style={styles.boardAll}
+        />
+        <Tap
+          setSearch={props.setSearch}
+          setTap={setTap}
+          name={"FREE"}
+          tap={
+            tap === "FREE" || category === "FREE" ? styles.click : styles.tap
+          }
+          style={styles.free}
+        />
+        <Tap
+          setSearch={props.setSearch}
+          setTap={setTap}
+          name={"MEDICAL"}
+          tap={
+            tap === "MEDICAL" || category === "MEDICAL"
+              ? styles.click
+              : styles.tap
+          }
+          style={styles.medical}
+        />
+      </div>
       <div className={styles.container}>
         <div>
           <input
@@ -71,12 +79,6 @@ const Board = (props) => {
             <MdSearch color="#AFA79F" />
           </span>
         </div>
-        <span>
-          <Button
-            onClick={() => navigate(`/list/${category}/write`)}
-            name={"글쓰기"}
-          />
-        </span>
       </div>
     </div>
   );

@@ -3,8 +3,22 @@ import styles from "../../css/Dday.module.css";
 import AddVaccine from "../../pages/AddVaccine";
 
 const Dday = (props) => {
-  const bgColor = ["#DCCFC2", "#C9DEEA", "#CFDBCA"];
-  const textColor = ["#867D74", "#6A828F", "#778572"];
+  const bgColor = [
+    "#DCCFC2",
+    "#C9DEEA",
+    "#CFDBCA",
+    "#DCCFC2",
+    "#C9DEEA",
+    "#CFDBCA",
+  ];
+  const textColor = [
+    "#867D74",
+    "#6A828F",
+    "#778572",
+    "#867D74",
+    "#6A828F",
+    "#778572",
+  ];
   const today = new Date();
 
   return (
