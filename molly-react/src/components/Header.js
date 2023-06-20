@@ -33,7 +33,7 @@ const Header = () => {
   const [loading, setLoading] = useState(false);
   const [iconView, setIconView] = useState(true);
   const [pet, setPet] = useState(null);
-  const [categoryView, setCategoryView] = useState(false);
+  const [alarm, setAlarm] = useState(null);
   const dispatch = useDispatch();
 
   const updateScroll = () => {
@@ -144,52 +144,95 @@ const Header = () => {
       }
     }
   );
+
   // useEffect(() => {
   //   setLoading(true);
   //   setPet([
-  // 		{
-  // 			"petId": 13,
-  // 			"petName": "몰리",
-  // 			"petType": "DOG",
-  // 			"birthdate": "2013-08-07",
-  // 			"vaccination": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2023-03-14"
-  // 				},
-  // 			],
-  // 			"vaccinePredict": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-13"
-  // 				},
-  //         {
-  // 					"vaccinationName": "종합백신3차",
-  // 					"vaccinationDate": "2023-05-30"
-  // 				}
-  // 			],
-  // 		},
   //     {
-  // 			"petId": 14,
-  // 			"petName": "보리",
-  // 			"petType": "CAT",
-  // 			"birthdate": "2019-01-10",
-  // 			"vaccination": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2020-08-30"
-  // 				},
-  // 			],
-  // 			"vaccinePredict": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-09-30"
-  // 				},
-  // 			],
-  // 		}
-  // 	])
-  //   setLoading(false)
-  // }, [])
+  //       petId: 13,
+  //       petName: "몰리",
+  //       petType: "DOG",
+  //       birthdate: "2013-08-07",
+  //       vaccination: [
+  //         {
+  //           vaccinationName: "종합백신1차",
+  //           vaccinationDate: "2023-03-14",
+  //         },
+  //       ],
+  //       vaccinePredict: [
+  //         {
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-05-13",
+  //         },
+  //         {
+  //           vaccinationName: "종합백신3차",
+  //           vaccinationDate: "2023-05-30",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       petId: 14,
+  //       petName: "보리",
+  //       petType: "CAT",
+  //       birthdate: "2019-01-10",
+  //       vaccination: [
+  //         {
+  //           vaccinationName: "종합백신1차",
+  //           vaccinationDate: "2020-08-30",
+  //         },
+  //       ],
+  //       vaccinePredict: [
+  //         {
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-09-30",
+  //         },
+  //       ],
+  //     },
+  //   ]);
+  //   setAlarm([
+  //     {
+  //       petId: 13,
+  //       petName: "몰리",
+  //       petType: "DOG",
+  //       birthdate: "2013-08-07",
+  //       vaccination: [
+  //         {
+  //           vaccinationName: "종합백신1차",
+  //           vaccinationDate: "2023-03-14",
+  //         },
+  //       ],
+  //       vaccinePredict: [
+  //         {
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-05-13",
+  //         },
+  //         {
+  //           vaccinationName: "종합백신3차",
+  //           vaccinationDate: "2023-05-30",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       petId: 14,
+  //       petName: "보리",
+  //       petType: "CAT",
+  //       birthdate: "2019-01-10",
+  //       vaccination: [
+  //         {
+  //           vaccinationName: "종합백신1차",
+  //           vaccinationDate: "2020-08-30",
+  //         },
+  //       ],
+  //       vaccinePredict: [
+  //         {
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-09-30",
+  //         },
+  //       ],
+  //     },
+  //   ]);
+  //   setLoading(false);
+  // }, []);
 
   const handlePetClick = () => {
     setLoading(true);
@@ -220,6 +263,35 @@ const Header = () => {
     setPetView(!petView);
   };
 
+  const handleAlarmClick = () => {
+    setLoading(true);
+
+    if (
+      localStorage.getItem("accessToken") !== null ||
+      localStorage.getItem("accessToken") !== ""
+    ) {
+      const config = {
+        headers: {
+          Authorization: localStorage.getItem("accessToken"),
+        },
+      };
+
+      axiosInstance
+        .get(`/api/auth/home`, config)
+        .then((response) => {
+          setIconView(true);
+          console.log(response);
+          setAlarm(response.data.data.pet);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
+    setAlarmView(!alarmView);
+  };
+
   return (
     <div style={{ zIndex: "4", position: "fixed" }}>
       {scrollPosition < 100 ? (
@@ -242,15 +314,7 @@ const Header = () => {
                     Schedule
                   </CustomNavLink>
                 </div>
-                <div
-                  style={{ position: "relative" }}
-                  onMouseOver={() => {
-                    setCategoryView(true);
-                  }}
-                  onMouseOut={() => {
-                    setCategoryView(false);
-                  }}
-                >
+                <div style={{ position: "relative" }}>
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
                     to="/list/ALL/ALL"
@@ -309,18 +373,13 @@ const Header = () => {
                       </div>
                     )}
                   </div>
-                  <div
-                    ref={alarmRef}
-                    onClick={() => {
-                      setAlarmView(!alarmView);
-                    }}
-                  >
+                  <div ref={alarmRef} onClick={handleAlarmClick}>
                     <span>
                       <TbBell color="#AFA79F" size="29px" />
                     </span>
                     {alarmView && (
                       <div className={styles.alarm}>
-                        <AlarmDropdown />
+                        <AlarmDropdown alarm={alarm} loading={loading} />
                       </div>
                     )}
                   </div>
@@ -349,15 +408,7 @@ const Header = () => {
                     Schedule
                   </CustomNavLink>
                 </div>
-                <div
-                  style={{ position: "relative" }}
-                  onMouseOver={() => {
-                    setCategoryView(true);
-                  }}
-                  onMouseOut={() => {
-                    setCategoryView(false);
-                  }}
-                >
+                <div style={{ position: "relative" }}>
                   <CustomNavLink
                     style={({ isActive }) => (isActive ? "active" : "")}
                     to="/list/ALL/ALL"
@@ -527,17 +578,55 @@ const PetDropdown = (props) => {
   );
 };
 
-const AlarmDropdown = () => {
+const AlarmDropdown = (props) => {
+  const today = new Date();
+  let count = 0;
+
+  if (props.loading) {
+    return (
+      <div className={styles.alarmdropdown}>
+        <li style={{ padding: "10px", color: "#AFA79F" }}>loading</li>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.alarmdropdown}>
-      <li>
-        <p>💉접종알림</p>
-        <p>까까의 종합백신 2차 접종이 일주일 남았습니다.</p>
-      </li>
-      <li>
-        <p>💉접종알림</p>
-        <p>마루의 컨넬코프 2차 접종이 일주일 남았습니다.</p>
-      </li>
+      {props.alarm.map((item, index) => {
+        return item.vaccinePredict.map((vaccine) => {
+          const dday = new Date(`${vaccine.vaccinationDate} 00:00:00`);
+          const gapNum = dday - today;
+          const day = Math.ceil(Math.ceil(gapNum / (1000 * 60 * 60 * 24)));
+          if (Math.abs(day) === 0) {
+            count++;
+            return (
+              <li>
+                <p>💉접종알림</p>
+                <p>
+                  {item.petName}의 {vaccine.vaccinationName}가 오늘 예정입니다.
+                </p>
+              </li>
+            );
+          } else if (day >= 0 && day <= 7) {
+            count++;
+            return (
+              <li>
+                <p>💉접종알림</p>
+                <p>
+                  {item.petName}의 {vaccine.vaccinationName}가 {Math.abs(day)}일
+                  남았습니다.
+                </p>
+              </li>
+            );
+          } else if (count === 0 && index === props.alarm.length - 1)
+            return (
+              <li>
+                <p>💉접종알림</p>
+                <p>알림이 없습니다.</p>
+              </li>
+            );
+        });
+      })}
     </div>
   );
 };

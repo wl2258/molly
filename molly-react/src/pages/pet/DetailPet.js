@@ -103,7 +103,18 @@ const DetailPet = () => {
   //         medicationEndDate: "2023-02-15",
   //       },
   //     ],
-  //     vaccination: [],
+  //     vaccination: [
+  //       {
+  //         vaccinationId: 1,
+  //         vaccinationName: "종합백신1차",
+  //         vaccinationDate: "2018-01-01",
+  //       },
+  //       {
+  //         vaccinationId: 1,
+  //         vaccinationName: "종합백신1차",
+  //         vaccinationDate: "2018-01-01",
+  //       },
+  //     ],
   //   });
 
   //   setPetKind([
@@ -446,20 +457,28 @@ const DetailPet = () => {
           </div>
           <div className={styles.weight}></div>
           <div className={styles.care}>
-            <h4>🦴 건강관리</h4>
-            <span>권장 사료량</span>
-            <span>{calFood()}g</span>
-            <br />
-            <span>권장 음수량</span>
-            <span>{text.weight * 80}ml</span>
-            <br />
-            <span>권장 운동량</span>
-            <h4>💉 예방접종 이력</h4>
+            <div className={styles.health}>
+              <h4>🦴 건강관리</h4>
+              <span>권장 사료량</span>
+              <span>{calFood()}g</span>
+              <div style={{ height: "10px" }} />
+              <span>권장 음수량</span>
+              <span>{text.weight * 80}ml</span>
+              <div style={{ height: "10px" }} />
+              <span>권장 운동량</span>
+              <span>
+                {text.weight < 2
+                  ? (30 * text.weight * 1.3).toFixed(2)
+                  : (text.weight * 70 * 1.3).toFixed(2)}
+                kcal
+              </span>
+            </div>
+            <h4 style={{ marginTop: "60px" }}>💉 예방접종 이력</h4>
             <span
               style={{
                 cursor: "pointer",
                 position: "absolute",
-                top: "170px",
+                top: "215px",
                 left: "120px",
               }}
               onClick={handleVaccineModal}

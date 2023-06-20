@@ -401,13 +401,15 @@ const UpdatePet = () => {
     const data = {
       petType: petType,
       petName: petNickName,
-      species: petValue,
+      species: petValue.speciesEn,
       birthdate: birthdayDate,
       gender: gender,
       neuteredStatus: neuteredStatus,
       weight: Number(weight),
       caution: caution,
     };
+
+    console.log(data);
 
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(

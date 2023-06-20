@@ -7,6 +7,7 @@ import Board from "./Board";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
+import { Button } from "../Button";
 
 const BoardList = () => {
   let { category, pet } = useParams();
@@ -523,6 +524,12 @@ const BoardList = () => {
             &gt;
           </button>
         </div>
+        <span className={styles.writeBtn}>
+          <Button
+            onClick={() => navigate(`/list/${category}/write`)}
+            name={"글쓰기"}
+          />
+        </span>
       </div>
     </div>
   );

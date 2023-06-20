@@ -20,7 +20,9 @@
   margin-top: 20px;
 }
 
-.info > div > h4, .weight > h4, .medicine > h4 {
+.info > div > h4,
+.weight > h4,
+.medicine > h4 {
   color: #827870;
   display: inline-block;
   margin-right: 43px;
@@ -28,7 +30,8 @@
   margin-bottom: 10px;
 }
 
-.info > div > span, .weight > span {
+.info > div > span,
+.weight > span {
   color: #827870;
   font-size: 15px;
 }
@@ -53,15 +56,25 @@
   width: 50px;
 }
 
-.care {
+.health {
+  background-color: #ede9e6;
+  border-radius: 15px;
+  padding: 1px 25px 15px;
+  margin-left: -20px;
+}
+
+.care,
+.health {
   position: relative;
 }
 
-.care, .weight {
+.care,
+.weight {
   margin-top: 144px;
 }
 
-.care > h4 {
+.care > h4,
+.health > h4 {
   color: #827870;
 }
 
@@ -69,14 +82,15 @@
   margin-top: 50px;
 }
 
-.care > span {
+.care > span,
+.health > span {
   color: #827870;
   font-size: 14px;
 }
 
-.care > span:nth-child(2), 
-.care > span:nth-child(5), 
-.care > span:nth-child(8) {
+.health > span:nth-child(2),
+.health > span:nth-child(5),
+.health > span:nth-child(8) {
   margin-right: 20px;
 }
 
@@ -93,7 +107,7 @@
 .radio > input {
   margin-right: 10px;
   accent-color: #827870;
-  border: none !important
+  border: none !important;
 }
 
 .medicine {
@@ -109,7 +123,7 @@
 
 .medicineinfo > p {
   display: inline-block;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   padding: 6px 22px;
   border-radius: 9px;
   font-size: 13px;
@@ -117,7 +131,8 @@
   margin-right: 20px;
 }
 
-.medicineinfo > span, .vaccine > span {
+.medicineinfo > span,
+.vaccine > span {
   color: #827870;
   font-size: 14px;
   margin-right: 12px;
@@ -127,7 +142,7 @@
   display: inline-block;
   color: #827870;
   font-size: 15px;
-  background-color: #EBE7E3;
+  background-color: #ebe7e3;
   padding: 6px 22px;
   border-radius: 9px;
 }
