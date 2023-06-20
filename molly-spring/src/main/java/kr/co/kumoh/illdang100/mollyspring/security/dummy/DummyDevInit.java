@@ -79,7 +79,7 @@ public class DummyDevInit extends DummyObject {
                     BoardEnum.MEDICAL, PetTypeEnum.RABBIT, false));
             Board maengguBoard = boardRepository.save(newBoard(maenggu, "고양이 치료 관련 질문입니다!", "<p>안녕하세요, 고양이를 키우고 있는데 최근에 이상한 증상이 나타나서 걱정입니다.&nbsp;</p><p>토를 많이 하고 약간의 식욕 감퇴가 있는데, 이럴 때 병원 방문이 필요한 건가요?&nbsp;</p><p>비슷한 경험이 있는 분들이 계시다면 조언 부탁드립니다!</p>",
                     BoardEnum.MEDICAL, PetTypeEnum.CAT, false));
-            Board cheolsuBoard = boardRepository.save(newBoard(cheolsu, "반려동물 명예의 전당! 사랑하는 우리 아이들 사진 공유해주세요!", "<p>여기에 있는 모든 반려동물들이 정말 귀여워요!&nbsp;</p><p>저도 저희 강아지 볼티의 사진을 공유하려고 합니다.&nbsp;</p><p>볼티는 작년에 저희 가족에 합류했는데, 정말 사랑스럽고 활발한 아이에요.&nbsp;</p><p>여러분의 반려동물 사진도 함께 공유해주세요!</p><figure class=\"image\"><img src=\"https://kit-molly-bucket.s3.ap-northeast-2.amazonaws.com/board/1/2e424b25-9e09-4bfb-85d4-151cd8bbe0d6image.jpeg\" alt=\"요즘 인스타에서 핫한 강아지 장난감 6종, 견생샷 남겨봐요 ...\"></figure>",
+            Board cheolsuBoard = boardRepository.save(newBoard(cheolsu, "반려동물 명예의 전당! 사랑하는 우리 아이들 사진 공유해주세요!", "<p>여기에 있는 모든 반려동물들이 정말 귀여워요!&nbsp;</p><p>저도 저희 강아지 볼티의 사진을 공유하려고 합니다.&nbsp;</p><p>볼티는 작년에 저희 가족에 합류했는데, 정말 사랑스럽고 활발한 아이에요.&nbsp;</p><p>여러분의 반려동물 사진도 함께 공유해주세요!</p><figure class=\"image\"><img src=\"https://kit-molly-bucket.s3.ap-northeast-2.amazonaws.com/board/1/ddbc56a2-31ba-41ae-a21f-b4a01d4fca95image.jpeg\" alt=\"윙크하는 강아지 : 동아사이언스\"></figure>",
                     BoardEnum.FREE, PetTypeEnum.NOT_SELECTED, false));
 
             likyRepository.save(newLiky(adminBoard1, jjanggu.getEmail(), boardRepository));
