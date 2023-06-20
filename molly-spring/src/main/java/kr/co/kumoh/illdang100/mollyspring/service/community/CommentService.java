@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentReqDto.*;
-import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentRespDto.*;
 
 @Slf4j
 @Service
@@ -32,7 +32,7 @@ public class CommentService {
     private final CommentComplaintRepository commentComplaintRepository;
 
     @Transactional
-    public CreateCommentResponse createComment(CreateCommentRequest createCommentRequest, Long accountId, Long boardId) {
+    public BoardCommentDto createComment(CreateCommentRequest createCommentRequest, Long accountId, Long boardId) {
 
         Board findBoard = findBoardByIdOrThrowException(boardId);
         Account findAccount = findAccountByIdOrThrowException(accountId);
@@ -40,8 +40,22 @@ public class CommentService {
                 commentRepository.save(new Comment(findBoard, createCommentRequest.getCommentContent(), findAccount.getEmail()));
         findBoard.increaseCommentCnt();
 
-        return new CreateCommentResponse(comment.getId());
+        String profileImageUrl = null;
+        if (findAccount.getAccountProfileImage() != null) {
+            profileImageUrl = findAccount.getAccountProfileImage().getStoreFileUrl();
+        }
+
+        return BoardCommentDto.builder()
+                .commentId(comment.getId())
+                .commentOwner(true)
+                .commentAccountEmail(comment.getAccountEmail())
+                .commentWriteNick(findAccount.getNickname())
+                .commentCreatedAt(comment.getCreatedDate())
+                .content(comment.getCommentContent())
+                .commentProfileImage(profileImageUrl)
+                .build();
     }
+
 
     @Transactional
     public void deleteComment(Long accountId, Long boardId, Long commentId) {

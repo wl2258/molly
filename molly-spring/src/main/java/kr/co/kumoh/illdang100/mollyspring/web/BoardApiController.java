@@ -23,7 +23,6 @@ import javax.validation.Valid;
 import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardReqDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.board.BoardRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentReqDto.*;
-import static kr.co.kumoh.illdang100.mollyspring.dto.comment.CommentRespDto.*;
 import static kr.co.kumoh.illdang100.mollyspring.dto.complaint.ComplaintReqDto.*;
 
 @RestController
@@ -150,7 +149,7 @@ public class BoardApiController {
                                               @RequestBody CreateCommentRequest createCommentRequest,
                                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        CreateCommentResponse result =
+        BoardCommentDto result =
                 commentService.createComment(createCommentRequest, principalDetails.getAccount().getId(), boardId);
         return new ResponseEntity<>(new ResponseDto<>(1, "댓글 작성이 완료되었습니다", result), HttpStatus.CREATED);
     }
