@@ -1,6 +1,4 @@
 .tap {
-  position: absolute;
-  top: -60px;
   color: #645c56;
   font-weight: 800;
   text-align: center;
@@ -12,8 +10,6 @@
 }
 
 .click {
-  position: absolute;
-  top: -60px;
   color: #645c56;
   font-weight: 800;
   text-align: center;
@@ -38,18 +34,15 @@
   left: 260px;
   border-radius: 0 20px 0 0;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 .container {
-  width: 50%;
-  position: absolute;
-  top: -70px;
-  right: 0px;
+  flex-grow: 0.5;
 }
 
 .container > div {
-  display: inline-block;
-  width: 65%;
+  width: 100%;
   padding-top: 10px;
   position: relative;
 }

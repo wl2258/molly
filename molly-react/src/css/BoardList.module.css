@@ -99,6 +99,7 @@
 }
 
 .footer {
+  position: relative;
   height: 80px;
   background-color: #f9f9f9;
   margin: auto;
@@ -173,4 +174,9 @@
 
 .petTap > span:not(:last-of-type) {
   border-right: 1px solid #e6ddd7;
+}
+
+.writeBtn {
+  position: absolute;
+  right: 55px;
 }
