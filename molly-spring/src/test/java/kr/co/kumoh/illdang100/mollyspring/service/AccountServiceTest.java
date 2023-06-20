@@ -46,7 +46,7 @@ class AccountServiceTest extends DummyObject {
     public void checkNicknameDuplicate_test() {
 
         // given
-        Account account = newAccount("molly_1234", "일당백");
+        Account account = newAccount("molly_1234", "일당백", null);
 
         // stub
         when(accountRepository.findByNickname(any())).thenReturn(Optional.empty());
@@ -61,7 +61,7 @@ class AccountServiceTest extends DummyObject {
     public void checkNicknameDuplicate_exception_test() {
 
         // given
-        Account account = newAccount("molly_1234", "일당백");
+        Account account = newAccount("molly_1234", "일당백", null);
 
         // stub
         when(accountRepository.findByNickname(any())).thenReturn(Optional.of(account));

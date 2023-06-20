@@ -122,15 +122,14 @@ public class AdminService {
 
     /**
      * 사용자 정지
-     * @param accountId 신고 당하는 사용자 PK
      * @param boardId 신고 당하는 게시글 PK
      * @param commentId 신고 당하는 댓글 PK
      * @param suspendAccountRequest 정지 기간 및 정지 사유
      */
     @Transactional
-    public void suspendAccount(Long accountId, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
+    public void suspendAccount(Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
 
-        Account findAccount = findAccountByIdOrThrowException(accountId);
+        String reportedEmail = suspendAccountRequest.getReportedEmail();
 
         // 동일한 컨텐츠(게시글 혹은 댓글)에 대해 정지가 존재하면 안된다.
         if (boardId != null && commentId == null) {
@@ -139,8 +138,8 @@ public class AdminService {
             }
             Board findBoard = findBoardByIdOrThrowException(boardId);
             // 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
-            checkAccessAuthorization(findBoard.getAccountEmail(), findAccount.getEmail());
-            saveSuspension(findAccount.getEmail(), boardId, null, suspendAccountRequest);
+            checkAccessAuthorization(findBoard.getAccountEmail(), reportedEmail);
+            saveSuspension(boardId, null, suspendAccountRequest);
             // 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
             deleteBoardComplaintsByBoardIdInBatch(findBoard.getId());
 
@@ -150,13 +149,13 @@ public class AdminService {
             }
             Comment findComment = findCommentByIdOrThrowException(commentId);
             // 들어온 boardId 또는 commentId가 해당 사용자가 작성한게 맞는지 검사하는 기능 추가
-            checkAccessAuthorization(findComment.getAccountEmail(), findAccount.getEmail());
-            saveSuspension(findAccount.getEmail(), null, commentId, suspendAccountRequest);
+            checkAccessAuthorization(findComment.getAccountEmail(), reportedEmail);
+            saveSuspension(null, commentId, suspendAccountRequest);
             // 어떤 신고로부터 정지당하는 건지 받아서 해당 신고 전부 삭제하기!!
             deleteCommentComplaintsByCommentIdInBatch(findComment.getId());
         }
 
-        updateSuspensionDate(findAccount.getEmail(), suspendAccountRequest.getSuspensionPeriod());
+        updateSuspensionDate(reportedEmail, suspendAccountRequest.getSuspensionPeriod());
     }
 
     /**
@@ -172,6 +171,8 @@ public class AdminService {
         Account admin = findAccountByIdOrThrowException(adminId);
         findBoard.increaseViews();
 
+        boolean isOwner = boardService.isAuthorizedToAccessBoard(findBoard, adminId);
+
         boolean thumbsUp = likyRepository.existsByAccountEmailAndBoard_Id(admin.getEmail(), boardId);
         String writerNick = null;
         String writerProfileImage = null;
@@ -185,6 +186,7 @@ public class AdminService {
 
         return PostDetailForAdminResponse.builder()
                 .title(findBoard.getBoardTitle())
+                .boardOwner(isOwner)
                 .category(findBoard.getCategory().toString())
                 .petType(findBoard.getPetType().toString())
                 .content(findBoard.getBoardContent())
@@ -215,12 +217,14 @@ public class AdminService {
 
     private BoardCommentForAdminDto createBoardCommentForAdminDto(Comment comment, Map<String, Account> accountMap, Account findAccount) {
         Account account = accountMap.get(comment.getAccountEmail());
+        boolean commentOwner = (account != null && findAccount != null && account.getId().equals(findAccount.getId()));
         String nickname = (account != null) ? account.getNickname() : null;
         String commentProfileImageUrl = (account != null && account.getAccountProfileImage() != null)
                 ? account.getAccountProfileImage().getStoreFileUrl() : null;
 
         return new BoardCommentForAdminDto(
                 comment.getId(),
+                commentOwner,
                 comment.getAccountEmail(),
                 nickname,
                 comment.getCreatedDate(),
@@ -261,16 +265,16 @@ public class AdminService {
         commentRepository.delete(findComment);
     }
 
-    private void saveSuspension(String accountEmail, Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
+    private void saveSuspension(Long boardId, Long commentId, SuspendAccountRequest suspendAccountRequest) {
         suspensionRepository.save(Suspension.builder()
-                .accountEmail(accountEmail)
+                .accountEmail(suspendAccountRequest.getReportedEmail())
                 .boardId(boardId)
                 .commentId(commentId)
                 .suspensionPeriod(suspendAccountRequest.getSuspensionPeriod())
                 .complaintReason(ComplaintReasonEnum.valueOf(suspendAccountRequest.getReason()))
                 .build());
 
-        log.info("정지가 성공적으로 생성되었습니다. [accountEmail={}, suspensionExpiryDate={}]", accountEmail, suspendAccountRequest.getSuspensionPeriod());
+        log.info("정지가 성공적으로 생성되었습니다. [accountEmail={}, suspensionExpiryDate={}]", suspendAccountRequest.getReportedEmail(), suspendAccountRequest.getSuspensionPeriod());
     }
 
     private void checkAccessAuthorization(String writerEmail, String accountEmail) {
