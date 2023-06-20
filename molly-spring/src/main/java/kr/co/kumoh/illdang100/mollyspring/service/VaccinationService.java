@@ -52,6 +52,8 @@ public class VaccinationService {
         String vaccinationName = vaccinationSaveRequest.getVaccinationName();
         LocalDate vaccinationDate = vaccinationSaveRequest.getVaccinationDate();
 
+        eheckPossibleDate(vaccinationDate);
+
         int n_idx = vaccinationName.indexOf(" ");
         String vaccineOriginName = vaccinationName.substring(0, n_idx - 1);
 
@@ -96,6 +98,10 @@ public class VaccinationService {
         return new VaccinationSaveResponse(vaccination.getId(), predictList);
     }
 
+    private static void eheckPossibleDate(LocalDate vaccinationDate) {
+        if (vaccinationDate.isAfter(LocalDate.now())) throw new CustomApiException("예방접종 등록 가능한 날짜가 아닙니다.");
+    }
+
     /**
      * 예방접종 이력 조회
      *
@@ -122,6 +128,7 @@ public class VaccinationService {
 
         Long vaccinationId = request.getVaccinationId();
         VaccinationHistory vaccination = findVaccinationOrElseThrow(vaccinationId);
+        eheckPossibleDate(request.getVaccinationDate());
 
         vaccination.updateVaccination(request);
 

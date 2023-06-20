@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../css/BoardList.module.css";
+import styles from "../../css/ManagerBoardList.module.css";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { IoMdThumbsUp } from "react-icons/io";
 import { FaComment } from "react-icons/fa";
-import Board from "./Board";
+import ManagerBoard from "./ManagerBoard";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
-import { Button } from "../Button";
 
-const BoardList = () => {
+const ManagerBoardList = () => {
   let { category, pet } = useParams();
   const [list, setList] = useState({});
   const [loading, setLoading] = useState(false);
@@ -345,13 +344,13 @@ const BoardList = () => {
   }
 
   return (
-    <div style={{ position: "relative", width: "85%", margin: "auto" }}>
-      <Board pet={pet} setSearch={setSearch} />
+    <div style={{ position: "relative", width: "75%", margin: "auto" }}>
+      <ManagerBoard pet={pet} setSearch={setSearch} />
       <div className={styles.header}>
         <div className={styles.petTap}>
           <span
             onClick={() => {
-              navigate(`/list/${category}/ALL`);
+              navigate(`/manager/list/${category}/ALL`);
             }}
             style={
               pet === "ALL" ? { color: "#f16340", fontWeight: "700" } : null
@@ -361,7 +360,7 @@ const BoardList = () => {
           </span>
           <span
             onClick={() => {
-              navigate(`/list/${category}/DOG`);
+              navigate(`/manager/list/${category}/DOG`);
             }}
             style={
               pet === "DOG" ? { color: "#f16340", fontWeight: "700" } : null
@@ -371,7 +370,7 @@ const BoardList = () => {
           </span>
           <span
             onClick={() => {
-              navigate(`/list/${category}/CAT`);
+              navigate(`/manager/list/${category}/CAT`);
             }}
             style={
               pet === "CAT" ? { color: "#f16340", fontWeight: "700" } : null
@@ -381,7 +380,7 @@ const BoardList = () => {
           </span>
           <span
             onClick={() => {
-              navigate(`/list/${category}/RABBIT`);
+              navigate(`/manager/list/${category}/RABBIT`);
             }}
             style={
               pet === "RABBIT" ? { color: "#f16340", fontWeight: "700" } : null
@@ -524,12 +523,6 @@ const BoardList = () => {
             &gt;
           </button>
         </div>
-        <span className={styles.writeBtn}>
-          <Button
-            onClick={() => navigate(`/list/${category}/write`)}
-            name={"글쓰기"}
-          />
-        </span>
       </div>
     </div>
   );
@@ -577,7 +570,7 @@ const List = (props) => {
     return (
       <div
         onClick={() => {
-          navigate(`/board/${props.id}/${props.category}/${props.pet}`);
+          navigate(`/manager/board/${props.id}`);
         }}
         className={styles.listManager}
       >
@@ -601,7 +594,7 @@ const List = (props) => {
     return (
       <div
         onClick={() => {
-          navigate(`/board/${props.id}/${props.category}/${props.pet}`);
+          navigate(`/manager/board/${props.id}`);
         }}
         className={styles.list}
       >
@@ -623,4 +616,4 @@ const List = (props) => {
   }
 };
 
-export default BoardList;
+export default ManagerBoardList;

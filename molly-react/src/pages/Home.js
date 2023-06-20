@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Dday from "../components/home/Dday";
-import Description from "../components/home/Description";
 import Graph from "../components/home/Graph";
 import Month from "../components/home/Month";
 import styled from "styled-components";
@@ -11,7 +10,7 @@ import axios from "axios";
 import { SyncLoader } from "react-spinners";
 
 let CustomBody = styled.div`
-  margin: 140px 10% 0;
+  margin: 140px 5% 0;
 `;
 
 let Schedule = styled.div`
@@ -31,6 +30,7 @@ const Home = () => {
   let { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [pet, setPet] = useState(null);
+  const [petProfile, setPetProfile] = useState(null);
   const [save, setSave] = useState(false);
   const navigate = useNavigate();
 
@@ -48,6 +48,7 @@ const Home = () => {
       .then((response) => {
         console.log(response);
         setPet(response.data.data.pet);
+        setPetProfile(response.data.data.petProfile);
         setLoading(false);
       })
       .catch((e) => {
@@ -59,53 +60,65 @@ const Home = () => {
   //   console.log("render");
   //   setLoading(true);
   //   setPet([
-  // 		{
-  // 			"petId": 13,
-  // 			"petName": "몰리",
-  // 			"petType": "DOG",
-  // 			"birthdate": "2013-08-07",
-  // 			"vaccination": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2023-03-14"
-  // 				},
-  // 			],
-  // 			"vaccinePredict": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				}
-  // 			],
-  // 		},
   //     {
-  // 			"petId": 14,
-  // 			"petName": "보리",
-  // 			"petType": "CAT",
-  // 			"birthdate": "2019-01-10",
-  // 			"vaccination": [
-  // 				{
-  // 					"vaccinationName": "종합백신1차",
-  // 					"vaccinationDate": "2020-08-30"
-  // 				},
-  // 			],
-  // 			"vaccinePredict": [
-  // 				{
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				},
+  //       petId: 13,
+  //       petName: "몰리",
+  //       petType: "DOG",
+  //       birthdate: "2013-08-07",
+  //       vaccination: [
   //         {
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				},
+  //           vaccinationName: "종합백신1차",
+  //           vaccinationDate: "2023-03-14",
+  //         },
+  //       ],
+  //       vaccinePredict: [
   //         {
-  // 					"vaccinationName": "종합백신2차",
-  // 					"vaccinationDate": "2023-05-16"
-  // 				}
-  // 			],
-  // 		}
-  // 	])
-  //   setLoading(false)
-  // }, [save])
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-05-16",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       petId: 14,
+  //       petName: "보리",
+  //       petType: "CAT",
+  //       birthdate: "2019-01-10",
+  //       vaccination: [
+  //         {
+  //           vaccinationName: "종합백신1차",
+  //           vaccinationDate: "2023-06-01",
+  //         },
+  //       ],
+  //       vaccinePredict: [
+  //         {
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-06-22",
+  //         },
+  //         {
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-06-22",
+  //         },
+  //         {
+  //           vaccinationName: "종합백신2차",
+  //           vaccinationDate: "2023-06-22",
+  //         },
+  //       ],
+  //     },
+  //   ]);
+  //   setPetProfile([
+  //     {
+  //       petId: 13,
+  //       profileImage:
+  //         "https://image.cine21.com/resize/cine21/still/2005/0512/M0020113_1[S750,750].jpg",
+  //     },
+  //     {
+  //       petId: 14,
+  //       profileImage:
+  //         "https://itcm.co.kr/files/attach/images/813/079/473/003/f63e884e06ff1cc9757b9021c77b274c.jpg",
+  //     },
+  //   ]);
+  //   setLoading(false);
+  // }, [save]);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -194,12 +207,7 @@ const Home = () => {
             />
           </Schedule>
           <Info>
-            <div>
-              <Graph />
-            </div>
-            <div>
-              <Description />
-            </div>
+            <Graph />
           </Info>
         </CustomBody>
         {id === "signup" && <SignUp />}
@@ -242,12 +250,7 @@ const Home = () => {
             </div>
           </Schedule>
           <Info>
-            <div>
-              <Graph />
-            </div>
-            <div>
-              <Description />
-            </div>
+            <Graph />
           </Info>
         </CustomBody>
         {id === "signup" && <SignUp />}
@@ -287,12 +290,7 @@ const Home = () => {
             </div>
           </Schedule>
           <Info>
-            <div>
-              <Graph />
-            </div>
-            <div>
-              <Description />
-            </div>
+            <Graph />
           </Info>
         </CustomBody>
         {id === "signup" && <SignUp />}
@@ -309,16 +307,16 @@ const Home = () => {
             <Month pet={pet} />
           </div>
           <div>
-            <Dday pet={pet} save={save} setSave={setSave} />
+            <Dday
+              pet={pet}
+              petProfile={petProfile}
+              save={save}
+              setSave={setSave}
+            />
           </div>
         </Schedule>
         <Info>
-          <div>
-            <Graph />
-          </div>
-          <div>
-            <Description />
-          </div>
+          <Graph />
         </Info>
       </CustomBody>
       {id === "signup" && <SignUp />}

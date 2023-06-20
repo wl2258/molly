@@ -247,7 +247,7 @@ class PetApiControllerTest extends DummyObject {
     }
 
     private void dataSetting() {
-        Account account = newAccount("molly", "일당백");
+        Account account = newAccount("molly", "일당백", null);
         accountRepository.save(account);
 
         Pet pet = newPet(account, "몰리", LocalDate.now().minusYears(1), PetGenderEnum.FEMALE, true, 3.5, PetTypeEnum.DOG, null, DogEnum.CHIHUAHUA);

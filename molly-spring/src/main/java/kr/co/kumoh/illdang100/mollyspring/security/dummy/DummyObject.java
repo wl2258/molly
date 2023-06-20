@@ -7,6 +7,7 @@ import kr.co.kumoh.illdang100.mollyspring.domain.board.BoardEnum;
 import kr.co.kumoh.illdang100.mollyspring.domain.comment.Comment;
 import kr.co.kumoh.illdang100.mollyspring.domain.complaint.BoardComplaint;
 import kr.co.kumoh.illdang100.mollyspring.domain.complaint.ComplaintReasonEnum;
+import kr.co.kumoh.illdang100.mollyspring.domain.image.ImageFile;
 import kr.co.kumoh.illdang100.mollyspring.domain.liky.Liky;
 import kr.co.kumoh.illdang100.mollyspring.domain.medication.MedicationHistory;
 import kr.co.kumoh.illdang100.mollyspring.domain.pet.*;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 
 public class DummyObject {
 
-    protected Account newAccount(String username, String nickname) {
+    protected Account newAccount(String username, String nickname, ImageFile imageFile) {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encPassword = passwordEncoder.encode("1234");
@@ -30,6 +31,7 @@ public class DummyObject {
                 .password(encPassword)
                 .email(username + "@naver.com")
                 .nickname(nickname)
+                .accountProfileImage(imageFile)
                 .role(AccountEnum.CUSTOMER)
                 .build();
     }

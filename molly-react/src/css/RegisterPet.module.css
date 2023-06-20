@@ -127,15 +127,16 @@
   font-size: small;
 }
 
-.dropdown {
+.dropdown > div:first-child {
   position: absolute;
   width: 140px;
-  height: 150px;
+  height: 90px;
   overflow-y: scroll;
+  background-color: #ebe7e3;
   z-index: 1;
 }
 
-.dropdown > li {
+.dropdown > div:first-child > li {
   position: relative;
   font-size: small;
   list-style: none;
@@ -394,4 +395,29 @@
   position: absolute;
   bottom: 210px;
   left: 470px;
+}
+
+.kindSearch {
+  position: absolute;
+  top: 115px;
+  background-color: #ebe7e3;
+  border-radius: 0 0 10px 10px;
+  width: 120px;
+  height: 20px;
+  padding: 8px 10px;
+  z-index: 3;
+}
+
+.kindSearch > input {
+  background-color: transparent;
+  border: none;
+  color: #656565;
+}
+
+.kindSearch > input:focus {
+  outline: none;
+}
+
+.kindSearch > input::placeholder {
+  color: #afa79f;
 }

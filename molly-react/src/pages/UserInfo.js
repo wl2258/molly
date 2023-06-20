@@ -46,15 +46,15 @@ const UserInfo = () => {
   }, []);
 
   // useEffect(() => {
-  //   setLoading(true)
+  //   setLoading(true);
   //   setUser({
-  //     "profileImage": "이미지 URL",
-  //     "nickname": "사용자 닉네임",
-  //     "provider": "kakao",
-  //     "email": "ddd@naver.com"
-  //   })
-  //   setLoading(false)
-  // }, [])
+  //     profileImage: "이미지 URL",
+  //     nickname: "사용자 닉네임",
+  //     provider: "kakao",
+  //     email: "ddd@naver.com",
+  //   });
+  //   setLoading(false);
+  // }, []);
 
   useEffect(() => {
     setImgFile(user.profileImage);
@@ -451,8 +451,8 @@ const UserInfo = () => {
               <button onClick={handleLeave}>탈퇴하기</button>
             </div>
             <p>
-              탈퇴 시 작성하신 포스트 및 댓글과 반려동물 등록 정보가 모두
-              삭제되며 복구되지 않습니다.
+              탈퇴 시 작성하신 반려동물 등록 정보가 모두 삭제되며 복구되지
+              않습니다.
             </p>
           </div>
         </div>

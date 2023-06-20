@@ -249,7 +249,7 @@ class AccountApiControllerTest extends DummyObject {
 
     private void dataSetting() {
 
-        accountRepository.save(newAccount("kakao_1234", "일당백"));
+        accountRepository.save(newAccount("kakao_1234", "일당백", null));
         em.clear();
     }
 }

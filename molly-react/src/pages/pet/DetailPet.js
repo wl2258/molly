@@ -76,66 +76,76 @@ const DetailPet = () => {
   // useEffect(() => {
   //   setLoading(true);
   //   setText({
-  // 		"userId": 32492,
-  // 		"petId": 1234,
-  // 		"petType": "DOG",
-  // 		"petName": "molly",
-  // 		"species": "MALTESE",
-  // 		"profileImage": "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
-  // 		"birthdate": "2013-08-07",
-  // 		"gender": "FEMALE",
-  // 		"neuteredStatus" : false,
-  // 		"weight" : 3.4,
-  // 		"caution" : "",
-  // 		"surgery": [{
-  //       "surgeryId": 1,
-  //       "surgeryName": "수직이도성형술",
-  //       "surgeryDate": "2023-01-01"
-  //     },],
-  // 		"medication": [{
-  // 			"medicationId": 1432,
-  // 			"medicationName": "넥스가드",
-  // 			"medicationStartDate": "2023-02-01",
-  // 			"medicationEndDate": "2023-02-15"
-  // 		}],
-  // 		"vaccination": [
-  // 			{
-  //         "vaccinationId": 1,
-  // 				"vaccinationName": "종합백신1차",
-  // 				"vaccinationDate": "2018-01-01"
-  // 			},
-  // 		]
-  //   })
+  //     userId: 32492,
+  //     petId: 1234,
+  //     petType: "DOG",
+  //     petName: "molly",
+  //     species: "MALTESE",
+  //     profileImage:
+  //       "https://dimg.donga.com/wps/NEWS/IMAGE/2017/01/27/82617772.2.jpg",
+  //     birthdate: "2013-08-07",
+  //     gender: "FEMALE",
+  //     neuteredStatus: false,
+  //     weight: 3.4,
+  //     caution: "",
+  //     surgery: [
+  //       {
+  //         surgeryId: 1,
+  //         surgeryName: "수직이도성형술",
+  //         surgeryDate: "2023-01-01",
+  //       },
+  //     ],
+  //     medication: [
+  //       {
+  //         medicationId: 1432,
+  //         medicationName: "넥스가드",
+  //         medicationStartDate: "2023-02-01",
+  //         medicationEndDate: "2023-02-15",
+  //       },
+  //     ],
+  //     vaccination: [
+  //       {
+  //         vaccinationId: 1,
+  //         vaccinationName: "종합백신1차",
+  //         vaccinationDate: "2018-01-01",
+  //       },
+  //       {
+  //         vaccinationId: 1,
+  //         vaccinationName: "종합백신1차",
+  //         vaccinationDate: "2018-01-01",
+  //       },
+  //     ],
+  //   });
 
   //   setPetKind([
   //     {
-  //       "speciesKo": "말티즈",
-  //       "speciesEn": "MALTESE"
+  //       speciesKo: "말티즈",
+  //       speciesEn: "MALTESE",
   //     },
   //     {
-  //       "speciesKo": "포메라니안",
-  //       "speciesEn": "POMERANIAN"
+  //       speciesKo: "포메라니안",
+  //       speciesEn: "POMERANIAN",
   //     },
   //     {
-  //       "speciesKo": "프렌치 불도그",
-  //       "speciesEn": "FRENCH_BULLDOG"
+  //       speciesKo: "프렌치 불도그",
+  //       speciesEn: "FRENCH_BULLDOG",
   //     },
   //     {
-  //       "speciesKo": "말티즈",
-  //       "speciesEn": "MALTESEd"
+  //       speciesKo: "말티즈",
+  //       speciesEn: "MALTESEd",
   //     },
   //     {
-  //       "speciesKo": "포메라니안",
-  //       "speciesEn": "POMERANIAN"
+  //       speciesKo: "포메라니안",
+  //       speciesEn: "POMERANIAN",
   //     },
   //     {
-  //       "speciesKo": "프렌치 불도그",
-  //       "speciesEn": "FRENCH_BULLDOG"
+  //       speciesKo: "프렌치 불도그",
+  //       speciesEn: "FRENCH_BULLDOG",
   //     },
-  //   ])
+  //   ]);
 
   //   setLoading(false);
-  // }, [])
+  // }, []);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
@@ -447,21 +457,29 @@ const DetailPet = () => {
           </div>
           <div className={styles.weight}></div>
           <div className={styles.care}>
-            <h4>🦴 건강관리</h4>
-            <span>권장 사료량</span>
-            <span>{calFood()}g</span>
-            <br />
-            <span>권장 음수량</span>
-            <span>{text.weight * 80}ml</span>
-            <br />
-            <span>권장 운동량</span>
-            <h4>💉 예방접종 이력</h4>
+            <div className={styles.health}>
+              <h4>🦴 건강관리</h4>
+              <span>권장 사료량</span>
+              <span>{calFood()}g</span>
+              <div style={{ height: "10px" }} />
+              <span>권장 음수량</span>
+              <span>{text.weight * 80}ml</span>
+              <div style={{ height: "10px" }} />
+              <span>권장 운동량</span>
+              <span>
+                {text.weight < 2
+                  ? (30 * text.weight * 1.3).toFixed(2)
+                  : (text.weight * 70 * 1.3).toFixed(2)}
+                kcal
+              </span>
+            </div>
+            <h4 style={{ marginTop: "60px" }}>💉 예방접종 이력</h4>
             <span
               style={{
                 cursor: "pointer",
                 position: "absolute",
-                top: "170px",
-                right: "20px",
+                top: "215px",
+                left: "120px",
               }}
               onClick={handleVaccineModal}
             >

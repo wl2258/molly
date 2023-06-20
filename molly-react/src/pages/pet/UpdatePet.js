@@ -14,7 +14,7 @@ const UpdatePet = () => {
   const [petType, setPetType] = useState("DOG"); // dog, cat, rabbit
   const [typeView, setTypeView] = useState(false); // 동물 종류 드롭다운 버튼
   const [pet, setPet] = useState(false); // 동물 품종 드롭다운 버튼
-  const [petValue, setPetValue] = useState("BICHON"); // 동물 품종
+  const [petValue, setPetValue] = useState({}); // 동물 품종
   const [gender, setGender] = useState(""); // 성별 라디오 버튼
   const [neutered, setNeutered] = useState(""); // 중성화 라디오 버튼
   const [imgFile, setImgFile] = useState("");
@@ -23,6 +23,8 @@ const UpdatePet = () => {
   const [confirm, setConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState({});
+  const [petKind, setPetKind] = useState([]);
+  const [petLoading, setPetLoading] = useState(false);
 
   const [petNickName, setPetNickName] = useState(""); // 동물 이름 input
   const [weight, setWeight] = useState(""); // 몸무게 input
@@ -53,33 +55,184 @@ const UpdatePet = () => {
 
   // useEffect(() => {
   //   setText({
-  // 		"userId": 32492,
-  // 		"petId": 1234,
-  // 		"petType": "DOG",
-  // 		"petName": "molly",
-  // 		"species": "MALTESE",
-  // 		"profileImage": "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
-  // 		"birthDate": "2013-08-07",
-  // 		"gender": "FEMALE",
-  // 		"neuteredStatus" : false,
-  // 		"weight" : 3.4,
-  // 		"caution" : "분리불안 심함",
-  // 		"surgery": [],
-  // 		"medication": [{
-  // 			"medicationId": 1432,
-  // 			"medicationName": "넥스가드",
-  // 			"medicationStart": "2023-02-01",
-  // 			"medicationEnd": "2023-02-15"
-  // 		}],
-  // 		"vaccination": [
-  // 			{
-  //         "vaccinationId": 1,
-  // 				"vaccinationName": "종합백신1차",
-  // 				"vaccinationDate": "2018-01-01"
-  // 			},
-  // 		]
-  //   })
-  // }, [])
+  //     userId: 32492,
+  //     petId: 1234,
+  //     petType: "DOG",
+  //     petName: "molly",
+  //     species: "MALTESE",
+  //     profileImage: "N23498SAJSJAFIOSJ...IJSDFJODISDJOISJS",
+  //     birthDate: "2013-08-07",
+  //     gender: "FEMALE",
+  //     neuteredStatus: false,
+  //     weight: 3.4,
+  //     caution: "분리불안 심함",
+  //     surgery: [],
+  //     medication: [
+  //       {
+  //         medicationId: 1432,
+  //         medicationName: "넥스가드",
+  //         medicationStart: "2023-02-01",
+  //         medicationEnd: "2023-02-15",
+  //       },
+  //     ],
+  //     vaccination: [
+  //       {
+  //         vaccinationId: 1,
+  //         vaccinationName: "종합백신1차",
+  //         vaccinationDate: "2018-01-01",
+  //       },
+  //     ],
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    setLoading(true);
+
+    const config = {
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
+
+    axiosInstance
+      .get(`/api/auth/pet/dog-species`, config)
+      .then((response) => {
+        console.log(response);
+        setPetKind(response.data.data);
+        setPetValue(response.data.data[0]);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
+  useEffect(() => {
+    setPetLoading(true);
+    const config = {
+      headers: {
+        Authorization: localStorage.getItem("accessToken"),
+      },
+    };
+
+    if (petType === "DOG") {
+      axiosInstance
+        .get(`/api/auth/pet/dog-species`, config)
+        .then((response) => {
+          console.log(response);
+          setPetValue(response.data.data[0]);
+          setPetKind(response.data.data);
+          setPetLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else if (petType === "CAT") {
+      axiosInstance
+        .get(`/api/auth/pet/cat-species`, config)
+        .then((response) => {
+          console.log(response);
+          setPetValue(response.data.data[0]);
+          setPetKind(response.data.data);
+          setPetLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      axiosInstance
+        .get(`/api/auth/pet/rabbit-species`, config)
+        .then((response) => {
+          console.log(response);
+          setPetValue(response.data.data[0]);
+          setPetKind(response.data.data);
+          setPetLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+    setPetLoading(false);
+  }, [petType]);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   if (petType === "DOG") {
+  //     setPetValue({
+  //       speciesKo: "말티즈",
+  //       speciesEn: "MALTESE",
+  //     });
+  //     setPetKind([
+  //       {
+  //         speciesKo: "말티즈",
+  //         speciesEn: "MALTESE",
+  //       },
+  //       {
+  //         speciesKo: "포메라니안",
+  //         speciesEn: "POMERANIAN",
+  //       },
+  //       {
+  //         speciesKo: "프렌치 불도그",
+  //         speciesEn: "FRENCH_BULLDOG",
+  //       },
+  //       {
+  //         speciesKo: "말티즈",
+  //         speciesEn: "MALTESE",
+  //       },
+  //       {
+  //         speciesKo: "포메라니안",
+  //         speciesEn: "POMERANIAN",
+  //       },
+  //       {
+  //         speciesKo: "ㅇㅇ",
+  //         speciesEn: "POMERANIAN",
+  //       },
+  //     ]);
+  //   } else if (petType === "CAT") {
+  //     setPetValue({
+  //       speciesKo: "노르웨이 숲",
+  //       speciesEn: "NORWEGIAN_FOREST",
+  //     });
+  //     setPetKind([
+  //       {
+  //         speciesKo: "노르웨이 숲",
+  //         speciesEn: "NORWEGIAN_FOREST",
+  //       },
+  //       {
+  //         speciesKo: "네벨룽",
+  //         speciesEn: "NEBELUNG",
+  //       },
+  //       {
+  //         speciesKo: "네바 마스커레이드",
+  //         speciesEn: "NEVA_MASQUERADE",
+  //       },
+  //       {
+  //         speciesKo: "데본렉스",
+  //         speciesEn: "DEVON_REX",
+  //       },
+  //     ]);
+  //   } else {
+  //     setPetValue({
+  //       speciesKo: "앙고라 토끼",
+  //       speciesEn: "ANGORA_RABBIT",
+  //     });
+  //     setPetKind([
+  //       {
+  //         speciesKo: "앙고라 토끼",
+  //         speciesEn: "ANGORA_RABBIT",
+  //       },
+  //       {
+  //         speciesKo: "롭이어",
+  //         speciesEn: "ROBYEAR",
+  //       },
+  //       {
+  //         speciesKo: "렉스",
+  //         speciesEn: "REX",
+  //       },
+  //     ]);
+  //   }
+  //   setLoading(false);
+  // }, [petType]);
 
   useEffect(() => {
     setPetType(text.petType);
@@ -248,13 +401,15 @@ const UpdatePet = () => {
     const data = {
       petType: petType,
       petName: petNickName,
-      species: petValue,
+      species: petValue.speciesEn,
       birthdate: birthdayDate,
       gender: gender,
       neuteredStatus: neuteredStatus,
       weight: Number(weight),
       caution: caution,
     };
+
+    console.log(data);
 
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(
@@ -355,7 +510,9 @@ const UpdatePet = () => {
           <h1>반려동물 수정</h1>
         </div>
         <div className={styles.dropdowncontainer}>
-          {typeView && <TypeDropdown setPetType={setPetType} />}
+          {typeView && (
+            <TypeDropdown setPetType={setPetType} setTypeView={setTypeView} />
+          )}
         </div>
         <div className={styles.upload}>
           <form encType="multipart/form-data">
@@ -394,26 +551,58 @@ const UpdatePet = () => {
             required
           ></input>
         </div>
-        <div className={styles.boarddetail}>
+        <div
+          className={styles.boarddetail}
+          style={petType === "RABBIT" ? { marginTop: "45px" } : null}
+        >
           <h4>품종</h4>
           <div
-            onClick={() => {
-              setPet(!pet);
-            }}
             className={styles.sort}
             style={{ borderRadius: pet ? "10px 10px 0 0" : "10px" }}
           >
-            <span className={styles.default}>{petValue}</span>
+            <span className={styles.default}>
+              {petValue === undefined ||
+              petValue === null ||
+              Object.keys(petValue).length === 0
+                ? "선택하세요"
+                : petValue.speciesKo}
+            </span>
             {pet ? (
-              <span style={{ position: "absolute", top: "2px", right: "10px" }}>
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  right: "10px",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setPet(!pet);
+                }}
+              >
                 <MdExpandLess size="25px" color="#AFA79F" />
               </span>
             ) : (
-              <span style={{ position: "absolute", top: "2px", right: "10px" }}>
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  right: "10px",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setPet(!pet);
+                }}
+              >
                 <MdExpandMore size="25px" color="#AFA79F" />
               </span>
             )}
-            {pet && <PetDropdown setValue={setPetValue} />}
+            {pet && (
+              <PetDropdown
+                setValue={setPetValue}
+                petKind={petKind}
+                setPet={setPet}
+              />
+            )}
           </div>
           <div className={styles.info}>
             <h4>생일</h4>
@@ -535,6 +724,7 @@ const TypeDropdown = (props) => {
       <li
         onClick={() => {
           props.setPetType("DOG");
+          props.setTypeView(false);
         }}
       >
         <img
@@ -546,6 +736,7 @@ const TypeDropdown = (props) => {
       <li
         onClick={() => {
           props.setPetType("CAT");
+          props.setTypeView(false);
         }}
       >
         <img
@@ -554,42 +745,66 @@ const TypeDropdown = (props) => {
           width="80px"
         />
       </li>
+      <li
+        onClick={() => {
+          props.setPetType("RABBIT");
+          props.setTypeView(false);
+        }}
+      >
+        <img
+          src={process.env.PUBLIC_URL + `/img/RABBIT-logo.png`}
+          alt="pet-icon"
+          width="70px"
+        />
+      </li>
     </div>
   );
 };
 
 const PetDropdown = (props) => {
+  const [search, setSearch] = useState("");
+
   return (
-    <div className={styles.dropdown}>
-      <li
-        onClick={() => {
-          props.setValue("BICHON");
-        }}
-      >
-        비숑
-      </li>
-      <li
-        onClick={() => {
-          props.setValue("MALTESE");
-        }}
-      >
-        말티즈
-      </li>
-      <li
-        onClick={() => {
-          props.setValue("POODLE");
-        }}
-      >
-        푸들
-      </li>
-      <li
-        onClick={() => {
-          props.setValue("WELSHCORGI");
-        }}
-      >
-        웰시코기
-      </li>
-    </div>
+    <>
+      <div className={styles.dropdown}>
+        <div onClick={() => props.setPet(false)}>
+          {search === ""
+            ? props.petKind.map((item) => {
+                return (
+                  <li
+                    onClick={() => {
+                      props.setValue(item);
+                    }}
+                  >
+                    {item.speciesKo}
+                  </li>
+                );
+              })
+            : props.petKind.map((item) => {
+                if (item.speciesKo === search) {
+                  return (
+                    <li
+                      onClick={() => {
+                        props.setValue(item);
+                      }}
+                    >
+                      {item.speciesKo}
+                    </li>
+                  );
+                }
+              })}
+        </div>
+      </div>
+      <div className={styles.kindSearch}>
+        <input
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+          }}
+          placeholder="검색"
+        ></input>
+      </div>
+    </>
   );
 };
 

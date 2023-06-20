@@ -32,7 +32,7 @@ const ManagerLogin = () => {
       .then((res) => {
         if (res.code === 1) {
           console.log(res.msg);
-          window.location.replace("/");
+          window.location.replace("/manager/home");
         } else {
           console.log(res.msg);
         }
