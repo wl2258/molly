@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 //import Board from './Board';
-import styles from "../css/ManagerBoard.module.css";
+import styles from "../css/ManagerBoardDetail.module.css";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { IoMdThumbsUp } from "react-icons/io";
 import { MdOutlineThumbUpAlt } from "react-icons/md";
