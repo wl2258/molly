@@ -152,9 +152,9 @@ class AdminApiControllerTest extends DummyObject {
     private void dataSetting() {
 
         Account administrator = accountRepository.save(newAdmin("administrator1", "관리자"));
-        Account jjanggu = accountRepository.save(newAccount("kakao_1234", "짱구"));
-        Account yuli = accountRepository.save(newAccount("kakao_5678", "유리"));
-        Account cheolsu = accountRepository.save(newAccount("kakao_9101", "철수"));
+        Account jjanggu = accountRepository.save(newAccount("kakao_1234", "짱구", null));
+        Account yuli = accountRepository.save(newAccount("kakao_5678", "유리", null));
+        Account cheolsu = accountRepository.save(newAccount("kakao_9101", "철수", null));
 
         Board jjangguBoard = boardRepository.save(newBoard(jjanggu, "jjangguPost", "<p>jjangguContent</p>", BoardEnum.FREE,
                 PetTypeEnum.DOG, false));

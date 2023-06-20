@@ -209,10 +209,10 @@ class BoardRepositoryImplTest extends DummyObject {
 
     private void dataSetting() {
 
-        Account jjanggu = accountRepository.save(newAccount("kakao_1234", "짱구"));
-        Account yuli = accountRepository.save(newAccount("kakao_5678", "유리"));
-        Account cheolsu = accountRepository.save(newAccount("kakao_9101", "철수"));
-        Account maenggu = accountRepository.save(newAccount("kakao_9999", "맹구"));
+        Account jjanggu = accountRepository.save(newAccount("kakao_1234", "짱구", null));
+        Account yuli = accountRepository.save(newAccount("kakao_5678", "유리", null));
+        Account cheolsu = accountRepository.save(newAccount("kakao_9101", "철수", null));
+        Account maenggu = accountRepository.save(newAccount("kakao_9999", "맹구", null));
 
         Board jjangguBoard = boardRepository.save(newBoard(jjanggu, "jjangguPost", "jjangguContent", BoardEnum.FREE,
                 PetTypeEnum.DOG, false));

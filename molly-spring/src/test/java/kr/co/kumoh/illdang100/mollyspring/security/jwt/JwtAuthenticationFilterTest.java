@@ -37,7 +37,7 @@ class JwtAuthenticationFilterTest extends DummyObject {
 
     @BeforeEach
     public void setUp() throws Exception {
-        accountRepository.save(newAccount("molly_test", "일당백"));
+        accountRepository.save(newAccount("molly_test", "일당백", null));
     }
 
     @Test

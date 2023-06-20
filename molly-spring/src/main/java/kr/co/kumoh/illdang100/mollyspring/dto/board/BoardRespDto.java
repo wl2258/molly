@@ -52,6 +52,7 @@ public class BoardRespDto {
     }
 
     @AllArgsConstructor
+    @Builder
     @Getter @Setter
     public static class BoardCommentDto {
         private Long commentId;
