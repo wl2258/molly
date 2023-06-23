@@ -14,7 +14,7 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/97449471/232280029-59eebf27-43aa-4687-805d-875ca19097df.png" width=700 height=450 /></p>
 
 ## 📃 데이터베이스 구조
-<p align="center"><img src="https://github.com/illdang100/molly/assets/97449471/debd7799-e469-47ae-9df1-8beceba82032.png" width=700 height=450 /></p>
+<p align="center"><img src="https://github.com/illdang100/molly/assets/80948330/5b4bcf66-3b96-40cf-9002-6ec35d0bc573.png" width=700 height=450 /></p>
 
 ## 🖨️ Api 명세서
 <p align="center"><img src="https://github.com/illdang100/molly/assets/80948330/47c93e0e-f8df-46f2-b716-249dc0d39777.png" width=700 /></p>
@@ -26,6 +26,48 @@
   
 #### Front-end
 - 장윤정 : 웹 디자인, 프론트엔드 기능
+
+## 📚 OPENSOURCE LIBRARY
+
+```javascript
+이 build.gradle 파일에서 다음 오픈 소스 라이브러리들이 사용되고 있습니다:
+
+com.ewerk.gradle.plugins.querydsl (버전 1.0.10): QueryDSL을 사용하기 위한 Gradle 플러그인입니다.
+
+org.springframework.boot:spring-boot-starter-data-jpa: 스프링 부트에서 JPA를 사용하기 위한 라이브러리입니다.
+
+org.springframework.boot:spring-boot-starter-security: 스프링 부트에서 보안 기능을 사용하기 위한 라이브러리입니다.
+
+org.springframework.boot:spring-boot-starter-validation: 스프링 부트에서 유효성 검사를 위한 라이브러리입니다.
+
+org.springframework.boot:spring-boot-starter-web: 스프링 부트에서 웹 애플리케이션을 개발하기 위한 라이브러리입니다.
+
+org.springframework.boot:spring-boot-starter-oauth2-client: 스프링 부트에서 OAuth 2.0 클라이언트를 사용하기 위한 라이브러리입니다.
+
+com.auth0:java-jwt (버전 4.2.1): Java에서 JSON Web Token (JWT)을 다루기 위한 라이브러리입니다.
+
+com.querydsl:querydsl-jpa (버전 5.0.0): QueryDSL을 JPA와 함께 사용하기 위한 라이브러리입니다.
+
+org.projectlombok:lombok: 자바 개발을 간소화하기 위한 라이브러리입니다. 테스트에서 사용됩니다.
+
+org.springframework.cloud:spring-cloud-starter-aws (버전 2.2.6.RELEASE): 스프링 클라우드에서 AWS를 사용하기 위한 라이브러리입니다.
+
+org.springframework.boot:spring-boot-starter-data-redis (버전 2.7.10): 스프링 부트에서 Redis를 사용하기 위한 라이브러리입니다.
+
+org.projectlombok:lombok: 자바 개발을 간소화하기 위한 라이브러리입니다.
+
+com.h2database:h2: H2 데이터베이스를 사용하기 위한 라이브러리입니다.
+
+org.mariadb.jdbc:mariadb-java-client: MariaDB를 사용하기 위한 라이브러리입니다.
+
+com.mysql:mysql-connector-j: MySQL을 사용하기 위한 라이브러리입니다.
+
+org.springframework.boot:spring-boot-starter-test: 스프링 부트에서 테스트를 위한 라이브러리입니다.
+
+org.springframework.security:spring-security-test: 스프링 시큐리티 테스트를 위한 라이브러리입니다.
+
+이 외에도 Gradle 플러그인과 관련된 의존성 관리와 테스트 설정 등이 포함되어 있습니다.
+```
 
 ## ⚒️ Tools
 <span><img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white"/></span>
