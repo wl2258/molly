@@ -10,7 +10,7 @@
 - 커뮤니티 페이지에서 글과 댓글을 작성하면서 반려동물을 키우는 사람들과 소통할 수 있습니다. <br/>
 - 내 위치를 기반으로 주변 동물병원의 위치와 해당 병원의 영업 여부를 확인할 수 있습니다.
 
-## 📦 전체 시스템 구조
+## 🌈 전체 시스템 구조
 <p align="center"><img src="https://user-images.githubusercontent.com/97449471/232280029-59eebf27-43aa-4687-805d-875ca19097df.png" width=700 height=450 /></p>
 
 ## 📃 데이터베이스 구조
@@ -27,46 +27,50 @@
 #### Front-end
 - 장윤정 : 웹 디자인, 프론트엔드 기능
 
-## 📚 OPENSOURCE LIBRARY
+## 📦 Packages
+#### SERVER 주요 OPENSOURCE
+| Name | Description |
+| --- | --- |
+| `Spring Security` |  애플리케이션의 보안 및 인증 처리 |
+| `Spring OAuth2 Client` |  OAuth 2.0 클라이언트 구현 |
+| `com.auth0:java-jwt` |  JWT(Json Web Token) 생성 및 검증을 위한 라이브러리 |
+| `com.querydsl:querydsl-jpa` |  Querydsl 를 사용하여 JPA 쿼리를 생성하기 위한 라이브러리 |
+| `com.querydsl:querydsl-apt` |  Querydsl 어노테이션 프로세서를 사용하여 쿼리 타입 클래스를 생성하기 위한 라이브러리 |
+| `org.springframework.cloud:spring-cloud-starter-aws` |  스프링 클라우드에서 AWS를 사용하기 위한 라이브러리 |
 
+#### Dependencies Module (package.json) 
 ```javascript
-이 build.gradle 파일에서 다음 오픈 소스 라이브러리들이 사용되고 있습니다:
-
-com.ewerk.gradle.plugins.querydsl (버전 1.0.10): QueryDSL을 사용하기 위한 Gradle 플러그인입니다.
-
-org.springframework.boot:spring-boot-starter-data-jpa: 스프링 부트에서 JPA를 사용하기 위한 라이브러리입니다.
-
-org.springframework.boot:spring-boot-starter-security: 스프링 부트에서 보안 기능을 사용하기 위한 라이브러리입니다.
-
-org.springframework.boot:spring-boot-starter-validation: 스프링 부트에서 유효성 검사를 위한 라이브러리입니다.
-
-org.springframework.boot:spring-boot-starter-web: 스프링 부트에서 웹 애플리케이션을 개발하기 위한 라이브러리입니다.
-
-org.springframework.boot:spring-boot-starter-oauth2-client: 스프링 부트에서 OAuth 2.0 클라이언트를 사용하기 위한 라이브러리입니다.
-
-com.auth0:java-jwt (버전 4.2.1): Java에서 JSON Web Token (JWT)을 다루기 위한 라이브러리입니다.
-
-com.querydsl:querydsl-jpa (버전 5.0.0): QueryDSL을 JPA와 함께 사용하기 위한 라이브러리입니다.
-
-org.projectlombok:lombok: 자바 개발을 간소화하기 위한 라이브러리입니다. 테스트에서 사용됩니다.
-
-org.springframework.cloud:spring-cloud-starter-aws (버전 2.2.6.RELEASE): 스프링 클라우드에서 AWS를 사용하기 위한 라이브러리입니다.
-
-org.springframework.boot:spring-boot-starter-data-redis (버전 2.7.10): 스프링 부트에서 Redis를 사용하기 위한 라이브러리입니다.
-
-org.projectlombok:lombok: 자바 개발을 간소화하기 위한 라이브러리입니다.
-
-com.h2database:h2: H2 데이터베이스를 사용하기 위한 라이브러리입니다.
-
-org.mariadb.jdbc:mariadb-java-client: MariaDB를 사용하기 위한 라이브러리입니다.
-
-com.mysql:mysql-connector-j: MySQL을 사용하기 위한 라이브러리입니다.
-
-org.springframework.boot:spring-boot-starter-test: 스프링 부트에서 테스트를 위한 라이브러리입니다.
-
-org.springframework.security:spring-security-test: 스프링 시큐리티 테스트를 위한 라이브러리입니다.
-
-이 외에도 Gradle 플러그인과 관련된 의존성 관리와 테스트 설정 등이 포함되어 있습니다.
+{
+  "name": "molly-react",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^37.1.0",
+    "@ckeditor/ckeditor5-react": "^6.0.0",
+    "@googlemaps/react-wrapper": "^1.1.35",
+    "@react-google-maps/api": "^2.18.1",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.3.4",
+    "date-fns": "^2.29.3",
+    "google-map-react": "^2.2.1",
+    "moment": "^2.29.4",
+    "react": "^18.2.0",
+    "react-datepicker": "^4.10.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.9.0",
+    "react-scripts": "5.0.1",
+    "react-spinners": "^0.13.8",
+    "redux": "^4.2.1",
+    "redux-persist": "^6.0.0",
+    "styled-components": "^5.3.8",
+    "web-vitals": "^2.1.4"
+  }
+}
 ```
 
 ## ⚒️ Tools
