@@ -16,6 +16,9 @@
 ## 📃 데이터베이스 구조
 <p align="center"><img src="https://github.com/illdang100/molly/assets/97449471/debd7799-e469-47ae-9df1-8beceba82032.png" width=700 height=450 /></p>
 
+## 🖨️ Api 명세서
+<p align="center"><img src="https://github.com/illdang100/molly/assets/80948330/47c93e0e-f8df-46f2-b716-249dc0d39777.png" width=700 /></p>
+
 ## 👥 역할 분담
 #### Back-end
 - 정연준(PM) : 소셜로그인, 회원가입, 커뮤니티, 관리자 기능
