@@ -1,16 +1,15 @@
 FROM openjdk:11-jdk-slim
-ARG JAR_FILE=build/libs/molly-spring-0.0.1-SNAPSHOT.jar
 
-# 터미널 접근 경로
 WORKDIR /app
 
-# ADD 압축파일.zip ./ # 이렇게 하면 압축이 풀린다.
-COPY ${JAR_FILE} ./molly-application.jar
+# COPY만 docker-compose 파일의 위치를 기반으로 작동한다.
+COPY . .
 
-# ENV TZ=Asia/Seoul
+# RUN은 현재 파일을 위치를 기반으로 작동한다.
+RUN chmod +x ./gradlew
+RUN ./gradlew clean build
 
-# 실행할 명령어를 넣는다.
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "molly-application.jar"]
+ENV JAR_PATH=/app/build/libs
+RUN mv ${JAR_PATH}/*.jar /app/app.jar
 
-# 명령어의 옵션
-# CMD ["--server.port=8080"]
+ENTRYPOINT [ "java", "-jar", "-Dspring.profiles.active=prod", "app.jar" ]
