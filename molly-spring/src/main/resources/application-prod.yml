@@ -63,6 +63,12 @@ jwt:
   subject: ${JWT_SUBJECT}
   secret: ${JWT_SECRET}
 
+admin:
+  name: ${ADMIN_NAME}
+  password: ${ADMIN_PASSWORD}
+  email: ${ADMIN_EMAIL}
+  nickname: ${ADMIN_NICKNAME}
+
 cloud:
   aws:
     credentials:
