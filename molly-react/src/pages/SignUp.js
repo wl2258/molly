@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "../css/SignUp.module.css";
 import { Button } from "../components/Button";
-import { useLocation } from "react-router-dom";
+import cookie from "react-cookies";
 import axios from "axios";
 
 const SignUp = () => {
@@ -26,14 +26,12 @@ const SignUp = () => {
   const [effectiveColor, setEffectiveColor] = useState("");
 
   const imgRef = useRef();
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
   let color = disabled ? "#D6CCC3" : "#B27910";
 
   useEffect(() => {
-    const accessToken = params.get("accessToken");
-    const refreshToken = params.get("refreshToken");
-    const accountId = params.get("accountId");
+    const accessToken = cookie.load("accessToken");
+    const refreshToken = cookie.load("refreshToken");
+    const accountId = cookie.load("accountId");
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);

@@ -267,6 +267,49 @@ const Header = () => {
   const handleAlarmClick = () => {
     setAlarmLoading(true);
 
+    //   setAlarm([
+    //     {
+    //       petId: 13,
+    //       petName: "몰리",
+    //       petType: "DOG",
+    //       birthdate: "2013-08-07",
+    //       vaccination: [
+    //         {
+    //           vaccinationName: "종합백신1차",
+    //           vaccinationDate: "2023-03-14",
+    //         },
+    //       ],
+    //       vaccinePredict: [
+    //         {
+    //           vaccinationName: "종합백신2차",
+    //           vaccinationDate: "2023-05-13",
+    //         },
+    //         {
+    //           vaccinationName: "종합백신3차",
+    //           vaccinationDate: "2023-05-30",
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       petId: 14,
+    //       petName: "보리",
+    //       petType: "CAT",
+    //       birthdate: "2019-01-10",
+    //       vaccination: [
+    //         {
+    //           vaccinationName: "종합백신1차",
+    //           vaccinationDate: "2020-08-30",
+    //         },
+    //       ],
+    //       vaccinePredict: [
+    //         {
+    //           vaccinationName: "종합백신2차",
+    //           vaccinationDate: "2023-09-30",
+    //         },
+    //       ],
+    //     },
+    //   ]);
+
     if (
       localStorage.getItem("accessToken") !== null ||
       localStorage.getItem("accessToken") !== ""
@@ -289,7 +332,7 @@ const Header = () => {
           console.log(e);
         });
     }
-
+    setAlarmLoading(false);
     setAlarmView(!alarmView);
   };
 

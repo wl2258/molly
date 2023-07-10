@@ -51,27 +51,27 @@ const HospitalMap = () => {
     libraries,
   });
 
-  useEffect(() => {
-    setLoading(true);
+  // useEffect(() => {
+  //   setLoading(true);
 
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
+  //   const config = {
+  //     headers: {
+  //       Authorization: localStorage.getItem("accessToken"),
+  //     },
+  //   };
 
-    axiosInstance
-      .get("/api/auth/hospital", config)
-      .then((res) => {
-        console.log(res);
-        if (res.data.code === 1) {
-          setLoading(false);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
+  //   axiosInstance
+  //     .get("/api/auth/hospital", config)
+  //     .then((res) => {
+  //       console.log(res);
+  //       if (res.data.code === 1) {
+  //         setLoading(false);
+  //       }
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     });
+  // }, []);
 
   useDidMountEffect(() => {
     if (navigator.geolocation) {
