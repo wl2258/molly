@@ -6,6 +6,10 @@
 [![Watch the video](https://img.youtube.com/vi/ryWhWpxDxIs/maxresdefault.jpg)](https://youtu.be/ryWhWpxDxIs)
 
 ## ☑️ 핵심기능 설명
+#### ✔️ 소셜 로그인
+간편한 로그인 기능을 제공합니다.. <br/>
+구글, 카카오 중 원하는 소셜로 로그인 가능합니다. <br/>
+
 #### ✔️ 예방접종 일정 관리 및 알림 기능 
 반려동물의 예방접종 일정을 관리하는 기능을 제공합니다. <br/>
 사용자는 각각의 반려동물 프로필을 생성하여 예방접종 일정을 등록할 수 있습니다. <br/>
