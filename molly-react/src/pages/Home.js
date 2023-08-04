@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SignUp from "./SignUp";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
+import useDidMountEffect from "../pages/useDidMountEffect";
 
 let CustomBody = styled.div`
   margin: 140px 5% 0;
@@ -34,7 +35,7 @@ const Home = () => {
   const [save, setSave] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     setLoading(true);
 
     const config = {
