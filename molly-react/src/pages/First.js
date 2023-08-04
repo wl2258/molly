@@ -29,7 +29,13 @@ const First = () => {
     const refreshToken = cookie.load("refreshToken");
     const accountId = cookie.load("accountId");
 
-    if (accessToken !== null && refreshToken !== null && accountId !== null) {
+    if (
+      accessToken !== null &&
+      refreshToken !== null &&
+      accountId !== null &&
+      accessToken !== undefined &&
+      refreshToken !== undefined
+    ) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("accountId", accountId);
