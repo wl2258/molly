@@ -151,7 +151,7 @@ const BoardDetail = () => {
   //     category: "MEDICAL",
   //     petType: "CAT",
   //     content:
-  //       "<p>제 강아지 예쁘죠?</p><figure><img src='/img/test.png'></img></figure><figure><img src='/img/CAT-logo.png'></figure>",
+  //       "<p>제 강아지 예쁘죠?</p><figure><img src='/img/test.png'></img></figure>",
   //     writerNick: null,
   //     writerEmail: "writer@naver.com",
   //     createdAt: "2023-03-01 11:00:34",
