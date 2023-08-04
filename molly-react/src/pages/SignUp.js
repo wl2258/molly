@@ -119,17 +119,10 @@ const SignUp = () => {
       formData.append("accountProfileImage", imgRef.current.files[0]);
     }
 
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
-
     const fetchData = async function fetch() {
       const response = await axiosInstance.post(
         `/api/auth/account/save`,
-        formData,
-        config
+        formData
       );
       console.log(response);
       if (response.data.code === 1) {

@@ -38,14 +38,8 @@ const Home = () => {
   useDidMountEffect(() => {
     setLoading(true);
 
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
-
     axiosInstance
-      .get(`/api/auth/home`, config)
+      .get(`/api/auth/home`)
       .then((response) => {
         console.log(response);
         setPet(response.data.data.pet);
@@ -123,6 +117,7 @@ const Home = () => {
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
+    withCredentials: true,
   });
 
   axiosInstance.interceptors.response.use(
