@@ -33,6 +33,7 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
             scope:
               - email
               - profile
@@ -61,6 +62,12 @@ logging:
 jwt:
   subject: ${JWT_SUBJECT}
   secret: ${JWT_SECRET}
+
+admin:
+  name: ${ADMIN_NAME}
+  password: ${ADMIN_PASSWORD}
+  email: ${ADMIN_EMAIL}
+  nickname: ${ADMIN_NICKNAME}
 
 cloud:
   aws:
