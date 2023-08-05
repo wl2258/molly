@@ -36,14 +36,8 @@ const UpdatePet = () => {
   useEffect(() => {
     setLoading(true);
 
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
-
     axiosInstance
-      .get(`/api/auth/pet/${id}`, config)
+      .get(`/api/auth/pet/${id}`)
       .then((response) => {
         console.log(response.data.data);
         setText(response.data.data);
@@ -89,14 +83,8 @@ const UpdatePet = () => {
   useEffect(() => {
     setLoading(true);
 
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
-
     axiosInstance
-      .get(`/api/auth/pet/dog-species`, config)
+      .get(`/api/auth/pet/dog-species`)
       .then((response) => {
         console.log(response);
         setPetKind(response.data.data);
@@ -110,15 +98,10 @@ const UpdatePet = () => {
 
   useEffect(() => {
     setPetLoading(true);
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
 
     if (petType === "DOG") {
       axiosInstance
-        .get(`/api/auth/pet/dog-species`, config)
+        .get(`/api/auth/pet/dog-species`)
         .then((response) => {
           console.log(response);
           setPetValue(response.data.data[0]);
@@ -130,7 +113,7 @@ const UpdatePet = () => {
         });
     } else if (petType === "CAT") {
       axiosInstance
-        .get(`/api/auth/pet/cat-species`, config)
+        .get(`/api/auth/pet/cat-species`)
         .then((response) => {
           console.log(response);
           setPetValue(response.data.data[0]);
@@ -142,7 +125,7 @@ const UpdatePet = () => {
         });
     } else {
       axiosInstance
-        .get(`/api/auth/pet/rabbit-species`, config)
+        .get(`/api/auth/pet/rabbit-species`)
         .then((response) => {
           console.log(response);
           setPetValue(response.data.data[0]);
@@ -250,6 +233,7 @@ const UpdatePet = () => {
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
+    withCredentials: true,
   });
 
   axiosInstance.interceptors.response.use(
@@ -342,18 +326,10 @@ const UpdatePet = () => {
       formData.append("petProfileImage", imgRef.current.files[0]);
     }
 
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
-
-    axiosInstance
-      .post(`/api/auth/pet/image`, formData, config)
-      .then((response) => {
-        console.log(response);
-        setProfile(!profile);
-      });
+    axiosInstance.post(`/api/auth/pet/image`, formData).then((response) => {
+      console.log(response);
+      setProfile(!profile);
+    });
   };
 
   // const handleSubmit = (e) => {
@@ -394,7 +370,6 @@ const UpdatePet = () => {
 
     const config = {
       headers: {
-        Authorization: localStorage.getItem("accessToken"),
         "Content-Type": "application/json",
       },
     };
@@ -428,20 +403,13 @@ const UpdatePet = () => {
   };
 
   const deleteImg = () => {
-    const config = {
-      headers: {
-        Authorization: localStorage.getItem("accessToken"),
-      },
-    };
     setImgFile("");
 
-    axiosInstance
-      .delete(`/api/auth/pet/image/${id}`, config)
-      .then((response) => {
-        console.log(response);
-        console.log("기본 이미지 변경 완료");
-        setProfile(!profile);
-      });
+    axiosInstance.delete(`/api/auth/pet/image/${id}`).then((response) => {
+      console.log(response);
+      console.log("기본 이미지 변경 완료");
+      setProfile(!profile);
+    });
   };
 
   const handleProfile = () => {

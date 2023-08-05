@@ -76,6 +76,7 @@ const Header = () => {
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
+    withCredentials: true,
   });
 
   axiosInstance.interceptors.response.use(
@@ -238,28 +239,17 @@ const Header = () => {
   const handlePetClick = () => {
     setLoading(true);
 
-    if (
-      localStorage.getItem("accessToken") !== null ||
-      localStorage.getItem("accessToken") !== ""
-    ) {
-      const config = {
-        headers: {
-          Authorization: localStorage.getItem("accessToken"),
-        },
-      };
-
-      axiosInstance
-        .get(`/api/auth/home`, config)
-        .then((response) => {
-          setIconView(true);
-          console.log(response);
-          setPet(response.data.data.pet);
-          setLoading(false);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
+    axiosInstance
+      .get(`/api/auth/home`)
+      .then((response) => {
+        setIconView(true);
+        console.log(response);
+        setPet(response.data.data.pet);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
 
     setPetView(!petView);
   };
@@ -310,28 +300,18 @@ const Header = () => {
     //     },
     //   ]);
 
-    if (
-      localStorage.getItem("accessToken") !== null ||
-      localStorage.getItem("accessToken") !== ""
-    ) {
-      const config = {
-        headers: {
-          Authorization: localStorage.getItem("accessToken"),
-        },
-      };
+    axiosInstance
+      .get(`/api/auth/home`)
+      .then((response) => {
+        setIconView(true);
+        console.log(response);
+        setAlarm(response.data.data.pet);
+        setAlarmLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
 
-      axiosInstance
-        .get(`/api/auth/home`, config)
-        .then((response) => {
-          setIconView(true);
-          console.log(response);
-          setAlarm(response.data.data.pet);
-          setAlarmLoading(false);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
     setAlarmLoading(false);
     setAlarmView(!alarmView);
   };
@@ -535,11 +515,7 @@ const UserDropdown = (props) => {
       <li
         onClick={() => {
           axios
-            .delete(`http://localhost:8080/api/account/logout`, {
-              headers: {
-                "Refresh-Token": localStorage.getItem("refreshToken"),
-              },
-            })
+            .delete(`http://localhost:8080/api/account/logout`)
             .then((response) => {
               console.log(response);
               localStorage.clear();

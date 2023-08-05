@@ -37,6 +37,7 @@ const AddVaccine = (props) => {
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8080",
+    withCredentials: true,
   });
 
   axiosInstance.interceptors.response.use(
@@ -110,7 +111,6 @@ const AddVaccine = (props) => {
   const handleAddVaccine = () => {
     const config = {
       headers: {
-        Authorization: localStorage.getItem("accessToken"),
         "Content-Type": "application/json",
       },
     };
