@@ -1,13 +1,14 @@
 # molly
-물놀이 인명사고를 예방하기 위해 물놀이 장소의 안전 정보를 제공하고, 리뷰 및 평점 작성 기능을 통해 사용자들의 경험을 공유할 수 있는 웹사이트
-<p align="center"><img src="https://github.com/illdang100/molly/assets/77067383/a005dbdd-79ac-4bdc-b94c-2ecec6fa4400" width="100%"/></p>
+애완동물 예방접종과 동물병원에 대한 정보를 쉽게 접할 수 있고, 애완동물 주인들의 정보 공유를 위한 커뮤니티 기능을 제공하는 웹 사이트
+<p align="center"><img src="https://github.com/illdang100/molly/assets/80948330/b04a0a8a-d833-4083-9f7a-30387bf9b0c1.png" width="100%"/></p>
 
 ## 💡 매뉴얼 (youtube)
+[![Watch the video](https://img.youtube.com/vi/ryWhWpxDxIs/maxresdefault.jpg)](https://youtu.be/ryWhWpxDxIs)
 
 ## ☑️ 핵심기능 설명
 #### ✔️ 소셜 로그인
 간편한 로그인 기능을 제공합니다.. <br/>
-구글, 카카오, 네이버 중 원하는 소셜로 로그인 가능합니다. <br/>
+구글, 카카오 중 원하는 소셜로 로그인 가능합니다. <br/>
 
 #### ✔️ 예방접종 일정 관리 및 알림 기능 
 반려동물의 예방접종 일정을 관리하는 기능을 제공합니다. <br/>
@@ -35,18 +36,18 @@
 <p align="center"><img src="https://github.com/illdang100/molly/assets/80948330/0a187191-23bd-4a88-af95-92965db7a065.png" width=100% /></p>
 
 ## 🌈 전체 시스템 구조
-<p align="center"><img src="https://github.com/illdang100/molly/assets/77067383/c1f7ac2e-74b0-4cc5-87fe-b9c5328d7bb7" width=600 height=350 /></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/97449471/232280029-59eebf27-43aa-4687-805d-875ca19097df.png" width=700 height=450 /></p>
 
 ## 📃 데이터베이스 구조
-<p align="center"><img src=""width=700 height=450 /></p>
+<p align="center"><img src="https://github.com/illdang100/molly/assets/80948330/5b4bcf66-3b96-40cf-9002-6ec35d0bc573.png" width=700 height=450 /></p>
 
 ## 🖨️ Api 명세서
-<p align="center"><img src="https://github.com/illdang100/molly/assets/77067383/48a1a1e3-6b40-435e-a065-03c85147aa32" width=700 /></p>
+<p align="center"><img src="https://github.com/illdang100/molly/assets/80948330/47c93e0e-f8df-46f2-b716-249dc0d39777.png" width=700 /></p>
 
 ## 👥 역할 분담
 #### Back-end
-- 정연준(PM) :
-- 손지민 : 
+- 정연준(PM) : 소셜로그인, 회원가입, 커뮤니티, 관리자 기능
+- 손지민 : 반려동물 등록, 예방접종 일정 기능
   
 #### Front-end
 - 장윤정 : 웹 디자인, 프론트엔드 기능
