@@ -54,12 +54,12 @@ jobs: # 병렬로 실행되는 작업 단위, 여러 step으로 이루어짐
 
       # (4) ./gradlw 실행 권한 부여
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x ./molly-spring/gradlew
         shell: bash
 
       # (5) Gradle build (Test 제외)
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: ./molly-spring/gradlew clean build -x test
         shell: bash
 
       # (6) Cd Project Root DIR
