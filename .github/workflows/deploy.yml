@@ -2,7 +2,7 @@ name: Deploy to Amazon EC2
 
 on: # Workflow를 자동으로 트리거 하기 위한 이벤트
   release:
-    types: [push] # push를 하면 자동으로 실행
+    types: [push, merge] # push를 하면 자동으로 실행
   push:
     branches: [dev, main] # develop, master 브랜치에서 동작
 
