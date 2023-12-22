@@ -1,8 +1,8 @@
 name: Deploy to Amazon EC2
 
 on: # Workflow를 자동으로 트리거 하기 위한 이벤트
-  # release:
-  #   types: [push, merge] # push를 하면 자동으로 실행
+  release:
+    types: [push] # push를 하면 자동으로 실행
   push:
     branches: [dev, main] # develop, master 브랜치에서 동작
 
@@ -23,7 +23,7 @@ permissions:
 jobs: # 병렬로 실행되는 작업 단위, 여러 step으로 이루어짐
   # dev
   dev-deploy:
-    if: contains(github.ref, 'develop')
+    if: contains(github.ref, 'dev')
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
