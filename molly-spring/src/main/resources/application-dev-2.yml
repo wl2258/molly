@@ -6,7 +6,7 @@ server:
       force: true
 
 spring:
-  profiles: dev-1
+  profiles: dev-2
   jpa:
     open-in-view: false
     hibernate:

@@ -6,7 +6,7 @@ server:
       force: true
 
 spring:
-  profiles: local-1
+  profiles: local-2
   servlet:
     multipart:
       max-file-size: 50MB
