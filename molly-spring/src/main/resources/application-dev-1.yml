@@ -7,6 +7,11 @@ server:
 
 spring:
   profiles: dev-1
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
   redis:
     host: 52.79.162.235
     port: 6379
@@ -17,11 +22,6 @@ spring:
       ddl-auto: none
     properties:
       '[hibernate.default_batch_fetch_size]': 100
-
-  servlet:
-    multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
 
 logging:
   level:
