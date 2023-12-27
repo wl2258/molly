@@ -7,6 +7,10 @@ server:
 
 spring:
   profiles: dev-1
+  redis:
+    host: 52.79.162.235
+    port: 6379
+
   jpa:
     open-in-view: false
     hibernate:
