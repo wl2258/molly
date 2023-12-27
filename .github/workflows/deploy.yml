@@ -50,6 +50,8 @@ jobs: # 병렬로 실행되는 작업 단위, 여러 step으로 이루어짐
           echo "${{ secrets.YML_DATABASE }}" > ./application-database.yml
           touch ./application-social-login.yml
           echo "${{ secrets.YML_SOCIAL_LOGIN }}" > ./application-social-login.yml
+          echo "${{ secrets.YML_DEV_1 }}" > ./application-dev-1.yml
+          echo "${{ secrets.YML_DEV_2 }}" > ./application-dev-2.yml
         shell: bash
 
       # (4) ./gradlw 실행 권한 부여
