@@ -1,3 +1,3 @@
  spring:
   profiles:
-    include: BUNDLE-KEY, database, social-login
+    include: BUNDLE-KEY, database, social-login, dev-redis
