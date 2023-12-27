@@ -14,10 +14,6 @@ spring:
     properties:
       '[hibernate.default_batch_fetch_size]': 100
 
-  redis:
-    host: 52.79.162.235
-    port: 6379
-
   servlet:
     multipart:
       max-file-size: 50MB
