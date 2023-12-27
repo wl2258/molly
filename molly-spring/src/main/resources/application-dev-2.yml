@@ -24,5 +24,7 @@ spring:
       '[hibernate.default_batch_fetch_size]': 100
 
 logging:
+  file:
+    name: /home/ec2-user/molly/out.log
   level:
     '[kr.co.kumoh.illdang100.mollyspring]': INFO
