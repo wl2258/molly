@@ -22,7 +22,7 @@ public class EnvRestController {
         this.mollyConfigUtil = mollyConfigUtil;
     }
 
-    @GetMapping("/molly-profile")
+    @GetMapping("/profile")
     public String getProfile() {
         String currentProfile = Arrays.stream(env.getActiveProfiles())
                 .filter(mollyConfigUtil.getSERVICE_PROFILE_LIST()::contains)
