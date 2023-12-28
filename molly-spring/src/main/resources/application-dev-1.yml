@@ -27,4 +27,4 @@ logging:
   file:
     name: /home/ec2-user/molly/out.log
   level:
-    '[kr.co.kumoh.illdang100.mollyspring]': INFO
+    '[kr.co.kumoh.illdang100.mollyspring]': DEBUG

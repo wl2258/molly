@@ -34,6 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
+        log.debug("1228_debug={}", "onAuthenticationSuccess start");
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
 
         Account account = principal.getAccount();
@@ -51,6 +52,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         addCookie(response, JwtVO.PK_HEADER, account.getId());
 
         getRedirectStrategy().sendRedirect(request, response, REDIRECT_URL);
+        log.debug("1228_debug={}", "onAuthenticationSuccess end");
     }
 
     private static void addCookie(HttpServletResponse response, String name, String value, boolean httpOnly) {
