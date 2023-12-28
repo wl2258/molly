@@ -28,7 +28,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
-    private static final String REDIRECT_URL = "http://localhost:3000/home/signup";
+    private static final String REDIRECT_URL = "https://dev--strong-elf-055cfd.netlify.app/home/signup";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
