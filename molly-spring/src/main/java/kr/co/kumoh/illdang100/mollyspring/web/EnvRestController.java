@@ -28,7 +28,7 @@ public class EnvRestController {
                 .filter(mollyConfigUtil.getSERVICE_PROFILE_LIST()::contains)
                 .collect(Collectors.joining());
 
-        log.info("[Current Profile] : " + currentProfile);
+        log.info("[Current Profile]: " + currentProfile);
 
         return currentProfile;
     }
